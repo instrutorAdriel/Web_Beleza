@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${tituloPagina}">Criar Conta</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/javaScript/cadastro.js}" defer></script>
+</head>
+<body>
+
+<div class="ssp-logo-fixed-container">
+    <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
+</div>
+
+<main class="ssp-login-centered-container">
+    <div class="ssp-form-card cadastro-container">
+
+        <header class="ssp-header-page-login">
+            <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
+            <h1 style="color: #F29301;" th:text="${tituloPagina}">Criar Conta</h1>
+            <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
+                Preencha os dados abaixo para se cadastrar.
+            </p>
+        </header>
+
+        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
+            <span class="ssp-error-message" style="display: block;" th:text="${erro}">Erro encontrado</span>
+        </div>
+
+        <form id="kc-form-register" th:action="@{/usuario/cadastro}" th:object="${usuarioDTO}" method="POST">
+
+            <div class="ssp-form-group">
+                <label th:for="nomeCompleto">Nome Completo</label>
+                <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
+            </div>
+
+            <div class="ssp-form-row" style="display: flex; gap: 1rem;">
+                <div class="ssp-form-group" style="flex: 1;">
+                    <label th:for="dataNascimento">Data de Nascimento</label>
+                    <input type="date" th:field="*{dataNascimento}" id="dataNascimento" class="ssp-form-control" required>
+                </div>
+
+                <div class="ssp-form-group" style="flex: 1;">
+                    <label th:for="telefone">Telefone / WhatsApp</label>
+                    <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
+                </div>
+            </div>
+
+            <div class="ssp-form-group">
+                <label th:for="endereco">Endereço Completo</label>
+                <input type="text" th:field="*{endereco}" id="endereco" class="ssp-form-control" placeholder="Rua, número, bairro e cidade" required>
+            </div>
+
+            <div class="ssp-form-group">
+                <label th:for="email">E-mail Institucional</label>
+                <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
+            </div>
+
+            <div class="ssp-form-group">
+                <label th:for="senha">Senha</label>
+                <div class="ssp-password-wrapper">
+                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" required autocomplete="new-password">
+                    <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
+                        <i class="fa-solid fa-eye" id="eyeIcon1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ssp-form-group">
+                <label th:for="confirmacaoSenha">Confirmar Senha</label>
+                <div class="ssp-password-wrapper">
+                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" required autocomplete="new-password">
+                    <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eyeIcon2')">
+                        <i class="fa-solid fa-eye" id="eyeIcon2"></i>
+                    </button>
+                </div>
+                <div id="password-error" class="ssp-error-message" style="color: #DC2626; font-size: 0.85rem; margin-top: 0.4rem; display: none; font-weight: 500;">Senha não compatível</div>
+            </div>
+
+            <button type="submit" class="ssp-btn-submit" style="margin-top: 1rem;">Finalizar Cadastro</button>
+
+        </form>
+
+        <div class="ssp-register-footer" style="text-align: center; margin-top: 1.5rem;">
+            Já tem uma conta? <a th:href="@{/usuario/login}">Faça login aqui</a>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>

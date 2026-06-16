@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversão</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="painel">
+    <h2>Conversor de Moedas</h2>
+
+    <div class="campo-grupo">
+        <label for="moeda-origem">Moeda de Origem (Sua moeda)</label>
+        <select id="moeda-origem">
+            <option value="USD" selected>USD - Dólar Americano</option>
+            <option value="BRL">BRL - Real Brasileiro</option>
+            <option value="EUR">EUR - Euro</option>
+        </select>
+    </div>
+
+    <div class="campo-grupo">
+        <label for="moeda-destino">Moeda de Destino (Para converter)</label>
+        <select id="moeda-destino">
+            <option value="BRL" selected>BRL - Real Brasileiro</option>
+            <option value="USD">USD - Dólar Americano</option>
+            <option value="EUR">EUR - Euro</option>
+        </select>
+    </div>
+
+    <div class="campo-grupo">
+        <label for="input-valor">Valor para converter</label>
+        <input type="number" id="input-valor" step="0.01" placeholder="0,00" value="100">
+    </div>
+
+    <button onclick="converterMoedas()">Converter Agora</button>
+
+    <div class="resultado-box" id="bloco-resultado">
+        <h3>Resultado da Conversão</h3>
+
+        <div class="linha-resultado">
+            Conversão: <strong id="res-conversao">-</strong>
+        </div>
+
+        <div class="linha-resultado">
+            Total Convertido: <span class="destaque-verde" id="res-total">0,00</span>
+        </div>
+
+        <div class="linha-resultado">
+            Taxa de Câmbio (Cotação): <strong id="res-taxa">0,00</strong>
+        </div>
+
+        <div class="linha-resultado">
+            Horário da Consulta: <strong id="res-hora">-</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    function converterMoedas() {
+        // Captura as moedas selecionadas nos Dropdowns
+        const origem = document.getElementById('moeda-origem').value;
+        const destino = document.getElementById('moeda-destino').value;
+        const valor = parseFloat(document.getElementById('input-valor').value);
+
+        // Validação caso o usuário tente converter a moeda para ela mesma (Ex: USD para USD)
+        if (origem === destino) {
+            alert("Por favor, escolha moedas diferentes para realizar a conversão!");
+            return;
+        }
+
+        if (isNaN(valor) || valor <= 0) {
+            alert("Por favor, insira um valor válido maior que zero!");
+            return;
+        }
+
+        // Junta as moedas para o formato que o seu Java espera (Ex: USD-BRL)
+        const parMoedas = `${origem}-${destino}`;
+
+        // Faz a busca na sua FinanceiroController do Java
+        fetch(`/api/financeiro?moedas=${parMoedas}`)
+            .then(response => response.json())
+            .then(dados => {
+
+                if (dados.valor === "0.00" || dados.nome.includes("Inválida")) {
+                    alert("Essa conversão não está disponível na API no momento.");
+                    return;
+                }
+
+                const cotacao = parseFloat(dados.valor);
+                const resultadoTotal = valor * cotacao;
+
+                const agora = new Date();
+                const dataHoraFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+
+                // Atualiza a tela com os dados recebidos
+                document.getElementById('res-conversao').innerText = dados.nome;
+
+                document.getElementById('res-total').innerText = resultadoTotal.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: destino
+                });
+
+                document.getElementById('res-taxa').innerText = cotacao.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 4
+                });
+
+                document.getElementById('res-hora').innerText = dataHoraFormatada;
+
+                // Torna o bloco de resultados visível
+                document.getElementById('bloco-resultado').style.display = 'block';
+            })
+            .catch(erro => {
+                console.error("Erro na conversão:", erro);
+                alert("Erro ao conectar com o servidor Java. Certifique-se de que o Spring Boot está rodando.");
+            });
+    }
+</script>
+</body>
+</html>

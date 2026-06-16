@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${tituloPagina}">Recuperar Senha</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:src="@{/javaScript/recuperar-senha.js}"></script>
+</head>
+<body>
+
+<div class="ssp-logo-fixed-container">
+  <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
+</div>
+
+<main class="ssp-login-centered-container">
+  <div class="ssp-form-card">
+    <header class="ssp-header-page-login">
+      <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
+      <h1 style="color: #F29301;" th:text="${tituloPagina}">Recuperar Senha</h1>
+      <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
+        Insira o e-mail associado à sua conta para receber o código de verificação.
+      </p>
+    </header>
+
+    <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
+      <span class="ssp-error-message" style="display: block;" th:text="${erro}">E-mail não localizado.</span>
+    </div>
+
+    <form id="kc-form-recovery" th:action="@{/usuario/recuperar-senha}" th:object="${usuarioDTO}" method="POST">
+      <div class="ssp-form-group">
+        <label th:for="email">E-mail cadastrado</label>
+        <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required>
+      </div>
+
+      <button type="submit" class="ssp-btn-submit" style="margin-top: 1rem;">Continuar</button>
+
+    </form>
+  </div>
+</main>
+</body>
+</html>
