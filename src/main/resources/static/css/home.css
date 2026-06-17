@@ -79,11 +79,17 @@ body {
     padding: 15px 20px;
 }
 
+.logo {
+    flex-shrink: 0;
+    margin-left: -20px;
+}
+
 .logo img {
     height: 42px;
     display: block;
     transition: var(--transicao);
 }
+
 .logo img:hover {
     transform: scale(1.03);
 }
@@ -91,10 +97,13 @@ body {
 .nav-menu {
     display: flex;
     gap: 25px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav-menu a {
-    color: #ffffff; /* Texto 100% branco para contraste perfeito no fundo preto */
+    color: #ffffff;
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
