@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/usuario")
+@RequestMapping("/")
 public class UsuarioController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class UsuarioController {
         }
 
         // Sucesso! Redireciona para a rota da Home interna do Portal
-        return "redirect:/usuario/home";
+        return "redirect:/home";
     }
 
     /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
@@ -72,7 +72,7 @@ public class UsuarioController {
             return "cadastro";
         }
 
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 
     /* ─── RECUPERAR SENHA ─────────────────────────────────────────────────── */
@@ -85,7 +85,7 @@ public class UsuarioController {
 
     @PostMapping("/recuperar-senha")
     public String processarRecuperarSenha(@ModelAttribute UsuarioDTO form, Model model) {
-        return "redirect:/usuario/codigo";
+        return "redirect:/codigo";
     }
 
     /* ─── CÓDIGO DE VERIFICAÇÃO ───────────────────────────────────────────── */
@@ -99,7 +99,7 @@ public class UsuarioController {
     @PostMapping("/verificar-codigo")
     public String processarCodigo(@ModelAttribute UsuarioDTO form, Model model) {
         if ("123456".equals(form.getCodigoVerificacao())) {
-            return "redirect:/usuario/altera-senha";
+            return "redirect:/altera-senha";
         }
         model.addAttribute("erro", "Código de verificação incorreto ou expirado.");
         model.addAttribute("tituloPagina", "Verificar Código");
@@ -123,6 +123,6 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Alterar Senha");
             return "altera-senha";
         }
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 }
