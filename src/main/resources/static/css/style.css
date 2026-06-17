@@ -3,9 +3,9 @@
    ========================================================================== */
 :root {
     --e-global-color-primary: #000000;       /* Preto Senac */
-    --e-global-color-secondary: #F29301;     /* Laranja Senac */
+    --e-global-color-secondary: #F7941D;     /* Laranja Senac */
     --e-global-color-text: #7A7A7A;          /* Cinza de apoio */
-    --e-global-color-accent: #F29301;
+    --e-global-color-accent: #F7941D;
     --e-global-color-c968c9f: #FFFFFF;
     --e-global-typography-primary-font-family: "Poppins", sans-serif;
     --wp--preset--shadow--natural: 0px 15px 35px rgba(0, 0, 0, 0.2);
@@ -28,9 +28,9 @@ body, html {
     /* GRADIENTE: Transição do Preto/Grafite para o Laranja Senac */
     background: linear-gradient(
             135deg,
-            #000000 0%,
-            #1A1A1A 40%,
-            #F29301 100%
+            #004A8D 0%,    /* Azul Senac */
+            #003366 50%,   /* Um tom de azul mais escuro para suavizar a transição */
+            #F7941D 100%   /* Laranja Senac */
     );
 
     overflow-x: hidden;
