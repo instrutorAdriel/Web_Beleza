@@ -6,10 +6,7 @@ import com.example.demo.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/usuario")
@@ -75,54 +72,29 @@ public class UsuarioController {
         return "redirect:/usuario/login";
     }
 
-    /* ─── RECUPERAR SENHA ─────────────────────────────────────────────────── */
+    /*
+    Rota de recuperar a senha e alterar senha
+     */
     @GetMapping("/recuperar-senha")
-    public String exibirRecuperarSenha(Model model) {
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Recuperar Senha");
+    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
+        model.addAttribute("tituloPagina", "Alterar Senha");
+        model.addAttribute("");
         return "recuperar-senha";
     }
 
     @PostMapping("/recuperar-senha")
-    public String processarRecuperarSenha(@ModelAttribute UsuarioDTO form, Model model) {
-        return "redirect:/usuario/codigo";
-    }
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model){
 
-    /* ─── CÓDIGO DE VERIFICAÇÃO ───────────────────────────────────────────── */
-    @GetMapping("/codigo")
-    public String exibirCodigo(Model model) {
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Verificar Código");
-        return "codigo";
-    }
-
-    @PostMapping("/verificar-codigo")
-    public String processarCodigo(@ModelAttribute UsuarioDTO form, Model model) {
-        if ("123456".equals(form.getCodigoVerificacao())) {
-            return "redirect:/usuario/altera-senha";
-        }
-        model.addAttribute("erro", "Código de verificação incorreto ou expirado.");
-        model.addAttribute("tituloPagina", "Verificar Código");
-        return "codigo";
-    }
-
-    /* ─── ALTERAR SENHA ────────────────────────────────────────────────────── */
-    @GetMapping("/altera-senha")
-    public String exibirAlterarSenha(Model model){
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Alterar Senha");
         return "altera-senha";
     }
 
-    @PostMapping("/altera-senha")
-    public String processarAlterarSenha(@ModelAttribute UsuarioDTO form, Model model){
-        String erro = usuarioService.alterarSenha(form);
+    @GetMapping("/validar-token/{token}")
+    public String validarToken(@PathVariable String token_uuid){
 
-        if (erro != null) {
-            model.addAttribute("erro", erro);
-            model.addAttribute("tituloPagina", "Alterar Senha");
-            return "altera-senha";
-        }
-        return "redirect:/usuario/login";
+    }
+
+    @GetMapping("/alterar-senha")
+    public String exibirAlterarSenha(@RequestParam String token_uuid){
+        return "altera-senha";
     }
 }
