@@ -107,14 +107,14 @@ public class UsuarioController {
     }
 
     /* ─── ALTERAR SENHA ────────────────────────────────────────────────────── */
-    @GetMapping("/altera-senha")
+    @GetMapping("/alterar-senha")
     public String exibirAlterarSenha(Model model){
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Alterar Senha");
         return "altera-senha";
     }
 
-    @PostMapping("/altera-senha")
+    @PostMapping("/alterar-senha")
     public String processarAlterarSenha(@ModelAttribute UsuarioDTO form, Model model){
         String erro = usuarioService.alterarSenha(form);
 
