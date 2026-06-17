@@ -768,3 +768,13 @@ body {
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
 }
+/* Correção para o carrossel calcular o tamanho exato dos cards visíveis */
+.carrossel-track {
+    display: flex !important;
+    gap: 24px;
+}
+
+/* Força o sumiço real dos cards de outras cidades no carrossel */
+.card-curso-completo[style*="display: none"] {
+    display: none !important;
+}

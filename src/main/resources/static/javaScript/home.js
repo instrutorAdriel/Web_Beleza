@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
+    inicializarValidacaoIdade();
 });
 
 /**
- * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS
- * Gerencia a rolagem horizontal matemática exata com tratamento de clique
+ * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
+ * Rola o carrossel de forma dinâmica baseando-se nos cards que estão visíveis.
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
@@ -19,19 +20,22 @@ function inicializarCarrossel() {
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
-    setaEsquerda.addEventListener('click', () => {
-        // Rola para a esquerda baseado no tamanho atual de um card + gap
+    // Seta para a Esquerda
+    setaEsquerda.addEventListener('click', (e) => {
+        e.preventDefault();
         track.scrollBy({ left: -344, behavior: 'smooth' });
     });
 
-    setaDireita.addEventListener('click', () => {
-        // Rola para a direita baseado no tamanho atual de um card + gap
+    // Seta para a Direita
+    setaDireita.addEventListener('click', (e) => {
+        e.preventDefault();
         track.scrollBy({ left: 344, behavior: 'smooth' });
     });
 }
 
 /**
  * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR BAIRRO
+ * Corrige o display para manter o comportamento de flexbox do carrossel.
  */
 function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
@@ -44,6 +48,7 @@ function inicializarFiltroBairros() {
         aba.addEventListener('click', (e) => {
             e.preventDefault();
 
+            // Gerencia a classe visual nos botões de filtro
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
@@ -52,16 +57,36 @@ function inicializarFiltroBairros() {
             cardsServicos.forEach(card => {
                 const cardBairro = card.getAttribute('data-bairro');
 
-                // Garante que o layout flex permaneça intacto ao reexibir os cards filtrados
+                // CORREÇÃO: Mudado de 'block' para 'flex' para não quebrar a estrutura do carrossel horizontal
                 if (bairroSelecionado === 'todos' || cardBairro === bairroSelecionado) {
-                    card.style.display = 'block';
+                    card.style.setProperty('display', 'flex', 'important');
                 } else {
-                    card.style.display = 'none';
+                    card.style.setProperty('display', 'none', 'important');
                 }
             });
 
-            // Reposiciona o carrossel no início ao alternar os filtros
-            if (track) track.scrollLeft = 0;
+            // RETORNA O CARROSSEL PARA O INÍCIO (Garante que os botões funcionem a partir do 1º card do filtro)
+            if (track) {
+                track.scrollLeft = 0;
+            }
+        });
+    });
+}
+
+/**
+ * MODULE: VALIDAÇÃO DE IDADE PARA AGENDAMENTO (+16 ANOS)
+ */
+function inicializarValidacaoIdade() {
+    const botoesAgendar = document.querySelectorAll('.btn-detalhes');
+
+    botoesAgendar.forEach(botao => {
+        botao.addEventListener('click', (e) => {
+            const confirmouIdade = confirm("Atenção: Para realizar o agendamento e receber o atendimento, você deve ter 16 anos ou mais. Você confirma que cumpre este requisito?");
+
+            if (!confirmouIdade) {
+                e.preventDefault();
+                console.log("Agendamento bloqueado: Idade insuficiente.");
+            }
         });
     });
 }
@@ -80,7 +105,6 @@ function inicializarFormularios() {
             e.preventDefault();
 
             const nomeInput = form.querySelector('input[type="text"]').value;
-            const emailInput = form.querySelector('input[type="email"]').value;
             const selectUnidade = form.querySelector('select');
             const unidadeSelect = selectUnidade.options[selectUnidade.selectedIndex].text;
 
