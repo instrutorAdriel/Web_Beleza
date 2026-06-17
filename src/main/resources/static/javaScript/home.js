@@ -1,17 +1,16 @@
 /**
- * SENAC DF - Inteligência Dinâmica do Portal (Cursos e Agendamentos)
+ * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Bairro)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializa todos os módulos da página
     inicializarCarrossel();
-    inicializarFiltroCursos();
+    inicializarFiltroBairros();
     inicializarFormularios();
 });
 
 /**
  * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS
- * Faz as setas arrastarem os cards de forma inteligente baseada no tamanho da tela
+ * Gerencia a rolagem horizontal matemática exata com tratamento de clique
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
@@ -20,100 +19,80 @@ function inicializarCarrossel() {
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
-    setaEsquerda.addEventListener('click', (e) => {
-        e.preventDefault();
-        moverCarrossel(-1);
+    setaEsquerda.addEventListener('click', () => {
+        // Rola para a esquerda baseado no tamanho atual de um card + gap
+        track.scrollBy({ left: -344, behavior: 'smooth' });
     });
 
-    setaDireita.addEventListener('click', (e) => {
-        e.preventDefault();
-        moverCarrossel(1);
+    setaDireita.addEventListener('click', () => {
+        // Rola para a direita baseado no tamanho atual de um card + gap
+        track.scrollBy({ left: 344, behavior: 'smooth' });
     });
-
-    function moverCarrossel(direcao) {
-        const primeiroCard = track.querySelector('.card-servico');
-        if (!primeiroCard) return;
-
-        // Descobre a largura exata do card + o espaçamento (gap = 24px)
-        const larguraCard = primeiroCard.offsetWidth + 24;
-
-        // Executa a rolagem
-        track.scrollLeft += (direcao * larguraCard);
-    }
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE CURSOS
- * Filtra os cards buscando a classe correspondente (TI, GASTRO, SAUDE) com base no texto da aba
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR BAIRRO
  */
-function inicializarFiltroCursos() {
+function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsCursos = document.querySelectorAll('.card-curso-completo');
+    const cardsServicos = document.querySelectorAll('.carrossel-track .card-curso-completo');
+    const track = document.querySelector('.carrossel-track');
+
+    if (!abas || !cardsServicos) return;
 
     abas.forEach(aba => {
         aba.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // Atualiza o estado visual das abas
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
-            // Normaliza o texto da aba para mapear as classes (ex: "Tecnologia" -> "TI")
-            const textoAba = aba.textContent.trim().toUpperCase();
-            let classeFiltro = '';
+            const bairroSelecionado = aba.getAttribute('data-bairro');
 
-            if (textoAba === 'TECNOLOGIA') classeFiltro = 'TI';
-            else if (textoAba === 'GASTRONOMIA') classeFiltro = 'GASTRO';
-            else if (textoAba === 'SAÚDE' || textoAba === 'SAUDE') classeFiltro = 'SAUDE';
+            cardsServicos.forEach(card => {
+                const cardBairro = card.getAttribute('data-bairro');
 
-            // Filtra os cards na tela
-            cardsCursos.forEach(card => {
-                const placeholder = card.querySelector('.img-placeholder-curso');
-
-                // Se for 'Todos' ou se o card possuir a classe da categoria correspondente
-                if (textoAba === 'TODOS' || (placeholder && placeholder.classList.contains(classeFiltro))) {
-                    card.style.display = 'flex';
+                // Garante que o layout flex permaneça intacto ao reexibir os cards filtrados
+                if (bairroSelecionado === 'todos' || cardBairro === bairroSelecionado) {
+                    card.style.display = 'block';
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            // Reposiciona o carrossel no início ao alternar os filtros
+            if (track) track.scrollLeft = 0;
         });
     });
 }
 
 /**
  * MODULE: CAPTURA E SUCESSO DE FORMULÁRIO
- * Captura os dados digitados na matrícula e personaliza o modal de sucesso correto (#sucesso)
  */
 function inicializarFormularios() {
     const formularios = document.querySelectorAll('.formulario-matricula form');
     const boxSucesso = document.querySelector('#sucesso .box-sucesso p');
 
+    if (!formularios) return;
+
     formularios.forEach(form => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Coleta os dados que o usuário digitou
             const nomeInput = form.querySelector('input[type="text"]').value;
             const emailInput = form.querySelector('input[type="email"]').value;
             const selectUnidade = form.querySelector('select');
             const unidadeSelect = selectUnidade.options[selectUnidade.selectedIndex].text;
 
-            // Busca o título do curso que está no topo do modal corrente
             const painelModal = form.closest('.modal-painel');
-            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Curso Selecionado";
+            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Serviço Selecionado";
 
-            // Altera dinamicamente o texto da tela de confirmação do ID #sucesso
             if (boxSucesso) {
                 boxSucesso.innerHTML = `Olá, <strong>${nomeInput}</strong>!<br><br>
-                Sua pré-inscrição para o curso de <strong>${nomeCurso}</strong> na <strong>${unidadeSelect}</strong> foi processada com sucesso.<br><br>
-                Enviamos um e-mail de confirmação para <strong>${emailInput}</strong> contendo a lista de documentos necessários para a efetivação da sua vaga.`;
+                Seu agendamento para o procedimento de <strong>${nomeCurso}</strong> na unidade <strong>${unidadeSelect}</strong> foi processado com sucesso.`;
             }
 
-            // Redireciona o alvo do CSS :target para exibir o modal correto de sucesso
             window.location.hash = 'sucesso';
-
-            // Limpa os campos do formulário
             form.reset();
         });
     });
