@@ -9,14 +9,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
+    @GetMapping("/")
+    public String exibirHome(Model model) {
+        model.addAttribute("tituloPagina", "Home - Portal Senac");
+        return "home";
+    }
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -36,21 +41,12 @@ public class UsuarioController {
 
         if (usuario == null) {
             model.addAttribute("erro", "E-mail ou senha incorretos.");
-            model.addAttribute("usuarioDTO", form); // Preserva o e-mail na tela se errar
+            model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
 
-        // Sucesso! Redireciona para a rota da Home interna do Portal
-        return "redirect:/home";
-    }
-
-    /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
-    @GetMapping("/home")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        // Retorna o arquivo 'home.html' em src/main/resources/templates/
-        return "home";
+        return "redirect:/painel"; // veja observação abaixo sobre essa linha
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
@@ -106,7 +102,7 @@ public class UsuarioController {
         return "codigo";
     }
 
-    /* ─── ALTERAR SENHA ────────────────────────────────────────────────────── */
+    /* ─── ALTERAR SENHA ───────────────────────────────────────────────────── */
     @GetMapping("/altera-senha")
     public String exibirAlterarSenha(Model model){
         model.addAttribute("usuarioDTO", new UsuarioDTO());
