@@ -280,6 +280,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
+
 .mini-card {
     background-color: var(--fundo-card);
     padding: 30px 20px;
@@ -303,6 +304,7 @@ body {
     color: var(--senac-laranja);
     margin-bottom: 15px;
 }
+
 
 /* ==========================================================================
    CARROSSEL DE AGENDAMENTOS
