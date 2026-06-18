@@ -4,10 +4,10 @@ function togglePasswordVisibility(inputId, iconId) {
 
     if (input.type === "password") {
         input.type = "text";
-        icone.classList.replace("fa-eye", "fa-eye-slash");
+        icone.classList.replace("fa-eye-slash", "fa-eye");
     } else {
         input.type = "password";
-        icone.classList.replace("fa-eye-slash", "fa-eye");
+        icone.classList.replace("fa-eye", "fa-eye-slash");
     }
 }
 

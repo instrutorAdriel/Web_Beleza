@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Alterar Senha</title>
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/altera-senha.js}" defer></script>
 </head>
 <body>
@@ -37,7 +39,7 @@
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{senha}" id="senha" class="ssp-form-control" placeholder="Digite a nova senha" required>
                     <button type="button" class="ssp-toggle-password" id="btnToggle1" aria-label="Mostrar senha">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
             </div>
@@ -47,7 +49,7 @@
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{confirmacaoSenha}" id="confirmacaoSenha" class="ssp-form-control" placeholder="Repita a nova senha" required>
                     <button type="button" class="ssp-toggle-password" id="btnToggle2" aria-label="Mostrar senha">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>
                 </div>
                 <div id="password-error" class="ssp-error-message">As senhas não coincidem.</div>
