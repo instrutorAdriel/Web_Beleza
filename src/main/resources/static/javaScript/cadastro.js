@@ -2,21 +2,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
-    const senhaInput = document.getElementById("senha");
-    const confirmaSenhaInput = document.getElementById("confirmacaoSenha");
+    // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
+    // O th:field="*{senha}" NÃO sobrescreve um id já definido manualmente no input,
+    // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
+    const senhaInput = document.getElementById("password");
+    const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
+
+    // Itens do checklist de força da senha
+    const reqMaiuscula = document.getElementById("req-maiuscula");
+    const reqMinuscula = document.getElementById("req-minuscula");
+    const reqNumero = document.getElementById("req-numero");
+    const reqEspecial = document.getElementById("req-especial");
 
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
-        // Remove tudo que não for número
         let num = e.target.value.replace(/\D/g, "");
-
-        // Limita a 11 dígitos
         if (num.length > 11) {
             num = num.substring(0, 11);
         }
-
-        // Aplica a formatação (11) 99999-9999 ou (11) 9999-9999
         if (num.length > 6) {
             e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
         } else if (num.length > 2) {
@@ -28,7 +32,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 2. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL (máscara de senha forte)
+    senhaInput.addEventListener("input", function (e) {
+        atualizarChecklistSenha(e.target.value);
+
+        if (senhaEhForte(e.target.value)) {
+            limparErro(senhaInput);
+        } else {
+            // feedback visual leve enquanto digita, sem bloquear nada aqui
+            senhaInput.classList.remove("input-error");
+        }
+    });
+
+    // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
     form.addEventListener("submit", function (event) {
         let erros = [];
 
@@ -45,12 +61,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (dataNascimentoInput.value) {
             const dataNascimento = new Date(dataNascimentoInput.value);
             const hoje = new Date();
-
-            // Calcula a idade
             let idade = hoje.getFullYear() - dataNascimento.getFullYear();
             const mes = hoje.getMonth() - dataNascimento.getMonth();
 
-            // Ajusta caso o aniversário ainda não tenha acontecido no ano atual
             if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
                 idade--;
             }
@@ -63,24 +76,68 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        // Validação da FORÇA da senha
+        let senhaValida = true;
+        if (!senhaEhForte(senhaInput.value)) {
+            erros.push("A senha deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
+            marcarErro(senhaInput);
+            senhaValida = false;
+        }
+
         // Validação das Senhas Iguais
         if (senhaInput.value !== confirmaSenhaInput.value) {
             erros.push("As senhas não coincidem.");
             marcarErro(senhaInput);
             marcarErro(confirmaSenhaInput);
+            senhaValida = false;
         } else {
-            limparErro(senhaInput);
             limparErro(confirmaSenhaInput);
         }
 
-        // Se houver algum erro, impede o envio e exibe um alerta
+        if (senhaValida) {
+            limparErro(senhaInput);
+        }
+
         if (erros.length > 0) {
-            event.preventDefault(); // Bloqueia o envio para a Controller Java
+            event.preventDefault();
             alert(erros.join("\n"));
         }
     });
 
-    // Funções auxiliares para estilização de erro baseadas no seu CSS
+    // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
+    function senhaEhForte(senha) {
+        const temMaiuscula = /[A-Z]/.test(senha);
+        const temMinuscula = /[a-z]/.test(senha);
+        const temNumero = /[0-9]/.test(senha);
+        const temEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha);
+
+        return temMaiuscula && temMinuscula && temNumero && temEspecial;
+    }
+
+    // Atualiza visualmente o checklist (máscara) de requisitos da senha
+    function atualizarChecklistSenha(senha) {
+        const regras = [
+            { elemento: reqMaiuscula, regex: /[A-Z]/ },
+            { elemento: reqMinuscula, regex: /[a-z]/ },
+            { elemento: reqNumero, regex: /[0-9]/ },
+            { elemento: reqEspecial, regex: /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/ }
+        ];
+
+        regras.forEach(({ elemento, regex }) => {
+            if (!elemento) return;
+            const icone = elemento.querySelector(".req-icon");
+            if (regex.test(senha)) {
+                elemento.classList.add("valid");
+                icone.classList.remove("fa-circle-xmark");
+                icone.classList.add("fa-circle-check");
+            } else {
+                elemento.classList.remove("valid");
+                icone.classList.remove("fa-circle-check");
+                icone.classList.add("fa-circle-xmark");
+            }
+        });
+    }
+
     function marcarErro(input) {
         input.classList.add("input-error");
     }
