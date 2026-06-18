@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
-    inicializarValidacaoIdade();
 });
 
 /**
@@ -68,24 +67,6 @@ function inicializarFiltroBairros() {
             // RETORNA O CARROSSEL PARA O INÍCIO (Garante que os botões funcionem a partir do 1º card do filtro)
             if (track) {
                 track.scrollLeft = 0;
-            }
-        });
-    });
-}
-
-/**
- * MODULE: VALIDAÇÃO DE IDADE PARA AGENDAMENTO (+16 ANOS)
- */
-function inicializarValidacaoIdade() {
-    const botoesAgendar = document.querySelectorAll('.btn-detalhes');
-
-    botoesAgendar.forEach(botao => {
-        botao.addEventListener('click', (e) => {
-            const confirmouIdade = confirm("Atenção: Para realizar o agendamento e receber o atendimento, você deve ter 16 anos ou mais. Você confirma que cumpre este requisito?");
-
-            if (!confirmouIdade) {
-                e.preventDefault();
-                console.log("Agendamento bloqueado: Idade insuficiente.");
             }
         });
     });
