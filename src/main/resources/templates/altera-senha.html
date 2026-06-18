@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Alterar Senha</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <script th:src="@{/javaScript/altera-senha.js}" defer></script>
 </head>
-<body>
+<body class="ssp-login-page">
 
-<div class="ssp-logo-fixed-container">
-    <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
-</div>
+<header class="site-header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="/img/branca_senac.png" alt="Logo SENAC">
+        </div>
+    </div>
+</header>
 
 <main class="ssp-login-centered-container">
     <div class="ssp-form-card">
@@ -21,13 +26,13 @@
         <header class="ssp-header-page-login">
             <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
             <h1 th:text="${tituloPagina}">Alterar Senha</h1>
-            <p class="ssp-register-footer">
+            <p class="ssp-register-subtitle">
                 Digite e confirme sua nova senha de acesso abaixo.
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-form-control input-error">
-            <span class="ssp-error-message" th:text="${erro}">Erro ao atualizar a senha.</span>
+        <div th:if="${erro}" class="ssp-alert-error">
+            <span class="ssp-error-message-box" th:text="${erro}">Erro ao atualizar a senha.</span>
         </div>
 
         <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha}" th:object="${usuarioDTO}" method="POST">
@@ -50,10 +55,10 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </button>
                 </div>
-                <div id="password-error" class="ssp-error-message">As senhas não coincidem.</div>
+                <div id="password-error" class="ssp-error-message-box static-error">As senhas não coincidem.</div>
             </div>
 
-            <button type="submit" class="ssp-btn-submit">Atualizar Senha</button>
+            <button type="submit" class="ssp-btn-submit submit-cadastro">Atualizar Senha</button>
         </form>
 
     </div>

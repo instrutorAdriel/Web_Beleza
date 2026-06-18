@@ -1,151 +1,100 @@
 /* ==========================================================================
-   VARIÁVEIS INSTITUCIONAIS
+   VARIÁVEIS DE IDENTIDADE COMPARTILHADAS (VINDAS DA HOME & LOGIN ORIGINAL)
    ========================================================================== */
 :root {
+    --fundo-principal: #ffffff;
+    --fundo-card: #f8fafc;
+    --senac-azul: #004A8D;
+
+    /* Cores e Tipografia Originais da Tela de Login */
     --e-global-color-primary: #000000;       /* Preto Senac */
     --e-global-color-secondary: #F7941D;     /* Laranja Senac */
     --e-global-color-text: #7A7A7A;          /* Cinza de apoio */
-    --e-global-color-accent: #F7941D;
-    --e-global-color-c968c9f: #FFFFFF;
     --e-global-typography-primary-font-family: "Poppins", sans-serif;
-    --wp--preset--shadow--natural: 0px 15px 35px rgba(0, 0, 0, 0.2);
+
+    --borda-suave: #e2e8f0;
+    --shadow-soft: 0 15px 40px rgba(0,0,0,.04);
+    --transicao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ==========================================================================
-   RESETS E CONFIGURAÇÕES DE PÁGINA
+   CONFIGURAÇÃO DA PÁGINA (MANTENDO O NOVO FUNDO E SUTILEZA DA HOME)
    ========================================================================== */
-* {
-    box-sizing: border-box;
+body.ssp-login-page {
+    font-family: var(--e-global-typography-primary-font-family);
+    background-color: var(--fundo-card) !important; /* Mantém o fundo harmônico e claro */
+    color: var(--e-global-color-primary);
     margin: 0;
     padding: 0;
-}
-
-body, html {
-    width: 100%;
     min-height: 100vh;
-    font-family: var(--e-global-typography-primary-font-family);
+    display: flex;
+    flex-direction: column;
+}
 
-    /* GRADIENTE: Transição do Preto/Grafite para o Laranja Senac */
-    background: linear-gradient(
-            135deg,
-            #004A8D 0%,    /* Azul Senac */
-            #003366 50%,   /* Um tom de azul mais escuro para suavizar a transição */
-            #F7941D 100%   /* Laranja Senac */
-    );
-
-    overflow-x: hidden;
-    position: relative;
+/* Elimina completamente as antigas esferas de desfoque */
+body.ssp-login-page::before,
+body.ssp-login-page::after {
+    display: none !important;
+    content: none !important;
 }
 
 /* ==========================================================================
-   EFEITOS DE FUNDO (ESFERAS BLUR)
+   ESTILIZAÇÃO DO HEADER DE ACORDO COM A HOME
    ========================================================================== */
-body::before {
-    content: '';
-    position: absolute;
-    width: 600px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 50%;
-    top: -150px;
-    right: -120px;
-    filter: blur(10px);
-    z-index: 0;
+.ssp-login-page .site-header {
+    background: #000000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--e-global-color-secondary);
+    box-shadow: 0 8px 32px rgba(0,0,0,.18);
 }
 
-body::after {
-    content: '';
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 50%;
-    bottom: -150px;
-    left: -100px;
-    z-index: 0;
+.ssp-login-page .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 15px 20px;
 }
 
-/* ==========================================================================
-   MENSAGENS DE ERRO E VALIDAÇÃO
-   ========================================================================== */
-.ssp-error-message {
-    color: #DC2626;
-    font-size: 0.85rem;
-    margin-top: 0.4rem;
-    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
-    font-weight: 500;
-}
-
-.ssp-form-control.input-error {
-    border-color: #DC2626 !important;
-    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12) !important;
-}
-
-/* ==========================================================================
-   LOGO NO CANTO SUPERIOR ESQUERDO
-   ========================================================================== */
-.ssp-logo-fixed-container {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    z-index: 10;
-}
-
-.ssp-logo-senac {
-    width: 110px;
-    height: auto;
+.ssp-login-page .logo img {
+    height: 42px;
     display: block;
-    object-fit: contain;
-    transition: transform 0.4s;
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+    transition: var(--transicao);
 }
 
-.ssp-logo-senac:hover {
-    transform: scale(1.05);
+.ssp-login-page .logo img:hover {
+    transform: scale(1.03);
 }
 
 /* ==========================================================================
-   CONTAINER CENTRALIZADO E CARD (GLASSMORPHISM)
+   CONTAINER CENTRAL E NOVO CARD (LIMPO / INTEGRADO VISUALMENTE)
    ========================================================================== */
 .ssp-login-centered-container {
+    flex: 1;
     width: 100%;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2rem 1.5rem;
-    position: relative;
-    z-index: 1; /* Mantém o formulário à frente do efeito borrado do fundo */
 }
 
-/* Quadro de Login/Cadastro Semi-Transparente e Visível */
 .ssp-form-card {
     width: 100%;
     max-width: 440px;
-
-    /* Fundo semi-transparente (65% de opacidade branca para contraste) */
-    background-color: rgba(255, 255, 255, 0.65);
-
-    /* Efeito de desfoque de fundo (Glassmorphism) */
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-
-    /* Borda sutil para destacar o card no fundo escuro */
-    border: 1px solid rgba(255, 255, 255, 0.4);
-
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--borda-suave) !important;
     padding: 3rem 2.5rem;
     border-radius: 16px;
-    box-shadow: var(--wp--preset--shadow--natural);
+    box-shadow: var(--shadow-soft) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: var(--transicao);
 }
 
-/* Tela de cadastro maior para acomodar confortavelmente os novos campos */
-.cadastro-container {
-    max-width: 540px;
-}
-
-/* ==========================================================================
-   CABEÇALHO DO FORMULÁRIO
-   ========================================================================== */
+/* Cabeçalho Interno do Card - Mantendo tamanhos originais do login */
 .ssp-header-page-login {
     margin-bottom: 2rem;
 }
@@ -172,7 +121,7 @@ body::after {
 }
 
 /* ==========================================================================
-   CAMPOS DE ENTRADA, LABELS E BOTÃO DO OLHO
+   CAMPOS DE ENTRADA (INPUTS ORIGINAIS)
    ========================================================================== */
 .ssp-form-group {
     margin-bottom: 1.4rem;
@@ -201,8 +150,8 @@ body::after {
     border-radius: 6px;
     font-size: 1rem;
     color: #2D3748;
-    background-color: rgba(250, 250, 250, 0.9); /* Input levemente transparente */
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ssp-password-wrapper .ssp-form-control {
@@ -213,7 +162,11 @@ body::after {
     outline: none;
     background-color: #FFFFFF;
     border-color: var(--e-global-color-secondary);
-    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2); /* Glow Laranja */
+    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2); /* Glow original */
+}
+
+.ssp-form-control::placeholder {
+    color: #A0AEC0;
 }
 
 .ssp-toggle-password {
@@ -223,31 +176,29 @@ body::after {
     border: none;
     color: #A0AEC0;
     cursor: pointer;
-    font-size: 1.15rem;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 4px;
+    transition: color 0.2s;
 }
 
 .ssp-toggle-password:hover {
     color: var(--e-global-color-primary);
 }
 
+/* Opções adicionais */
 .ssp-form-options {
     display: flex;
     margin-bottom: 1.8rem;
     font-size: 0.88rem;
 }
 
-.text-right {
-    justify-content: flex-end;
-}
-
 .ssp-forgot-password {
     color: var(--e-global-color-primary);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.2s;
 }
 
 .ssp-forgot-password:hover {
@@ -255,14 +206,29 @@ body::after {
     text-decoration: underline;
 }
 
+/* Caixa de Alerta de Erro Customizada */
+.ssp-alert-error {
+    margin-bottom: 1.5rem;
+    background-color: rgba(220, 38, 38, 0.06);
+    padding: 0.85rem;
+    border-radius: 6px;
+    border: 1px solid rgba(220, 38, 38, 0.15);
+}
+.ssp-error-message-box {
+    color: #DC2626;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: block;
+}
+
 /* ==========================================================================
-   BOTÕES E LOGIN SOCIAL
+   BOTÕES E LOGIN SOCIAL (ESTILOS DO LOGIN ORIGINAL)
    ========================================================================== */
 .ssp-btn-submit {
     width: 100%;
     padding: 0.95rem;
-    background-color: var(--e-global-color-secondary); /* Laranja */
-    color: white;
+    background-color: var(--e-global-color-secondary);
+    color: #FFFFFF; /* Retornado para branco conforme o original */
     border: none;
     border-radius: 6px;
     font-family: inherit;
@@ -273,13 +239,14 @@ body::after {
 }
 
 .ssp-btn-submit:hover {
-    background-color: #d68100; /* Laranja escuro no hover */
+    background-color: #d68100; /* Laranja escuro original */
 }
 
 .ssp-btn-submit:active {
     transform: scale(0.98);
 }
 
+/* Divisor original */
 .ssp-divider {
     text-align: center;
     margin: 1.6rem 0;
@@ -298,7 +265,7 @@ body::after {
 }
 
 .ssp-divider span {
-    background-color: rgb(220, 220, 220); /* Compatibilidade de mesclagem com o glassmorphism */
+    background-color: #ffffff;
     padding: 0 12px;
     font-size: 0.85rem;
     color: var(--e-global-color-text);
@@ -307,6 +274,7 @@ body::after {
     border-radius: 4px;
 }
 
+/* Botões Sociais */
 .ssp-social-login {
     display: flex;
     gap: 1rem;
@@ -326,7 +294,7 @@ body::after {
     font-weight: 500;
     text-decoration: none;
     color: #4A5568;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #ffffff;
     transition: background-color 0.2s, border-color 0.2s, transform 0.1s ease;
 }
 
@@ -339,7 +307,6 @@ body::after {
     transform: scale(0.98);
 }
 
-/* Estilos específicos para o botão do Google */
 .ssp-btn-google {
     border-color: rgba(66, 133, 244, 0.2);
 }
@@ -348,7 +315,6 @@ body::after {
     border-color: #4285F4;
 }
 
-/* Estilos específicos para o botão da Microsoft */
 .ssp-btn-microsoft {
     border-color: rgba(5, 166, 240, 0.2);
 }
@@ -357,11 +323,7 @@ body::after {
     border-color: #05a6f0;
 }
 
-.ssp-btn-social svg {
-    display: block;
-    flex-shrink: 0;
-}
-
+/* Rodapé do Cadastro */
 .ssp-register-footer {
     text-align: center;
     font-size: 0.95rem;
@@ -379,44 +341,97 @@ body::after {
 }
 
 /* ==========================================================================
-   AJUSTES PARA CELULAR (MOBILE)
+   COMPORTAMENTO RESPONSIVO MANTENDO O EQUILÍBRIO VISUAL DO MOBILE
    ========================================================================== */
 @media (max-width: 480px) {
-    .ssp-logo-fixed-container {
-        position: static;
-        margin: 2rem auto 0 auto;
-        display: flex;
-        justify-content: center;
-    }
     .ssp-login-centered-container {
-        min-height: auto;
-        padding-top: 1rem;
+        padding: 2rem 1rem;
     }
     .ssp-form-card {
-        padding: 2rem 1.5rem;
-        box-shadow: none;
-        background-color: transparent; /* Remove o fundo do card no mobile */
-        border: none;
-        backdrop-filter: none;
+        padding: 2.5rem 1.5rem;
+        border: none !important;
+        box-shadow: none !important;
+        background-color: transparent !important;
     }
-    .ssp-divider span {
-        background-color: transparent;
-        color: #FFFFFF;
-    }
-    /* Altera as fontes para Branco no mobile para dar contraste com o fundo escuro da tela */
     .ssp-form-group label,
     .ssp-header-page-login h1,
     .ssp-login-button-back,
     .ssp-forgot-password,
     .ssp-register-footer {
-        color: #FFFFFF;
+        color: var(--e-global-color-primary) !important;
     }
-    .ssp-register-footer a {
-        color: var(--e-global-color-secondary);
+    .ssp-divider span {
+        background-color: var(--fundo-card);
     }
-    /* No mobile, faz com que os botões sociais herdem o comportamento correto */
-    .ssp-btn-social {
-        background-color: rgba(255, 255, 255, 0.9);
-        color: #2D3748;
+}
+
+
+/* ==========================================================================
+   CLASSES EXCLUSIVAS ADICIONADAS PARA O FORMULÁRIO DE CADASTRO
+   ========================================================================== */
+.cadastro-container {
+    max-width: 540px !important; /* Mantém a proporção do cadastro ligeiramente maior */
+}
+
+.ssp-register-subtitle {
+    font-size: 0.95rem;
+    color: var(--e-global-color-text);
+    text-align: left;
+    margin-top: 0.5rem;
+    font-weight: 400;
+}
+
+.ssp-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.ssp-form-group-flex {
+    flex: 1;
+    margin-bottom: 1.4rem;
+}
+
+.ssp-form-group-flex label {
+    display: block;
+    color: var(--e-global-color-primary);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.static-error {
+    margin-top: 0.4rem;
+    display: none; /* Controlado nativamente via JavaScript do cadastro.js */
+}
+
+.submit-cadastro {
+    margin-top: 1rem;
+}
+
+/* Ajuste responsivo para a linha dupla no Mobile */
+@media (max-width: 480px) {
+    .ssp-form-row {
+        flex-direction: column;
+        gap: 0;
     }
+}
+
+
+
+
+/* 1. Força TODOS os inputs da classe a seguirem o mesmo padrão rígido */
+.ssp-form-control {
+    box-sizing: border-box !important; /* Garante que padding não mude o tamanho final */
+    height: 48px !important;            /* Força os dois a terem exatamente a mesma altura */
+    border-radius: 6px !important;      /* Iguala o arredondamento de ambos */
+}
+
+/* 2. Remove os estilos estranhos que o navegador injeta ao preencher o e-mail automaticamente */
+.ssp-form-control:-webkit-autofill,
+.ssp-form-control:-webkit-autofill:hover,
+.ssp-form-control:-webkit-autofill:focus {
+    -webkit-text-fill-color: #2D3748 !important; /* Mantém a cor do texto original */
+    box-shadow: 0 0 0px 1000px #ffffff inset !important; /* Mantém o fundo branco */
+    transition: background-color 5000s ease-in-out 0s;
+    font-family: var(--e-global-typography-primary-font-family) !important;
 }

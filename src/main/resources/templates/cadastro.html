@@ -5,31 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Criar Conta</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
 </head>
-<body>
-
-<div class="ssp-logo-fixed-container">
-    <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
-</div>
+<body class="ssp-login-page">
 
 <main class="ssp-login-centered-container">
     <div class="ssp-form-card cadastro-container">
 
         <header class="ssp-header-page-login">
             <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
-            <h1 style="color: #F29301;" th:text="${tituloPagina}">Criar Conta</h1>
-            <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
+            <h1 th:text="${tituloPagina}">Criar Conta</h1>
+            <p class="ssp-register-subtitle">
                 Preencha os dados abaixo para se cadastrar.
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
-            <span class="ssp-error-message" style="display: block;" th:text="${erro}">Erro encontrado</span>
+        <div th:if="${erro}" class="ssp-alert-error">
+            <span class="ssp-error-message-box" th:text="${erro}">Erro encontrado</span>
         </div>
 
         <form id="kc-form-register" th:action="@{/usuario/cadastro}" th:object="${usuarioDTO}" method="POST">
@@ -39,13 +35,13 @@
                 <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
             </div>
 
-            <div class="ssp-form-row" style="display: flex; gap: 1rem;">
-                <div class="ssp-form-group" style="flex: 1;">
+            <div class="ssp-form-row">
+                <div class="ssp-form-group-flex">
                     <label th:for="dataNascimento">Data de Nascimento</label>
                     <input type="date" th:field="*{dataNascimento}" id="dataNascimento" class="ssp-form-control" required>
                 </div>
 
-                <div class="ssp-form-group" style="flex: 1;">
+                <div class="ssp-form-group-flex">
                     <label th:for="telefone">Telefone / WhatsApp</label>
                     <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
@@ -79,14 +75,14 @@
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>
                 </div>
-                <div id="password-error" class="ssp-error-message" style="color: #DC2626; font-size: 0.85rem; margin-top: 0.4rem; display: none; font-weight: 500;">Senha não compatível</div>
+                <div id="password-error" class="ssp-error-message-box static-error">Senha não compatível</div>
             </div>
 
-            <button type="submit" class="ssp-btn-submit" style="margin-top: 1rem;">Finalizar Cadastro</button>
+            <button type="submit" class="ssp-btn-submit submit-cadastro">Finalizar Cadastro</button>
 
         </form>
 
-        <div class="ssp-register-footer" style="text-align: center; margin-top: 1.5rem;">
+        <div class="ssp-register-footer">
             Já tem uma conta? <a th:href="@{/usuario/login}">Faça login aqui</a>
         </div>
 
