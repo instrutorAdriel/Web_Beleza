@@ -9,14 +9,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
+    @GetMapping("/")
+    public String exibirHome(Model model) {
+        model.addAttribute("tituloPagina", "Home - Portal Senac");
+        return "home";
+    }
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -41,16 +46,7 @@ public class UsuarioController {
             return "login";
         }
 
-        // Sucesso! Redireciona para a rota da Home interna do Portal
-        return "redirect:/usuario/home";
-    }
-
-    /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
-    @GetMapping("/home")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        // Retorna o arquivo 'home.html' em src/main/resources/templates/
-        return "home";
+        return "redirect:/painel"; // veja observação abaixo sobre essa linha
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
@@ -72,7 +68,7 @@ public class UsuarioController {
             return "cadastro";
         }
 
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 
     /* ─── RECUPERAR SENHA ─────────────────────────────────────────────────── */
@@ -85,7 +81,7 @@ public class UsuarioController {
 
     @PostMapping("/recuperar-senha")
     public String processarRecuperarSenha(@ModelAttribute UsuarioDTO form, Model model) {
-        return "redirect:/usuario/codigo";
+        return "redirect:/codigo";
     }
 
     /* ─── CÓDIGO DE VERIFICAÇÃO ───────────────────────────────────────────── */
@@ -99,7 +95,7 @@ public class UsuarioController {
     @PostMapping("/verificar-codigo")
     public String processarCodigo(@ModelAttribute UsuarioDTO form, Model model) {
         if ("123456".equals(form.getCodigoVerificacao())) {
-            return "redirect:/usuario/altera-senha";
+            return "redirect:/alterar-senha";
         }
         model.addAttribute("erro", "Código de verificação incorreto ou expirado.");
         model.addAttribute("tituloPagina", "Verificar Código");
@@ -123,6 +119,6 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Alterar Senha");
             return "altera-senha";
         }
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 }

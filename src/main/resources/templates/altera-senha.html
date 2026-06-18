@@ -19,7 +19,7 @@
     <div class="ssp-form-card">
 
         <header class="ssp-header-page-login">
-            <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
+            <a class="ssp-login-button-back" th:href="@{/login}">&larr; Voltar para o Login</a>
             <h1 th:text="${tituloPagina}">Alterar Senha</h1>
             <p class="ssp-register-footer">
                 Digite e confirme sua nova senha de acesso abaixo.
@@ -30,7 +30,7 @@
             <span class="ssp-error-message" th:text="${erro}">Erro ao atualizar a senha.</span>
         </div>
 
-        <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha}" th:object="${usuarioDTO}" method="POST">
+        <form id="form-alterar-senha" th:action="@{/alterar-senha}" th:object="${usuarioDTO}" method="POST">
 
             <div class="ssp-form-group">
                 <label th:for="senha">Nova Senha</label>
