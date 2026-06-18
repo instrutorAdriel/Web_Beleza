@@ -3,10 +3,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializa todos os módulos da página
+    // Inicializa todos os módulos da página de forma organizada
     inicializarCarrossel();
     inicializarFiltroCursos();
     inicializarFormularios();
+    inicializarHeroBanner(); // <-- Ativação do módulo do Banner integrada aqui
 });
 
 /**
@@ -100,7 +101,7 @@ function inicializarFormularios() {
             const unidadeSelect = selectUnidade.options[selectUnidade.selectedIndex].text;
 
             // Busca o título do curso que está no topo do modal corrente
-            const painelModal = form.closest('.modal-painel');
+            const painelModal = form.closest('.modal-panel');
             const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Curso Selecionado";
 
             // Altera dinamicamente o texto da tela de confirmação do ID #sucesso
@@ -117,4 +118,54 @@ function inicializarFormularios() {
             form.reset();
         });
     });
+}
+
+/**
+ * MODULE: HERO BANNER (ESTILO DISNEY+) - VERSÃO ULTRA ROBUSTA
+ * Gerencia a transição das imagens de fundo sem quebrar o posicionamento do texto fixo
+ */
+function inicializarHeroBanner() {
+    const slider = document.getElementById('heroSlider');
+    const btnPrev = document.getElementById('heroBtnPrev');
+    const btnNext = document.getElementById('heroBtnNext');
+
+    // Valida se a estrutura do banner realmente existe na página corrente
+    if (!slider || !btnPrev || !btnNext) return;
+
+    let slideAtual = 0;
+    const totalSlides = slider.children.length;
+
+    // Calcula milimetricamente a largura atual do banner e executa o scroll suave
+    function atualizarPosicao() {
+        const larguraItem = slider.getBoundingClientRect().width;
+        slider.scrollTo({
+            left: larguraItem * slideAtual,
+            behavior: 'smooth'
+        });
+    }
+
+    // Evento para avançar slide
+    btnNext.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (slideAtual < totalSlides - 1) {
+            slideAtual++;
+        } else {
+            slideAtual = 0; // Loop infinito: volta para o primeiro
+        }
+        atualizarPosicao();
+    });
+
+    // Evento para voltar slide
+    btnPrev.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (slideAtual > 0) {
+            slideAtual--;
+        } else {
+            slideAtual = totalSlides - 1; // Loop infinito: vai para o último
+        }
+        atualizarPosicao();
+    });
+
+    // Recalcula o tamanho se o usuário redimensionar o navegador (responsividade)
+    window.addEventListener('resize', atualizarPosicao);
 }

@@ -31,16 +31,35 @@
 </header>
 
 <section class="hero-banner">
-    <div class="hero-conteudo">
-        <span class="badge-hero">Inscrições Abertas</span>
-        <h1>Construa seu futuro profissional no Senac</h1>
-        <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
-        <div class="hero-botoes">
-            <a href="#cursos" class="btn-principal">Ver Cursos</a>
-            <a href="#agendamentos" class="btn-secundario">Agendar Serviço</a>
-        </div>
+    <div class="slider" id="heroSlider">
+        <div class="slide" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9) 20%, rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80');"></div>
+        <div class="slide" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9) 20%, rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80');"></div>
+        <div class="slide" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9) 20%, rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80');"></div>
     </div>
+
+    <div class="hero-conteudo">
+
+    </div>
+
+    <button class="arrow prev" id="heroBtnPrev">&#10094;</button>
+    <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
+
+<script>
+    // Nome corrigido para sincronizar perfeitamente com os botões acima
+    function avancarOuVoltarSlide(direction) {
+        const slider = document.getElementById('heroSlider');
+        const slideWidth = slider.clientWidth;
+
+        if (direction === 1 && (slider.scrollLeft + slideWidth >= slider.scrollWidth - 10)) {
+            slider.scrollTo({ left: 0, behavior: 'smooth' });
+        } else if (direction === -1 && slider.scrollLeft <= 10) {
+            slider.scrollTo({ left: slider.scrollWidth, behavior: 'smooth' });
+        } else {
+            slider.scrollBy({ left: slideWidth * direction, behavior: 'smooth' });
+        }
+    }
+</script>
 
 <section id="sobre" class="sobre-section">
     <div class="sobre-container">
@@ -353,6 +372,5 @@
         <p>&copy; 2026 Senac Brasil. Todos os direitos reservados.</p>
     </div>
 </footer>
-
 </body>
 </html>
