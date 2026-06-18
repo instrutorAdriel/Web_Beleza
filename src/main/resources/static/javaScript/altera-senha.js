@@ -1,22 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Seleção dos elementos do formulário
+    // Seleção dos elementos do formulário e de validação
     const form = document.getElementById("form-alterar-senha");
     const senhaInput = document.getElementById("senha");
     const confirmaSenhaInput = document.getElementById("confirmacaoSenha");
     const errorWarning = document.getElementById("password-error");
 
+    // Seleção dos botões de alternar senha e de seus respectivos ícones (FontAwesome)
     const btnToggle1 = document.getElementById("btnToggle1");
     const btnToggle2 = document.getElementById("btnToggle2");
-
-
-    const svgEyeOpen = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
-    const svgEyeClosed = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+    const eyeIcon1 = document.getElementById("eyeIcon1");
+    const eyeIcon2 = document.getElementById("eyeIcon2");
 
     /**
      * Função que valida se os dois campos de senha são idênticos
      */
     function verificarSenhas() {
-        // Só valida se o usuário já tiver digitado algo no campo de confirmação
         if (confirmaSenhaInput.value === "") {
             errorWarning.style.display = "none";
             senhaInput.classList.remove("input-error");
@@ -38,32 +36,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /**
-     * Função para alternar a visibilidade do campo de senha de forma genérica
+     * Função baseada na tela de Cadastro para alternar ícone do FontAwesome e visibilidade
      */
-    function togglePassword(inputElement, buttonElement) {
+    function togglePasswordVisibility(inputElement, iconElement) {
         if (inputElement.type === "password") {
             inputElement.type = "text";
-            buttonElement.innerHTML = svgEyeClosed;
+            iconElement.classList.replace("fa-eye-slash", "fa-eye");
         } else {
             inputElement.type = "password";
-            buttonElement.innerHTML = svgEyeOpen;
+            iconElement.classList.replace("fa-eye", "fa-eye-slash");
         }
     }
 
-    // Ouvintes de evento (Listeners) para validação em tempo real
+    // Ouvintes de evento para validação em tempo real das senhas
     senhaInput.addEventListener("input", verificarSenhas);
     confirmaSenhaInput.addEventListener("input", verificarSenhas);
 
-    // Ouvintes de evento para os botões de mostrar/ocultar senha
-    if (btnToggle1) {
+    // Ouvintes de evento para os botões usando a nova lógica do ícone
+    if (btnToggle1 && eyeIcon1) {
         btnToggle1.addEventListener("click", function () {
-            togglePassword(senhaInput, btnToggle1);
+            togglePasswordVisibility(senhaInput, eyeIcon1);
         });
     }
 
-    if (btnToggle2) {
+    if (btnToggle2 && eyeIcon2) {
         btnToggle2.addEventListener("click", function () {
-            togglePassword(confirmaSenhaInput, btnToggle2);
+            togglePasswordVisibility(confirmaSenhaInput, eyeIcon2);
         });
     }
 
