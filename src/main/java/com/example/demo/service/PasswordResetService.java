@@ -6,6 +6,7 @@ import com.example.demo.respository.PasswordResetRepository;
 import com.example.demo.respository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
@@ -36,7 +37,11 @@ public class PasswordResetService {
         return null;
     }
 
-    public String validarToken(String token_uuid, Usuario usuario){
+    public String verificarToken(String token_uuid){
+        if (!passwordResetRepository.existsByToken(token_uuid)){
+            return "Token inválido";
+        }
+
         return null;
     }
 }

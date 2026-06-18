@@ -31,7 +31,11 @@
         </div>
 
         <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha}" th:object="${usuarioDTO}" method="POST">
-
+            <div style="" hidden>
+                <span th:text="${token}"></span>
+                <label for="token">Token:</label>
+                <input id="token" name="token" th:field="*{token}" th:value="${token}" hidden>
+            </div>
             <div class="ssp-form-group">
                 <label th:for="senha">Nova Senha</label>
                 <div class="ssp-password-wrapper">

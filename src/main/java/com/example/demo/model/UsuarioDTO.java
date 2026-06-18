@@ -9,16 +9,7 @@ public class UsuarioDTO {
     private String email;
     private String senha;
     private String confirmacaoSenha;
-
-    public void setCodigoVerificacao(String codigoVerificacao) {
-        this.codigoVerificacao = codigoVerificacao;
-    }
-
-    public String getCodigoVerificacao() {
-        return codigoVerificacao;
-    }
-
-    private String codigoVerificacao;
+    protected String token;
 
     public void setConfirmacaoSenha(String confirmacaoSenha) {
         this.confirmacaoSenha = confirmacaoSenha;
@@ -52,13 +43,6 @@ public class UsuarioDTO {
         this.senha = senha;
     }
 
-    public void setConfirmaSenha(String confirmaSenha) {
-        this.confirmaSenha = confirmaSenha;
-    }
-
-    private String confirmaSenha;
-
-
     public String getNomeCompleto() {
         return nomeCompleto;
     }
@@ -83,8 +67,7 @@ public class UsuarioDTO {
         return senha;
     }
 
-    public String getConfirmaSenha() {
-        return confirmaSenha;
+    public String getToken() {
+        return token;
     }
-
 }

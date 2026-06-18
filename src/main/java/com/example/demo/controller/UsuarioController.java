@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
+import com.example.demo.respository.PasswordResetRepository;
 import com.example.demo.respository.UsuarioRepository;
 import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UsuarioService;
@@ -22,8 +23,11 @@ public class UsuarioController {
 
     @Autowired
     private PasswordResetService passwordResetService;
+
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordResetRepository passwordResetRepository;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -120,9 +124,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/alterar-senha/{token}")
-    public String exibirAlterarSenha(@RequestParam String token_uuid){
+    public String exibirAlterarSenha(@PathVariable String token, UsuarioDTO form, Model model){
+        if (passwordResetService.verificarToken(token) != null){
+            return "redirect:/indefinido";
+        }
 
+        model.addAttribute("token", token);
+        model.addAttribute("usuarioDTO", form);
 
-        return "altera-senha";
+        return "alterar-senha";
     }
 }

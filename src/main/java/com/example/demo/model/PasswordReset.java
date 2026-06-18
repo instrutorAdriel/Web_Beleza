@@ -19,7 +19,7 @@ public class PasswordReset {
     private Long id_password_reset_token;
 
     @Column(nullable = false, length = 255)
-    private String token_uuid;
+    private String token;
 
     @Column(nullable = false)
     private LocalDateTime data_expiracao;
@@ -31,7 +31,7 @@ public class PasswordReset {
     protected PasswordReset() {}
 
     public PasswordReset (String token, Usuario usuario){
-        this.token_uuid = token;
+        this.token = token;
         this.usuario = usuario;
         this.data_expiracao = LocalDateTime.now().plusMinutes(30);
     }
@@ -42,8 +42,8 @@ public class PasswordReset {
         return id_password_reset_token;
     }
 
-    public String getToken_uuid() {
-        return token_uuid;
+    public String getToken() {
+        return token;
     }
 
     public LocalDateTime getData_expiracao() {
