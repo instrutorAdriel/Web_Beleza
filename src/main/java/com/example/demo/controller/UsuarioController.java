@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
 import com.example.demo.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model){
+    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model,  HttpSession session){
         System.out.println("=== TENTATIVA DE LOGIN ===");
         System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
         System.out.println("Senha vinda do HTML: [ PROTEGIDO ]");
@@ -42,14 +43,22 @@ public class UsuarioController {
         }
 
         // Sucesso! Redireciona para a rota da Home interna do Portal
+        session.setAttribute("usuarioLogado", usuario);
+        return "redirect:/usuario/home";
+
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // limpa toda a sessão
         return "redirect:/usuario/home";
     }
 
     /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
     @GetMapping("/home")
-    public String exibirHome(Model model) {
+    public String exibirHome(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        model.addAttribute("usuarioLogado", usuario);
         model.addAttribute("tituloPagina", "Home - Portal Senac");
-        // Retorna o arquivo 'home.html' em src/main/resources/templates/
         return "home";
     }
 

@@ -21,6 +21,18 @@
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
             <a href="#depoimento" class="nav-link">Depoimentos</a>
         </nav>
+        <!-- Não logado -->
+        <a th:if="${usuarioLogado == null}"
+           th:href="@{/usuario/login}" class="btn-entrar">
+            <i class="fa-solid fa-right-to-bracket"></i> Entrar
+        </a>
+
+        <!-- Logado -->
+        <div th:if="${usuarioLogado != null}" class="usuario-logado">
+            <i class="fa-solid fa-circle-user"></i>
+            <span th:text="${usuarioLogado.nomeCompleto}">Usuário</span>
+            <a href="#" class="btn-sair">Sair</a>
+        </div>
     </div>
 </header>
 

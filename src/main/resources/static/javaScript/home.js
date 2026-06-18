@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarFiltroCursos();
     inicializarFormularios();
     inicializarNavAtiva();
+    inicializarLogout();
 });
 
 /**
@@ -164,6 +165,53 @@ function inicializarNavAtiva() {
             if (link.getAttribute('href') === `#${secaoAtual}`) {
                 link.classList.add('ativo');
             }
+
         });
+
+    });
+
+}
+/**
+ * MODULE: CONFIRMAÇÃO DE LOGOUT
+ * Exibe um popover personalizado perguntando se o usuário tem certeza
+ * que deseja sair antes de redirecionar para o logout
+ */
+function inicializarLogout() { // ← agora está no escopo global
+    const btnSair = document.querySelector('.btn-sair');
+
+    if (!btnSair) return;
+
+    btnSair.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const popover = document.createElement('div');
+        popover.className = 'popover-logout';
+        popover.innerHTML = `
+            <p>Tem certeza que deseja sair?</p>
+            <div class="popover-botoes">
+                <button class="popover-btn-sim">Sim, sair</button>
+                <button class="popover-btn-nao">Cancelar</button>
+            </div>
+        `;
+
+        document.querySelector('.popover-logout')?.remove();
+        document.body.appendChild(popover);
+
+        popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
+            window.location.href = '/usuario/logout';
+        });
+
+        popover.querySelector('.popover-btn-nao').addEventListener('click', () => {
+            popover.remove();
+        });
+
+        setTimeout(() => {
+            document.addEventListener('click', function fechar(e) {
+                if (!popover.contains(e.target) && e.target !== btnSair) {
+                    popover.remove();
+                    document.removeEventListener('click', fechar);
+                }
+            });
+        }, 100);
     });
 }
