@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroCursos();
     inicializarFormularios();
+    inicializarNavAtiva();
 });
 
 /**
@@ -115,6 +116,54 @@ function inicializarFormularios() {
 
             // Limpa os campos do formulário
             form.reset();
+
+        });
+
+    });
+
+}
+/**
+ * MODULE: NAVEGAÇÃO ATIVA POR SCROLL
+ * Destaca o link do nav em laranja conforme a seção visível na tela.
+ */
+function inicializarNavAtiva() {
+    const links = document.querySelectorAll('.nav-link');
+    const secoes = document.querySelectorAll('section[id]');
+
+    // Clique no menu
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const destino = document.querySelector(this.getAttribute('href'));
+
+            if (destino) {
+                destino.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Atualiza menu conforme scroll
+    window.addEventListener('scroll', () => {
+        let secaoAtual = '';
+
+        secoes.forEach(secao => {
+            const topo = secao.offsetTop - 120;
+            const altura = secao.offsetHeight;
+
+            if (window.scrollY >= topo && window.scrollY < topo + altura) {
+                secaoAtual = secao.getAttribute('id');
+            }
+        });
+
+        links.forEach(link => {
+            link.classList.remove('ativo');
+
+            if (link.getAttribute('href') === `#${secaoAtual}`) {
+                link.classList.add('ativo');
+            }
         });
     });
 }

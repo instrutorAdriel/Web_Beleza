@@ -67,7 +67,6 @@ body {
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border-bottom: 4px solid var(--senac-laranja);
 }
 
 .header-container {
@@ -112,8 +111,15 @@ body {
     padding: 5px 0;
 }
 
-.nav-menu a:hover, .destaque-menu {
-    color: var(--senac-laranja) !important;
+
+.nav-menu a:hover {
+    color: #ffffff;}
+
+/* Link ativo - quando está na seção selecionada */
+.nav-menu a.ativo {
+    color: var(--senac-laranja);
+    border-bottom: 2px solid var(--senac-laranja);
+    padding-bottom: 3px;
 }
 
 /* Campo de busca adaptado para o fundo preto */
@@ -151,10 +157,12 @@ body {
     font-weight: 700;
     transition: var(--transicao);
 }
-.header-busca button:hover {
-    background-color: var(--senac-laranja-hover);
+#hero:target        ~ * .nav-link[href="#hero"],
+#agendamentos:target ~ * .nav-link[href="#agendamentos"],
+#depoimento:target  ~ * .nav-link[href="#depoimento"] {
+    color: var(--senac-laranja);
+    border-bottom: 2px solid var(--senac-laranja);
 }
-
 /* ==========================================================================
    HERO BANNER (PRETO COM DETALHES LARANJA)
    ========================================================================== */
