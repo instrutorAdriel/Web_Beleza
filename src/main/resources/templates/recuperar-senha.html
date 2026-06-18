@@ -26,6 +26,9 @@
     <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
       <span class="ssp-error-message" style="display: block;" th:text="${erro}">E-mail não localizado.</span>
     </div>
+    <div th:if="${mess}" class="ssp-form-control" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
+      <span class="ssp-success-message" style="display: block;" th:text="${mess}"></span>
+    </div>
 
     <form id="kc-form-recovery" th:action="@{/usuario/recuperar-senha}" th:object="${usuarioDTO}" method="POST">
       <div class="ssp-form-group">

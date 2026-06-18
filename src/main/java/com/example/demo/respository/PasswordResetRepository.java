@@ -4,4 +4,5 @@ import com.example.demo.model.PasswordReset;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PasswordResetRepository extends JpaRepository<PasswordReset, Long> {
+    Boolean existsByToken_uuid(String token_uuid);
 }

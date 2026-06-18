@@ -2,11 +2,16 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
+import com.example.demo.respository.UsuarioRepository;
+import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UsuarioService;
+import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/usuario")
@@ -14,6 +19,11 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -78,23 +88,41 @@ public class UsuarioController {
     @GetMapping("/recuperar-senha")
     public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
         model.addAttribute("tituloPagina", "Alterar Senha");
-        model.addAttribute("");
+        model.addAttribute("usuarioDTO", form);
         return "recuperar-senha";
     }
 
     @PostMapping("/recuperar-senha")
     public String processarEmail(@ModelAttribute UsuarioDTO form, Model model){
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
-        return "altera-senha";
+        if (form.getEmail().isBlank()){
+            model.addAttribute("erro", "E-mail em branco");
+            return "recuperar-senha";
+        } else if (!Validador.isEmailValido(form.getEmail())){
+            model.addAttribute("erro", "E-mail inválido");
+            return "recuperar-senha";
+        } else if (res.isEmpty()){
+            model.addAttribute("erro", "E-mail inválido");
+            return "recuperar-senha";
+        }
+
+        Usuario usuario = res.get();
+
+        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null){
+            model.addAttribute("mess", "Foi enviado um e-mail, verifique a caixa de mensagens ou spam.");
+        } else {
+            model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
+            return "recuperar-senha";
+        }
+
+        return "recuperar-senha";
     }
 
-    @GetMapping("/validar-token/{token}")
-    public String validarToken(@PathVariable String token_uuid){
-
-    }
-
-    @GetMapping("/alterar-senha")
+    @GetMapping("/alterar-senha/{token}")
     public String exibirAlterarSenha(@RequestParam String token_uuid){
+
+
         return "altera-senha";
     }
 }

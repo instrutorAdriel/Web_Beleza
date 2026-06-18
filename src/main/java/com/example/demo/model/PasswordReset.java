@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class PasswordReset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id_password_reset_token;
 
     @Column(nullable = false, length = 255)
     private String token_uuid;
@@ -25,20 +25,21 @@ public class PasswordReset {
     private LocalDateTime data_expiracao;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id")
     private Usuario usuario;
 
     protected PasswordReset() {}
 
-    public PasswordReset (String token){
+    public PasswordReset (String token, Usuario usuario){
         this.token_uuid = token;
+        this.usuario = usuario;
         this.data_expiracao = LocalDateTime.now().plusMinutes(30);
     }
 
     // Getters e Setters
 
-    public Long getId() {
-        return id;
+    public Long getId_password_reset_token() {
+        return id_password_reset_token;
     }
 
     public String getToken_uuid() {
