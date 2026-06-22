@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
-import com.example.demo.respository.PasswordResetRepository;
 import com.example.demo.respository.UsuarioRepository;
 import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UsuarioService;
@@ -10,12 +9,13 @@ import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
@@ -26,6 +26,13 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
+    @GetMapping("/")
+    public String exibirHome(Model model) {
+        model.addAttribute("tituloPagina", "Home - Portal Senac");
+        return "home";
+    }
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -50,16 +57,7 @@ public class UsuarioController {
             return "login";
         }
 
-        // Sucesso! Redireciona para a rota da Home interna do Portal
-        return "redirect:/usuario/home";
-    }
-
-    /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
-    @GetMapping("/home")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        // Retorna o arquivo 'home.html' em src/main/resources/templates/
-        return "home";
+        return "redirect:/painel"; // veja observação abaixo sobre essa linha
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
@@ -81,7 +79,7 @@ public class UsuarioController {
             return "cadastro";
         }
 
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 
     /*
