@@ -522,6 +522,13 @@ body {
     justify-content: center;
     font-size: 52px;
     color: white;
+    background: var(--cor-principal, #2b4c7e);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    height: 150px;">
 }
 
 .img-placeholder-curso.TI { background: linear-gradient(135deg, #1e3c72, #2a5298); }
