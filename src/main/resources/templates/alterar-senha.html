@@ -27,15 +27,10 @@
         </header>
 
         <div th:if="${erro}" class="ssp-form-control input-error">
-            <span class="ssp-error-message" th:text="${erro}">Erro ao atualizar a senha.</span>
+            <span class="ssp-error-message" th:text="${erro}"></span>
         </div>
 
-        <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha}" th:object="${usuarioDTO}" method="POST">
-            <div style="" hidden>
-                <span th:text="${token}"></span>
-                <label for="token">Token:</label>
-                <input id="token" name="token" th:field="*{token}" th:value="${token}" hidden>
-            </div>
+        <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha/{token}(token=${token})}" th:object="${usuarioDTO}" method="POST">
             <div class="ssp-form-group">
                 <label th:for="senha">Nova Senha</label>
                 <div class="ssp-password-wrapper">

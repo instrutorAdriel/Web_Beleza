@@ -26,8 +26,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    @Autowired
-    private PasswordResetRepository passwordResetRepository;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -124,7 +122,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/alterar-senha/{token}")
-    public String exibirAlterarSenha(@PathVariable String token, UsuarioDTO form, Model model){
+    public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model){
         if (passwordResetService.verificarToken(token) != null){
             return "redirect:/indefinido";
         }
@@ -136,9 +134,25 @@ public class UsuarioController {
     }
 
     @PostMapping("/alterar-senha/{token}")
-    public String processarAlterarSenha(@PathVariable String token, UsuarioDTO form){
-        // Vericação se o token do alterar senha é de fato valido
+    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute  UsuarioDTO form, Model model){
+        // Vericação se o token do alterar senha é de fato valido antes de alterar a senha
+        if (passwordResetService.verificarToken(token) != null){
+            // Exibir uma mensagem na página dizendo que ocorreu um erro, sem necessidade de retornar para uma página
+            // de erro
 
+            return "redirect:/indefinido";
+        }
+
+        form.setEmail(passwordResetService.retornarUsuario(token).getEmail());
+        String res = usuarioService.alterarSenha(form);
+
+        if (res != null){
+            model.addAttribute("erro", res);
+            model.addAttribute("usuarioDTO", form);
+            return "alterar-senha";
+        }
+
+        model.addAttribute("erro", "Senha alterada com sucesso!");
 
         return "alterar-senha";
     }

@@ -47,4 +47,8 @@ public class PasswordResetService {
 
         return null;
     }
+
+    public Usuario retornarUsuario(String token_uuid){
+        return passwordResetRepository.findByToken(token_uuid).get().getUsuario();
+    }
 }
