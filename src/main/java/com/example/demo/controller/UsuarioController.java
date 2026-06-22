@@ -134,4 +134,12 @@ public class UsuarioController {
 
         return "alterar-senha";
     }
+
+    @PostMapping("/alterar-senha/{token}")
+    public String processarAlterarSenha(@PathVariable String token, UsuarioDTO form){
+        // Vericação se o token do alterar senha é de fato valido
+
+
+        return "alterar-senha";
+    }
 }
