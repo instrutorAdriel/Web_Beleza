@@ -7,6 +7,8 @@ import com.example.demo.respository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,9 +42,16 @@ public class PasswordResetService {
     }
 
     public String verificarToken(String token_uuid){
-        if (!passwordResetRepository.existsByToken(token_uuid)){
-            IO.println("Token Inválido: " + token_uuid);
+        Optional<PasswordReset> resetOpt = passwordResetRepository.findByToken(token_uuid);
+
+        if (resetOpt.isEmpty()){
             return "Token inválido";
+        }
+
+        PasswordReset psr = resetOpt.get();
+
+        if (LocalDateTime.now().isAfter(psr.getData_expiracao())){
+            return "Token expirado";
         }
 
         return null;
