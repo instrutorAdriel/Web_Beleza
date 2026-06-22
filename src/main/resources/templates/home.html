@@ -45,21 +45,7 @@
     <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
 
-<script>
-    // Nome corrigido para sincronizar perfeitamente com os botões acima
-    function avancarOuVoltarSlide(direction) {
-        const slider = document.getElementById('heroSlider');
-        const slideWidth = slider.clientWidth;
 
-        if (direction === 1 && (slider.scrollLeft + slideWidth >= slider.scrollWidth - 10)) {
-            slider.scrollTo({ left: 0, behavior: 'smooth' });
-        } else if (direction === -1 && slider.scrollLeft <= 10) {
-            slider.scrollTo({ left: slider.scrollWidth, behavior: 'smooth' });
-        } else {
-            slider.scrollBy({ left: slideWidth * direction, behavior: 'smooth' });
-        }
-    }
-</script>
 
 <section id="sobre" class="sobre-section">
     <div class="sobre-container">
