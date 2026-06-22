@@ -30,7 +30,7 @@
       <span class="ssp-success-message" style="display: block;" th:text="${mess}"></span>
     </div>
 
-    <form id="kc-form-recovery" th:action="@{/usuario/recuperar-senha}" th:object="${usuarioDTO}" method="POST">
+    <form id="kc-form-recovery" th:action="@{/recuperar-senha}" th:object="${usuarioDTO}" method="POST">
       <div class="ssp-form-group">
         <label th:for="email">E-mail cadastrado</label>
         <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required>

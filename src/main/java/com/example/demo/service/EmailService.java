@@ -11,7 +11,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void enviarEmailDeRecuperacao(String destinatario, String token){
-        String link = "http://localhost:8080/usuario/alterar-senha/" + token;
+        String link = "http://localhost:8080/alterar-senha/" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(destinatario);
