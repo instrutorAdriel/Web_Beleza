@@ -16,12 +16,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
-    @GetMapping("/")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        return "home";
-    }
+
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/usuario/login")

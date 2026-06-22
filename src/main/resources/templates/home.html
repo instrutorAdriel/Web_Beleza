@@ -330,30 +330,33 @@
     </div>
 </div>
 
+<!-- RODAPÉ COM THYMELEAF -->
 <footer class="site-footer">
     <div class="footer-container">
         <div class="footer-bloco">
-            <h4>Sobre o Salão de beleza Senac</h4>
-            <p>O Salão de Beleza do SENAC-DF oferece serviços gratuitos à comunidade, proporcionando atendimento de qualidade, cuidado e bem-estar. Nosso compromisso é promover a autoestima e oferecer uma experiência acolhedora e profissional para todos.</p>
+            <h4 th:text="${footerTituloSobre}">Sobre o Salão de beleza Senac</h4>
+            <p th:text="${footerSobre}">O Salão de Beleza do SENAC-DF oferece serviços gratuitos à comunidade, proporcionando atendimento de qualidade, cuidado e bem-estar. Nosso compromisso é promover a autoestima e oferecer uma experiência acolhedora e profissional para todos.</p>
         </div>
         <div class="footer-bloco">
-            <h4>Contato rápido</h4>
+            <h4 th:text="${footerTituloContato}">Contato rápido</h4>
             <div class="redes-sociais">
-                <a href="https://api.whatsapp.com/send/?phone=556137719800&text&type=phone_number&app_absent=0"><i class="fa-brands fa-whatsapp"></i></a>
+                <a th:href="${footerWhatsappLink}"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
-            <p>Horário de funcionamento: segunda a sexta-feira | 8h às 19h</p>
+            <p th:text="${footerHorario}">Horário de funcionamento: segunda a sexta-feira | 8h às 19h</p>
         </div>
         <div class="footer-bloco">
-            <h4>Siga-nos</h4>
+            <h4 th:text="${footerTituloRedes}">Siga-nos</h4>
             <div class="redes-sociais">
-                <a href="https://www.facebook.com/SenacDistritoFederal/"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://www.instagram.com/senacdf/?hl=pt"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://br.linkedin.com/school/senacdf/"><i class="fa-brands fa-linkedin"></i></a>
+                <a th:href="${footerFacebookLink}"><i class="fa-brands fa-facebook"></i></a>
+                <a th:href="${footerInstagramLink}"><i class="fa-brands fa-instagram"></i></a>
+                <a th:href="${footerLinkedinLink}"><i class="fa-brands fa-linkedin"></i></a>
             </div>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2026 Senac Brasil. Todos os direitos reservados.</p>
+        <p th:text="'© ' + ${footerAno} + ' ' + ${footerEmpresa} + '. Todos os direitos reservados.'">
+            &copy; 2026 Senac Brasil. Todos os direitos reservados.
+        </p>
     </div>
 </footer>
 
