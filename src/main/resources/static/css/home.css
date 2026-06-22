@@ -280,7 +280,6 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
-
 .mini-card {
     background-color: var(--fundo-card);
     padding: 30px 20px;
@@ -304,7 +303,6 @@ body {
     color: var(--senac-laranja);
     margin-bottom: 15px;
 }
-
 
 /* ==========================================================================
    CARROSSEL DE AGENDAMENTOS
@@ -710,7 +708,7 @@ body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
+    gap: 200px;
 }
 .footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
 .footer-bloco h4 {
