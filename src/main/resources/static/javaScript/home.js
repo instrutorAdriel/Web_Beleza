@@ -37,39 +37,59 @@ function inicializarCarrossel() {
  * Corrige o display para manter o comportamento de flexbox do carrossel.
  */
 function inicializarFiltroBairros() {
+
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsServicos = document.querySelectorAll('.carrossel-track .card-curso-completo');
+    const cardsServicos = document.querySelectorAll('.card-curso-completo');
     const track = document.querySelector('.carrossel-track');
 
-    if (!abas || !cardsServicos) return;
-
     abas.forEach(aba => {
+
         aba.addEventListener('click', (e) => {
+
             e.preventDefault();
 
-            // Gerencia a classe visual nos botões de filtro
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
-            const bairroSelecionado = aba.getAttribute('data-bairro');
+            const unidadeSelecionada =
+                aba.getAttribute('data-unidade');
 
             cardsServicos.forEach(card => {
-                const cardBairro = card.getAttribute('data-bairro');
 
-                // CORREÇÃO: Mudado de 'block' para 'flex' para não quebrar a estrutura do carrossel horizontal
-                if (bairroSelecionado === 'todos' || cardBairro === bairroSelecionado) {
-                    card.style.setProperty('display', 'flex', 'important');
+                const unidadeCard =
+                    card.getAttribute('data-unidade');
+
+                if (
+                    unidadeSelecionada === 'todos' ||
+                    unidadeCard === unidadeSelecionada
+                ) {
+
+                    card.style.setProperty(
+                        'display',
+                        'flex',
+                        'important'
+                    );
+
                 } else {
-                    card.style.setProperty('display', 'none', 'important');
+
+                    card.style.setProperty(
+                        'display',
+                        'none',
+                        'important'
+                    );
+
                 }
+
             });
 
-            // RETORNA O CARROSSEL PARA O INÍCIO (Garante que os botões funcionem a partir do 1º card do filtro)
             if (track) {
                 track.scrollLeft = 0;
             }
+
         });
+
     });
+
 }
 
 /**

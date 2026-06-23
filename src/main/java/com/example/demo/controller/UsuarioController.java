@@ -16,12 +16,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
-    @GetMapping("/")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        return "home";
-    }
+    // O método exibirHome que usava @GetMapping("/") foi REMOVIDO daqui
+    // para não conflitar com a HomeController.
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -41,12 +37,12 @@ public class UsuarioController {
 
         if (usuario == null) {
             model.addAttribute("erro", "E-mail ou senha incorretos.");
-            model.addAttribute("usuarioDTO", form); // Preserva o e-mail na tela se errar
+            model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
 
-        return "redirect:/painel"; // veja observação abaixo sobre essa linha
+        return "redirect:/painel";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
