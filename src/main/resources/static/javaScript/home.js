@@ -1,5 +1,5 @@
 /**
- * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Bairro)
+ * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Unidade)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
- * Rola o carrossel de forma dinâmica baseando-se nos cards que estão visíveis.
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
@@ -19,13 +18,11 @@ function inicializarCarrossel() {
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
-    // Seta para a Esquerda
     setaEsquerda.addEventListener('click', (e) => {
         e.preventDefault();
         track.scrollBy({ left: -344, behavior: 'smooth' });
     });
 
-    // Seta para a Direita
     setaDireita.addEventListener('click', (e) => {
         e.preventDefault();
         track.scrollBy({ left: 344, behavior: 'smooth' });
@@ -33,63 +30,52 @@ function inicializarCarrossel() {
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR BAIRRO
- * Corrige o display para manter o comportamento de flexbox do carrossel.
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE
+ * Remove acentuações e normaliza os termos para garantir o funcionamento do filtro.
  */
 function inicializarFiltroBairros() {
-
     const abas = document.querySelectorAll('.aba-filtro');
     const cardsServicos = document.querySelectorAll('.card-curso-completo');
     const track = document.querySelector('.carrossel-track');
 
+    if (!abas || cardsServicos.length === 0) return;
+
+    // Função auxiliar para remover acentos e caracteres especiais
+    const normalizarTexto = (texto) => {
+        if (!texto) return '';
+        return texto
+            .trim()
+            .toLowerCase()
+            .normalize('NFD') // Divide os caracteres dos seus acentos
+            .replace(/[\u0300-\u036f]/g, ''); // Remove os acentos isolados
+    };
+
     abas.forEach(aba => {
-
         aba.addEventListener('click', (e) => {
-
             e.preventDefault();
 
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
-            const unidadeSelecionada =
-                aba.getAttribute('data-unidade');
+            // Normaliza o termo vindo do data-unidade do botão clicado
+            const unidadeSelecionada = normalizarTexto(aba.getAttribute('data-unidade'));
 
             cardsServicos.forEach(card => {
+                // Normaliza o termo vindo do data-unidade gerado pelo Thymeleaf
+                const unidadeCard = normalizarTexto(card.getAttribute('data-unidade'));
 
-                const unidadeCard =
-                    card.getAttribute('data-unidade');
-
-                if (
-                    unidadeSelecionada === 'todos' ||
-                    unidadeCard === unidadeSelecionada
-                ) {
-
-                    card.style.setProperty(
-                        'display',
-                        'flex',
-                        'important'
-                    );
-
+                if (unidadeSelecionada === 'todos' || unidadeCard === unidadeSelecionada) {
+                    card.style.setProperty('display', 'flex', 'important');
                 } else {
-
-                    card.style.setProperty(
-                        'display',
-                        'none',
-                        'important'
-                    );
-
+                    card.style.setProperty('display', 'none', 'important');
                 }
-
             });
 
             if (track) {
                 track.scrollLeft = 0;
             }
-
         });
-
     });
-
 }
 
 /**
