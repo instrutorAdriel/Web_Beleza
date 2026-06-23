@@ -110,7 +110,7 @@ public class UsuarioController {
         Usuario usuario = res.get();
 
         if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null){
-            model.addAttribute("mess", "Foi enviado um e-mail, verifique a caixa de mensagens ou spam.");
+            model.addAttribute("succ", "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
         } else {
             model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
             return "recuperar-senha";
@@ -150,7 +150,7 @@ public class UsuarioController {
             return "alterar-senha";
         }
 
-        model.addAttribute("erro", "Senha alterada com sucesso!");
+        model.addAttribute("succ", "Senha alterada com sucesso!");
 
         return "alterar-senha";
     }

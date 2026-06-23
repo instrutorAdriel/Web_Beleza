@@ -36,7 +36,7 @@ public class PasswordResetService {
         // Criar o código de enviar o email com o token
         emailService.enviarEmailDeRecuperacao(usuario.getEmail(), tokenUUID);
 
-        IO.println("localhost:8080/usuario/alterar-senha/" + tokenUUID);
+        IO.println("localhost:8080/alterar-senha/" + tokenUUID);
 
         return null;
     }
