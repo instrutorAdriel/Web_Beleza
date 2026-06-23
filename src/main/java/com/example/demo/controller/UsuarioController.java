@@ -44,22 +44,14 @@ public class UsuarioController {
 
         // Sucesso! Redireciona para a rota da Home interna do Portal
         session.setAttribute("usuarioLogado", usuario);
-        return "redirect:/usuario/home";
+        return "redirect:/home";
 
     }
+    // ─── LOGOUT ───────────────────────────────────────────────────
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // limpa toda a sessão
-        return "redirect:/usuario/home";
-    }
-
-    /* ─── TELA HOME DO PORTAL SENAC ───────────────────────────────────────── */
-    @GetMapping("/home")
-    public String exibirHome(HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
-        model.addAttribute("usuarioLogado", usuario);
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        return "home";
+        session.invalidate();
+        return "redirect:/usuario/login";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
