@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
-    const setaEsquerda = document.querySelector('.seta-esquerda');
-    const setaDireita = document.querySelector('.seta-direita');
+    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
+    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
@@ -120,6 +120,28 @@ function inicializarFormularios() {
 
             window.location.hash = 'sucesso';
             form.reset();
+
+        });
+
+    });
+
+}
+/**
+ * MODULE: CARROSSEL DE DEPOIMENTOS
+ */
+function inicializarCarrosselDepoimentos() {
+    const track = document.querySelector('.carrossel-depoimentos');
+    const setas = document.querySelectorAll('.depoimento-seta');
+
+    if (!track || setas.length === 0) return;
+
+    setas.forEach(seta => {
+        seta.addEventListener('click', (e) => {
+            e.preventDefault();
+            const primeiroCard = track.querySelector('.card-depoimento');
+            if (!primeiroCard) return;
+            const largura = primeiroCard.offsetWidth + 24;
+            track.scrollLeft += seta.classList.contains('seta-esquerda') ? -largura : largura;
         });
     });
 }
