@@ -1,0 +1,6 @@
+.form-avaliacao { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.campo-form { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.campo-form label { font-weight: 600; font-size: 0.9rem; }
+.campo-form input, .campo-form textarea {
+    padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit;
+}

@@ -1,0 +1,28 @@
+<div id="modal-avaliacao" class="modal-plataforma">
+    <div class="modal-painel">
+        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+        <span class="tag-modal">Avaliação de Modelo</span>
+        <h2>Avaliar Resultado do Modelo</h2>
+        <link rel="stylesheet" th:href="@{/css/avaliacoes.css}">
+
+        <form th:action="@{/avaliacoes}" method="post" enctype="multipart/form-data" class="form-avaliacao">
+
+            <div class="campo-form">
+                <label for="imagem">Imagem do Resultado *</label>
+                <input type="file" id="imagem" name="imagem" accept="image/*" required>
+            </div>
+
+            <div class="campo-form">
+                <label for="descricao">Descrição da Avaliação *</label>
+                <textarea id="descricao" name="descricao" rows="4" placeholder="Descreva o resultado obtido..." required></textarea>
+            </div>
+
+            <div class="campo-form">
+                <label for="nomeModelo">Nome do Modelo (opcional)</label>
+                <input type="text" id="nomeModelo" name="nomeModelo" placeholder="Ex: Modelo XYZ v1.0">
+            </div>
+
+            <button type="submit" class="btn-confirmar">Enviar Avaliação</button>
+        </form>
+    </div>
+</div>
