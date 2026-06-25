@@ -1,40 +1,36 @@
 /**
- * SENAC DF - Inteligência Dinâmica do Portal (Cursos e Agendamentos)
+ * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Bairro)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
-    inicializarFiltroCursos();
+    inicializarFiltroBairros();
     inicializarFormularios();
     inicializarCarrosselDepoimentos();
 });
 
 /**
- * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS
+ * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
+ * Rola o carrossel de forma dinâmica baseando-se nos cards que estão visíveis.
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
-    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
-    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
+    const setaEsquerda = document.querySelector('.seta-esquerda');
+    const setaDireita = document.querySelector('.seta-direita');
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
+    // Seta para a Esquerda
     setaEsquerda.addEventListener('click', (e) => {
         e.preventDefault();
-        moverCarrossel(-1);
+        track.scrollBy({ left: -344, behavior: 'smooth' });
     });
 
+    // Seta para a Direita
     setaDireita.addEventListener('click', (e) => {
         e.preventDefault();
-        moverCarrossel(1);
+        track.scrollBy({ left: 344, behavior: 'smooth' });
     });
-
-    function moverCarrossel(direcao) {
-        const primeiroCard = track.querySelector('.card-servico');
-        if (!primeiroCard) return;
-        const larguraCard = primeiroCard.offsetWidth + 24;
-        track.scrollLeft += (direcao * larguraCard);
-    }
 }
 
 /**
@@ -58,34 +54,41 @@ function inicializarCarrosselDepoimentos() {
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE CURSOS
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR BAIRRO
+ * Corrige o display para manter o comportamento de flexbox do carrossel.
  */
-function inicializarFiltroCursos() {
+function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsCursos = document.querySelectorAll('.card-curso-completo');
+    const cardsServicos = document.querySelectorAll('.carrossel-track .card-curso-completo');
+    const track = document.querySelector('.carrossel-track');
+
+    if (!abas || !cardsServicos) return;
 
     abas.forEach(aba => {
         aba.addEventListener('click', (e) => {
             e.preventDefault();
 
+            // Gerencia a classe visual nos botões de filtro
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
-            const textoAba = aba.textContent.trim().toUpperCase();
-            let classeFiltro = '';
+            const bairroSelecionado = aba.getAttribute('data-bairro');
 
-            if (textoAba === 'TECNOLOGIA') classeFiltro = 'TI';
-            else if (textoAba === 'GASTRONOMIA') classeFiltro = 'GASTRO';
-            else if (textoAba === 'SAÚDE' || textoAba === 'SAUDE') classeFiltro = 'SAUDE';
+            cardsServicos.forEach(card => {
+                const cardBairro = card.getAttribute('data-bairro');
 
-            cardsCursos.forEach(card => {
-                const placeholder = card.querySelector('.img-placeholder-curso');
-                if (textoAba === 'TODOS' || (placeholder && placeholder.classList.contains(classeFiltro))) {
-                    card.style.display = 'flex';
+                // CORREÇÃO: Mudado de 'block' para 'flex' para não quebrar a estrutura do carrossel horizontal
+                if (bairroSelecionado === 'todos' || cardBairro === bairroSelecionado) {
+                    card.style.setProperty('display', 'flex', 'important');
                 } else {
-                    card.style.display = 'none';
+                    card.style.setProperty('display', 'none', 'important');
                 }
             });
+
+            // RETORNA O CARROSSEL PARA O INÍCIO (Garante que os botões funcionem a partir do 1º card do filtro)
+            if (track) {
+                track.scrollLeft = 0;
+            }
         });
     });
 }
@@ -97,22 +100,22 @@ function inicializarFormularios() {
     const formularios = document.querySelectorAll('.formulario-matricula form');
     const boxSucesso = document.querySelector('#sucesso .box-sucesso p');
 
+    if (!formularios) return;
+
     formularios.forEach(form => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const nomeInput = form.querySelector('input[type="text"]').value;
-            const emailInput = form.querySelector('input[type="email"]').value;
             const selectUnidade = form.querySelector('select');
             const unidadeSelect = selectUnidade.options[selectUnidade.selectedIndex].text;
 
             const painelModal = form.closest('.modal-painel');
-            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Curso Selecionado";
+            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Serviço Selecionado";
 
             if (boxSucesso) {
                 boxSucesso.innerHTML = `Olá, <strong>${nomeInput}</strong>!<br><br>
-                Sua pré-inscrição para o curso de <strong>${nomeCurso}</strong> na <strong>${unidadeSelect}</strong> foi processada com sucesso.<br><br>
-                Enviamos um e-mail de confirmação para <strong>${emailInput}</strong> contendo a lista de documentos necessários para a efetivação da sua vaga.`;
+                Seu agendamento para o procedimento de <strong>${nomeCurso}</strong> na unidade <strong>${unidadeSelect}</strong> foi processado com sucesso.`;
             }
 
             window.location.hash = 'sucesso';
