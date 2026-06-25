@@ -41,8 +41,7 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
-
-        return "redirect:/painel";
+        return "redirect:/";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
