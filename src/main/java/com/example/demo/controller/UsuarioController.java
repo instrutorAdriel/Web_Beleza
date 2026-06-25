@@ -46,7 +46,7 @@ public class UsuarioController {
             return "login";
         }
 
-        return "redirect:/painel"; // veja observação abaixo sobre essa linha
+        return "redirect:/";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
