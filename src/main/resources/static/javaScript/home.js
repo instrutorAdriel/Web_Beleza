@@ -1,171 +1,162 @@
-/**
- * SENAC DF - Inteligência Dinâmica do Portal (Cursos e Agendamentos)
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicializa todos os módulos da página de forma organizada
-    inicializarCarrossel();
-    inicializarFiltroCursos();
-    inicializarFormularios();
-    inicializarHeroBanner(); // <-- Ativação do módulo do Banner integrada aqui
+    inicializarHeroSlider();    // Controla o banner principal do topo (com autoplay corrigido)
+    inicializarCarrossel();     // Controla as setas dos cards de agendamento
+    inicializarFiltroBairros(); // Controla os filtros por região (Taguatinga, Gama, etc)
+    inicializarFormularios();   // Controla o envio dos dados e modal de sucesso
 });
 
 /**
- * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS
- * Faz as setas arrastarem os cards de forma inteligente baseada no tamanho da tela
+ * MODULE: BANNER PRINCIPAL (HERO SLIDER DO TOPO)
+ * Controla a transição automática e manual dos slides do topo, resetando o tempo no clique.
+ */
+function inicializarHeroSlider() {
+    const slider = document.getElementById('heroSlider');
+    const slides = document.querySelectorAll('#heroSlider .slide');
+    const btnPrev = document.getElementById('heroBtnPrev');
+    const btnNext = document.getElementById('heroBtnNext');
+
+    if (!slider || slides.length === 0) return;
+
+    let index = 0;
+    let autoPlayTimer = null;
+
+    function atualizarSlider() {
+        slider.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    // Função que inicia ou reinicia o temporizador do zero
+    function iniciarAutoPlay() {
+        if (autoPlayTimer) clearInterval(autoPlayTimer);
+
+        autoPlayTimer = setInterval(() => {
+            index = (index + 1) % slides.length;
+            atualizarSlider();
+        }, 5000); // Passa sozinho a cada 5 segundos
+    }
+
+    if (btnNext) {
+        btnNext.addEventListener('click', (e) => {
+            e.preventDefault();
+            index = (index + 1) % slides.length;
+            atualizarSlider();
+            iniciarAutoPlay(); // Zera o cronômetro para não pular slide rápido demais
+        });
+    }
+
+    if (btnPrev) {
+        btnPrev.addEventListener('click', (e) => {
+            e.preventDefault();
+            index = (index - 1 + slides.length) % slides.length;
+            atualizarSlider();
+            iniciarAutoPlay(); // Zera o cronômetro para não pular slide rápido demais
+        });
+    }
+
+    // Ativa o autoplay assim que a página carrega
+    iniciarAutoPlay();
+}
+
+/**
+ * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
+ * Rola o carrossel calculando dinamicamente a largura do card + o espaçamento (gap).
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
     const setaEsquerda = document.querySelector('.seta-esquerda');
     const setaDireita = document.querySelector('.seta-direita');
 
-    if (!track || !setaEsquerda || !setaDireita) return;
+    if (!track) return;
 
-    setaEsquerda.addEventListener('click', (e) => {
-        e.preventDefault();
-        moverCarrossel(-1);
-    });
+    // Calcula dinamicamente o tamanho do card para a rolagem perfeita
+    const getScrollAmount = () => {
+        const card = track.querySelector('.card-curso-completo');
+        return card ? card.offsetWidth + 24 : 344;
+    };
 
-    setaDireita.addEventListener('click', (e) => {
-        e.preventDefault();
-        moverCarrossel(1);
-    });
+    if (setaEsquerda) {
+        setaEsquerda.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+        });
+    }
 
-    function moverCarrossel(direcao) {
-        const primeiroCard = track.querySelector('.card-servico');
-        if (!primeiroCard) return;
-
-        // Descobre a largura exata do card + o espaçamento (gap = 24px)
-        const larguraCard = primeiroCard.offsetWidth + 24;
-
-        // Executa a rolagem
-        track.scrollLeft += (direcao * larguraCard);
+    if (setaDireita) {
+        setaDireita.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+        });
     }
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE CURSOS
- * Filtra os cards buscando a classe correspondente (TI, GASTRO, SAUDE) com base no texto da aba
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR BAIRRO
+ * Limpa o display para ocultar e exibe limpando a propriedade para não quebrar o flexbox.
  */
-function inicializarFiltroCursos() {
+function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsCursos = document.querySelectorAll('.card-curso-completo');
+    const cardsServicos = document.querySelectorAll('.card-curso-completo');
+    const track = document.querySelector('.carrossel-track');
+
+    if (!abas || !cardsServicos) return;
 
     abas.forEach(aba => {
         aba.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // Atualiza o estado visual das abas
+            // Gerencia a classe visual nos botões de filtro
             abas.forEach(a => a.classList.remove('ativa'));
             aba.classList.add('ativa');
 
-            // Normaliza o texto da aba para mapear as classes (ex: "Tecnologia" -> "TI")
-            const textoAba = aba.textContent.trim().toUpperCase();
-            let classeFiltro = '';
+            const bairroSelecionado = aba.getAttribute('data-bairro');
 
-            if (textoAba === 'TECNOLOGIA') classeFiltro = 'TI';
-            else if (textoAba === 'GASTRONOMIA') classeFiltro = 'GASTRO';
-            else if (textoAba === 'SAÚDE' || textoAba === 'SAUDE') classeFiltro = 'SAUDE';
+            cardsServicos.forEach(card => {
+                const cardBairro = card.getAttribute('data-bairro');
 
-            // Filtra os cards na tela
-            cardsCursos.forEach(card => {
-                const placeholder = card.querySelector('.img-placeholder-curso');
-
-                // Se for 'Todos' ou se o card possuir a classe da categoria correspondente
-                if (textoAba === 'TODOS' || (placeholder && placeholder.classList.contains(classeFiltro))) {
-                    card.style.display = 'flex';
+                if (bairroSelecionado === 'todos' || cardBairro === bairroSelecionado) {
+                    // Remove o display 'none' e volta ao padrão estruturado do CSS/HTML
+                    card.style.display = '';
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            // Retorna o carrossel para o início ao filtrar
+            if (track) {
+                track.style.scrollBehavior = 'auto';
+                track.scrollLeft = 0;
+                track.style.scrollBehavior = 'smooth';
+            }
         });
     });
 }
 
 /**
  * MODULE: CAPTURA E SUCESSO DE FORMULÁRIO
- * Captura os dados digitados na matrícula e personaliza o modal de sucesso correto (#sucesso)
  */
 function inicializarFormularios() {
     const formularios = document.querySelectorAll('.formulario-matricula form');
     const boxSucesso = document.querySelector('#sucesso .box-sucesso p');
 
+    if (!formularios) return;
+
     formularios.forEach(form => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Coleta os dados que o usuário digitou
-            const nomeInput = form.querySelector('input[type="text"]').value;
-            const emailInput = form.querySelector('input[type="email"]').value;
+            const nomeInput = form.querySelector('input[type="text"]')?.value || 'Usuário';
             const selectUnidade = form.querySelector('select');
-            const unidadeSelect = selectUnidade.options[selectUnidade.selectedIndex].text;
+            const unidadeSelect = selectUnidade ? selectUnidade.options[selectUnidade.selectedIndex].text : 'Unidade';
 
-            // Busca o título do curso que está no topo do modal corrente
-            const painelModal = form.closest('.modal-panel');
-            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Curso Selecionado";
+            const painelModal = form.closest('.modal-painel');
+            const nomeCurso = painelModal ? painelModal.querySelector('h2').textContent : "Serviço Selecionado";
 
-            // Altera dinamicamente o texto da tela de confirmação do ID #sucesso
             if (boxSucesso) {
                 boxSucesso.innerHTML = `Olá, <strong>${nomeInput}</strong>!<br><br>
-                Sua pré-inscrição para o curso de <strong>${nomeCurso}</strong> na <strong>${unidadeSelect}</strong> foi processada com sucesso.<br><br>
-                Enviamos um e-mail de confirmação para <strong>${emailInput}</strong> contendo a lista de documentos necessários para a efetivação da sua vaga.`;
+                Seu agendamento para o procedimento de <strong>${nomeCurso}</strong> na unidade <strong>${unidadeSelect}</strong> foi processado com sucesso.`;
             }
 
-            // Redireciona o alvo do CSS :target para exibir o modal correto de sucesso
             window.location.hash = 'sucesso';
-
-            // Limpa os campos do formulário
             form.reset();
         });
     });
-}
-
-/**
- * MODULE: HERO BANNER (ESTILO DISNEY+) - VERSÃO ULTRA ROBUSTA
- * Gerencia a transição das imagens de fundo sem quebrar o posicionamento do texto fixo
- */
-function inicializarHeroBanner() {
-    const slider = document.getElementById('heroSlider');
-    const btnPrev = document.getElementById('heroBtnPrev');
-    const btnNext = document.getElementById('heroBtnNext');
-
-    // Valida se a estrutura do banner realmente existe na página corrente
-    if (!slider || !btnPrev || !btnNext) return;
-
-    let slideAtual = 0;
-    const totalSlides = slider.children.length;
-
-    // Calcula milimetricamente a largura atual do banner e executa o scroll suave
-    function atualizarPosicao() {
-        const larguraItem = slider.getBoundingClientRect().width;
-        slider.scrollTo({
-            left: larguraItem * slideAtual,
-            behavior: 'smooth'
-        });
-    }
-
-    // Evento para avançar slide
-    btnNext.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (slideAtual < totalSlides - 1) {
-            slideAtual++;
-        } else {
-            slideAtual = 0; // Loop infinito: volta para o primeiro
-        }
-        atualizarPosicao();
-    });
-
-    // Evento para voltar slide
-    btnPrev.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (slideAtual > 0) {
-            slideAtual--;
-        } else {
-            slideAtual = totalSlides - 1; // Loop infinito: vai para o último
-        }
-        atualizarPosicao();
-    });
-
-    // Recalcula o tamanho se o usuário redimensionar o navegador (responsividade)
-    window.addEventListener('resize', atualizarPosicao);
 }
