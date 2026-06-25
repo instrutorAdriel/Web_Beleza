@@ -15,10 +15,7 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
-    // O método exibirHome que usava @GetMapping("/") foi REMOVIDO daqui
-    // para não conflitar com a HomeController.
-
+    
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
     public String exibirLogin(Model model) {
