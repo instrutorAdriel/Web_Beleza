@@ -59,633 +59,78 @@
 
 <section id="servicos-agendamento" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
-    <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela região mais próxima de você.</p>
+    <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa" data-bairro="todos">Todos</a>
-        <a href="#" class="aba-filtro" data-bairro="taguatinga">Taguatinga</a>
-        <a href="#" class="aba-filtro" data-bairro="sobradinho">Sobradinho</a>
-        <a href="#" class="aba-filtro" data-bairro="ceilandia">Ceilândia</a>
-        <a href="#" class="aba-filtro" data-bairro="gama">Gama</a>
-        <a href="#" class="aba-filtro" data-bairro="recanto-das-emas">Recanto das Emas</a>
-        <a href="#" class="aba-filtro" data-bairro="santa-maria">Santa Maria</a>
-        <a href="#" class="aba-filtro" data-bairro="plano-piloto">Plano Piloto</a>
+        <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
+        <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+        <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
+        <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
+        <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
+        <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
+        <a href="#" class="aba-filtro" data-unidade="santa-maria">Santa Maria</a>
+        <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
     <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
 
-        <button type="button" class="seta-carrossel seta-esquerda" style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
-            <i class="fa-solid fa-chevron-left" style="font-size: 1.2rem;"></i>
+        <button type="button" class="seta-carrossel seta-esquerda"
+                style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <div class="carrossel-track" style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
+        <div class="carrossel-track"
+             style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
 
-            <!-- CARDS TAGUATINGA -->
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://img.magnific.com/fotos-premium/corte-de-cabelo-no-salao-de-beleza_78492-738.jpg"  alt="Corte Feminino">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Corte Feminino</h3>
-                    <p>Corte de cabelo feminino moderno realizado por alunos sob supervisão de instrutores do Senac.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
+            <div class="card-curso-completo"
+                 th:each="servico : ${servicos}"
+                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
+                 style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://www.culturado.com.br/wp-content/uploads/2022/05/corte-masculino.webp"  alt="Corte Masculino">
+                <div class="img-placeholder-curso">
+                    <img th:src="${servico.imagem}"
+                         th:alt="${servico.nomeServico}">
                 </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Corte Masculino</h3>
-                    <p>Modelagem e cortes clássicos ou modernos para o público masculino com acabamento profissional.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://img.magnific.com/premium-photo/handsome-man-barbershop-shaving_752325-17502.jpg"  alt="Barba">
-                </div>
                 <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Design de Barba</h3>
-                    <p>Alinhamento de barba, terapia com toalha quente e finalização com produtos específicos.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://media.istockphoto.com/id/1224673653/photo/woman-drying-hair-in-a-hairsalon.jpg?s=170667a&w=0&k=20&c=8NmOff4gGe4Lj5wyB0JGmYzycAfBcvHyjWUkaDmwiEo="  alt="Escova">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Escova Modeladora</h3>
-                    <p>Lavagem especial e modelagem de fios com secador para acabamento liso ou ondulado.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
+                    <span class="tipo-curso"
+                          th:text="${servico.unidade}">
+                    </span>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://noticiasconcursos.com.br/wp-content/uploads/2022/03/noticiasconcursos.com.br-dicas-incriveis-de-hidratacao-de-cabelo-veja-como-deixar-cabelo-mais-hidratado-reproducao-freepik-1080x720.jpg"  alt="Hidratação">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Hidratação Capilar</h3>
-                    <p>Tratamento de nutrição profunda para devolução do brilho e da umidade natural do fio.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
+                    <h3 th:text="${servico.nomeServico}"></h3>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://i.pinimg.com/736x/a8/2b/91/a82b91f01e1744c901b86cfc00e923ab.jpg"  alt="Coloração">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Coloração Global</h3>
-                    <p>Aplicação técnica de tinturas capilares para cobertura de fios brancos ou mudança de tom uniforme.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Ver Mais & Agendar</a>
-                </div>
-            </div>
+                    <p th:text="${servico.descricao}"></p>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://www.salud180.com/sites/default/files/styles/4x3_medium/public/como-mantener-el-color-de-las-mechas-en-el-cabello-min.jpg"  alt="Mechas">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Luzes & Mechas</h3>
-                    <p>Processo de descoloração em mechas selecionadas para iluminação e efeitos loiros/morena iluminada.</p>
                     <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 3h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Ver Mais & Agendar</a>
-                </div>
-            </div>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://blog.kert.com.br/wp-content/uploads/2022/10/Alisamentos.jpeg"  alt="Alisamento">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Alisamento Químico</h3>
-                    <p>Redução permanente ou temporária de volume através de processos de relaxamento capilar.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 30min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Ver Mais & Agendar</a>
-                </div>
-            </div>
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${servico.duracao}"></span>
+                        </span>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://www.aguanaboca.org/wp-content/uploads/2015/03/Selagem-t%C3%A9rmica-caseira-.jpg"  alt="Selagem">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Selagem Térmica</h3>
-                    <p>Tratamento térmico selador de cutículas para redução de frizz, alinhamento leve e brilho intenso.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Ver Mais & Agendar</a>
-                </div>
-            </div>
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${servico.unidade}"></span>
+                        </span>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://images.alwatanvoice.com/news/large/9999107406.jpg"  alt="Maquiagem">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Maquiagem Social</h3>
-                    <p>Produção de maquiagem para eventos sociais e festas com técnicas de contorno, olhos e pele.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
                     </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Ver Mais & Agendar</a>
-                </div>
-            </div>
 
-            <div class="card-curso-completo" data-bairro="taguatinga" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://th.bing.com/th/id/R.2d38783a5471c2e9e15d65d7610c52bb?rik=D2lvtQ%2fuqJhoiA&pid=ImgRaw&r=0"  alt="Design Sobrancelhas">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Taguatinga</span>
-                    <h3>Design de Sobrancelhas</h3>
-                    <p>Estudo e modelagem da simetria facial por meio da remoção de pelos das sobrancelhas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Taguatinga</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
+                    <a href="#modal-agendamento" class="btn-detalhes">
+                        Agendar
+                    </a>
 
-            <!-- CARDS DO GAMA -->
-            <div class="card-curso-completo" data-bairro="gama" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://www.culturado.com.br/wp-content/uploads/2022/05/corte-masculino.webp"  alt="Corte Masculino Gama">
                 </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Gama</span>
-                    <h3>Corte Masculino</h3>
-                    <p>Modelos de cortes masculinos clássicos e modernos, executados por alunos de barbearia.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Gama</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
 
-            <div class="card-curso-completo" data-bairro="gama" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://img.magnific.com/fotos-premium/corte-de-cabelo-no-salao-de-beleza_78492-738.jpg"  alt="Corte Feminino Gama">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Gama</span>
-                    <h3>Corte Feminino</h3>
-                    <p>Corte e modelagem de cabelo feminino realizado sob supervisão de instrutores do segmento de beleza.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Gama</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="gama" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://img.magnific.com/premium-photo/handsome-man-barbershop-shaving_752325-17502.jpg"  alt="Barba Gama">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Gama</span>
-                    <h3>Design de Barba</h3>
-                    <p>Alinhamento de barba, técnicas de barbear clássico e acabamento com produtos especiais.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Gama</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="gama" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://i.pinimg.com/736x/a8/2b/91/a82b91f01e1744c901b86cfc00e923ab.jpg"  alt="Coloração Gama">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Gama</span>
-                    <h3>Coloração Global</h3>
-                    <p>Aplicação técnica de colorações ou tonalizantes para cobertura de fios e mudança de tom uniforme.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Gama</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="gama" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://plus.unsplash.com/premium_photo-1661420297394-a8a9590e93a8?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YmFyYmVhcmlhfGVufDB8fDB8fHww"  alt="Serviços de Barbearia Gama">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Gama</span>
-                    <h3>Serviços de Barbearia</h3>
-                    <p>Procedimentos combinados de cabelo e barba integrados às atividades das turmas práticas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Variável</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Gama</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <!-- CARDS RECANTO DAS EMAS -->
-            <div class="card-curso-completo" data-bairro="recanto-das-emas" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://nucleocursos.com.br/blog/wp-content/uploads/2022/10/Profissao-Cabeleireiro-Tudo-o-que-voce-precisa-saber-768x576.jpeg"  alt="Serviços de Cabeleireiro Recanto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fce4ec; color: #880e4f;">Recanto das Emas</span>
-                    <h3>Serviços de Cabeleireiro</h3>
-                    <p>Procedimentos capilares diversos realizados ao público, variando conforme o cronograma das turmas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Conforme turma</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Recanto das Emas</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="recanto-das-emas" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://facesspa.com/wp-content/uploads/2020/05/AdobeStock_56635333.jpeg"  alt="Manicure e Pedicure Recanto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #fce4ec; color: #880e4f;">Recanto das Emas</span>
-                    <h3>Manicure & Pedicure</h3>
-                    <p>Cuidados e embelezamento das unhas das mãos e pés realizados por alunos em turmas práticas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Conforme turma</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Recanto das Emas</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <!-- INÍCIO DOS CARDS PLANO PILOTO -->
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://img.magnific.com/fotos-premium/corte-de-cabelo-no-salao-de-beleza_78492-738.jpg"  alt="Corte Feminino Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Corte Feminino</h3>
-                    <p>Salão-Escola com atendimento contínuo. Cortes modernos realizados com acompanhamento técnico.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://www.culturado.com.br/wp-content/uploads/2022/05/corte-masculino.webp"  alt="Corte Masculino Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Corte Masculino</h3>
-                    <p>Salão-Escola com atendimento contínuo. Cortes tradicionais e estilizados para o público masculino.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://media.istockphoto.com/id/1224673653/photo/woman-drying-hair-in-a-hairsalon.jpg?s=170667a&w=0&k=20&c=8NmOff4gGe4Lj5wyB0JGmYzycAfBcvHyjWUkaDmwiEo="  alt="Escova Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Escova Modeladora</h3>
-                    <p>Secagem, alinhamento técnico e acabamento profissional com escovação de alta performance.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkN4lsYnQBnMOgBdvJO-7gHaHa?w=1000&h=1000&rs=1&pid=ImgDetMain&o=7&rm=3"  alt="Chapinha Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Prancha / Chapinha</h3>
-                    <p>Alisamento e finalização térmica precisa com proteção capilar e controle de frizz do fio.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 30min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://primeirahora.com.br/wp-content/uploads/2023/07/mulher-fazendo-tratamento-em-cabeleireiro_23-2149230954-1024x682.webp"  alt="Babyliss Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Modelagem com Babyliss</h3>
-                    <p>Criação de ondas estruturadas, cachos e finalizações estilizadas no único salão-escola contínuo.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://catracalivre.com.br/wp-content/uploads/2026/01/freepik-mulher-europeia-com-cabelos-naturais-em-processo-d-3150.jpeg"  alt="Hidratação Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Hidratação & Nutrição</h3>
-                    <p>Reposição hídrica profunda e lipídica essencial para devolver o brilho e maciez natural aos fios.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.mqNZ48L9onXxgKRQ47vdtwHaHa?w=700&h=700&rs=1&pid=ImgDetMain&o=7&rm=3"  alt="Reconstrução Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Reconstrução Capilar</h3>
-                    <p>Tratamento reconstrutor potente focado em repor a massa e queratina de cabelos danificados.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 15min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://i.pinimg.com/736x/a8/2b/91/a82b91f01e1744c901b86cfc00e923ab.jpg"  alt="Coloração Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Coloração Global</h3>
-                    <p>Aplicação uniforme de coloração permanente ou tonalizantes com excelente cobertura de brancos.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="plano-piloto" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://tse3.mm.bing.net/th/id/OIP.n5fkvV6JxTO0HqH06c7KRQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"  alt="Modelagem Plano Piloto">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e0f7fa; color: #006064;">Plano Piloto</span>
-                    <h3>Design & Modelagem</h3>
-                    <p>Estruturação de penteados e finalizações estéticas exclusivas no polo central de atendimento.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Plano Piloto</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-            <!-- FIM DOS CARDS PLANO PILOTO -->
-            
-            <!-- CARDS SANTA MARIA -->
-
-            <div class="card-curso-completo" data-bairro="santa-maria" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.bvVXbyC3VV9RgsZ4WF15rgHaE7?rs=1&pid=ImgDetMain&o=7&rm=3"  alt="Serviços de Cabelo Santa Maria">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Santa Maria</span>
-                    <h3>Serviços de Cabelo</h3>
-                    <p>Procedimentos capilares realizados por alunos durante as aulas práticas supervisionadas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Conforme turma</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Santa Maria</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="santa-maria" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://facesspa.com/wp-content/uploads/2020/05/AdobeStock_56635333.jpeg"  alt="Manicure e Pedicure Santa Maria">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Santa Maria</span>
-                    <h3>Manicure & Pedicure</h3>
-                    <p>Cuidados e embelezamento das unhas das mãos e dos pés realizados em atividades práticas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Conforme turma</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Santa Maria</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="santa-maria" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://acquasaudejf.com.br/wp-content/uploads/2021/08/esteticos.jpg"  alt="Serviços de Estética Santa Maria">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Santa Maria</span>
-                    <h3>Serviços de Estética</h3>
-                    <p>Atendimentos estéticos realizados por alunos em formação, conforme disponibilidade das turmas.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Conforme turma</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Santa Maria</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <!-- CARDS DE CEILÂNDIA -->
-            <div class="card-curso-completo" data-bairro="ceilandia" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.d2EkYMqyxwVHuHZVTfxUAAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3"  alt="Corte de Cabelo Ceilândia">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Ceilândia</span>
-                    <h3>Corte de Cabelo</h3>
-                    <p>Corte de cabelo executado por alunos em treinamento, integrando ações de prática profissional.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Ceilândia</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="ceilandia" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://media.istockphoto.com/id/1224673653/photo/woman-drying-hair-in-a-hairsalon.jpg?s=170667a&w=0&k=20&c=8NmOff4gGe4Lj5wyB0JGmYzycAfBcvHyjWUkaDmwiEo="  alt="Escova Ceilândia">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Ceilândia</span>
-                    <h3>Escova Modeladora</h3>
-                    <p>Secagem e modelagem técnica dos fios, realizada durante os projetos de aperfeiçoamento prático.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Ceilândia</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="ceilandia" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://noticiasconcursos.com.br/wp-content/uploads/2022/03/noticiasconcursos.com.br-dicas-incriveis-de-hidratacao-de-cabelo-veja-como-deixar-cabelo-mais-hidratado-reproducao-freepik-1080x720.jpg"  alt="Hidratação Ceilândia">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Ceilândia</span>
-                    <h3>Hidratação Capilar</h3>
-                    <p>Tratamento para reposição hídrica e brilho dos fios em laboratório de prática profissional.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Ceilândia</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="ceilandia" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://i.pinimg.com/736x/a8/2b/91/a82b91f01e1744c901b86cfc00e923ab.jpg"  alt="Coloração Ceilândia">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Ceilândia</span>
-                    <h3>Coloração Global</h3>
-                    <p>Aplicação técnica de tinturas capilares uniformes sob supervisão direta dos docentes.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 2h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Ceilândia</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <!-- CARDS DE SOBRADINHO -->
-            <div class="card-curso-completo" data-bairro="sobradinho" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://static1.purepeople.com.br/articles/9/33/62/49/@/3817533-transformacao-de-virginia-fonseca-aconte-1200x0-2.jpg"  alt="Corte de Cabelo Sobradinho">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #f3e5f5; color: #4a148c;">Sobradinho</span>
-                    <h3>Corte de Cabelo</h3>
-                    <p>Modelagem e cortes realizados por alunos em treinamento prático sob supervisão docente.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 1h 00min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Sobradinho</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="sobradinho" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://th.bing.com/th/id/R.2d38783a5471c2e9e15d65d7610c52bb?rik=D2lvtQ%2fuqJhoiA&pid=ImgRaw&r=0"  alt="Design de Sobrancelhas Sobradinho">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #f3e5f5; color: #4a148c;">Sobradinho</span>
-                    <h3>Design de Sobrancelhas</h3>
-                    <p>Alinhamento e design personalizado para realçar o olhar de acordo com o visagismo facial.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> 45min</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Sobradinho</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
-            </div>
-
-            <div class="card-curso-completo" data-bairro="sobradinho" style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
-                <div class="img-placeholder-curso BELEZA">
-                    <img src="https://nucleocursos.com.br/blog/wp-content/uploads/2022/10/Profissao-Cabeleireiro-Tudo-o-que-voce-precisa-saber-768x576.jpeg"  alt="Serviços de Cabeleireiro Sobradinho">
-                </div>
-                <div class="corpo-curso">
-                    <span class="tipo-curso" style="background: #f3e5f5; color: #4a148c;">Sobradinho</span>
-                    <h3>Serviços de Cabeleireiro</h3>
-                    <p>Procedimentos capilares diversos executados durante as aulas práticas da turma de beleza.</p>
-                    <div class="detalhes-rapidos-curso">
-                        <span><i class="fa-regular fa-clock"></i> Variável</span>
-                        <span><i class="fa-solid fa-location-dot"></i> Unidade Sobradinho</span>
-                    </div>
-                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
-                </div>
             </div>
 
         </div>
 
-        <button type="button" class="seta-carrossel seta-direita" style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
-            <i class="fa-solid fa-chevron-right" style="font-size: 1.2rem;"></i>
+        <button type="button" class="seta-carrossel seta-direita"
+                style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-right"></i>
         </button>
+
     </div>
 </section>
 

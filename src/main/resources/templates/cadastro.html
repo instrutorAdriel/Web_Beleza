@@ -10,6 +10,36 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
+
+    <style>
+        /* Checklist de requisitos de senha - mova para style.css se preferir */
+        .ssp-password-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0.6rem 0 0 0;
+            font-size: 0.85rem;
+        }
+        .ssp-password-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #9CA3AF;
+            margin-bottom: 0.3rem;
+            transition: color 0.2s ease;
+        }
+        .ssp-password-checklist li i {
+            width: 14px;
+        }
+        .ssp-password-checklist li.valid {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-check {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-xmark {
+            color: #DC2626;
+        }
+    </style>
 </head>
 <body>
 
@@ -69,6 +99,21 @@
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
+
+                <ul class="ssp-password-checklist" id="password-checklist">
+                    <li id="req-maiuscula" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra maiúscula
+                    </li>
+                    <li id="req-minuscula" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra minúscula
+                    </li>
+                    <li id="req-numero" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Número
+                    </li>
+                    <li id="req-especial" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Caractere especial
+                    </li>
+                </ul>
             </div>
 
             <div class="ssp-form-group">

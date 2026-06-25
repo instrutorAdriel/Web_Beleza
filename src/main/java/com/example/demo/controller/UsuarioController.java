@@ -9,10 +9,8 @@ import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 @Controller
@@ -26,13 +24,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
-    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
-    @GetMapping("/")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        return "home";
-    }
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -52,12 +43,11 @@ public class UsuarioController {
 
         if (usuario == null) {
             model.addAttribute("erro", "E-mail ou senha incorretos.");
-            model.addAttribute("usuarioDTO", form); // Preserva o e-mail na tela se errar
+            model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
-
-        return "redirect:/painel"; // veja observação abaixo sobre essa linha
+        return "redirect:/";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
