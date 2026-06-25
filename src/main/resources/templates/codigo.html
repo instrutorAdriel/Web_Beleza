@@ -16,7 +16,7 @@
 <main class="ssp-login-centered-container">
   <div class="ssp-form-card">
     <header class="ssp-header-page-login">
-      <a class="ssp-login-button-back" th:href="@{/usuario/recuperar-senha}">&larr; Voltar</a>
+      <a class="ssp-login-button-back" th:href="@{/recuperar-senha}">&larr; Voltar</a>
       <h1 style="color: #F29301;" th:text="${tituloPagina}">Verificar Código</h1>
       <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
         Digite o código de segurança enviado para o seu e-mail.
@@ -27,7 +27,7 @@
       <span class="ssp-error-message" style="display: block;" th:text="${erro}">Código incorreto.</span>
     </div>
 
-    <form id="kc-form-code" th:action="@{/usuario/verificar-codigo}" th:object="${usuarioDTO}" method="POST">
+    <form id="kc-form-code" th:action="@{/verificar-codigo}" th:object="${usuarioDTO}" method="POST">
       <div class="ssp-form-group">
         <label th:for="codigoVerificacao">Código de Verificação</label>
         <input type="text" th:field="*{codigoVerificacao}" id="codigoVerificacao" class="ssp-form-control" placeholder="Ex: 123456" required style="text-align: center; font-size: 1.3rem; letter-spacing: 4px; font-weight: 600;">
