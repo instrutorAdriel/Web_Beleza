@@ -79,11 +79,16 @@ body {
     padding: 15px 20px;
 }
 
+.logo {
+    flex-shrink: 0;
+}
+
 .logo img {
     height: 42px;
     display: block;
     transition: var(--transicao);
 }
+
 .logo img:hover {
     transform: scale(1.03);
 }
@@ -91,6 +96,9 @@ body {
 .nav-menu {
     display: flex;
     gap: 25px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .nav-menu a {
@@ -103,47 +111,124 @@ body {
     padding: 5px 0;
 }
 
-.nav-menu a:hover, .destaque-menu {
-    color: var(--senac-laranja) !important;
+
+.nav-menu a:hover {
+    color: #ffffff;}
+
+/* Link ativo - quando está na seção selecionada */
+.nav-menu a.ativo {
+    color: var(--senac-laranja);
+    border-bottom: 2px solid var(--senac-laranja);
+    padding-bottom: 3px;
 }
 
 /* Campo de busca adaptado para o fundo preto */
-.header-busca {
-    display: flex;
-    background: #1a1a1a;
+.btn-entrar {
+    text-decoration: none;
+    background-color: transparent;
+    color: var(--senac-laranja);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 22px;
     border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #333333;
+    border: 2px solid var(--senac-laranja);
     transition: var(--transicao);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
-.header-busca:focus-within {
-    border-color: var(--senac-laranja);
-    background: #222222;
+.btn-entrar:hover {
+    background-color: var(--senac-laranja);
+    color: #000000;
+    transform: translateY(-2px);
 }
-
-.header-busca input {
-    background: transparent;
-    border: none;
-    padding: 10px 14px;
-    outline: none;
-    width: 200px;
+.usuario-logado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: #ffffff;
-    font-family: inherit;
+    font-weight: 600;
     font-size: 14px;
 }
-
-.header-busca button {
-    background-color: var(--senac-laranja);
-    border: none;
-    color: #000000;
-    padding: 0 18px;
-    cursor: pointer;
+.usuario-logado i {
+    font-size: 22px;
+    color: var(--senac-laranja);
+}
+.btn-sair {
+    text-decoration: none;
+    color: var(--senac-laranja);
+    border: 2px solid var(--senac-laranja);
+    padding: 6px 14px;
+    border-radius: 6px;
     font-weight: 700;
+    font-size: 13px;
     transition: var(--transicao);
 }
-.header-busca button:hover {
-    background-color: var(--senac-laranja-hover);
+.btn-sair:hover {
+    background-color: var(--senac-laranja);
+    color: #000000;
+}
+.popover-logout {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    background: #ffffff;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    min-width: 220px;
+    animation: modalEntrada 0.2s ease;
+}
+
+.popover-logout p {
+    color: var(--texto-escuro);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.popover-botoes {
+    display: flex;
+    gap: 10px;
+}
+
+.popover-btn-sim {
+    flex: 1;
+    background: var(--senac-laranja);
+    color: #000000;
+    border: none;
+    padding: 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transicao);
+}
+
+.popover-btn-sim:hover {
+    background: var(--senac-laranja-hover);
+}
+
+.popover-btn-nao {
+    flex: 1;
+    background: transparent;
+    color: var(--texto-escuro);
+    border: 1px solid var(--borda-suave);
+    padding: 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transicao);
+}
+
+.popover-btn-nao:hover {
+    background: var(--fundo-card);
 }
 
 /* ==========================================================================
@@ -775,8 +860,8 @@ body {
 }
 
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
