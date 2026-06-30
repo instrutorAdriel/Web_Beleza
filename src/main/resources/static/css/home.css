@@ -710,7 +710,7 @@ body {
     padding-left: 110px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 60px;
+    gap: 80px;
 }
 .footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
 .footer-bloco h4 {
