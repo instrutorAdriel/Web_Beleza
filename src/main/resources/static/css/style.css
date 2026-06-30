@@ -81,6 +81,14 @@ body::after {
     box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12) !important;
 }
 
+.ssp-success-message {
+    color: #b2ff6a;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
+    font-weight: 500;
+}
+
 /* ==========================================================================
    LOGO NO CANTO SUPERIOR ESQUERDO
    ========================================================================== */

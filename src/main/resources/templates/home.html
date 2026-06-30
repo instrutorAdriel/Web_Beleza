@@ -13,6 +13,7 @@
 
 <header class="site-header">
     <div class="header-container">
+
         <div class="logo">
             <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
         </div>
@@ -40,17 +41,16 @@
       </div>
   </header>
 
-  <section id="hero" class="hero-banner">
-      <div class="hero-conteudo">
-          <span class="badge-hero">Inscrições Abertas</span>
-          <h1>Construa seu futuro profissional no Senac</h1>
-          <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
-          <div class="hero-botoes">
-              <a href="#cursos" class="btn-principal">Ver Cursos</a>
-              <a href="#agendamentos" class="btn-secundario">Agendar Serviço</a>
-          </div>
-      </div>
-  </section>
+<section id="hero" class="hero-banner">
+    <div class="hero-conteudo">
+        <span class="badge-hero">Inscrições Abertas</span>
+        <h1>Construa seu futuro profissional no Senac</h1>
+        <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
+        <div class="hero-botoes">
+            <a href="#servicos-agendamento" class="btn-principal">Ver Serviços</a>
+        </div>
+    </div>
+</section>
 
   <section id="sobre" class="sobre-section">
       <div class="sobre-container">
@@ -71,234 +71,84 @@
       </div>
   </section>
 
-  <!-- SEÇÃO CURSOS -->
-<section id="cursos" class="cursos-secao-avancada container-interno">
-    <h2 class="titulo-secao">Nossos Cursos</h2>
-    <p class="subtitulo-secao">Escolha a trilha que mais combina com seu perfil e objetivos.</p>
+<section id="servicos-agendamento" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+    <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
+    <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa">Todos</a>
-        <a href="#" class="aba-filtro">Tecnologia</a>
-        <a href="#" class="aba-filtro">Gastronomia</a>
-        <a href="#" class="aba-filtro">Saúde</a>
+        <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
+        <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+        <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
+        <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
+        <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
+        <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
+        <a href="#" class="aba-filtro" data-unidade="santa-maria">Santa Maria</a>
+        <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
-    <div class="grid-cursos-completo">
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso TI">
-                <img  src="https://www.df.senac.br/wp-content/uploads/2025/09/Informatica-Windows-e-Office-Fundamental-4.webp" height="180"></img>
-                <i class="fa-solid fa-code"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Técnico</span>
-                <h3>Desenvolvimento de Sistemas</h3>
-                <p>Aprenda lógica de programação, banco de dados, arquiteturas web e mobile do zero.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 1200h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Presencial</span>
+    <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+
+        <button type="button" class="seta-carrossel seta-esquerda"
+                style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="carrossel-track"
+             style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
+
+            <div class="card-curso-completo"
+                 th:each="servico : ${servicos}"
+                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
+                 style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
+
+                <div class="img-placeholder-curso">
+                    <img th:src="${servico.imagem}"
+                         th:alt="${servico.nomeServico}">
                 </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
+
+                <div class="corpo-curso">
+
+                    <span class="tipo-curso"
+                          th:text="${servico.unidade}">
+                    </span>
+
+                    <h3 th:text="${servico.nomeServico}"></h3>
+
+                    <p th:text="${servico.descricao}"></p>
+
+                    <div class="detalhes-rapidos-curso">
+
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${servico.duracao}"></span>
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${servico.unidade}"></span>
+                        </span>
+
+                    </div>
+
+                    <a href="#modal-agendamento" class="btn-detalhes">
+                        Agendar
+                    </a>
+
+                </div>
+
             </div>
+
         </div>
 
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso GASTRO">
-                <img src="https://www.df.senac.br/wp-content/uploads/2024/02/Barista-4.png" height="180"></img>
-                <i class="fa-solid fa-utensils"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Livre</span>
-                <h3>Culinária Internacional</h3>
-                <p>Domine técnicas clássicas das cozinhas francesa, italiana e asiática com chefs renomados.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 60h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Noturno</span>
-                </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
-            </div>
-        </div>
+        <button type="button" class="seta-carrossel seta-direita"
+                style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
 
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso SAUDE">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <img src="https://www.df.senac.br/wp-content/uploads/2024/01/Tecnico-em-Podologia-4.png" height="180"></img>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Técnico</span>
-                <h3>Técnico em Enfermagem</h3>
-                <p>Formação completa para atuação em hospitais, clínicas e cuidados domiciliares com ética.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 1600h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Matutino</span>
-                </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- SEÇÃO AGENDAMENTOS (COM NOVOS CARDS ADICIONADOS) -->
-<section id="agendamentos" class="container-interno">
-    <h2 class="titulo-secao">Agendamentos de Serviços</h2>
-    <p class="subtitulo-secao">Receba atendimento prático dos nossos alunos supervisionados por professores experientes.</p>
-
-    <div class="carrossel-wrapper">
-        <a href="#" class="seta-carrossel seta-esquerda"><i class="fa-solid fa-chevron-left"></i></a>
-
-        <div class="carrossel-track">
-            <!-- Card 1 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Jessé Freire</span>
-                    <h3 class="card-titulo-servico">Corte de Cabelo Masculino</h3>
-                    <p class="card-descricao">Corte e acabamento realizados por nossa turma de Barbeiro Profissional.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Taguatinga</span>
-                    <h3 class="card-titulo-servico">Atendimento Estético</h3>
-                    <p class="card-descricao">Limpeza de pele profunda realizada pelos estudantes de Estética.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Samambaia</span>
-                    <h3 class="card-titulo-servico">Consultoria de Imagem</h3>
-                    <p class="card-descricao">Análise de coloração pessoal conduzida pelo time de Moda.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-
-            <!-- Card 4 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Ceilândia</span>
-                    <h3 class="card-titulo-servico">Design de Sobrancelhas</h3>
-                    <p class="card-descricao">Modelagem, simetria facial e aplicação de henna pela equipe de Beleza.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-
-            <!-- Card 5 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Gama</span>
-                    <h3 class="card-titulo-servico">Atendimento Nutricional</h3>
-                    <p class="card-descricao">Avaliação de bioimpedância e plano alimentar com alunos de Nutrição.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-
-            <!-- Card 6 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Unidade Norte</span>
-                    <h3 class="card-titulo-servico">Massagem Relaxante</h3>
-                    <p class="card-descricao">Sessões de massagem terapêutica aplicadas pelo time de Massoterapia.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
-            </div>
-        </div>
-
-            <a class="seta-carrossel seta-direita"><i class="fa-solid fa-chevron-right"></i></a>
     </div>
 </section>
 
-<!-- SEÇÃO DEPOIMENTO-->
-<section id="avaliacoes" class="container-interno" style="margin-bottom: 4rem;">
-    <h2 class="titulo-secao">Últimas Notícias</h2>
-    <p class="subtitulo-secao">Fique por dentro das novidades, eventos e oportunidades do Senac.</p>
-
-    <div class="grid-cursos-completo">
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-newspaper"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Evento</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 15 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Feira de Empregabilidade 2026</h3>
-                <p>Participe do maior evento de contratação do ano, com palestras exclusivas e processos seletivos imediatos.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Conquista</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 10 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Alunos de Gastronomia premiados</h3>
-                <p>Nossa equipe conquistou o primeiro lugar no festival gastronômico regional com prato sustentável.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-laptop-code"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Inovação</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 02 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Novos Laboratórios de TI</h3>
-                <p>Senac inaugura infraestrutura de ponta focada em Inteligência Artificial e Computação em Nuvem.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- MODAIS -->
-<div id="modal-curso-detalhes" class="modal-plataforma">
-    <div class="modal-painel">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
-        <span class="tag-modal">Inscrições Online</span>
-        <h2>Técnico em Desenvolvimento de Sistemas</h2>
-
-        <div class="modal-grid-conteudo">
-            <div class="ementa-curso">
-                <h4>O que você vai aprender</h4>
-                <ul>
-                    <li><i class="fa-solid fa-check"></i> Lógica de Programação e Algoritmos</li>
-                    <li><i class="fa-solid fa-check"></i> Desenvolvimento Web (HTML, CSS, JS, React)</li>
-                    <li><i class="fa-solid fa-check"></i> Bancos de Dados Relacionais e Não-Relacionais</li>
-                    <li><i class="fa-solid fa-check"></i> Metodologias Ágeis (Scrum/Kanban)</li>
-                </ul>
-            </div>
-            <div class="formulario-matricula">
-                <h4>Preencha para garantir sua vaga</h4>
-                <form action="#sucesso" method="POST">
-                    <label for="nome">Nome Completo</label>
-                    <input type="text" id="nome" placeholder="Seu nome aqui" required>
-
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" placeholder="seuemail@provedor.com" required>
-
-                    <label for="unidade">Unidade de Preferência</label>
-                    <select id="unidade" required>
-                        <option value="">Selecione...</option>
-                        <option value="centro">Unidade Centro</option>
-                        <option value="norte">Unidade Norte</option>
-                    </select>
-
-                    <button type="submit" class="btn-enviar-formulario">Confirmar Matrícula</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="modal-agendamento" class="modal-plataforma">
+<div id="avaliacoes" class="modal-plataforma">
     <div class="modal-painel">
         <a href="#" class="btn-fechar-modal">&times; Fechar</a>
         <span class="tag-modal">Serviços Práticos</span>

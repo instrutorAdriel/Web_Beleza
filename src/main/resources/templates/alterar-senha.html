@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <script th:src="@{/javaScript/altera-senha.js}" defer></script>
+    <script th:src="@{/javaScript/alterar-senha.js}" defer></script>
 </head>
 <body>
 
@@ -19,19 +19,22 @@
     <div class="ssp-form-card">
 
         <header class="ssp-header-page-login">
-            <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
+            <a class="ssp-login-button-back" th:href="@{/login}">&larr; Voltar para o Login</a>
             <h1 th:text="${tituloPagina}">Alterar Senha</h1>
             <p class="ssp-register-footer">
                 Digite e confirme sua nova senha de acesso abaixo.
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-form-control input-error">
-            <span class="ssp-error-message" th:text="${erro}">Erro ao atualizar a senha.</span>
+        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
+            <span class="ssp-error-message" style="display: block;" th:text="${erro}"></span>
         </div>
 
-        <form id="form-alterar-senha" th:action="@{/usuario/alterar-senha}" th:object="${usuarioDTO}" method="POST">
+        <div th:if="${succ}" class="ssp-form-control" style="display: block; margin-bottom: 1rem; background-color: rgba(0, 213, 111, 0.1); padding: 0.8rem; border-radius: 6px;">
+            <span class="ssp-success-message" style="display: block;" th:text="${succ}"></span>
+        </div>
 
+        <form id="form-alterar-senha" th:action="@{/alterar-senha/{token}(token=${token})}" th:object="${usuarioDTO}" method="POST">
             <div class="ssp-form-group">
                 <label th:for="senha">Nova Senha</label>
                 <div class="ssp-password-wrapper">
