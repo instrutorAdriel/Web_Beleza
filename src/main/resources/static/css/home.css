@@ -730,11 +730,24 @@ body {
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
+<<<<<<< HEAD
     padding-left: 110px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 80px;
+=======
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 150px;
+    padding: 0 0 0 100px;
+>>>>>>> aa97909fec062f4d5b4b5201eaf4173e6933a55c
 }
+
+.footer-bloco {
+    flex: 0 1 300px; /* cada bloco tem base de 300px mas pode encolher */
+}
+
 .footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
 .footer-bloco h4 {
     font-size: 18px;
@@ -744,6 +757,23 @@ body {
     display: inline-block;
     color: var(--texto-claro);
     font-weight: 700;
+}
+.contato-item a {
+    color: var(--texto-claro);
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.contato-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contato-item p {
+    margin: 0;
 }
 .redes-sociais {
     display: flex;
