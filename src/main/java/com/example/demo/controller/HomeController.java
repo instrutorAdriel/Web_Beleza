@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Usuario;
 import com.example.demo.service.HomeService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +17,10 @@ public class HomeController {
 
     // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("servicos", homeService.listarServicos());
+        public String exibirHome(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        model.addAttribute("usuarioLogado", usuario);
+        model.addAttribute("tituloPagina", "Home - Portal Senac");
         return "home";
     }
 
