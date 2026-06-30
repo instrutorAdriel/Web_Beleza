@@ -167,10 +167,12 @@ body {
     font-size: 13px;
     transition: var(--transicao);
 }
+
 .btn-sair:hover {
     background-color: var(--senac-laranja);
     color: #000000;
 }
+
 .popover-logout {
     position: fixed;
     top: 70px;
@@ -883,3 +885,7 @@ body {
 .card-servico[style*="display: none"] {
     display: none !important;
 }
+
+/* ==========================================================================
+ELEMENTOS DO PERFIL
+========================================================================== */

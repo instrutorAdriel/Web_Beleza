@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <title th:text="${tituloPagina}">Perfil</title>
+</head>
+<body>
+<div class="container-painel">
+    <div class="sidebar">
+        <h3 class="bar-item">Painel</h3>
+        <a href="#" class="bar-item button">Informação do Perfil</a>
+        <a href="#" class="bar-item button">Configuração do Perfil</a>
+        <a href="#" class="bar-item button">Agendamentos</a>
+        <a href="#" class="bar-item button">Avaliações</a>
+        <a th:href="@{/}" class="bar-item button">Voltar</a>
+        <a th:href="@{/logout}" class="bar-item button">Sair</a>
+    </div>
+</div>
+<div class="conteudo-principal">
+
+</div>
+</body>
+</html>

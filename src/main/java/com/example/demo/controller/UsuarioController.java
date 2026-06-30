@@ -164,4 +164,11 @@ public class UsuarioController {
 
         return "alterar-senha";
     }
+
+    @GetMapping("/perfil")
+    public String processarPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+        Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+        model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
+        return "perfil";
+    }
 }

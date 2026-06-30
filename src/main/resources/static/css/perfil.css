@@ -1,0 +1,83 @@
+:root {
+    --fundo-principal: #ffffff;       /* Fundo do site 100% branco */
+    --fundo-card: #f8fafc;            /* Cinza azulado bem suave para os cards */
+    --fundo-dark: #000000;            /* Preto absoluto para o cabeçalho e hero */
+    --fundo-footer: #0f172a;          /* Azul escuro/preto corporativo para o rodapé */
+    --fundo-input: #ffffff;           /* Inputs internos brancos */
+    --senac-laranja: #f7941e;         /* Laranja oficial */
+    --senac-laranja-hover: #e8830c;   /* Laranja ao passar o mouse */
+    --texto-escuro: #1e293b;          /* Texto principal para leitura no fundo branco */
+    --texto-claro: #ffffff;           /* Texto para leitura nos fundos pretos */
+    --texto-mutado: #64748b;          /* Descrições secundárias */
+    --borda-suave: #e2e8f0;           /* Divisores de layout claros */
+    --sucesso: #10b981;               /* Verde moderno para sucesso */
+    --transicao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset Global */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Public Sans', sans-serif;
+    background-color: var(--fundo-principal);
+    color: var(--texto-escuro);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+.container-painel {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+}
+
+.conteudo-principal {
+    flex: 1; /* Ocupa o restante da tela */
+    padding: 40px;
+    background-color: #f8f9fa;
+}
+
+/* Botoes */
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0
+}
+
+.button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.button:hover {
+    color: #000; !important;
+    background-color: #ccc; !important;
+}
