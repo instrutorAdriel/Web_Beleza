@@ -31,7 +31,7 @@
         <!-- Logado -->
         <div th:if="${usuarioLogado != null}" class="usuario-logado">
             <i class="fa-solid fa-circle-user"></i>
-            <a th:href="@{/perfil}" href="" th:text="${usuarioLogado.nomeCompleto}">Usuário</a>
+            <a th:href="@{/perfil}" th:text="${usuarioLogado.nomeCompleto}">Usuário</a>
             <a href="#" class="btn-sair">Sair</a>
         </div>
     </div>
