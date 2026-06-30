@@ -29,6 +29,6 @@ public class HomeController {
         model.addAttribute("footerAno", "2026");
         model.addAttribute("footerEmpresa", "Senac Brasil");
 
-        return "home"; 
+        return "home";
     }
 }
