@@ -94,7 +94,7 @@ body {
 }
 
 .nav-menu a {
-    color: #ffffff; /* Texto 100% branco para contraste perfeito no fundo preto */
+    color: #ffffff;
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
@@ -110,7 +110,7 @@ body {
 /* Campo de busca adaptado para o fundo preto */
 .header-busca {
     display: flex;
-    background: #1a1a1a; /* Fundo cinza escuro para destacar as bordas no header */
+    background: #1a1a1a;
     border-radius: 6px;
     overflow: hidden;
     border: 1px solid #333333;
@@ -150,7 +150,6 @@ body {
    HERO BANNER (PRETO COM DETALHES LARANJA)
    ========================================================================== */
 .hero-banner {
-    /* Fundo preto profundo mesclado com imagem de fundo escurecida */
     background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
     min-height: 550px;
     display: flex;
@@ -192,7 +191,7 @@ body {
     letter-spacing: -0.5px;
 }
 
-/* Subtítulo em cinza claro para excelente leitura no fundo preto */
+/* Subtítulo em cinza claro */
 .hero-conteudo p {
     font-size: 19px;
     margin-bottom: 45px;
@@ -210,7 +209,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Botão Principal: Laranja Sólido com escrita preta */
 .btn-principal {
     text-decoration: none;
     padding: 16px 36px;
@@ -230,7 +228,6 @@ body {
     box-shadow: 0 6px 20px rgba(247, 148, 30, 0.4);
 }
 
-/* Botão Secundário: Vazado com bordas laranjas e texto laranja */
 .btn-secundario {
     text-decoration: none;
     padding: 16px 36px;
@@ -305,16 +302,16 @@ body {
 }
 
 /* ==========================================================================
-   CARROSSEL DE AGENDAMENTOS
+   CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
    ========================================================================== */
 .carrossel-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
+    display: block;
+    width: 100%;
+    padding: 0 40px;
 }
 .carrossel-track {
-    display: flex;
+    display: flex !important;
     gap: 24px;
     overflow-x: auto;
     scroll-behavior: smooth;
@@ -326,8 +323,9 @@ body {
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
 .card-servico {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 320px; /* Alargado ligeiramente para acompanhar a altura */
+    max-width: 320px;
+    height: 380px; /* <--- AUMENTADO (ANTES ERA 320px) */
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
@@ -335,7 +333,6 @@ body {
     padding: 28px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     transition: var(--transicao);
 }
 .card-servico:hover {
@@ -348,21 +345,23 @@ body {
     text-transform: uppercase;
     color: var(--senac-laranja);
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: inline-block;
     letter-spacing: 0.5px;
 }
 .card-titulo-servico {
     font-size: 19px;
     color: var(--texto-escuro);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     font-weight: 700;
 }
 .card-descricao {
     font-size: 14px;
     color: var(--texto-mutado);
-    margin-bottom: 24px;
     line-height: 1.6;
+    margin-bottom: 18px;
+    overflow: hidden;
+    flex-grow: 1;
 }
 
 .btn-card {
@@ -370,11 +369,12 @@ body {
     color: #000000;
     text-align: center;
     text-decoration: none;
-    padding: 11px;
+    padding: 12px;
     border-radius: 6px;
     font-weight: 700;
     display: block;
     transition: var(--transicao);
+    margin-top: auto;
 }
 .btn-card:hover {
     background-color: var(--senac-laranja-hover);
@@ -388,6 +388,8 @@ body {
     height: 46px;
     border-radius: 50%;
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -401,11 +403,11 @@ body {
     color: #000000;
     border-color: var(--senac-laranja);
 }
-.seta-esquerda { left: -20px; }
-.seta-direita { right: -20px; }
+.seta-esquerda { left: 0px; }
+.seta-direita { right: 0px; }
 
 /* ==========================================================================
-   PLATAFORMA DE CURSOS (GRID)
+   PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
    ========================================================================== */
 .abas-categorias {
     display: flex;
@@ -447,6 +449,7 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
+    height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
     transition: var(--transicao);
 }
 
@@ -457,12 +460,30 @@ body {
 }
 
 .img-placeholder-curso {
-    height: 170px;
+    height: 200px; /* Aumentado ligeiramente o banner do curso */
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 52px;
     color: white;
+    flex-shrink: 0;
+}
+
+.img-placeholder-curso img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.img-placeholder-curso i {
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 
 .img-placeholder-curso.TI { background: linear-gradient(135deg, #1e3c72, #2a5298); }
@@ -487,8 +508,8 @@ body {
 
 .corpo-curso h3 {
     color: var(--texto-escuro);
-    font-size: 21px;
-    margin-bottom: 12px;
+    font-size: 22px;
+    margin-bottom: 10px;
     font-weight: 700;
 }
 
@@ -496,7 +517,8 @@ body {
     color: var(--texto-mutado);
     font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
+    overflow: hidden;
     flex-grow: 1;
 }
 
@@ -506,11 +528,12 @@ body {
     font-size: 13px;
     color: var(--texto-escuro);
     font-weight: 600;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
     background: #f1f5f9;
     padding: 10px 14px;
     border-radius: 6px;
     border: 1px solid var(--borda-suave);
+    margin-top: auto;
 }
 .detalhes-rapidos-curso i {
     color: var(--senac-laranja);
@@ -522,7 +545,7 @@ body {
     color: #000000;
     text-align: center;
     text-decoration: none;
-    padding: 12px;
+    padding: 13px;
     border-radius: 6px;
     font-weight: 700;
     transition: var(--transicao);
@@ -764,9 +787,15 @@ body {
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
 
-    .seta-carrossel { display: none; } /* Arrasto por toque no mobile */
+    .seta-carrossel { display: none; }
     .sobre-cards { grid-template-columns: 1fr; }
 
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
+}
+
+/* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
+.card-curso-completo[style*="display: none"],
+.card-servico[style*="display: none"] {
+    display: none !important;
 }

@@ -2,13 +2,16 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
+import com.example.demo.respository.UsuarioRepository;
+import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UsuarioService;
+import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 public class UsuarioController {
@@ -16,22 +19,21 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    /* ─── TELA HOME (RAIZ DO SITE) ────────────────────────────────────────── */
-    @GetMapping("/")
-    public String exibirHome(Model model) {
-        model.addAttribute("tituloPagina", "Home - Portal Senac");
-        return "home";
-    }
+    @Autowired
+    private PasswordResetService passwordResetService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
-    @GetMapping("/usuario/login")
+    @GetMapping("/login")
     public String exibirLogin(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Entrar");
         return "login";
     }
 
-    @PostMapping("/usuario/login")
+    @PostMapping("/login")
     public String processarLogin(@ModelAttribute UsuarioDTO form, Model model){
         System.out.println("=== TENTATIVA DE LOGIN ===");
         System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
@@ -45,19 +47,18 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
-
-        return "redirect:/usuario/painel"; // veja observação abaixo sobre essa linha
+        return "redirect:/";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
-    @GetMapping("/usuario/cadastro")
+    @GetMapping("/cadastro")
     public String exibirCadastro(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Criar Conta");
         return "cadastro";
     }
 
-    @PostMapping("/usuario/cadastro")
+    @PostMapping("/cadastro")
     public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model) {
         String erro = usuarioService.cadastrar(form);
 
@@ -68,57 +69,79 @@ public class UsuarioController {
             return "cadastro";
         }
 
-        return "redirect:/usuario/login";
+        return "redirect:/login";
     }
 
-    /* ─── RECUPERAR SENHA ─────────────────────────────────────────────────── */
-    @GetMapping("/usuario/recuperar-senha")
-    public String exibirRecuperarSenha(Model model) {
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Recuperar Senha");
+    /*
+    Rota de recuperar a senha e alterar senha
+     */
+    @GetMapping("/recuperar-senha")
+    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
+        model.addAttribute("tituloPagina", "Alterar Senha");
+        model.addAttribute("usuarioDTO", form);
         return "recuperar-senha";
     }
 
-    @PostMapping("/usuario/recuperar-senha")
-    public String processarRecuperarSenha(@ModelAttribute UsuarioDTO form, Model model) {
-        return "redirect:/usuario/codigo";
-    }
+    @PostMapping("/recuperar-senha")
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model){
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
-    /* ─── CÓDIGO DE VERIFICAÇÃO ───────────────────────────────────────────── */
-    @GetMapping("/usuario/codigo")
-    public String exibirCodigo(Model model) {
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Verificar Código");
-        return "codigo";
-    }
-
-    @PostMapping("/usuario/verificar-codigo")
-    public String processarCodigo(@ModelAttribute UsuarioDTO form, Model model) {
-        if ("123456".equals(form.getCodigoVerificacao())) {
-            return "redirect:/usuario/altera-senha";
+        if (form.getEmail().isBlank()){
+            model.addAttribute("erro", "E-mail em branco");
+            return "recuperar-senha";
+        } else if (!Validador.isEmailValido(form.getEmail())){
+            model.addAttribute("erro", "E-mail inválido");
+            return "recuperar-senha";
+        } else if (res.isEmpty()){
+            model.addAttribute("erro", "E-mail inválido");
+            return "recuperar-senha";
         }
-        model.addAttribute("erro", "Código de verificação incorreto ou expirado.");
-        model.addAttribute("tituloPagina", "Verificar Código");
-        return "codigo";
-    }
 
-    /* ─── ALTERAR SENHA ───────────────────────────────────────────────────── */
-    @GetMapping("/usuario/altera-senha")
-    public String exibirAlterarSenha(Model model){
-        model.addAttribute("usuarioDTO", new UsuarioDTO());
-        model.addAttribute("tituloPagina", "Alterar Senha");
-        return "altera-senha";
-    }
+        Usuario usuario = res.get();
 
-    @PostMapping("/usuario/altera-senha")
-    public String processarAlterarSenha(@ModelAttribute UsuarioDTO form, Model model){
-        String erro = usuarioService.alterarSenha(form);
-
-        if (erro != null) {
-            model.addAttribute("erro", erro);
-            model.addAttribute("tituloPagina", "Alterar Senha");
-            return "altera-senha";
+        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null){
+            model.addAttribute("succ", "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
+        } else {
+            model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
+            return "recuperar-senha";
         }
-        return "redirect:/usuario/login";
+
+        return "recuperar-senha";
+    }
+
+    @GetMapping("/alterar-senha/{token}")
+    public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model){
+        if (passwordResetService.verificarToken(token) != null){
+            return "redirect:/indefinido";
+        }
+
+        model.addAttribute("token", token);
+        model.addAttribute("usuarioDTO", form);
+
+        return "alterar-senha";
+    }
+
+    @PostMapping("/alterar-senha/{token}")
+    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute  UsuarioDTO form, Model model){
+        // Vericação se o token do alterar senha é de fato valido antes de alterar a senha
+        if (passwordResetService.verificarToken(token) != null){
+            // Exibir uma mensagem na página dizendo que ocorreu um erro, sem necessidade de retornar para uma página
+            // de erro
+
+            return "redirect:/indefinido";
+        }
+
+        form.setEmail(passwordResetService.retornarUsuario(token).getEmail());
+        String res = usuarioService.alterarSenha(form);
+
+        if (res != null){
+            model.addAttribute("erro", res);
+            model.addAttribute("usuarioDTO", form);
+            return "alterar-senha";
+        }
+
+        model.addAttribute("succ", "Senha alterada com sucesso!");
+
+        return "alterar-senha";
     }
 }
