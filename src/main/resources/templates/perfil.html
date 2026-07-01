@@ -7,36 +7,69 @@
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body>
-<div class="container-painel">
-    <div class="sidebar">
-        <h3 class="bar-item">Painel</h3>
-        <a href="#" class="bar-item button">Informação do Perfil</a>
-        <a href="#" class="bar-item button">Configuração do Perfil</a>
-        <a href="#" class="bar-item button">Agendamentos</a>
-        <a href="#" class="bar-item button">Avaliações</a>
-        <a th:href="@{/}" class="bar-item button">Voltar</a>
-        <a th:href="@{/logout}" class="bar-item button">Sair</a>
+<div class="painel-controle">
+    <div class="container-painel">
+        <div class="sidebar">
+            <h3 class="bar-item">Painel</h3>
+            <a href="" data-target="perfil-informacao" class="bar-item button active">Informação do Perfil</a>
+            <a href="" data-target="perfil-configuracao" class="bar-item button">Configuração do Perfil</a>
+            <a href="" data-target="perfil-agendamento" class="bar-item button">Agendamentos</a>
+            <a href="" data-target="perfil-avaliacao" class="bar-item button">Avaliações</a>
+            <a th:href="@{/}" class="bar-item button">Voltar</a>
+            <a th:href="@{/logout}" class="bar-item button">Sair</a>
+        </div>
+    </div>
+    <div class="conteudo-principal">
+        <section id="perfil-informacao" class="secao-painel">
+            <div class="secao-header">
+                <h2>Informação do Perfil</h2>
+            </div>
+
+            <form class="form-perfil" action="/perfil" method="POST">
+                <div class="form-grid">
+                    <div class="group-input">
+                        <label for="nome">Nome Completo</label>
+                        <input id="nome" name="nome">
+                    </div>
+                    <div class="group-input">
+                        <label for="data_nascimento">Data de Nascimento</label>
+                        <input id="data_nascimento" name="data_nascimento">
+                    </div>
+                    <div class="group-input">
+                        <label for="telefone">Telefone</label>
+                        <input id="telefone" name="telefone">
+                    </div>
+                    <div class="group-input">
+                        <label for="email">E-mail</label>
+                        <input id="email" name="email">
+                    </div>
+                    <div class="group-input">
+                        <p>Aqui vai ficar a opção do usuário alterar a senha</p>
+                    </div>
+                    <div class="group-input"></div>
+                    <div class="group-button">
+                        <button type="">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="perfil-configuracao" class="secao-painel hidden">
+            <div class="secao-header">
+                <h2>Configuração do Perfil</h2>
+            </div>
+        </section>
+        <section id="perfil-agendamento" class="secao-painel hidden">
+            <div class="secao-header">
+                <h2>Agendamento</h2>
+            </div>
+        </section>
+        <section id="perfil-avaliacao" class="secao-painel hidden">
+            <div class="secao-header">
+                <h2>Avaliação</h2>
+            </div>
+        </section>
     </div>
 </div>
-<div class="conteudo-principal">
-    <section class="secao-painel">
-        <div class="secao-header">
-            <h2>Informação do Perfil</h2>
-        </div>
-
-        <form class="form-perfil" action="" method="POST">
-            <div class="grid-form">
-                <div class="group-input"></div>
-                <div class="group-input"></div>
-                <div class="group-input"></div>
-                <div class="group-input"></div>
-                <div class="group-input"></div>
-            </div>
-        </form>
-    </section>
-    <section></section>
-    <section></section>
-    <section></section>
-</div>
+<script th:src="@{javaScript/perfil.js}"></script>
 </body>
 </html>

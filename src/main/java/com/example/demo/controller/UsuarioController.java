@@ -166,7 +166,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/perfil")
-    public String processarPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+    public String exibirPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+        Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+        model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
+        return "perfil";
+    }
+
+    @PostMapping("/perfil")
+    public String processarPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
         model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
         return "perfil";
