@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HomeController {
@@ -17,5 +18,11 @@ public class HomeController {
     public String home(Model model) {
         model.addAttribute("servicos", homeService.listarServicos());
         return "home";
+    }
+
+    @GetMapping("/indefinido")
+    public String exibirTelaIndefinida(Model model){
+        model.addAttribute("tituloPagina", "Página Indefinida");
+        return "undefined";
     }
 }
