@@ -31,7 +31,7 @@
 
         <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
-            <span th:text="${usuario != null} ? ${usuario.nomeCompleto} : ''">>Usuário</span>
+            <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
             <!--  <img th:if="${usuario.fotoUrl != null}"
                 th:src="${usuario.fotoUrl}"
