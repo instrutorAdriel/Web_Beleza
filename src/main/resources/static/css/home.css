@@ -81,7 +81,6 @@ body {
 
 .logo {
     flex-shrink: 0;
-    margin-left: -200px;
 }
 
 .logo img {
@@ -167,12 +166,10 @@ body {
     font-size: 13px;
     transition: var(--transicao);
 }
-
 .btn-sair:hover {
     background-color: var(--senac-laranja);
     color: #000000;
 }
-
 .popover-logout {
     position: fixed;
     top: 70px;
@@ -729,6 +726,48 @@ body {
 .ementa-curso li { font-size: 14px; color: var(--texto-mutado); margin-bottom: 14px; line-height: 1.6; }
 .ementa-curso i { color: var(--sucesso); margin-right: 8px; }
 
+.formulario-matricula form {
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario-matricula label {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--texto-escuro);
+    text-transform: uppercase;
+}
+.formulario-matricula input, .formulario-matricula select {
+    background: var(--fundo-input);
+    color: var(--texto-escuro);
+    padding: 12px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 6px;
+    margin-bottom: 18px;
+    font-family: inherit;
+    outline: none;
+    font-size: 14px;
+    transition: var(--transicao);
+}
+.formulario-matricula input:focus, .formulario-matricula select:focus {
+    border-color: var(--senac-laranja);
+    box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+.btn-enviar-formulario {
+    background: var(--senac-laranja);
+    color: #000000;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 15px;
+    transition: var(--transicao);
+}
+.btn-enviar-formulario:hover { background: var(--senac-laranja-hover); }
+
 /* Tabela de horários */
 .tabela-horarios { width: 100%; border-collapse: collapse; margin-top: 25px; }
 .tabela-horarios th, .tabela-horarios td { padding: 14px; text-align: left; border-bottom: 1px solid var(--borda-suave); color: var(--texto-escuro); }
@@ -821,8 +860,8 @@ body {
 }
 
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
