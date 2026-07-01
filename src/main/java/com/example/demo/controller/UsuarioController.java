@@ -19,15 +19,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-<<<<<<< HEAD
     @Autowired
     private PasswordResetService passwordResetService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-=======
-
->>>>>>> aa97909fec062f4d5b4b5201eaf4173e6933a55c
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")

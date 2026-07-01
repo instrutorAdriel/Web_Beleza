@@ -180,32 +180,25 @@
 <footer class="site-footer">
     <div class="footer-container">
         <div class="footer-bloco">
-<<<<<<< HEAD
-            <h4 th:text="${footerTituloSobre}">Sobre o Senac</h4>
+            <div class="titulo-wrapper">
+                <h4 th:text="${footerTituloSobre}">Sobre o Senac</h4>
+            </div>
             <p th:text="${footerSobre}">Texto sobre o Senac...</p>
         </div>
         <div class="footer-bloco">
-            <h4 th:text="${footerTituloContato}">Contato rápido</h4>
-            <p>
-                Telefone: <span th:text="${footerTelefone}">0800 707 1022</span><br>
-                E-mail: <span th:text="${footerEmail}">faleconosco@senac.br</span>
-            </p>
-=======
-            <h4 th:text="${footerTituloSobre}">Sobre o Salão de beleza Senac</h4>
-            <p th:text="${footerSobre}">O Salão de Beleza do SENAC-DF oferece serviços gratuitos à comunidade, proporcionando atendimento de qualidade, cuidado e bem-estar. Nosso compromisso é promover a autoestima e oferecer uma experiência acolhedora e profissional para todos.</p>
-        </div>
-        <div class="footer-bloco">
-            <h4 th:text="${footerTituloContato}">Contato rápido</h4>
+            <div class="titulo-wrapper">
+                <h4 th:text="${footerTituloContato}">Contato rápido</h4>
+            </div>
             <div class="contato-item">
-                <a th:href="${footerWhatsappLink}"><i class="fa-brands fa-whatsapp"></i></a>
+                <a th:href="${footerWhatsappLink}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
                 <p th:text="${footerHorario}">Horário de funcionamento: segunda a sexta-feira | 8h às 19h</p>
             </div>
->>>>>>> aa97909fec062f4d5b4b5201eaf4173e6933a55c
         </div>
         <div class="footer-bloco">
-            <h4 th:text="${footerTituloRedes}">Siga-nos</h4>
+            <div class="titulo-wrapper">
+                <h4 th:text="${footerTituloRedes}">Siga-nos</h4>
+            </div>
             <div class="redes-sociais">
-<<<<<<< HEAD
                 <a th:href="${footerFacebookLink}" target="_blank" rel="noopener noreferrer">
                     <i class="fa-brands fa-facebook"></i>
                 </a>
@@ -215,22 +208,13 @@
                 <a th:href="${footerLinkedinLink}" target="_blank" rel="noopener noreferrer">
                     <i class="fa-brands fa-linkedin"></i>
                 </a>
-=======
-                <a th:href="${footerFacebookLink}"><i class="fa-brands fa-facebook"></i></a>
-                <a th:href="${footerInstagramLink}"><i class="fa-brands fa-instagram"></i></a>
-                <a th:href="${footerLinkedinLink}"><i class="fa-brands fa-linkedin"></i></a>
->>>>>>> aa97909fec062f4d5b4b5201eaf4173e6933a55c
             </div>
         </div>
     </div>
     <div class="footer-bottom">
-<<<<<<< HEAD
-        <p>&copy; <span th:text="${footerAno}">2026</span> <span th:text="${footerEmpresa}">Senac Brasil</span>. Todos os direitos reservados.</p>
-=======
         <p th:text="'© ' + ${footerAno} + ' ' + ${footerEmpresa} + '. Todos os direitos reservados.'">
             &copy; 2026 Senac Brasil. Todos os direitos reservados.
         </p>
->>>>>>> aa97909fec062f4d5b4b5201eaf4173e6933a55c
     </div>
 </footer>
 
