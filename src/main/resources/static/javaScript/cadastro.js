@@ -203,4 +203,5 @@ document.addEventListener("DOMContentLoaded", function () {
     function limparErro(input) {
         input.classList.remove("input-error");
     }
+    });
 });
