@@ -25,14 +25,14 @@
 
         <!-- Não logado -->
         <a th:if="${usuario == null}"
-           th:href="@{/usuario/login}" class="btn-entrar">
+           th:href="@{/login}" class="btn-entrar">
             <i class="fa-solid fa-right-to-bracket"></i> Entrar
         </a>
 
         <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
             <span th:text="${usuario != null} ? ${usuario.nomeCompleto} : ''">>Usuário</span>
-            <a th:href="@{/usuario/logout}" class="btn-sair">Sair</a>
+            <a th:href="@{/logout}" class="btn-sair">Sair</a>
             <!--  <img th:if="${usuario.fotoUrl != null}"
                 th:src="${usuario.fotoUrl}"
                 alt="Foto de perfil" class="foto-perfil"/>
@@ -71,7 +71,7 @@
       </div>
   </section>
 
-<section id="servicos-agendamento" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 

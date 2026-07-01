@@ -188,7 +188,7 @@ function inicializarLogout() { // ← agora está no escopo global
         document.body.appendChild(popover);
 
         popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
-            window.location.href = '/usuario/logout';
+            window.location.href = '/logout';
         });
 
         popover.querySelector('.popover-btn-nao').addEventListener('click', () => {

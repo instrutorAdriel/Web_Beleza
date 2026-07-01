@@ -51,14 +51,14 @@ public class UsuarioController {
 
         // Sucesso! Redireciona para a rota da Home interna do Portal
         session.setAttribute("usuarioLogado", usuario);
-        return "redirect:/home";
+        return "redirect:/";
 
     }
     // ─── LOGOUT ───────────────────────────────────────────────────
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
