@@ -31,7 +31,7 @@
         </div>
 
         <!-- Formulário: Envia os dados para a Controller validar no banco de dados -->
-        <form th:action="@{/usuario/login}" th:object="${usuarioDTO}" method="POST">
+        <form th:action="@{/login}" th:object="${usuarioDTO}" method="POST">
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
                 <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="seuemail@gmail.com" required>
@@ -48,7 +48,7 @@
             </div>
 
             <div class="ssp-form-options text-right">
-                <a th:href="@{/usuario/recuperar-senha}" class="ssp-forgot-password">Esqueceu a senha?</a>
+                <a th:href="@{/recuperar-senha}" class="ssp-forgot-password">Esqueceu a senha?</a>
             </div>
 
             <!-- Botão de Envio: Dispara a verificação no Java -->
@@ -82,7 +82,7 @@
         </div>
 
         <div class="ssp-register-footer">
-            Não possui conta? <a th:href="@{/usuario/cadastro}">Cadastre-se</a>
+            Não possui conta? <a th:href="@{/cadastro}">Cadastre-se</a>
         </div>
     </div>
 </div>
