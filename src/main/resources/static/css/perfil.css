@@ -40,6 +40,11 @@ input {
     font-size: 1rem;
 }
 
+input:read-only {
+    background-color: var(--borda-suave);
+    color: var(--texto-mutado);
+}
+
 .painel-controle {
     display: flex;
     min-height: 100vh;
@@ -105,6 +110,24 @@ a.active {
     background-color: var(--senac-laranja); !important;
 }
 
+.btn {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    background: var(--senac-laranja);
+    color: var(--texto-claro);
+}
+
+.btn:hover {
+    box-shadow: none;
+    background-color: var(--senac-laranja-hover);
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -116,10 +139,12 @@ a.active {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding: 12px 0 12px 0;
 }
 
 .group-button {
     display: flex;
+    padding: 12px 0 0 0;
 }
 
 /*

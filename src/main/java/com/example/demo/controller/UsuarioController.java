@@ -169,6 +169,7 @@ public class UsuarioController {
     public String exibirPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
         model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
+        model.addAttribute("usuarioDTO", usuario);
         return "perfil";
     }
 
@@ -176,6 +177,7 @@ public class UsuarioController {
     public String processarPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
         model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
+        model.addAttribute("usuarioDTO", usuario);
         return "perfil";
     }
 }
