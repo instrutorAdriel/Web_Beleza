@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.app.beleza.service;
 
-import com.example.demo.model.Usuario;
-import com.example.demo.model.UsuarioDTO;
-import com.example.demo.respository.UsuarioRepository;
+import com.app.beleza.model.Usuario;
+import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.respository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

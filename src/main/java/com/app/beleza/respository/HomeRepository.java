@@ -1,6 +1,6 @@
-package com.example.demo.respository;
+package com.app.beleza.respository;
 
-import com.example.demo.model.Home;
+import com.app.beleza.model.Home;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.app.beleza.model;
 
 public class AgendamentoDTO {
 
