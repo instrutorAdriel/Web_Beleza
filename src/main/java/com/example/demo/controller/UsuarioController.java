@@ -5,6 +5,7 @@ import com.example.demo.model.UsuarioDTO;
 import com.example.demo.respository.UsuarioRepository;
 import com.example.demo.service.PasswordResetService;
 import com.example.demo.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model){
+    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model,  HttpSession session){
         System.out.println("=== TENTATIVA DE LOGIN ===");
         System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
         System.out.println("Senha vinda do HTML: [ PROTEGIDO ]");
@@ -47,7 +48,17 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
+
+        // Sucesso! Redireciona para a rota da Home interna do Portal
+        session.setAttribute("usuarioLogado", usuario);
         return "redirect:/";
+
+    }
+    // ─── LOGOUT ───────────────────────────────────────────────────
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */

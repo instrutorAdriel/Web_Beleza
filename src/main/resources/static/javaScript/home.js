@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
+    inicializarNavAtiva();
+    inicializarLogout();
 });
 
 /**
@@ -106,7 +108,102 @@ function inicializarFormularios() {
 
             window.location.hash = 'sucesso';
             form.reset();
+
         });
+
+    });
+
+}
+/**
+ * MODULE: NAVEGAÇÃO ATIVA POR SCROLL
+ * Destaca o link do nav em laranja conforme a seção visível na tela.
+ */
+function inicializarNavAtiva() {
+    const links = document.querySelectorAll('.nav-link');
+    const secoes = document.querySelectorAll('section[id]');
+
+    // Clique no menu
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const destino = document.querySelector(this.getAttribute('href'));
+
+            if (destino) {
+                destino.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Atualiza menu conforme scroll
+    window.addEventListener('scroll', () => {
+        let secaoAtual = '';
+
+        secoes.forEach(secao => {
+            const topo = secao.offsetTop - 120;
+            const altura = secao.offsetHeight;
+
+            if (window.scrollY >= topo && window.scrollY < topo + altura) {
+                secaoAtual = secao.getAttribute('id');
+            }
+        });
+
+        links.forEach(link => {
+            link.classList.remove('ativo');
+
+            if (link.getAttribute('href') === `#${secaoAtual}`) {
+                link.classList.add('ativo');
+            }
+
+        });
+
+    });
+
+}
+/**
+ * MODULE: CONFIRMAÇÃO DE LOGOUT
+ * Exibe um popover personalizado perguntando se o usuário tem certeza
+ * que deseja sair antes de redirecionar para o logout
+ */
+function inicializarLogout() { // ← agora está no escopo global
+    const btnSair = document.querySelector('.btn-sair');
+
+    if (!btnSair) return;
+
+    btnSair.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const popover = document.createElement('div');
+        popover.className = 'popover-logout';
+        popover.innerHTML = `
+            <p>Tem certeza que deseja sair?</p>
+            <div class="popover-botoes">
+                <button class="popover-btn-sim">Sim, sair</button>
+                <button class="popover-btn-nao">Cancelar</button>
+            </div>
+        `;
+
+        document.querySelector('.popover-logout')?.remove();
+        document.body.appendChild(popover);
+
+        popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
+            window.location.href = '/logout';
+        });
+
+        popover.querySelector('.popover-btn-nao').addEventListener('click', () => {
+            popover.remove();
+        });
+
+        setTimeout(() => {
+            document.addEventListener('click', function fechar(e) {
+                if (!popover.contains(e.target) && e.target !== btnSair) {
+                    popover.remove();
+                    document.removeEventListener('click', fechar);
+                }
+            });
+        }, 100);
     });
 }
 
