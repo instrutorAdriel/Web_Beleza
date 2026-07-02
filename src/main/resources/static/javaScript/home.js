@@ -3,6 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarHeroBanner(); // NOVO: Inicializa o Hero Banner junto com os outros módulos
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
@@ -205,3 +206,100 @@ function inicializarLogout() { // ← agora está no escopo global
         }, 100);
     });
 }
+
+/**
+ * MODULE: CONTROLE DO HERO BANNER (SLIDESHOW AUTOMÁTICO E MANUAL)
+ * Ajustado exatamente para a estrutura do seu HTML (id="heroSlider", class="slide", etc.)
+ */
+function inicializarHeroBanner() {
+    const sliderContainer = document.querySelector('#heroSlider');
+    const slides = document.querySelectorAll('#heroSlider .slide');
+    const setaEsquerda = document.querySelector('#heroBtnPrev');
+    const setaDireita = document.querySelector('#heroBtnNext');
+
+    if (slides.length === 0) return;
+
+    let slideAtual = 0;
+    let intervaloBanner;
+    const tempoTransicao = 5000; // Alterna automaticamente a cada 5 segundos
+
+    // Configuração inicial de estilo dos slides caso não estejam mapeados no CSS
+    if (sliderContainer) {
+        sliderContainer.style.position = 'relative';
+        sliderContainer.style.overflow = 'hidden';
+    }
+
+    slides.forEach((slide, idx) => {
+        slide.style.position = 'absolute';
+        slide.style.top = '0';
+        slide.style.left = '0';
+        slide.style.width = '100%';
+        slide.style.height = '100%';
+        slide.style.transition = 'opacity 0.8s ease-in-out';
+
+        // Deixa apenas o primeiro slide visível inicialmente
+        if (idx === 0) {
+            slide.classList.add('ativa');
+            slide.style.opacity = '1';
+            slide.style.zIndex = '2';
+        } else {
+            slide.classList.remove('ativa');
+            slide.style.opacity = '0';
+            slide.style.zIndex = '1';
+        }
+    });
+
+    // Função para transição e exibição dos slides
+    function mostrarSlide(index) {
+        // Trata os limites (loop infinito)
+        if (index >= slides.length) slideAtual = 0;
+        else if (index < 0) slideAtual = slides.length - 1;
+        else slideAtual = index;
+
+        // Atualiza a opacidade de cada slide baseado no índice ativo
+        slides.forEach((slide, idx) => {
+            if (idx === slideAtual) {
+                slide.classList.add('ativa');
+                slide.style.opacity = '1';
+                slide.style.zIndex = '2';
+            } else {
+                slide.classList.remove('ativa');
+                slide.style.opacity = '0';
+                slide.style.zIndex = '1';
+            }
+        });
+    }
+
+    function proximoSlide() {
+        mostrarSlide(slideAtual + 1);
+    }
+
+    function slideAnterior() {
+        mostrarSlide(slideAtual - 1);
+    }
+
+    function reiniciarIntervalo() {
+        clearInterval(intervaloBanner);
+        intervaloBanner = setInterval(proximoSlide, tempoTransicao);
+    }
+
+    // Inicia o carrossel automático ao carregar
+    reiniciarIntervalo();
+
+    // Ouvintes de evento para as setas do seu HTML
+    if (setaDireita) {
+        setaDireita.addEventListener('click', (e) => {
+            e.preventDefault();
+            proximoSlide();
+            reiniciarIntervalo();
+        });
+    }
+
+    if (setaEsquerda) {
+        setaEsquerda.addEventListener('click', (e) => {
+            e.preventDefault();
+            slideAnterior();
+            reiniciarIntervalo();
+        });
+    }
+}11
