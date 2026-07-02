@@ -337,6 +337,8 @@ body {
     flex-direction: column;
     justify-content: space-between;
     transition: var(--transicao);
+
+
 }
 .card-servico:hover {
     transform: translateY(-6px);
@@ -375,6 +377,7 @@ body {
     font-weight: 700;
     display: block;
     transition: var(--transicao);
+
 }
 .btn-card:hover {
     background-color: var(--senac-laranja-hover);
@@ -563,6 +566,7 @@ body {
     color: var(--texto-escuro);
     animation: modalEntrada 0.4s ease;
 }
+
 
 @keyframes modalEntrada {
     from { opacity: 0; transform: translateY(-30px); }
@@ -767,4 +771,22 @@ body {
 
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
+}
+
+
+
+
+
+
+
+.tabela-horarios th,
+.tabela-horarios td {
+    text-align: center !important;
+    vertical-align: middle;
+}
+
+
+.tabela-horarios td .btn-confirmar {
+    display: inline-block;
+    margin: 0 auto;
 }

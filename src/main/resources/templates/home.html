@@ -143,7 +143,7 @@
                     <h3 class="card-titulo-servico">Corte de Cabelo Masculino</h3>
                     <p class="card-descricao">Corte e acabamento realizados por nossa turma de Barbeiro Profissional.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(1)" >Agendar</a>
             </div>
 
             <!-- Card 2 -->
@@ -153,7 +153,7 @@
                     <h3 class="card-titulo-servico">Atendimento Estético</h3>
                     <p class="card-descricao">Limpeza de pele profunda realizada pelos estudantes de Estética.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(2)">Agendar</a>
             </div>
 
             <!-- Card 3 -->
@@ -163,7 +163,7 @@
                     <h3 class="card-titulo-servico">Consultoria de Imagem</h3>
                     <p class="card-descricao">Análise de coloração pessoal conduzida pelo time de Moda.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(3)">Agendar</a>
             </div>
 
             <!-- Card 4 (Novo) -->
@@ -173,7 +173,7 @@
                     <h3 class="card-titulo-servico">Design de Sobrancelhas</h3>
                     <p class="card-descricao">Modelagem, simetria facial e aplicação de henna pela equipe de Beleza.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(4)">Agendar</a>
             </div>
 
             <!-- Card 5 (Novo) -->
@@ -183,7 +183,7 @@
                     <h3 class="card-titulo-servico">Atendimento Nutricional</h3>
                     <p class="card-descricao">Avaliação de bioimpedância e plano alimentar com alunos de Nutrição.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(5)">Agendar</a>
             </div>
 
             <!-- Card 6 (Novo) -->
@@ -193,7 +193,7 @@
                     <h3 class="card-titulo-servico">Massagem Relaxante</h3>
                     <p class="card-descricao">Sessões de massagem terapêutica aplicadas pelo time de Massoterapia.</p>
                 </div>
-                <a href="#modal-agendamento" class="btn-card">Agendar</a>
+                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(6)">Agendar</a>
             </div>
         </div>
 
@@ -290,29 +290,20 @@
 
 <div id="modal-agendamento" class="modal-plataforma">
     <div class="modal-painel">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+        <a href="#" class="btn-fechar-modal" onclick="fecharModal()">&times; Fechar</a>
         <span class="tag-modal">Serviços Práticos</span>
         <h2>Horários Disponíveis para Atendimento</h2>
 
         <table class="tabela-horarios">
             <thead>
             <tr>
-                <th>Horário</th>
-                <th>Status</th>
+                <th>Data do Atendimento</th>
+                <th>Horário Inicial</th>
+                <th>Vagas Disponíveis</th>
                 <th>Ação</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td>Terça-feira, 14:00</td>
-                <td class="vaga-sim">Disponível</td>
-                <td><a href="#sucesso" class="btn-confirmar">Agendar</a></td>
-            </tr>
-            <tr>
-                <td>Terça-feira, 15:30</td>
-                <td class="vaga-nao">Esgotado</td>
-                <td><button class="btn-confirmar" disabled>Indisponível</button></td>
-            </tr>
+            <tbody id="tabela-sessoes-body">
             </tbody>
         </table>
     </div>
@@ -354,5 +345,6 @@
     </div>
 </footer>
 
+<script th:src="@{/JavaScript/agendamento.js}"></script>
 </body>
 </html>
