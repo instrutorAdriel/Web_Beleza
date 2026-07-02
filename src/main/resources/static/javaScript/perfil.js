@@ -8,6 +8,11 @@ const sections = document.querySelectorAll("section");
 
 sidebar_itens.forEach(bar_item => {
     bar_item.addEventListener('click', function (evento) {
+        const href = bar_item.getAttribute("href");
+        if (href && !href.startsWith("#") && href !== ""){
+            return;
+        }
+
         evento.preventDefault(); // Evita recarregar a página
         const bar_item_clicado = evento.currentTarget;
 
@@ -20,4 +25,4 @@ sidebar_itens.forEach(bar_item => {
         bar_item_clicado.classList.add("active");
         targetSection.classList.remove("hidden");
     })
-})
+});
