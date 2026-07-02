@@ -2,10 +2,13 @@
  * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Unidade)
  */
 
+const ENDPOINT_AVALIACAO = '/api/avaliacoes';
+
 document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
+    inicializarAvaliacaoModelos();
 });
 
 /**
@@ -106,5 +109,134 @@ function inicializarFormularios() {
             window.location.hash = 'sucesso';
             form.reset();
         });
+    });
+}
+
+/**
+ * MODULE: AVALIAÇÃO DE MODELOS (popup com imagem, descrição e nome do modelo)
+ */
+function inicializarAvaliacaoModelos() {
+    const modal = document.getElementById('modal-avaliacao');
+    const form = document.getElementById('form-avaliacao');
+
+    if (!modal || !form) return;
+
+    const inputImagem = document.getElementById('imagemResultado');
+    const previewWrapper = document.getElementById('previewImagem');
+    const feedback = document.getElementById('feedbackAvaliacao');
+    const inputNomeModelo = document.getElementById('nomeModelo');
+    const btnEnviar = document.getElementById('btn-enviar-avaliacao');
+
+    // --- Abertura do modal a partir de qualquer botão com data-abrir-avaliacao ---
+    document.querySelectorAll('[data-abrir-avaliacao]').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nomeModelo = btn.getAttribute('data-abrir-avaliacao');
+            if (nomeModelo) {
+                inputNomeModelo.value = nomeModelo;
+            }
+            abrirModalAvaliacao();
+        });
+    });
+
+    function abrirModalAvaliacao() {
+        modal.classList.add('ativo');
+        modal.style.display = 'flex';
+    }
+
+    function fecharModalAvaliacao() {
+        modal.classList.remove('ativo');
+        modal.style.display = 'none';
+        form.reset();
+        previewWrapper.innerHTML = '';
+        previewWrapper.classList.remove('ativo');
+        feedback.textContent = '';
+        feedback.className = 'feedback-avaliacao';
+    }
+
+    document.getElementById('btn-fechar-avaliacao').addEventListener('click', (e) => {
+        e.preventDefault();
+        fecharModalAvaliacao();
+    });
+
+    document.getElementById('btn-cancelar-avaliacao').addEventListener('click', (e) => {
+        e.preventDefault();
+        fecharModalAvaliacao();
+    });
+
+    // Fecha clicando fora do painel
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) fecharModalAvaliacao();
+    });
+
+    // --- Preview da imagem selecionada ---
+    inputImagem.addEventListener('change', () => {
+        const arquivo = inputImagem.files[0];
+        previewWrapper.innerHTML = '';
+
+        if (!arquivo) {
+            previewWrapper.classList.remove('ativo');
+            return;
+        }
+
+        const leitor = new FileReader();
+        leitor.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            previewWrapper.appendChild(img);
+            previewWrapper.classList.add('ativo');
+        };
+        leitor.readAsDataURL(arquivo);
+    });
+
+    // --- Envio do formulário para o backend Spring ---
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        feedback.textContent = '';
+        feedback.className = 'feedback-avaliacao';
+
+        const descricao = document.getElementById('descricaoAvaliacao').value.trim();
+        const arquivo = inputImagem.files[0];
+
+        if (!arquivo || !descricao) {
+            feedback.textContent = 'Preencha a imagem e a descrição da avaliação.';
+            feedback.classList.add('erro');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('imagem', arquivo);
+        formData.append('descricao', descricao);
+        formData.append('nomeModelo', inputNomeModelo.value.trim()); // pode ir vazio
+
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando...';
+
+        try {
+            const resposta = await fetch(ENDPOINT_AVALIACAO, {
+                method: 'POST',
+                body: formData
+                // Não defina Content-Type manualmente: o navegador
+                // monta o boundary correto do multipart/form-data.
+            });
+
+            if (!resposta.ok) {
+                throw new Error('Falha ao enviar avaliação (status ' + resposta.status + ')');
+            }
+
+            feedback.textContent = 'Avaliação enviada com sucesso!';
+            feedback.classList.add('sucesso');
+
+            setTimeout(fecharModalAvaliacao, 1200);
+
+        } catch (erro) {
+            console.error(erro);
+            feedback.textContent = 'Erro ao enviar a avaliação. Tente novamente.';
+            feedback.classList.add('erro');
+        } finally {
+            btnEnviar.disabled = false;
+            btnEnviar.textContent = 'Enviar Avaliação';
+        }
     });
 }
