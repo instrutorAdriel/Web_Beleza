@@ -24,8 +24,14 @@
                 <h2>Informação do Perfil</h2>
             </div>
 
-            <form class="form-perfil" th:action="@{/perfil}" th:object="${usuarioDTO}" method="POST">
+            <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
                 <div class="form-grid">
+                    <div class="group-info" th:if="${mensagem}" class="alerta">
+                        <span th:text="${mensagem}"></span>
+                    </div>
+                    <div class="group-input">
+
+                    </div>
                     <div class="group-input">
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
@@ -58,8 +64,11 @@
                 <h2>Configuração do Perfil</h2>
             </div>
 
-            <div>
+            <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
                 <h3>Atualizar Senha</h3>
+                <div class="group-info">
+
+                </div>
                 <div class="group-input">
                     <label for="senha-atual">Senha Atual</label>
                     <input type="password" id="senha-atual" name="senha-atual">
@@ -75,11 +84,11 @@
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
-            </div>
+            </form>
         </section>
         <section id="perfil-agendamento" class="secao-painel hidden">
             <div class="secao-header">
-                <h2>Agendamento</h2>
+                <h2>Agendamentos</h2>
             </div>
         </section>
         <section id="perfil-avaliacao" class="secao-painel hidden">

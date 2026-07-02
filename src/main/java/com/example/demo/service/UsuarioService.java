@@ -84,4 +84,8 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
         return null;
     }
+
+    public String salvarUsuarioInfo(UsuarioDTO form){
+        return "";
+    }
 }
