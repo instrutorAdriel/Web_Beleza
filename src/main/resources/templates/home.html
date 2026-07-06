@@ -141,43 +141,17 @@
     <div class="carrossel-wrapper">
         <a href="#" class="seta-carrossel seta-esquerda depoimento-seta"><i class="fa-solid fa-chevron-left"></i></a>
         <div class="carrossel-track carrossel-depoimentos">
-            <div class="card-depoimento">
-                <p class="depoimento-texto">"Fiz o design de sobrancelhas e fiquei impressionada com a simetria e o capricho. As alunas são muito dedicadas e o resultado ficou perfeito!"</p>
-                <div class="depoimento-autor">
-                    <div class="avatar-inicial">R</div>
-                    <div>
-                        <strong>Rafaela Costa</strong>
-                        <span>Design de Sobrancelhas — Unidade Ceilândia</span>
-                    </div>
+            <div class="card-depoimento" th:each="dep : ${depoimentos}">
+                <p class="depoimento-texto" th:text="'&quot;' + ${dep.texto} + '&quot;'"></p>
+                <div class="depoimento-imagens" th:if="${dep.imagem1 != null}">
+                    <img th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}">
+                    <img th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}" th:src="${dep.imagem2}" ...>
                 </div>
-            </div>
-            <div class="card-depoimento">
-                <p class="depoimento-texto">"Vim fazer o corte de cabelo e saí muito satisfeito. Atendimento atencioso, ambiente organizado e o resultado ficou exatamente como eu queria."</p>
                 <div class="depoimento-autor">
-                    <div class="avatar-inicial">C</div>
+                    <div class="avatar-inicial" th:text="${dep.inicialAvatar}"></div>
                     <div>
-                        <strong>Carlos Mendes</strong>
-                        <span>Corte de Cabelo Masculino — Unidade Jessé Freire</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card-depoimento">
-                <p class="depoimento-texto">"Fiz manicure aqui e adorei! As alunas têm muito cuidado e atenção nos detalhes. Super indico para quem quer um serviço de qualidade sem custo."</p>
-                <div class="depoimento-autor">
-                    <div class="avatar-inicial">J</div>
-                    <div>
-                        <strong>Juliana Ferreira</strong>
-                        <span>Manicure — Unidade Gama</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card-depoimento">
-                <p class="depoimento-texto">"Vim fazer o corte e escova e saí apaixonada! As alunas têm muito talento e o professor supervisionou cada etapa. Atendimento impecável do início ao fim."</p>
-                <div class="depoimento-autor">
-                    <div class="avatar-inicial">A</div>
-                    <div>
-                        <strong>Amanda Souza</strong>
-                        <span>Corte e Escova — Unidade Jessé Freire</span>
+                        <strong th:text="${dep.nome}"></strong>
+                        <span th:text="${dep.servico} + ' — ' + ${dep.unidade}"></span>
                     </div>
                 </div>
             </div>
