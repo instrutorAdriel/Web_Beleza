@@ -25,8 +25,8 @@
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
-                <div class="group-info" th:if="${mensagemSucessoPerfil}">
-                    <span th:text="${mensagemSucessoPerfil}"></span>
+                <div class="group-info" th:if="${mensagemPerfil}">
+                    <span th:text="${mensagemPerfil}"></span>
                 </div>
                 <div class="form-grid">
                     <div class="group-input">
@@ -63,21 +63,21 @@
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
                 <h3>Atualizar Senha</h3>
-                <div class="group-info" th:if="${mensagemSucessoSenha}">
-                    <span th:text="${mensagemSucessoSenha}"></span>
+                <div class="group-info" th:if="${mensagemSenha}">
+                    <span th:text="${mensagemSenha}"></span>
                 </div>
 
                 <div class="group-input">
                     <label for="senha-atual">Senha Atual</label>
-                    <input type="password" id="senha-atual" name="senha-atual">
+                    <input th:field="*{senha}" type="password" id="senha-atual" name="senha-atual">
                 </div>
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input type="password" id="senha-nova" name="senha-nova">
+                    <input th:field="*{novaSenha}" type="password" id="senha-nova" name="senha-nova">
                 </div>
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input type="password" id="senha-confirmar" name="senha-confirmar">
+                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" name="senha-confirmar">
                 </div>
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>

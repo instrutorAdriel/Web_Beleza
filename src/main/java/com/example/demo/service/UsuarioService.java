@@ -86,7 +86,24 @@ public class UsuarioService {
         return null;
     }
 
-    public String salvarUsuarioInfo(UsuarioDTO form){
+    public String atualizarSenha(UsuarioDTO form) {
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
+        if (res.isEmpty()) return "Esse conta não existe.";
+
+        if (!encoder.matches(form.getSenha(), res.get().getSenha())) {
+            return "A senha atual não está correta.";
+        }
+
+        if (!form.getNovaSenha().equals(form.getConfirmacaoSenha())) {
+            return "As senhas não conferem.";
+        }
+
+        res.get().setSenha(encoder.encode(form.getNovaSenha()));
+
+        return null;
+    }
+
+    public String salvarUsuarioInfo(UsuarioDTO form) {
         if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
             return "Data de nascimento inválido!";
         }

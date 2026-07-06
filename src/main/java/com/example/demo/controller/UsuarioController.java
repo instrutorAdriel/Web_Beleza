@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -184,36 +183,43 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/atualizar-perfil")
-    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes, ModelMap modelMap){
+    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes){
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+        if (usuario == null) return "redirect:/login";
 
         // Passo de validação dos campos
         String res = usuarioService.salvarUsuarioInfo(form);
         if (res != null) {
-            redirectAttributes.addFlashAttribute("mensagemSucessoPerfil", res);
-            redirectAttributes.addFlashAttribute("usuarioDTO", form);
+            redirectAttributes.addFlashAttribute("mensagemPerfil", res);
             return "redirect:/perfil";
         }
 
         // Busca o usuario e atualiza o formulario
-        Optional<Usuario> resultado = usuarioRepository.findByEmail(form.getEmail());
-        if (resultado.isEmpty()) return "redirect:/perfil";
+        Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
 
-        form.setDataNascimento(resultado.get().getDataNascimento());
-        form.setEndereco(resultado.get().getEndereco());
-        form.setTelefone(resultado.get().getTelefone());
+        session.setAttribute("usuarioLogado", resultado.get());
 
-        redirectAttributes.addFlashAttribute("mensagemSucessoPerfil", "Informações atualizadas com sucesso!");
+        redirectAttributes.addFlashAttribute("mensagemPerfil", "Informações atualizadas com sucesso!");
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
 
         return "redirect:/perfil";
     }
 
     @PostMapping("/perfil/atualizar-senha")
-    public String atualizarSenha(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
+    public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes){
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
-        model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
-        model.addAttribute("usuarioDTO", usuario);
-        return "perfil";
+        if (usuario == null) return "redirect:/login";
+
+        form.setEmail(usuario.getEmail());
+
+        String res = usuarioService.atualizarSenha(form);
+        if (res != null) {
+            redirectAttributes.addFlashAttribute("mensagemSenha", res);
+            return "redirect:/perfil";
+        }
+
+        redirectAttributes.addFlashAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
+        redirectAttributes.addFlashAttribute("usuarioDTO", form);
+        return "redirect:/perfil";
     }
 }
