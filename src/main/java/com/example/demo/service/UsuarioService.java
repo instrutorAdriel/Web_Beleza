@@ -104,4 +104,15 @@ public class UsuarioService {
 
         return null;
     }
+
+    public UsuarioDTO converterModelParaDTO(Usuario usuario) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setNomeCompleto(usuario.getNomeCompleto());
+        usuarioDTO.setDataNascimento(usuario.getDataNascimento());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setEndereco(usuario.getEndereco());
+        usuarioDTO.setTelefone(usuario.getTelefone());
+
+        return usuarioDTO;
+    }
 }

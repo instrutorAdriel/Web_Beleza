@@ -168,10 +168,18 @@ public class UsuarioController {
     }
 
     @GetMapping("/perfil")
-    public String exibirPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+    public String exibirPerfil(Model model, HttpSession session) {
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
-        model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
-        model.addAttribute("usuarioDTO", usuario);
+        Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
+
+        if (resultado.isEmpty()) {
+            return "redirect:/";
+        }
+
+        UsuarioDTO usuarioAtualizado = usuarioService.converterModelParaDTO(resultado.get());
+
+        model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
+        model.addAttribute("usuarioDTO", usuarioAtualizado);
         return "perfil";
     }
 
@@ -194,10 +202,6 @@ public class UsuarioController {
         form.setDataNascimento(resultado.get().getDataNascimento());
         form.setEndereco(resultado.get().getEndereco());
         form.setTelefone(resultado.get().getTelefone());
-
-        IO.println(form.getEndereco());
-        IO.println(form.getDataNascimento());
-        IO.println(form.getTelefone());
 
         redirectAttributes.addFlashAttribute("mensagemSucessoPerfil", "Informações atualizadas com sucesso!");
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
