@@ -1,6 +1,8 @@
-package com.example.demo.controller;
+package com.app.beleza.controller;
 
-import com.example.demo.service.HomeService;
+import com.app.beleza.model.Usuario;
+import jakarta.servlet.http.HttpSession;
+import com.app.beleza.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ public class HomeController {
 
     // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(HttpSession session,Model model) {
 
         // Títulos
         model.addAttribute("footerTituloSobre", "Sobre o Senac");
@@ -50,6 +52,10 @@ public class HomeController {
         model.addAttribute("footerEmpresa", "Senac Brasil");
 
         model.addAttribute("servicos", homeService.listarServicos());
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);
+
         return "home";
     }
 
