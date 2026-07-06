@@ -13,117 +13,138 @@
 
 <header class="site-header">
     <div class="header-container">
+
         <div class="logo">
             <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
         </div>
         <nav class="nav-menu">
-            <a href="#" class="destaque-menu">Home</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#cursos">Cursos</a>
-            <a href="#agendamentos">Agendamentos</a>
-            <a href="#noticias">Notícias</a>
+            <a href="#hero" class="nav-link ativo">Home</a>
+            <a href="#agendamentos" class="nav-link">Agendamentos</a>
+            <a href="#avaliacoes" class="nav-link">Avaliações</a>
         </nav>
-        <div class="header-busca">
-            <input type="text" placeholder="Buscar cursos...">
-            <button type="button">Ir</button>
-        </div>
-    </div>
-</header>
 
-<section class="hero-banner">
+        <!-- Não logado -->
+        <a th:if="${usuario == null}"
+           th:href="@{/login}" class="btn-entrar">
+            <i class="fa-solid fa-right-to-bracket"></i> Entrar
+        </a>
+
+        <!-- Logado -->
+        <div th:if="${usuario != null}" class="usuario-logado">
+            <span th:text="${usuario != null} ? ${usuario.nomeCompleto} : ''">>Usuário</span>
+            <a th:href="@{/logout}" class="btn-sair">Sair</a>
+            <!--  <img th:if="${usuario.fotoUrl != null}"
+                th:src="${usuario.fotoUrl}"
+                alt="Foto de perfil" class="foto-perfil"/>
+           <i th:if="${usuario.fotoUrl == null}" class="fa-solid fa-circle-user"></i>-->
+          </div>
+      </div>
+  </header>
+
+<section id="hero" class="hero-banner">
     <div class="hero-conteudo">
         <span class="badge-hero">Inscrições Abertas</span>
         <h1>Construa seu futuro profissional no Senac</h1>
         <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
         <div class="hero-botoes">
-            <a href="#cursos" class="btn-principal">Ver Cursos</a>
-            <a href="#agendamentos" class="btn-secundario">Agendar Serviço</a>
+            <a href="#servicos-agendamento" class="btn-principal">Ver Serviços</a>
         </div>
     </div>
 </section>
 
-<section id="sobre" class="sobre-section">
-    <div class="sobre-container">
-        <div class="sobre-texto">
-            <h2>Tradição e Inovação no Ensino Profissional</h2>
-            <p>O Senac transforma vidas por meio da educação profissionalizante. Nossos laboratórios replicam o ambiente real do mercado de trabalho, preparando você para os desafios do dia a dia da sua futura carreira.</p>
-        </div>
-        <div class="sobre-cards">
-            <div class="mini-card">
-                <i class="fa-solid fa-graduation-cap"></i>
-                <h3>Diplomas Reconhecidos</h3>
-            </div>
-            <div class="mini-card">
-                <i class="fa-solid fa-briefcase"></i>
-                <h3>Foco no Mercado</h3>
-            </div>
-        </div>
-    </div>
-</section>
+  <section id="sobre" class="sobre-section">
+      <div class="sobre-container">
+          <div class="sobre-texto">
+              <h2>Tradição e Inovação no Ensino Profissional</h2>
+              <p>O Senac transforma vidas por meio da educação profissionalizante. Nossos laboratórios replicam o ambiente real do mercado de trabalho, preparando você para os desafios do dia a dia da sua futura carreira.</p>
+          </div>
+          <div class="sobre-cards">
+              <div class="mini-card">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <h3>Diplomas Reconhecidos</h3>
+              </div>
+              <div class="mini-card">
+                  <i class="fa-solid fa-briefcase"></i>
+                  <h3>Foco no Mercado</h3>
+              </div>
+          </div>
+      </div>
+  </section>
 
-<!-- SEÇÃO CURSOS -->
-<section id="cursos" class="cursos-secao-avancada container-interno">
-    <h2 class="titulo-secao">Nossos Cursos</h2>
-    <p class="subtitulo-secao">Escolha a trilha que mais combina com seu perfil e objetivos.</p>
+<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+    <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
+    <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa">Todos</a>
-        <a href="#" class="aba-filtro">Tecnologia</a>
-        <a href="#" class="aba-filtro">Gastronomia</a>
-        <a href="#" class="aba-filtro">Saúde</a>
+        <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
+        <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+        <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
+        <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
+        <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
+        <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
+        <a href="#" class="aba-filtro" data-unidade="santa-maria">Santa Maria</a>
+        <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
-    <div class="grid-cursos-completo">
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso TI">
-                <img  src="https://www.df.senac.br/wp-content/uploads/2025/09/Informatica-Windows-e-Office-Fundamental-4.webp" height="180"></img>
-                <i class="fa-solid fa-code"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Técnico</span>
-                <h3>Desenvolvimento de Sistemas</h3>
-                <p>Aprenda lógica de programação, banco de dados, arquiteturas web e mobile do zero.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 1200h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Presencial</span>
+    <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+
+        <button type="button" class="seta-carrossel seta-esquerda"
+                style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="carrossel-track"
+             style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
+
+            <div class="card-curso-completo"
+                 th:each="servico : ${servicos}"
+                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
+                 style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
+
+                <div class="img-placeholder-curso">
+                    <img th:src="${servico.imagem}"
+                         th:alt="${servico.nomeServico}">
                 </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
+
+                <div class="corpo-curso">
+
+                    <span class="tipo-curso"
+                          th:text="${servico.unidade}">
+                    </span>
+
+                    <h3 th:text="${servico.nomeServico}"></h3>
+
+                    <p th:text="${servico.descricao}"></p>
+
+                    <div class="detalhes-rapidos-curso">
+
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${servico.duracao}"></span>
+                        </span>
+
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${servico.unidade}"></span>
+                        </span>
+
+                    </div>
+
+                    <a href="#modal-agendamento" class="btn-detalhes">
+                        Agendar
+                    </a>
+
+                </div>
+
             </div>
+
         </div>
 
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso GASTRO">
-                <img src="https://www.df.senac.br/wp-content/uploads/2024/02/Barista-4.png" height="180"></img>
-                <i class="fa-solid fa-utensils"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Livre</span>
-                <h3>Culinária Internacional</h3>
-                <p>Domine técnicas clássicas das cozinhas francesa, italiana e asiática com chefs renomados.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 60h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Noturno</span>
-                </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
-            </div>
-        </div>
+        <button type="button" class="seta-carrossel seta-direita"
+                style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
 
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso SAUDE">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <img src="https://www.df.senac.br/wp-content/uploads/2024/01/Tecnico-em-Podologia-4.png" height="180"></img>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso">Técnico</span>
-                <h3>Técnico em Enfermagem</h3>
-                <p>Formação completa para atuação em hospitais, clínicas e cuidados domiciliares com ética.</p>
-                <div class="detalhes-rapidos-curso">
-                    <span><i class="fa-regular fa-clock"></i> 1600h</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Matutino</span>
-                </div>
-                <a href="#modal-curso-detalhes" class="btn-detalhes">Ver Mais & Matrícula</a>
-            </div>
-        </div>
     </div>
 </section>
 

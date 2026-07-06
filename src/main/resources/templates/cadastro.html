@@ -10,38 +10,72 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
+
+    <style>
+        /* Checklist de requisitos de senha - mova para style.css se preferir */
+        .ssp-password-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0.6rem 0 0 0;
+            font-size: 0.85rem;
+        }
+        .ssp-password-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #9CA3AF;
+            margin-bottom: 0.3rem;
+            transition: color 0.2s ease;
+        }
+        .ssp-password-checklist li i {
+            width: 14px;
+        }
+        .ssp-password-checklist li.valid {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-check {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-xmark {
+            color: #DC2626;
+        }
+    </style>
 </head>
-<body class="ssp-login-page">
+<body>
+
+<div class="ssp-logo-fixed-container">
+    <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
+</div>
 
 <main class="ssp-login-centered-container">
     <div class="ssp-form-card cadastro-container">
 
         <header class="ssp-header-page-login">
-            <a class="ssp-login-button-back" th:href="@{/usuario/login}">&larr; Voltar para o Login</a>
-            <h1 th:text="${tituloPagina}">Criar Conta</h1>
-            <p class="ssp-register-subtitle">
+            <a class="ssp-login-button-back" th:href="@{/login}">&larr; Voltar para o Login</a>
+            <h1 style="color: #F29301;" th:text="${tituloPagina}">Criar Conta</h1>
+            <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
                 Preencha os dados abaixo para se cadastrar.
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-alert-error">
-            <span class="ssp-error-message-box" th:text="${erro}">Erro encontrado</span>
+        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
+            <span class="ssp-error-message" style="display: block;" th:text="${erro}">Erro encontrado</span>
         </div>
 
-        <form id="kc-form-register" th:action="@{/usuario/cadastro}" th:object="${usuarioDTO}" method="POST">
+        <form id="kc-form-register" th:action="@{/cadastro}" th:object="${usuarioDTO}" method="POST">
 
             <div class="ssp-form-group">
                 <label th:for="nomeCompleto">Nome Completo</label>
                 <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
             </div>
 
-            <div class="ssp-form-row">
-                <div class="ssp-form-group-flex">
+            <div class="ssp-form-row" style="display: flex; gap: 1rem;">
+                <div class="ssp-form-group" style="flex: 1;">
                     <label th:for="dataNascimento">Data de Nascimento</label>
-                    <input type="date" th:field="*{dataNascimento}" id="dataNascimento" class="ssp-form-control" required>
+                    <input type="text" th:field="*{dataNascimento}" id="dataNascimento" class="ssp-form-control" placeholder="dd/mm/aaaa" maxlength="10" required>
                 </div>
 
-                <div class="ssp-form-group-flex">
+                <div class="ssp-form-group" style="flex: 1;">
                     <label th:for="telefone">Telefone / WhatsApp</label>
                     <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
@@ -65,6 +99,21 @@
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
+
+                <ul class="ssp-password-checklist" id="password-checklist">
+                    <li id="req-maiuscula" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra maiúscula
+                    </li>
+                    <li id="req-minuscula" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra minúscula
+                    </li>
+                    <li id="req-numero" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Número
+                    </li>
+                    <li id="req-especial" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Caractere especial
+                    </li>
+                </ul>
             </div>
 
             <div class="ssp-form-group">
@@ -75,15 +124,15 @@
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>
                 </div>
-                <div id="password-error" class="ssp-error-message-box static-error">Senha não compatível</div>
+                <div id="password-error" class="ssp-error-message" style="color: #DC2626; font-size: 0.85rem; margin-top: 0.4rem; display: none; font-weight: 500;">Senha não compatível</div>
             </div>
 
-            <button type="submit" class="ssp-btn-submit submit-cadastro">Finalizar Cadastro</button>
+            <button type="submit" class="ssp-btn-submit" style="margin-top: 1rem;">Finalizar Cadastro</button>
 
         </form>
 
-        <div class="ssp-register-footer">
-            Já tem uma conta? <a th:href="@{/usuario/login}">Faça login aqui</a>
+        <div class="ssp-register-footer" style="text-align: center; margin-top: 1.5rem;">
+            Já tem uma conta? <a th:href="@{/login}">Faça login aqui</a>
         </div>
 
     </div>
