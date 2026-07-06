@@ -1,11 +1,12 @@
-package com.example.demo.controller;
+package com.app.beleza.controller;
 
-import com.example.demo.model.Usuario;
-import com.example.demo.model.UsuarioDTO;
-import com.example.demo.respository.UsuarioRepository;
-import com.example.demo.service.PasswordResetService;
-import com.example.demo.service.UsuarioService;
-import com.example.demo.utils.Validador;
+import com.app.beleza.model.Usuario;
+import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.PasswordResetService;
+import com.app.beleza.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
+import com.app.beleza.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +35,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model){
+    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model,  HttpSession session){
         System.out.println("=== TENTATIVA DE LOGIN ===");
         System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
         System.out.println("Senha vinda do HTML: [ PROTEGIDO ]");
@@ -47,7 +48,17 @@ public class UsuarioController {
             model.addAttribute("tituloPagina", "Entrar");
             return "login";
         }
+
+        // Sucesso! Redireciona para a rota da Home interna do Portal
+        session.setAttribute("usuarioLogado", usuario);
         return "redirect:/";
+
+    }
+    // ─── LOGOUT ───────────────────────────────────────────────────
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */

@@ -1,11 +1,12 @@
-package com.example.demo.controller;
+package com.app.beleza.controller;
 
-import com.example.demo.service.HomeService;
+import com.app.beleza.model.Usuario;
+import jakarta.servlet.http.HttpSession;
+import com.app.beleza.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HomeController {
@@ -15,9 +16,13 @@ public class HomeController {
 
     // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(HttpSession session,Model model) {
         model.addAttribute("servicos", homeService.listarServicos());
         model.addAttribute("depoimentos", homeService.listarDepoimentos());
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);
+
         return "home";
     }
 

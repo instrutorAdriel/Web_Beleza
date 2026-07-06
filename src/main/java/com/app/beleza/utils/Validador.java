@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.app.beleza.utils;
 
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
