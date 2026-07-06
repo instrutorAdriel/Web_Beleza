@@ -10,7 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -144,7 +146,7 @@ public class UsuarioController {
     @PostMapping("/alterar-senha/{token}")
     public String processarAlterarSenha(@PathVariable String token, @ModelAttribute  UsuarioDTO form, Model model){
         // Vericação se o token do alterar senha é de fato valido antes de alterar a senha
-        if (passwordResetService.verificarToken(token) != null){
+        if (passwordResetService.verificarToken(token) != null) {
             // Exibir uma mensagem na página dizendo que ocorreu um erro, sem necessidade de retornar para uma página
             // de erro
 
@@ -174,11 +176,33 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/atualizar-perfil")
-    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
+    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes, ModelMap modelMap){
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
-        model.addAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
-        model.addAttribute("usuarioDTO", usuario);
-        return "perfil";
+
+        // Passo de validação dos campos
+        String res = usuarioService.salvarUsuarioInfo(form);
+        if (res != null) {
+            redirectAttributes.addFlashAttribute("mensagemSucessoPerfil", res);
+            redirectAttributes.addFlashAttribute("usuarioDTO", form);
+            return "redirect:/perfil";
+        }
+
+        // Busca o usuario e atualiza o formulario
+        Optional<Usuario> resultado = usuarioRepository.findByEmail(form.getEmail());
+        if (resultado.isEmpty()) return "redirect:/perfil";
+
+        form.setDataNascimento(resultado.get().getDataNascimento());
+        form.setEndereco(resultado.get().getEndereco());
+        form.setTelefone(resultado.get().getTelefone());
+
+        IO.println(form.getEndereco());
+        IO.println(form.getDataNascimento());
+        IO.println(form.getTelefone());
+
+        redirectAttributes.addFlashAttribute("mensagemSucessoPerfil", "Informações atualizadas com sucesso!");
+        redirectAttributes.addFlashAttribute("usuarioDTO", form);
+
+        return "redirect:/perfil";
     }
 
     @PostMapping("/perfil/atualizar-senha")

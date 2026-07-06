@@ -25,12 +25,10 @@
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
+                <div class="group-info" th:if="${mensagemSucessoPerfil}">
+                    <span th:text="${mensagemSucessoPerfil}"></span>
+                </div>
                 <div class="form-grid">
-                    <div class="group-info" th:if="${mensagem}">
-                        <span th:text="${mensagem}"></span>
-                    </div>
-                    <div class="group-input"></div>
-                    <div class="group-input"></div>
                     <div class="group-input">
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
@@ -65,8 +63,8 @@
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
                 <h3>Atualizar Senha</h3>
-                <div class="group-info" th:if="${mensagem}">
-                    <span th:text="${mensagem}"></span>
+                <div class="group-info" th:if="${mensagemSucessoSenha}">
+                    <span th:text="${mensagemSucessoSenha}"></span>
                 </div>
 
                 <div class="group-input">

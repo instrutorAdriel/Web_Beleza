@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.Usuario;
 import com.example.demo.model.UsuarioDTO;
 import com.example.demo.respository.UsuarioRepository;
+import com.example.demo.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,21 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form){
-        return "";
+        if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
+            return "Data de nascimento inválido!";
+        }
+
+        Optional<Usuario> resultado = usuarioRepository.findByEmail(form.getEmail());
+
+        if (resultado.isEmpty()) {
+            return "E-mail não encontrado.";
+        }
+
+        Usuario usuario = resultado.get();
+        usuario.setDataNascimento(form.getDataNascimento());
+        usuario.setEndereco(form.getEndereco());
+        usuario.setTelefone(form.getTelefone());
+
+        return null;
     }
 }
