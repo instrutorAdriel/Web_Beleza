@@ -133,29 +133,66 @@
     </div>
 </section>
 
-<!-- SEÇÃO DEPOIMENTOS — fora do carrossel de serviços -->
+<!-- SEÇÃO DEPOIMENTOS -->
 <section id="depoimentos" class="container-interno" style="margin-bottom: 4rem;">
     <h2 class="titulo-secao">Depoimentos</h2>
-    <p class="subtitulo-secao">Veja o que nossos clientes dizem sobre os serviços do salão.</p>
+    <p class="subtitulo-secao">
+        Veja o que nossos clientes dizem sobre os serviços do salão.
+    </p>
+
     <div class="carrossel-wrapper">
-        <a href="#" class="seta-carrossel seta-esquerda depoimento-seta"><i class="fa-solid fa-chevron-left"></i></a>
+
+        <a href="#" class="seta-carrossel seta-esquerda depoimento-seta">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+
         <div class="carrossel-track carrossel-depoimentos">
+
             <div class="card-depoimento" th:each="dep : ${depoimentos}">
-                <p class="depoimento-texto" th:text="'&quot;' + ${dep.texto} + '&quot;'"></p>
-                <div class="depoimento-imagens" th:if="${dep.imagem1 != null}">
-                    <img th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}">
-                    <img th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}" th:src="${dep.imagem2}" ...>
+
+                <p class="depoimento-texto"
+                   th:text="'&quot;' + ${dep.texto} + '&quot;'">
+                </p>
+
+                <!-- IMAGENS -->
+                <div class="depoimento-imagens"
+                     th:if="${(dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)) or (dep.imagem2 != null and !#strings.isEmpty(dep.imagem2))}">
+
+                    <img
+                            th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}"
+                            th:src="${dep.imagem1}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
+                    <img
+                            th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}"
+                            th:src="${dep.imagem2}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
                 </div>
+
+                <!-- AUTOR -->
                 <div class="depoimento-autor">
-                    <div class="avatar-inicial" th:text="${dep.inicialAvatar}"></div>
+
+                    <div class="avatar-inicial"
+                         th:text="${dep.inicialAvatar}">
+                    </div>
+
                     <div>
                         <strong th:text="${dep.nome}"></strong>
                         <span th:text="${dep.servico} + ' — ' + ${dep.unidade}"></span>
                     </div>
+
                 </div>
+
             </div>
         </div>
-        <a href="#" class="seta-carrossel seta-direita depoimento-seta"><i class="fa-solid fa-chevron-right"></i></a>
+
+        <a href="#" class="seta-carrossel seta-direita depoimento-seta">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
     </div>
 </section>
 
@@ -219,6 +256,7 @@
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
             </div>
+
         </div>
     </div>
     <div class="footer-bottom">

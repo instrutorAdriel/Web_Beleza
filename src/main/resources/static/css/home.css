@@ -750,23 +750,25 @@ body {
     border-top: 1px solid var(--borda-suave);
     padding-top: 1rem;
 }
-.depoimento-imagens {
-    width: 100%;
-    height: 180px;
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    gap: 8px;
+.depoimento-imagens{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    width:100%;
+    height:180px;
+    overflow:hidden;
+    border-radius:8px;
 }
 
-.depoimento-imagem {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: 8px;
-    flex: 1;
-    display: block;
+.depoimento-imagem{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* Se houver apenas UMA imagem */
+.depoimento-imagens:not(:has(img + img)){
+    grid-template-columns:1fr;
 }
 .avatar-inicial {
     width: 42px;
