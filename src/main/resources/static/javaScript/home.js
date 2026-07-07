@@ -2,13 +2,13 @@
  * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Unidade)
  */
 
-const ENDPOINT_AVALIACAO = '/api/avaliacoes';
-
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarHeroBanner(); // NOVO: Inicializa o Hero Banner junto com os outros módulos
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
-    inicializarAvaliacaoModelos();
+    inicializarNavAtiva();
+    inicializarLogout();
 });
 
 /**
@@ -110,135 +110,198 @@ function inicializarFormularios() {
 
             window.location.hash = 'sucesso';
             form.reset();
+
         });
+
+    });
+
+}
+/**
+ * MODULE: NAVEGAÇÃO ATIVA POR SCROLL
+ * Destaca o link do nav em laranja conforme a seção visível na tela.
+ */
+function inicializarNavAtiva() {
+    const links = document.querySelectorAll('.nav-link');
+    const secoes = document.querySelectorAll('section[id]');
+
+    // Clique no menu
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const destino = document.querySelector(this.getAttribute('href'));
+
+            if (destino) {
+                destino.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Atualiza menu conforme scroll
+    window.addEventListener('scroll', () => {
+        let secaoAtual = '';
+
+        secoes.forEach(secao => {
+            const topo = secao.offsetTop - 120;
+            const altura = secao.offsetHeight;
+
+            if (window.scrollY >= topo && window.scrollY < topo + altura) {
+                secaoAtual = secao.getAttribute('id');
+            }
+        });
+
+        links.forEach(link => {
+            link.classList.remove('ativo');
+
+            if (link.getAttribute('href') === `#${secaoAtual}`) {
+                link.classList.add('ativo');
+            }
+
+        });
+
+    });
+
+}
+/**
+ * MODULE: CONFIRMAÇÃO DE LOGOUT
+ * Exibe um popover personalizado perguntando se o usuário tem certeza
+ * que deseja sair antes de redirecionar para o logout
+ */
+function inicializarLogout() { // ← agora está no escopo global
+    const btnSair = document.querySelector('.btn-sair');
+
+    if (!btnSair) return;
+
+    btnSair.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const popover = document.createElement('div');
+        popover.className = 'popover-logout';
+        popover.innerHTML = `
+            <p>Tem certeza que deseja sair?</p>
+            <div class="popover-botoes">
+                <button class="popover-btn-sim">Sim, sair</button>
+                <button class="popover-btn-nao">Cancelar</button>
+            </div>
+        `;
+
+        document.querySelector('.popover-logout')?.remove();
+        document.body.appendChild(popover);
+
+        popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
+            window.location.href = '/logout';
+        });
+
+        popover.querySelector('.popover-btn-nao').addEventListener('click', () => {
+            popover.remove();
+        });
+
+        setTimeout(() => {
+            document.addEventListener('click', function fechar(e) {
+                if (!popover.contains(e.target) && e.target !== btnSair) {
+                    popover.remove();
+                    document.removeEventListener('click', fechar);
+                }
+            });
+        }, 100);
     });
 }
 
 /**
- * MODULE: AVALIAÇÃO DE MODELOS (popup com imagem, descrição e nome do modelo)
+ * MODULE: CONTROLE DO HERO BANNER (SLIDESHOW AUTOMÁTICO E MANUAL)
+ * Ajustado exatamente para a estrutura do seu HTML (id="heroSlider", class="slide", etc.)
  */
-function inicializarAvaliacaoModelos() {
-    const modal = document.getElementById('modal-avaliacao');
-    const form = document.getElementById('form-avaliacao');
+function inicializarHeroBanner() {
+    const sliderContainer = document.querySelector('#heroSlider');
+    const slides = document.querySelectorAll('#heroSlider .slide');
+    const setaEsquerda = document.querySelector('#heroBtnPrev');
+    const setaDireita = document.querySelector('#heroBtnNext');
 
-    if (!modal || !form) return;
+    if (slides.length === 0) return;
 
-    const inputImagem = document.getElementById('imagemResultado');
-    const previewWrapper = document.getElementById('previewImagem');
-    const feedback = document.getElementById('feedbackAvaliacao');
-    const inputNomeModelo = document.getElementById('nomeModelo');
-    const btnEnviar = document.getElementById('btn-enviar-avaliacao');
+    let slideAtual = 0;
+    let intervaloBanner;
+    const tempoTransicao = 5000; // Alterna automaticamente a cada 5 segundos
 
-    // --- Abertura do modal a partir de qualquer botão com data-abrir-avaliacao ---
-    document.querySelectorAll('[data-abrir-avaliacao]').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const nomeModelo = btn.getAttribute('data-abrir-avaliacao');
-            if (nomeModelo) {
-                inputNomeModelo.value = nomeModelo;
+    // Configuração inicial de estilo dos slides caso não estejam mapeados no CSS
+    if (sliderContainer) {
+        sliderContainer.style.position = 'relative';
+        sliderContainer.style.overflow = 'hidden';
+    }
+
+    slides.forEach((slide, idx) => {
+        slide.style.position = 'absolute';
+        slide.style.top = '0';
+        slide.style.left = '0';
+        slide.style.width = '100%';
+        slide.style.height = '100%';
+        slide.style.transition = 'opacity 0.8s ease-in-out';
+
+        // Deixa apenas o primeiro slide visível inicialmente
+        if (idx === 0) {
+            slide.classList.add('ativa');
+            slide.style.opacity = '1';
+            slide.style.zIndex = '2';
+        } else {
+            slide.classList.remove('ativa');
+            slide.style.opacity = '0';
+            slide.style.zIndex = '1';
+        }
+    });
+
+    // Função para transição e exibição dos slides
+    function mostrarSlide(index) {
+        // Trata os limites (loop infinito)
+        if (index >= slides.length) slideAtual = 0;
+        else if (index < 0) slideAtual = slides.length - 1;
+        else slideAtual = index;
+
+        // Atualiza a opacidade de cada slide baseado no índice ativo
+        slides.forEach((slide, idx) => {
+            if (idx === slideAtual) {
+                slide.classList.add('ativa');
+                slide.style.opacity = '1';
+                slide.style.zIndex = '2';
+            } else {
+                slide.classList.remove('ativa');
+                slide.style.opacity = '0';
+                slide.style.zIndex = '1';
             }
-            abrirModalAvaliacao();
         });
-    });
-
-    function abrirModalAvaliacao() {
-        modal.classList.add('ativo');
-        modal.style.display = 'flex';
     }
 
-    function fecharModalAvaliacao() {
-        modal.classList.remove('ativo');
-        modal.style.display = 'none';
-        form.reset();
-        previewWrapper.innerHTML = '';
-        previewWrapper.classList.remove('ativo');
-        feedback.textContent = '';
-        feedback.className = 'feedback-avaliacao';
+    function proximoSlide() {
+        mostrarSlide(slideAtual + 1);
     }
 
-    document.getElementById('btn-fechar-avaliacao').addEventListener('click', (e) => {
-        e.preventDefault();
-        fecharModalAvaliacao();
-    });
+    function slideAnterior() {
+        mostrarSlide(slideAtual - 1);
+    }
 
-    document.getElementById('btn-cancelar-avaliacao').addEventListener('click', (e) => {
-        e.preventDefault();
-        fecharModalAvaliacao();
-    });
+    function reiniciarIntervalo() {
+        clearInterval(intervaloBanner);
+        intervaloBanner = setInterval(proximoSlide, tempoTransicao);
+    }
 
-    // Fecha clicando fora do painel
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) fecharModalAvaliacao();
-    });
+    // Inicia o carrossel automático ao carregar
+    reiniciarIntervalo();
 
-    // --- Preview da imagem selecionada ---
-    inputImagem.addEventListener('change', () => {
-        const arquivo = inputImagem.files[0];
-        previewWrapper.innerHTML = '';
+    // Ouvintes de evento para as setas do seu HTML
+    if (setaDireita) {
+        setaDireita.addEventListener('click', (e) => {
+            e.preventDefault();
+            proximoSlide();
+            reiniciarIntervalo();
+        });
+    }
 
-        if (!arquivo) {
-            previewWrapper.classList.remove('ativo');
-            return;
-        }
-
-        const leitor = new FileReader();
-        leitor.onload = (e) => {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            previewWrapper.appendChild(img);
-            previewWrapper.classList.add('ativo');
-        };
-        leitor.readAsDataURL(arquivo);
-    });
-
-    // --- Envio do formulário para o backend Spring ---
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        feedback.textContent = '';
-        feedback.className = 'feedback-avaliacao';
-
-        const descricao = document.getElementById('descricaoAvaliacao').value.trim();
-        const arquivo = inputImagem.files[0];
-
-        if (!arquivo || !descricao) {
-            feedback.textContent = 'Preencha a imagem e a descrição da avaliação.';
-            feedback.classList.add('erro');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('imagem', arquivo);
-        formData.append('descricao', descricao);
-        formData.append('nomeModelo', inputNomeModelo.value.trim()); // pode ir vazio
-
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = 'Enviando...';
-
-        try {
-            const resposta = await fetch(ENDPOINT_AVALIACAO, {
-                method: 'POST',
-                body: formData
-                // Não defina Content-Type manualmente: o navegador
-                // monta o boundary correto do multipart/form-data.
-            });
-
-            if (!resposta.ok) {
-                throw new Error('Falha ao enviar avaliação (status ' + resposta.status + ')');
-            }
-
-            feedback.textContent = 'Avaliação enviada com sucesso!';
-            feedback.classList.add('sucesso');
-
-            setTimeout(fecharModalAvaliacao, 1200);
-
-        } catch (erro) {
-            console.error(erro);
-            feedback.textContent = 'Erro ao enviar a avaliação. Tente novamente.';
-            feedback.classList.add('erro');
-        } finally {
-            btnEnviar.disabled = false;
-            btnEnviar.textContent = 'Enviar Avaliação';
-        }
-    });
-}
+    if (setaEsquerda) {
+        setaEsquerda.addEventListener('click', (e) => {
+            e.preventDefault();
+            slideAnterior();
+            reiniciarIntervalo();
+        });
+    }
+}11
