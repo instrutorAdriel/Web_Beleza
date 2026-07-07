@@ -174,4 +174,84 @@ Seções
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
+    /* ===== Formulário de Depoimento (Avaliações) ===== */
+
+    #depoimento-form textarea,
+    #depoimento-form select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: var(--fundo-input);
+        color: var(--texto-escuro);
+    }
+    #depoimento-form textarea { min-height: 90px; resize: vertical; }
+
+    #depoimento-form textarea:focus,
+    #depoimento-form select:focus,
+    #depoimento-form input:focus {
+        outline: none;
+        border-color: var(--senac-laranja);
+        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+    }
+
+    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
+    .depoimento-checkbox-linha {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--fundo-card);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--borda-suave);
+    }
+    .depoimento-checkbox-linha input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+        border: none;
+        margin-top: 3px;
+    }
+    .depoimento-checkbox-linha label {
+        font-size: 0.85rem;
+        color: var(--texto-mutado);
+        line-height: 1.4;
+    }
+
+    .depoimento-foto-preview {
+        display: none;
+        margin-top: 10px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--borda-suave);
+    }
+
+    .depoimento-erro {
+        background: #fef2f2;
+        color: #dc2626;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .depoimento-sucesso {
+        text-align: center;
+        padding: 16px 0;
+    }
+    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
+    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
+
+    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
+       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
+    #depoimento-form .group-input:has(textarea),
+    #depoimento-form .group-input:has(input[type="file"]),
+    #depoimento-form .depoimento-checkbox-linha,
+    #depoimento-form .depoimento-erro {
+        grid-column: 1 / -1;
+    }
 }
