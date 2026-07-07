@@ -1,6 +1,6 @@
-package com.example.demo.respository;
+package com.app.beleza.respository;
 
-import com.example.demo.model.Usuario;
+import com.app.beleza.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

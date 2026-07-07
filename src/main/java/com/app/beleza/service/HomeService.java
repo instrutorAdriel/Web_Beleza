@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.app.beleza.service;
 
-import com.example.demo.model.Home;
-import com.example.demo.model.AgendamentoDTO;
-import com.example.demo.respository.HomeRepository;
+import com.app.beleza.model.Home;
+import com.app.beleza.model.AgendamentoDTO;
+import com.app.beleza.respository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

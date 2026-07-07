@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senac - Página Inicial</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+  <script th:src="@{/javaScript/home.js}" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-container">
+
+    <div class="logo">
+      <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
+    </div>
+
+    <nav class="nav-menu" style="display: flex; justify-content: center; gap: 30px; margin: 0 auto;">
+      <a href="#" class="destaque-menu">Home</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos-agendamento">Serviços</a>
+      <button type="button" class="btn-principal" data-abrir-avaliacao="">Nos Avalie</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero-banner">
+  <div class="hero-conteudo">
+    <span class="badge-hero">Inscrições Abertas</span>
+    <h1>Construa seu futuro profissional no Senac</h1>
+    <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
+    <div class="hero-botoes">
+      <a href="#servicos-agendamento" class="btn-principal">Ver Serviços</a>
+    </div>
+  </div>
+</section>
+
+<section id="sobre" class="sobre-section">
+  <div class="sobre-container">
+    <div class="sobre-texto">
+      <h2>Tradição e Inovação no Ensino Profissional</h2>
+      <p>O Senac transforma vidas por meio da educação profissionalizante. Nossos laboratórios replicam o ambiente real do mercado de trabalho, preparando você para os desafios do dia a dia da sua futura carreira.</p>
+    </div>
+    <div class="sobre-cards">
+      <div class="mini-card">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <h3>Diplomas Reconhecidos</h3>
+      </div>
+      <div class="mini-card">
+        <i class="fa-solid fa-briefcase"></i>
+        <h3>Foco no Mercado</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="servicos-agendamento" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+  <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
+  <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
+
+  <div class="abas-categorias">
+    <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
+    <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+    <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
+    <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
+    <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
+    <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
+    <a href="#" class="aba-filtro" data-unidade="santa-maria">Santa Maria</a>
+    <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
+  </div>
+
+  <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+
+    <button type="button" class="seta-carrossel seta-esquerda"
+            style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <div class="carrossel-track"
+         style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
+
+      <div class="card-curso-completo"
+           th:each="servico : ${servicos}"
+           th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
+           style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
+
+        <div class="img-placeholder-curso">
+          <img th:src="${servico.imagem}"
+               th:alt="${servico.nomeServico}">
+        </div>
+
+        <div class="corpo-curso">
+
+                    <span class="tipo-curso"
+                          th:text="${servico.unidade}">
+                    </span>
+
+          <h3 th:text="${servico.nomeServico}"></h3>
+
+          <p th:text="${servico.descricao}"></p>
+
+          <div class="detalhes-rapidos-curso">
+
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${servico.duracao}"></span>
+                        </span>
+
+            <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${servico.unidade}"></span>
+                        </span>
+
+          </div>
+
+          <a href="#modal-agendamento" class="btn-detalhes">
+            Agendar
+          </a>
+
+          <button type="button" class="btn-detalhes" th:attr="data-abrir-avaliacao=${servico.nomeServico}">
+            Avaliar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <button type="button" class="seta-carrossel seta-direita"
+            style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+  </div>
+</section>
+
+<div id="modal-agendamento" class="modal-plataforma">
+  <div class="modal-painel">
+    <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+    <span class="tag-modal">Serviços Práticos</span>
+    <h2>Horários Disponíveis para Atendimento</h2>
+
+    <table class="tabela-horarios">
+      <thead>
+      <tr>
+        <th>Horário</th>
+        <th>Status</th>
+        <th>Ação</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Terça-feira, 14:00</td>
+        <td class="vaga-sim">Disponível</td>
+        <td><a href="#sucesso" class="btn-confirmar">Agendar</a></td>
+      </tr>
+      <tr>
+        <td>Terça-feira, 15:30</td>
+        <td class="vaga-nao">Esgotado</td>
+        <td><button class="btn-confirmar" disabled>Indisponível</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="sucesso" class="modal-plataforma">
+  <div class="modal-painel box-sucesso">
+    <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+    <div class="icone-sucesso">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h2>Operação Realizada com Sucesso!</h2>
+    <p>Seus dados foram processados. Enviamos um e-mail de confirmação com os próximos passos e orientações detalhadas.</p>
+    <a href="#" class="btn-principal">Voltar para a Home</a>
+  </div>
+</div>
+
+<!--
+  ===================================================================
+  MODAL: AVALIAÇÃO DE MODELOS
+  ===================================================================
+-->
+<div id="modal-avaliacao" class="modal-plataforma">
+  <div class="modal-painel">
+    <a href="#" class="btn-fechar-modal" id="btn-fechar-avaliacao">&times; Fechar</a>
+
+    <span class="tag-modal">Avaliação de Modelo</span>
+    <h2>Inserir Avaliação do Modelo</h2>
+    <p class="subtitulo-modal">Envie o resultado obtido e descreva sua avaliação.</p>
+
+    <form id="form-avaliacao" class="formulario-avaliacao" enctype="multipart/form-data">
+
+      <div class="campo-form">
+        <label for="nomeModelo">Nome do modelo <span class="opcional-label">(opcional)</span></label>
+        <input type="text" id="nomeModelo" name="nomeModelo" placeholder="Ex.: GPT-4, ResNet-50...">
+      </div>
+
+      <div class="campo-form">
+        <label for="imagemResultado">Imagem do resultado</label>
+        <input type="file" id="imagemResultado" name="imagem" accept="image/*" required>
+        <div class="preview-imagem" id="previewImagem"></div>
+      </div>
+
+      <div class="campo-form">
+        <label for="descricaoAvaliacao">Descrição da avaliação</label>
+        <textarea id="descricaoAvaliacao" name="descricao" rows="4"
+                  placeholder="Descreva os resultados, observações, métricas..." required></textarea>
+      </div>
+
+      <div class="feedback-avaliacao" id="feedbackAvaliacao"></div>
+
+      <div class="acoes-form">
+        <button type="button" class="btn-secundario" id="btn-cancelar-avaliacao">Cancelar</button>
+        <button type="submit" class="btn-confirmar" id="btn-enviar-avaliacao">Enviar Avaliação</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-bloco">
+      <h4>Sobre o Senac</h4>
+      <p>O Serviço Nacional de Aprendizagem Comercial é o principal agente de educação profissional focado no sector de comércio de bens, serviços e turismo do país.</p>
+    </div>
+    <div class="footer-bloco">
+      <h4>Contato rápido</h4>
+      <p>Telefone: 0800 707 1022<br>E-mail: faleconosco@senac.br</p>
+    </div>
+    <div class="footer-bloco">
+      <h4>Siga-nos</h4>
+      <div class="redes-sociais">
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Senac Brasil. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+</body>
+</html>
