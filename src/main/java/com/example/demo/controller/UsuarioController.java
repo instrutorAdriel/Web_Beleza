@@ -166,8 +166,12 @@ public class UsuarioController {
         return "alterar-senha";
     }
 
+    /*
+    SEÇÃO PERFIL
+     */
+
     @GetMapping("/perfil")
-    public String exibirPerfil(Model model, HttpSession session) {
+    public String exibirPerfil(@RequestParam(required = false) String aba, Model model, HttpSession session) {
         Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
         Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
 
@@ -179,6 +183,18 @@ public class UsuarioController {
 
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
         model.addAttribute("usuarioDTO", usuarioAtualizado);
+
+        IO.println("Param (/perfil) = " + aba);
+        if (aba == null) {
+            model.addAttribute("abaAtiva", "informacao");
+        } else if (aba.equals("configuracao")) {
+            model.addAttribute("abaAtiva", "configuracao");
+        } else if (aba.equals("agendamento")) {
+            model.addAttribute("abaAtiva", "agendamento");
+        } else if (aba.equals("avaliacao")) {
+            model.addAttribute("abaAtiva", "avaliacao");
+        }
+
         return "perfil";
     }
 
@@ -214,12 +230,13 @@ public class UsuarioController {
 
         String res = usuarioService.atualizarSenha(form);
         if (res != null) {
-            redirectAttributes.addFlashAttribute("mensagemSenha", res);
-            return "redirect:/perfil";
+            redirectAttributes.addFlashAttribute("mensagemError", res);
+            return "redirect:/perfil?aba=configuracao";
         }
 
+        redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha atualizado com sucesso!");
         redirectAttributes.addFlashAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
-        return "redirect:/perfil";
+        return "redirect:/perfil?aba=configuracao";
     }
 }

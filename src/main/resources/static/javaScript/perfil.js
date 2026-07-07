@@ -5,6 +5,7 @@ const perfil_avaliacao = document.getElementById("perfil-avaliacao");
 const sidebar_itens = document.querySelectorAll(".sidebar a.bar-item");
 const sections = document.querySelectorAll("section");
 
+/*
 sidebar_itens.forEach(bar_item => {
     bar_item.addEventListener('click', function (evento) {
         const href = bar_item.getAttribute("href");
@@ -25,6 +26,7 @@ sidebar_itens.forEach(bar_item => {
         targetSection.classList.remove("hidden");
     })
 });
+*/
 
 document.addEventListener('DOMContentLoaded', function () {
    document.getElementById("data_nascimento").addEventListener('input', function (e) {

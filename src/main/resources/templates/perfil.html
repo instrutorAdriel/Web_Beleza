@@ -11,15 +11,15 @@
     <div class="container-painel">
         <div class="sidebar">
             <h3 class="bar-item">Painel</h3>
-            <a href="#" data-target="perfil-informacao" class="bar-item button active">Informação do Perfil</a>
-            <a href="#" data-target="perfil-configuracao" class="bar-item button">Configuração do Perfil</a>
-            <a href="#" data-target="perfil-agendamento" class="bar-item button">Agendamentos</a>
-            <a href="#" data-target="perfil-avaliacao" class="bar-item button">Avaliações</a>
+            <a th:href="@{/perfil}" data-target="perfil-informacao" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
+            <a th:href="@{/perfil(aba='configuracao')}" data-target="perfil-configuracao" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
+            <a th:href="@{/perfil(aba='agendamento')}" data-target="perfil-agendamento" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
+            <a th:href="@{/perfil(aba='avaliacao')}" class="bar-item button" th:classappend="${abaAtiva == 'avaliacao'} ? 'active'">Avaliações</a>
             <a th:href="@{/}" class="bar-item button">Voltar</a>
         </div>
     </div>
     <div class="conteudo-principal">
-        <section id="perfil-informacao" class="secao-painel">
+        <section id="perfil-informacao" class="secao-painel" th:if="${abaAtiva == 'informacao'}">
             <div class="secao-header">
                 <h2>Informação do Perfil</h2>
             </div>
@@ -59,15 +59,18 @@
                 </div>
             </form>
         </section>
-        <section id="perfil-configuracao" class="secao-painel hidden">
+        <section id="perfil-configuracao" class="secao-painel" th:if="${abaAtiva == 'configuracao'}">
             <div class="secao-header">
                 <h2>Configuração do Perfil</h2>
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
                 <h3>Atualizar Senha</h3>
-                <div class="group-info" th:if="${mensagemSenha}">
-                    <span th:text="${mensagemSenha}"></span>
+                <div th:class="'group-info ' + 'success'" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div th:class="'group-info ' + 'error'" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
                 </div>
 
                 <div class="group-input">
@@ -87,12 +90,12 @@
                 </div>
             </form>
         </section>
-        <section id="perfil-agendamento" class="secao-painel hidden">
+        <section id="perfil-agendamento" class="secao-painel" th:if="${abaAtiva == 'agendamento'}">
             <div class="secao-header">
                 <h2>Agendamentos</h2>
             </div>
         </section>
-        <section id="perfil-avaliacao" class="secao-painel hidden">
+        <section id="perfil-avaliacao" class="secao-painel" th:if="${abaAtiva == 'avaliacao'}">
             <div class="secao-header">
                 <h2>Avaliações</h2>
             </div>
