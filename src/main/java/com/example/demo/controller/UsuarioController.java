@@ -190,7 +190,7 @@ public class UsuarioController {
         // Passo de validação dos campos
         String res = usuarioService.salvarUsuarioInfo(form);
         if (res != null) {
-            redirectAttributes.addFlashAttribute("mensagemPerfil", res);
+            redirectAttributes.addFlashAttribute("mensagemError", res);
             return "redirect:/perfil";
         }
 
@@ -199,7 +199,7 @@ public class UsuarioController {
 
         session.setAttribute("usuarioLogado", resultado.get());
 
-        redirectAttributes.addFlashAttribute("mensagemPerfil", "Informações atualizadas com sucesso!");
+        redirectAttributes.addFlashAttribute("mensagemSucesso", "Informações atualizadas com sucesso!");
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
 
         return "redirect:/perfil";

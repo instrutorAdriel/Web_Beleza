@@ -25,8 +25,11 @@
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
-                <div class="group-info" th:if="${mensagemPerfil}">
-                    <span th:text="${mensagemPerfil}"></span>
+                <div th:class="'group-info ' + 'success'" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div th:class="'group-info ' + 'error'" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
                 </div>
                 <div class="form-grid">
                     <div class="group-input">
