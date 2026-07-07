@@ -34,13 +34,29 @@ public class SessaoAtendimentoService {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
 
-        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() -1);
+        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() - 1);
         sessao.setAgendadoPeloUsuario(true);
 
         repository.save(sessao);
-
     }
 
+    // NOVO MÉTODO METICULOSAMENTE CONSTRUÍDO PARA O SEU CÓDIGO:
+    public void cancelarSessao(Long id) {
+        SessaoAtendimento sessao = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
+
+        // VALIDAÇÃO CRUCIAL: Só cancela se o usuário de fato agendou.
+        // Isso impede que vagas subam além do limite original se clicarem várias vezes.
+        if (!sessao.isAgendadoPeloUsuario()) {
+            throw new RuntimeException("Você não possui um agendamento ativo nesta sessão para cancelar.");
+        }
+
+        // Devolve a vaga para o painel
+        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
+
+        // MUDANÇA QUE FAZ O BOTÃO VOLTAR A SER LARANJA:
+        sessao.setAgendadoPeloUsuario(false);
+
+        repository.save(sessao);
+    }
 }
-
-

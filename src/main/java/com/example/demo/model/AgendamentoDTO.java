@@ -2,12 +2,16 @@ package com.example.demo.model;
 
 public class AgendamentoDTO {
 
+    private Long servicoId;
+
     private String nomeServico;
     private String descricao;
     private String imagem;
     private String unidade;
     private String bairro;
     private String duracao;
+
+
 
     public void setNomeServico(String nomeServico) {
         this.nomeServico = nomeServico;
@@ -56,4 +60,13 @@ public class AgendamentoDTO {
     public String getDuracao() {
         return duracao;
     }
+
+    public Long getServicoId() {
+        return servicoId;
+    }
+
+    public void setServicoId(Long servicoId) {
+        this.servicoId = servicoId;
+    }
+
 }

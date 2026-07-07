@@ -1,41 +1,58 @@
-// Recebe o ID do serviço clicado
+// Abre o modal e pede ao Spring o HTML pronto da tabela
 function abrirModalAgendamento(idServico) {
+    console.log("Carregando tabela via Spring para o Serviço:", idServico);
+
+    // Armazena o ID do serviço atual no próprio modal para sabermos qual atualizar depois
+    document.getElementById("modal-agendamento").dataset.idServicoAtual = idServico;
+
     document.getElementById("modal-agendamento").style.display = "flex";
 
-    // Envia o ID na rota para a Controller receber no @RequestParam
-    fetch(`/api/agendamento?servicoId=${idServico}`)
-        .then(response => response.json())
-        .then(sessoes => {
-            const tbody = document.getElementById("tabela-sessoes-body");
-            tbody.innerHTML = "";
+    // Busca o fragmento HTML renderizado pelo servidor
+    fetch(`/api/agendamento/modal-tabela?servicoId=${idServico}`)
+        .then(response => response.text()) //
+        .then(htmlDoFragmento => {
 
-            sessoes.forEach(sessao => {
-                const tr = document.createElement("tr");
-
-                let botaoAcao = "";
-                if (sessao.agendadoPeloUsuario) {
-                    botaoAcao = `<button class="btn-agendado" disabled style="background-color: #13382c; color: #2ecc71;">✓ Agendado</button>`;
-                } else if (sessao.vagasDisponiveis <= 0) {
-                    botaoAcao = `<button class="btn-confirmar" disabled>Indisponível</button>`;
-                } else {
-                    botaoAcao = `<button class="btn-confirmar" onclick="confirmarAgendamento(${sessao.id})" style="background-color: #f39c12; color: white;">Agendar ➔</button>`;
-                }
-
-                tr.innerHTML = `
-                    <td>${sessao.dataAtendimento}</td>
-                    <td>${sessao.horarioInicial}</td>
-                    <td style="color: ${sessao.vagasDisponiveis === 0 ? '#ef4444' : '#2ecc71'}; font-weight: bold;">
-    ${sessao.vagasDisponiveis === 0 ? 'Esgotado' : sessao.vagasDisponiveis + ' restantes'}
-</td>
-                    <td>${botaoAcao}</td>
-                `;
-
-                tbody.appendChild(tr);
-            });
+            document.getElementById("tabela-sessoes-body").innerHTML = htmlDoFragmento;
         })
-        .catch(error => console.error("Erro ao buscar sessões:", error));
+        .catch(error => console.error("Erro ao carregar fragmento:", error));
 }
 
 function fecharModal() {
     document.getElementById("modal-agendamento").style.display = "none";
+}
+
+// Executa a ação de Agendar
+function confirmarAgendamento(idSessao) {
+    fetch(`/api/agendamento/${idSessao}/agendar`, { method: 'POST' })
+        .then(response => {
+            if (response.ok) return response.text();
+            return response.text().then(text => { throw new Error(text) });
+        })
+        .then(mensagem => {
+            alert(mensagem);
+
+
+            const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
+            abrirModalAgendamento(idServicoAtual);
+        })
+        .catch(error => alert("Erro ao agendar: " + error.message));
+}
+
+// Executa a ação de Desfazer o Agendamento
+function desfazerAgendamento(idSessao) {
+    if (confirm("Tem certeza que deseja cancelar este agendamento?")) {
+        fetch(`/api/agendamento/${idSessao}/cancelar`, { method: 'POST' })
+            .then(response => {
+                if (response.ok) return response.text();
+                return response.text().then(text => { throw new Error(text) });
+            })
+            .then(mensagem => {
+                alert(mensagem);
+
+
+                const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
+                abrirModalAgendamento(idServicoAtual);
+            })
+            .catch(error => alert("Erro ao cancelar: " + error.message));
+    }
 }

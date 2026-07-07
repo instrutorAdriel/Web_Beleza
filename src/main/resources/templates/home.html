@@ -52,25 +52,6 @@
     </div>
 </section>
 
-  <section id="sobre" class="sobre-section">
-      <div class="sobre-container">
-          <div class="sobre-texto">
-              <h2>Tradição e Inovação no Ensino Profissional</h2>
-              <p>O Senac transforma vidas por meio da educação profissionalizante. Nossos laboratórios replicam o ambiente real do mercado de trabalho, preparando você para os desafios do dia a dia da sua futura carreira.</p>
-          </div>
-          <div class="sobre-cards">
-              <div class="mini-card">
-                  <i class="fa-solid fa-graduation-cap"></i>
-                  <h3>Diplomas Reconhecidos</h3>
-              </div>
-              <div class="mini-card">
-                  <i class="fa-solid fa-briefcase"></i>
-                  <h3>Foco no Mercado</h3>
-              </div>
-          </div>
-      </div>
-  </section>
-
 <section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
@@ -130,7 +111,7 @@
 
                     </div>
 
-                    <a href="#modal-agendamento" class="btn-detalhes">
+                    <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
                         Agendar
                     </a>
 
@@ -148,126 +129,6 @@
     </div>
 </section>
 
-<!-- SEÇÃO AGENDAMENTOS (COM NOVOS CARDS ADICIONADOS) -->
-<section id="agendamentos" class="container-interno">
-    <h2 class="titulo-secao">Agendamentos de Serviços</h2>
-    <p class="subtitulo-secao">Receba atendimento prático dos nossos alunos supervisionados por professores experientes.</p>
-
-    <div class="carrossel-wrapper">
-        <a href="#" class="seta-carrossel seta-esquerda"><i class="fa-solid fa-chevron-left"></i></a>
-
-        <div class="carrossel-track">
-            <!-- Card 1 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Jessé Freire</span>
-                    <h3 class="card-titulo-servico">Corte de Cabelo Masculino</h3>
-                    <p class="card-descricao">Corte e acabamento realizados por nossa turma de Barbeiro Profissional.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(1)" >Agendar</a>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Taguatinga</span>
-                    <h3 class="card-titulo-servico">Atendimento Estético</h3>
-                    <p class="card-descricao">Limpeza de pele profunda realizada pelos estudantes de Estética.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(2)">Agendar</a>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Samambaia</span>
-                    <h3 class="card-titulo-servico">Consultoria de Imagem</h3>
-                    <p class="card-descricao">Análise de coloração pessoal conduzida pelo time de Moda.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(3)">Agendar</a>
-            </div>
-
-            <!-- Card 4 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Ceilândia</span>
-                    <h3 class="card-titulo-servico">Design de Sobrancelhas</h3>
-                    <p class="card-descricao">Modelagem, simetria facial e aplicação de henna pela equipe de Beleza.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(4)">Agendar</a>
-            </div>
-
-            <!-- Card 5 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Gama</span>
-                    <h3 class="card-titulo-servico">Atendimento Nutricional</h3>
-                    <p class="card-descricao">Avaliação de bioimpedância e plano alimentar com alunos de Nutrição.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(5)">Agendar</a>
-            </div>
-
-            <!-- Card 6 (Novo) -->
-            <div class="card-servico">
-                <div>
-                    <span class="card-tag-unidade">Unidade Norte</span>
-                    <h3 class="card-titulo-servico">Massagem Relaxante</h3>
-                    <p class="card-descricao">Sessões de massagem terapêutica aplicadas pelo time de Massoterapia.</p>
-                </div>
-                <a href="#modal-agendamento" class="btn-card" onclick="abrirModalAgendamento(6)">Agendar</a>
-            </div>
-        </div>
-
-        <a href="#" class="seta-carrossel seta-direita"><i class="fa-solid fa-chevron-right"></i></a>
-    </div>
-</section>
-
-<!-- SEÇÃO NOTÍCIAS -->
-<section id="noticias" class="container-interno" style="margin-bottom: 4rem;">
-    <h2 class="titulo-secao">Últimas Notícias</h2>
-    <p class="subtitulo-secao">Fique por dentro das novidades, eventos e oportunidades do Senac.</p>
-
-    <div class="grid-cursos-completo">
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-newspaper"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #e3f2fd; color: #0d47a1;">Evento</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 15 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Feira de Empregabilidade 2026</h3>
-                <p>Participe do maior evento de contratação do ano, com palestras exclusivas e processos seletivos imediatos.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #e8f5e9; color: #1b5e20;">Conquista</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 10 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Alunos de Gastronomia premiados</h3>
-                <p>Nossa equipe conquistou o primeiro lugar no festival gastronômico regional com prato sustentável.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-
-        <div class="card-curso-completo">
-            <div class="img-placeholder-curso" style="background: var(--cor-principal, #2b4c7e); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; height: 150px;">
-                <i class="fa-solid fa-laptop-code"></i>
-            </div>
-            <div class="corpo-curso">
-                <span class="tipo-curso" style="background: #fff3e0; color: #e65100;">Inovação</span>
-                <span style="font-size: 0.85rem; color: #777; display: block; margin-top: 0.5rem;"><i class="fa-regular fa-calendar"></i> 02 Junho, 2026</span>
-                <h3 style="margin-top: 0.5rem;">Novos Laboratórios de TI</h3>
-                <p>Senac inaugura infraestrutura de ponta focada em Inteligência Artificial e Computação em Nuvem.</p>
-                <a href="#" class="btn-detalhes" style="margin-top: 1rem;">Ler Notícia</a>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- MODAIS -->
 <div id="modal-curso-detalhes" class="modal-plataforma">
@@ -311,7 +172,7 @@
 
 <div id="modal-agendamento" class="modal-plataforma">
     <div class="modal-painel">
-        <a href="#" class="btn-fechar-modal" onclick="fecharModal()">&times; Fechar</a>
+        <a href="#agendamentos" class="btn-fechar-modal" onclick="fecharModal()">&times; Fechar</a>
         <span class="tag-modal">Serviços Práticos</span>
         <h2>Horários Disponíveis para Atendimento</h2>
 
@@ -324,7 +185,44 @@
                 <th>Ação</th>
             </tr>
             </thead>
-            <tbody id="tabela-sessoes-body">
+            <tbody id="tabela-sessoes-body" th:fragment="tabela-modal-fragment">
+
+            <tr th:if="${#lists.isEmpty(sessoes)}">
+                <td colspan="4" style="text-align: center; padding: 2rem; color: #7f8c8d; font-style: italic;">
+                    <i class="fa-regular fa-calendar-times" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block; color: #bdc3c7;"></i>
+                    Não há horários disponíveis para este serviço no momento.
+                </td>
+            </tr>
+
+            <tr th:unless="${#lists.isEmpty(sessoes)}" th:each="sessao : ${sessoes}">
+                <td th:text="${sessao.dataAtendimento}"></td>
+                <td th:text="${sessao.horarioInicial}"></td>
+
+                <td th:style="'font-weight: bold; color: ' + (${sessao.vagasDisponiveis == 0} ? '#ef4444' : '#2ecc71')"
+                    th:text="${sessao.vagasDisponiveis == 0} ? 'Esgotado' : ${sessao.vagasDisponiveis} + ' restantes'">
+                </td>
+
+                <td>
+                    <button th:if="${sessao.agendadoPeloUsuario}"
+                            class="btn-cancelar"
+                            style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;"
+                            th:onclick="|desfazerAgendamento(${sessao.id})|">
+                        ✕ Desfazer
+                    </button>
+
+                    <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis <= 0}"
+                            class="btn-confirmar" disabled style="background-color: #bdc3c7; color: #7f8c8d;">
+                        Indisponível
+                    </button>
+
+                    <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
+                            class="btn-confirmar"
+                            style="background-color: #f39c12; color: white;"
+                            th:onclick="|confirmarAgendamento(${sessao.id})|">
+                        Agendar ➔
+                    </button>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
