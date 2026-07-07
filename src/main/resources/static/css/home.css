@@ -447,7 +447,7 @@ body {
     border: 1px solid var(--borda-suave);
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    display: flex;
+    display:none;
     flex-direction: column;
     height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
     transition: var(--transicao);
