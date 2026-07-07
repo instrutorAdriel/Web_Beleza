@@ -19,25 +19,19 @@
         </div>
         <nav class="nav-menu">
             <a href="#hero" class="nav-link ativo">Home</a>
-            <a href="#sobre-salao" class="nav-link">Sobre o Salão</a>
+            <a href="#sobre-salao" class="nav-link">Sobre</a>
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
             <a href="#avaliacoes" class="nav-link">Avaliações</a>
         </nav>
 
-        <!-- Não logado -->
         <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
             <i class="fa-solid fa-right-to-bracket"></i> Entrar
         </a>
 
-        <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
             <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
-            <!--  <img th:if="${usuario.fotoUrl != null}"
-                th:src="${usuario.fotoUrl}"
-                alt="Foto de perfil" class="foto-perfil"/>
-           <i th:if="${usuario.fotoUrl == null}" class="fa-solid fa-circle-user"></i>-->
         </div>
     </div>
 </header>
@@ -57,11 +51,10 @@
     <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
 
-<section id="sobre-salao" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+<section id="sobre-salao" class="cursos-secao-avancada container-interno" style="margin-bottom: 0;">
     <h2 class="titulo-secao">Como Funciona o Nosso Salão de Beleza</h2>
     <p class="subtitulo-secao">Um salão-escola: você recebe o serviço gratuitamente e ajuda a formar os futuros profissionais do Senac-DF.</p>
 
-    <!-- ETAPAS DO ATENDIMENTO -->
     <div class="salao-etapas" style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin: 2rem 0 3rem;">
 
         <div class="etapa-card" style="flex: 1 1 220px; max-width: 260px; background: #fff; border-radius: 12px; padding: 28px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
@@ -90,7 +83,6 @@
 
     </div>
 
-    <!-- O QUE É NECESSÁRIO -->
     <h3 style="text-align: center; color: #2b4c7e; margin-bottom: 1.5rem;">O que é necessário para realizar os procedimentos</h3>
 
     <div class="salao-requisitos" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 3rem;">
@@ -108,7 +100,7 @@
         </div>
 
         <div class="requisito-card" style="flex: 1 1 260px; max-width: 320px; background: #f4f6fa; border-radius: 12px; padding: 22px;">
-            <i class="fa-solid fa-child-reaching" style="color: #2b4c7e;"></i>
+            <i class="fa-solid fa-child" style="color: #2b4c7e;"></i>
             <strong style="margin-left: 8px;">Atenção com o público infantil</strong>
             <p style="font-size: 0.9rem; color: #555; margin: 8px 0 0;">Existem restrições específicas para o atendimento de crianças. Veja os detalhes no termo abaixo.</p>
         </div>
@@ -137,21 +129,19 @@
             O usuário declara também estar ciente de que:
         </p>
 
-        <ul style="font-size: 0.92rem; color: #444; line-height: 1.7; padding-left: 20px;">
+        <ul style="font-size: 0.92rem; color: #444; line-height: 1.7; padding-left: 20px; margin-bottom: 0;">
             <li>Menores de 12 anos apenas na presença de um responsável, maiores de 12 podem realizar procedimentos sem a presença de um responsável;</li>
             <li>Não é permitido o uso de produtos químicos em crianças, independentemente da idade;</li>
             <li>Não é permitido o uso de fontes de calor, como secadores e pranchas alisadoras, em crianças menores de 12 anos;</li>
             <li>Não é permitido realizar corte de cabelo em crianças menores de 6 anos;</li>
             <li>O Senac-DF não se responsabiliza por danos causados por imperícia ou negligência, caso o usuário não siga as instruções estipuladas pelo salão-escola;</li>
             <li>O Senac-DF não se responsabiliza caso o procedimento não saia como o esperado pelo usuário, uma vez que o resultado pode variar de pessoa para pessoa;</li>
-            <li>Este serviço tem natureza gratuita, e a participação do usuário se dá na condição de voluntário para o treinamento dos alunos da instituição, sempre supervisionados pelo instrutor do respectivo curso.</li>
+            <li>Este serviço tem natureza gratuita, e a participação do usuário se dá na condition de voluntário para o treinamento dos alunos da instituição, sempre supervisionados pelo instrutor do respectivo curso.</li>
         </ul>
-
-
     </div>
 </section>
 
-<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-top: 0; padding-top: 0; margin-bottom: 2rem;">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
