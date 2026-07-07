@@ -23,14 +23,14 @@
             <a href="#avaliacoes" class="nav-link">Depoimentos</a>
         </nav>
         <!-- Não logado -->
-        <a th:if="${usuarioLogado == null}"
+        <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
             <i class="fa-solid fa-right-to-bracket"></i> Entrar
         </a>
 
         <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
-            <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
+            <a th:href="@{/perfil}" th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
             <!--  <img th:if="${usuario.fotoUrl != null}"
                 th:src="${usuario.fotoUrl}"
