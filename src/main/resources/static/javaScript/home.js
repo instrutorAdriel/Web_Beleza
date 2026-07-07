@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarFormularios();
     inicializarNavAtiva();
     inicializarLogout();
+    inicializarTermoConsentimento(); // NOVO: Exige aceite do termo antes de confirmar agendamento
 });
 
 /**
@@ -302,4 +303,10 @@ function inicializarHeroBanner() {
             reiniciarIntervalo();
         });
     }
-}11
+
+
+
+
+
+
+}
