@@ -56,7 +56,7 @@
     <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
 
-<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+<section id="agendamentos" class="container-interno">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
@@ -71,20 +71,16 @@
         <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
-    <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+    <div class="carrossel-wrapper">
 
-        <button type="button" class="seta-carrossel seta-esquerda"
-                style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <button type="button" class="seta-carrossel seta-esquerda">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <div class="carrossel-track"
-             style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
-
+        <div class="carrossel-track">
             <div class="card-curso-completo"
                  th:each="servico : ${servicos}"
-                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
-                 style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
+                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
 
                 <div class="img-placeholder-curso">
                     <img th:src="${servico.imagem}"
@@ -115,18 +111,12 @@
 
                     </div>
 
-                    <a href="#modal-agendamento" class="btn-detalhes">
-                        Agendar
-                    </a>
-
+                    <a href="#modal-agendamento" class="btn-detalhes">Agendar</a>
                 </div>
-
             </div>
-
         </div>
 
-        <button type="button" class="seta-carrossel seta-direita"
-                style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <button type="button" class="seta-carrossel seta-direita">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 

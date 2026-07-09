@@ -469,17 +469,22 @@
    CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
    ========================================================================== */
 .carrossel-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
     padding: 0 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 .carrossel-track {
-    display: flex !important;
-    gap: 24px;
-    overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 20px 5px;
+    display: flex;
+    overflow-x: auto;
+    gap: 24px;
+    width: 100%;
+    padding: 15px 5px;
+    scrollbar-width: none;
 }
 
 .carrossel-track::-webkit-scrollbar { height: 6px; }
@@ -562,13 +567,44 @@
     text-decoration: none;
     transition: var(--transicao);
 }
+
 .seta-carrossel:hover {
     background-color: var(--senac-laranja);
     color: #000000;
     border-color: var(--senac-laranja);
 }
-.seta-esquerda { left: 0px; }
-.seta-direita { right: 0px; }
+
+.seta-esquerda {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seta-direita {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* ==========================================================================
    PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
@@ -615,6 +651,9 @@
     flex-direction: column;
     height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
     transition: var(--transicao);
+    flex: 0 0 auto;
+    width: 320px;
+    box-sizing: border-box;
 }
 
 .card-curso-completo:hover {
@@ -1228,6 +1267,33 @@ color: #444444;
 .ssp-forgot-password:hover {
     color: var(--e-global-color-secondary);
     text-decoration: underline;
+}
+
+.ssp-password-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0 0;
+    font-size: 0.85rem;
+}
+.ssp-password-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #9CA3AF;
+    margin-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+.ssp-password-checklist li i {
+    width: 14px;
+}
+.ssp-password-checklist li.valid {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-check {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-xmark {
+    color: #DC2626;
 }
 
 /* ==========================================================================
