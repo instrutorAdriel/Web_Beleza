@@ -65,6 +65,18 @@ document.addEventListener("DOMContentLoaded", function () {
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 8) num = num.substring(0, 8);
 
+        if (num.length >= 2) {
+            let dia = parseInt(num.substring(0, 2), 10);
+            if (dia > 31) dia = 31;
+            num = String(dia).padStart(2, "0") + num.substring(2);
+        }
+
+        if (num.length >= 4) {
+            let mes = parseInt(num.substring(2, 4), 10);
+            if (mes > 12) mes = 12;
+            num = num.substring(0, 2) + String(mes).padStart(2, "0") + num.substring(4);
+        }
+
         if (num.length > 4) {
             e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
         } else if (num.length > 2) {
