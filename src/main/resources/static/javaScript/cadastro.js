@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
+    const nomeCompletoInput = document.getElementById("nomeCompleto");
+    const nomeCompletoErro = document.getElementById("nomeCompleto-erro"); // NOVO
 
     // Itens do checklist de força da senha
     const reqMaiuscula = document.getElementById("req-maiuscula");
@@ -59,8 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
-    // 2. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa)
+    // 3. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa) com ano máximo = ano atual
     dataNascimentoInput.addEventListener("input", function (e) {
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 8) num = num.substring(0, 8);
@@ -77,6 +78,14 @@ document.addEventListener("DOMContentLoaded", function () {
             num = num.substring(0, 2) + String(mes).padStart(2, "0") + num.substring(4);
         }
 
+        // Limita o ano ao ano atual (dinâmico, se atualiza sozinho a cada ano)
+        if (num.length === 8) {
+            const anoAtual = new Date().getFullYear();
+            let ano = parseInt(num.substring(4, 8), 10);
+            if (ano > anoAtual) ano = anoAtual;
+            num = num.substring(0, 4) + String(ano).padStart(4, "0");
+        }
+
         if (num.length > 4) {
             e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
         } else if (num.length > 2) {
@@ -86,7 +95,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+    // 4. BLOQUEIA NÚMEROS E SÍMBOLOS NO NOME COMPLETO (permite letras, acentos e espaços)
+    // O aviso fica visível enquanto houver caractere inválido e some quando a pessoa apagar
+    nomeCompletoInput.addEventListener("input", function (e) {
+        const valorOriginal = e.target.value;
+        const valorLimpo = valorOriginal.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+
+        if (valorOriginal !== valorLimpo) {
+            // Havia número ou símbolo digitado — mostra o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "flex";
+            nomeCompletoInput.classList.add("input-error");
+        } else {
+            // Não há mais número/símbolo — esconde o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "none";
+            nomeCompletoInput.classList.remove("input-error");
+        }
+
+        e.target.value = valorLimpo;
+    });
+
+    // 5. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
     form.addEventListener("submit", function (event) {
         let erros = [];
 
@@ -101,14 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Validação da Idade Mínima (Mínimo 14 anos)
         if (dataNascimentoInput.value) {
-            const dataNascimento = new Date(dataNascimentoInput.value);
-            const hoje = new Date();
-            let idade = hoje.getFullYear() - dataNascimento.getFullYear();
-            const mes = hoje.getMonth() - dataNascimento.getMonth();
-
-            if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
-                idade--;
-            }
             const partes = dataNascimentoInput.value.split("/");
 
             if (partes.length !== 3 || partes[2].length !== 4) {
