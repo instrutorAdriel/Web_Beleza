@@ -82,7 +82,6 @@
 
 .logo {
     flex-shrink: 0;
-    margin-left: -200px;
 }
 
 .logo img {
@@ -940,11 +939,19 @@
 
 @media (max-width: 768px) {
     .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .nav-menu {
+        position: static;
+        left: auto;
+        transform: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        width: 100%;
+    }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
-
     .hero-banner { min-height: auto; padding: 80px 20px; }
+    .slide { background-size: contain; background-color: #020617; }
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
