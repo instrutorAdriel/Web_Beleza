@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html class="html-home" lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Senac - Página Inicial</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/home.js}" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="home-body">
 
 <header class="site-header">
     <div class="header-container">
@@ -146,8 +146,8 @@
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
-        <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+
+        <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
         <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
@@ -218,6 +218,70 @@
     </div>
 </section>
 
+<!-- SEÇÃO DEPOIMENTOS -->
+<section id="depoimentos" class="container-interno" style="margin-bottom: 4rem;">
+    <h2 class="titulo-secao">Depoimentos</h2>
+    <p class="subtitulo-secao">
+        Veja o que nossos clientes dizem sobre os serviços do salão.
+    </p>
+
+    <div class="carrossel-wrapper">
+
+        <a href="#" class="seta-carrossel seta-esquerda depoimento-seta">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+
+        <div class="carrossel-track carrossel-depoimentos">
+
+            <div class="card-depoimento" th:each="dep : ${depoimentos}">
+
+                <p class="depoimento-texto"
+                   th:text="'&quot;' + ${dep.texto} + '&quot;'">
+                </p>
+
+                <!-- IMAGENS -->
+                <div class="depoimento-imagens"
+                     th:if="${(dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)) or (dep.imagem2 != null and !#strings.isEmpty(dep.imagem2))}">
+
+                    <img
+                            th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}"
+                            th:src="${dep.imagem1}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
+                    <img
+                            th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}"
+                            th:src="${dep.imagem2}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
+                </div>
+
+                <!-- AUTOR -->
+                <div class="depoimento-autor">
+
+                    <div class="avatar-inicial"
+                         th:text="${dep.inicialAvatar}">
+                    </div>
+
+                    <div>
+                        <strong th:text="${dep.nome}"></strong>
+                        <span th:text="${dep.servico} + ' — ' + ${dep.unidade}"></span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <a href="#" class="seta-carrossel seta-direita depoimento-seta">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+    </div>
+</section>
+
+<!--<div id="modal-agendamento" class="modal-plataforma">-->
 <div id="avaliacoes" class="modal-plataforma">
     <div class="modal-painel">
         <a href="#" class="btn-fechar-modal">&times; Fechar</a>
@@ -277,6 +341,7 @@
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
             </div>
+
         </div>
     </div>
     <div class="footer-bottom">
