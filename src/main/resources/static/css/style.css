@@ -69,6 +69,7 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 4px solid var(--senac-laranja);
 }
 
 .header-container {
@@ -82,7 +83,6 @@
 
 .logo {
     flex-shrink: 0;
-    margin-left: -200px;
 }
 
 .logo img {
@@ -939,8 +939,8 @@
 }
 
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
