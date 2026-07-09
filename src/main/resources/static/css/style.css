@@ -1021,7 +1021,6 @@ body.ssp-page::before {
 }
 
 body.ssp-page::after {
-    content: '';
     position: absolute;
     width: 400px;
     height: 400px;
