@@ -1,6 +1,6 @@
-package com.example.demo.respository;
+package com.app.beleza.respository;
 
-import com.example.demo.model.SessaoAtendimento;
+import com.app.beleza.model.SessaoAtendimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

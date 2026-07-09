@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.app.beleza.controller;
 
-import com.example.demo.model.SessaoAtendimentoDTO;
-import com.example.demo.service.SessaoAtendimentoService;
+import com.app.beleza.model.SessaoAtendimentoDTO;
+import com.app.beleza.service.SessaoAtendimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

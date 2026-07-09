@@ -1,8 +1,8 @@
-package com.example.demo.service;
+package com.app.beleza.service;
 
-import com.example.demo.model.SessaoAtendimento;
-import com.example.demo.model.SessaoAtendimentoDTO;
-import com.example.demo.respository.SessaoAtendimentoRepository;
+import com.app.beleza.model.SessaoAtendimento;
+import com.app.beleza.model.SessaoAtendimentoDTO;
+import com.app.beleza.respository.SessaoAtendimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,17 +1,19 @@
-// Abre o modal e pede ao Spring o HTML pronto da tabela
+// Abre o modal e pede ao Spring o HTML pronto (Fragmento) da tabela
 function abrirModalAgendamento(idServico) {
     console.log("Carregando tabela via Spring para o Serviço:", idServico);
 
     // Armazena o ID do serviço atual no próprio modal para sabermos qual atualizar depois
     document.getElementById("modal-agendamento").dataset.idServicoAtual = idServico;
-
     document.getElementById("modal-agendamento").style.display = "flex";
 
     // Busca o fragmento HTML renderizado pelo servidor
     fetch(`/api/agendamento/modal-tabela?servicoId=${idServico}`)
-        .then(response => response.text()) //
+        .then(response => {
+            if (!response.ok) throw new Error("Erro na requisição da tabela");
+            return response.text(); // Lemos como TEXT (HTML bruto vindo do Thymeleaf)
+        })
         .then(htmlDoFragmento => {
-
+            // Substitui o corpo da tabela diretamente com o HTML processado pelo Java
             document.getElementById("tabela-sessoes-body").innerHTML = htmlDoFragmento;
         })
         .catch(error => console.error("Erro ao carregar fragmento:", error));
@@ -30,8 +32,7 @@ function confirmarAgendamento(idSessao) {
         })
         .then(mensagem => {
             alert(mensagem);
-
-
+            // Atualiza apenas a tabela dinamicamente mantendo o modal aberto!
             const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
             abrirModalAgendamento(idServicoAtual);
         })
@@ -48,8 +49,7 @@ function desfazerAgendamento(idSessao) {
             })
             .then(mensagem => {
                 alert(mensagem);
-
-
+                // Atualiza apenas a tabela dinamicamente mantendo o modal aberto!
                 const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
                 abrirModalAgendamento(idServicoAtual);
             })
