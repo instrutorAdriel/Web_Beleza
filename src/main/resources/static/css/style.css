@@ -167,7 +167,10 @@ body::after {
     margin-bottom: 0.8rem;
     transition: color 0.2s ease;
 }
+.ssp-login-button-back:hover{
+color: #444444;
 
+}
 
 
 .ssp-header-page-login h1 {
