@@ -40,7 +40,6 @@ body, html {
    EFEITOS DE FUNDO (ESFERAS BLUR)
    ========================================================================== */
 body::before {
-    content: '';
     position: absolute;
     width: 600px;
     height: 500px;
