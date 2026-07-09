@@ -25,8 +25,20 @@ public class SessaoAtendimento {
     @Column(name = "agendado_pelo_usuario", nullable = false)
     private boolean agendadoPeloUsuario;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario; // Relaciona a sessão com o Usuário real do banco
+
     // ... mantenha os getters e setters iguais abaixo
 
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public Long getServicoId() {
         return servicoId;

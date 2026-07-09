@@ -24,19 +24,29 @@ function fecharModal() {
 }
 
 // Executa a ação de Agendar
+// Executa a ação de Agendar
 function confirmarAgendamento(idSessao) {
     fetch(`/api/agendamento/${idSessao}/agendar`, { method: 'POST' })
         .then(response => {
+            if (response.status === 401) {
+                // Se o Java disser que não está logado, avisa e manda para o /login
+                alert("Para agendar um horário, você precisa entrar na sua conta.");
+                window.location.href = "/login";
+                throw new Error("Usuário não autenticado");
+            }
             if (response.ok) return response.text();
             return response.text().then(text => { throw new Error(text) });
         })
         .then(mensagem => {
             alert(mensagem);
-            // Atualiza apenas a tabela dinamicamente mantendo o modal aberto!
             const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
             abrirModalAgendamento(idServicoAtual);
         })
-        .catch(error => alert("Erro ao agendar: " + error.message));
+        .catch(error => {
+            if (error.message !== "Usuário não autenticado") {
+                alert("Erro ao agendar: " + error.message);
+            }
+        });
 }
 
 // Executa a ação de Desfazer o Agendamento
@@ -44,15 +54,23 @@ function desfazerAgendamento(idSessao) {
     if (confirm("Tem certeza que deseja cancelar este agendamento?")) {
         fetch(`/api/agendamento/${idSessao}/cancelar`, { method: 'POST' })
             .then(response => {
+                if (response.status === 401) {
+                    alert("Sua sessão expirou. Por favor, faça login novamente.");
+                    window.location.href = "/login";
+                    throw new Error("Usuário não autenticado");
+                }
                 if (response.ok) return response.text();
                 return response.text().then(text => { throw new Error(text) });
             })
             .then(mensagem => {
                 alert(mensagem);
-                // Atualiza apenas a tabela dinamicamente mantendo o modal aberto!
                 const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
                 abrirModalAgendamento(idServicoAtual);
             })
-            .catch(error => alert("Erro ao cancelar: " + error.message));
+            .catch(error => {
+                if (error.message !== "Usuário não autenticado") {
+                    alert("Erro ao cancelar: " + error.message);
+                }
+            });
     }
 }

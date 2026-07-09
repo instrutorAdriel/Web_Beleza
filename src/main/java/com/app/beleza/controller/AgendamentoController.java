@@ -1,7 +1,9 @@
 package com.app.beleza.controller;
 
 import com.app.beleza.model.SessaoAtendimentoDTO;
+import com.app.beleza.model.Usuario;
 import com.app.beleza.service.SessaoAtendimentoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,24 +27,36 @@ public class AgendamentoController {
         return "home :: tabela-modal-fragment";
     }
 
-    // 2. Endpoint para Confirmar Agendamento
     @PostMapping("/{id}/agendar")
     @ResponseBody
-    public ResponseEntity<String> agendar(@PathVariable Long id) {
+    public ResponseEntity<String> agendar(@PathVariable Long id, HttpSession session) {
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+
+        if (usuarioLogado == null) {
+            return ResponseEntity.status(401).body("Você precisa estar logado para realizar um agendamento.");
+        }
+
         try {
-            service.agendarSessao(id);
+            // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE
+            service.agendarSessao(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento Realizado com Sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // 3. NOVO: Endpoint para Desfazer/Cancelar Agendamento
     @PostMapping("/{id}/cancelar")
     @ResponseBody
-    public ResponseEntity<String> cancelar(@PathVariable Long id) {
+    public ResponseEntity<String> cancelar(@PathVariable Long id, HttpSession session) {
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+
+        if (usuarioLogado == null) {
+            return ResponseEntity.status(401).body("Você precisa estar logado para cancelar.");
+        }
+
         try {
-            service.cancelarSessao(id); // Garanta que esse método exista na sua SessaoAtendimentoService para devolver +1 vaga
+            // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE SE CERTIFICAR DE QUE É ELE MESMO CANCELANDO
+            service.cancelarSessao(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento cancelado com sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

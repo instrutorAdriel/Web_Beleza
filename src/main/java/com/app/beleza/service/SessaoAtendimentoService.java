@@ -2,6 +2,7 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.SessaoAtendimento;
 import com.app.beleza.model.SessaoAtendimentoDTO;
+import com.app.beleza.model.Usuario;
 import com.app.beleza.respository.SessaoAtendimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,35 +28,35 @@ public class SessaoAtendimentoService {
         )).collect(Collectors.toList());
     }
 
-    public void agendarSessao(Long id){
-        SessaoAtendimento sessao = repository.findById(id).orElseThrow(()-> new RuntimeException("Sessão não encontrada!"));
+    public void agendarSessao(Long id, Usuario usuario) {
+        SessaoAtendimento sessao = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
-        if(sessao.getVagasDisponiveis() <= 0) {
+        if (sessao.getVagasDisponiveis() <= 0) {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
 
+        // VÍNCULO REAL AQUI:
         sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() - 1);
         sessao.setAgendadoPeloUsuario(true);
+        sessao.setUsuario(usuario); // Agora o banco sabe EXATAMENTE quem agendou!
 
         repository.save(sessao);
     }
 
     // NOVO MÉTODO METICULOSAMENTE CONSTRUÍDO PARA O SEU CÓDIGO:
-    public void cancelarSessao(Long id) {
+    public void cancelarSessao(Long id, Usuario usuario) {
         SessaoAtendimento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
-        // VALIDAÇÃO CRUCIAL: Só cancela se o usuário de fato agendou.
-        // Isso impede que vagas subam além do limite original se clicarem várias vezes.
-        if (!sessao.isAgendadoPeloUsuario()) {
-            throw new RuntimeException("Você não possui um agendamento ativo nesta sessão para cancelar.");
+        // Segurança extra: impede que o usuário A cancele a sessão do usuário B
+        if (sessao.getUsuario() == null || !sessao.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Você não tem permissão para cancelar este agendamento.");
         }
 
-        // Devolve a vaga para o painel
         sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
-
-        // MUDANÇA QUE FAZ O BOTÃO VOLTAR A SER LARANJA:
         sessao.setAgendadoPeloUsuario(false);
+        sessao.setUsuario(null); // Remove o vínculo do usuário daquela vaga
 
         repository.save(sessao);
     }
