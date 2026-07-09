@@ -31,7 +31,7 @@
 
         <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
-            <span th:text="${usuario != null} ? ${usuario.nomeCompleto} : ''">>Usuário</span>
+            <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
             <!--  <img th:if="${usuario.fotoUrl != null}"
                 th:src="${usuario.fotoUrl}"
@@ -41,15 +41,19 @@
       </div>
   </header>
 
-<section id="hero" class="hero-banner">
-    <div class="hero-conteudo">
-        <span class="badge-hero">Inscrições Abertas</span>
-        <h1>Construa seu futuro profissional no Senac</h1>
-        <p>Conheça nossa plataforma de cursos e serviços de atendimento com agendamento simplificado.</p>
-        <div class="hero-botoes">
-            <a href="#servicos-agendamento" class="btn-principal">Ver Serviços</a>
-        </div>
+<section class="hero-banner">
+    <div class="slider" id="heroSlider">
+        <div class="slide" id="slide1"></div>
+        <div class="slide" id="slide2"></div>
+        <div class="slide" id="slide3"></div>
     </div>
+
+    <div class="hero-conteudo">
+
+    </div>
+
+    <button class="arrow prev" id="heroBtnPrev">&#10094;</button>
+    <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
 
 <section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
@@ -57,8 +61,8 @@
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa" data-unidade="todos">Todos</a>
-        <a href="#" class="aba-filtro" data-unidade="taguatinga">Taguatinga</a>
+
+        <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
         <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
@@ -128,47 +132,6 @@
 
     </div>
 </section>
-
-
-<!-- MODAIS -->
-<div id="modal-curso-detalhes" class="modal-plataforma">
-    <div class="modal-painel">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
-        <span class="tag-modal">Inscrições Online</span>
-        <h2>Técnico em Desenvolvimento de Sistemas</h2>
-
-        <div class="modal-grid-conteudo">
-            <div class="ementa-curso">
-                <h4>O que você vai aprender</h4>
-                <ul>
-                    <li><i class="fa-solid fa-check"></i> Lógica de Programação e Algoritmos</li>
-                    <li><i class="fa-solid fa-check"></i> Desenvolvimento Web (HTML, CSS, JS, React)</li>
-                    <li><i class="fa-solid fa-check"></i> Bancos de Dados Relacionais e Não-Relacionais</li>
-                    <li><i class="fa-solid fa-check"></i> Metodologias Ágeis (Scrum/Kanban)</li>
-                </ul>
-            </div>
-            <div class="formulario-matricula">
-                <h4>Preencha para garantir sua vaga</h4>
-                <form action="#sucesso" method="POST">
-                    <label for="nome">Nome Completo</label>
-                    <input type="text" id="nome" placeholder="Seu nome aqui" required>
-
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" placeholder="seuemail@provedor.com" required>
-
-                    <label for="unidade">Unidade de Preferência</label>
-                    <select id="unidade" required>
-                        <option value="">Selecione...</option>
-                        <option value="centro">Unidade Centro</option>
-                        <option value="norte">Unidade Norte</option>
-                    </select>
-
-                    <button type="submit" class="btn-enviar-formulario">Confirmar Matrícula</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="modal-agendamento" class="modal-plataforma">
     <div class="modal-painel">

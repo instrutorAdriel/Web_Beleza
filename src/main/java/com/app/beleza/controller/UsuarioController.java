@@ -1,12 +1,12 @@
-package com.example.demo.controller;
+package com.app.beleza.controller;
 
-import com.example.demo.model.Usuario;
-import com.example.demo.model.UsuarioDTO;
-import com.example.demo.respository.UsuarioRepository;
-import com.example.demo.service.PasswordResetService;
-import com.example.demo.service.UsuarioService;
+import com.app.beleza.model.Usuario;
+import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.PasswordResetService;
+import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
-import com.example.demo.utils.Validador;
+import com.app.beleza.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
