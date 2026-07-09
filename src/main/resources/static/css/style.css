@@ -314,7 +314,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 9999 !important; /* Máxima prioridade no clique da página */
+    z-index: 99!important; /* Máxima prioridade no clique da página */
     pointer-events: auto !important; /* Obriga o browser a capturar o clique */
     user-select: none;
 }
