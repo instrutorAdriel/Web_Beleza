@@ -100,6 +100,8 @@ function inicializarFiltroBairros() {
             }
         });
     });
+    const abaAtiva = document.querySelector('.aba-filtro.ativa');
+    if (abaAtiva) abaAtiva.click();
 }
 
 /**
