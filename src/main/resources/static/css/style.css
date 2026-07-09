@@ -33,7 +33,6 @@ body, html {
             #F29301 100%
     );
 
-    overflow-x: hidden;
     position: relative;
 }
 
@@ -86,6 +85,41 @@ body::after {
     margin-top: 0.4rem;
     display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
     font-weight: 500;
+}
+
+/* ==========================================================================
+   ALERTA DE FAIXA ETÁRIA (CADASTRO)
+   ========================================================================== */
+.ssp-alert {
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: sspFadeIn 0.3s ease-in;
+}
+
+.ssp-alert-erro {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: #DC2626;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.ssp-alert-aviso {
+    background-color: rgba(242, 147, 1, 0.12);
+    color: #92400e;
+    border: 1px solid rgba(242, 147, 1, 0.35);
+}
+
+.ssp-alert-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #1e40af;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+@keyframes sspFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
