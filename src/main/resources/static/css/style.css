@@ -1353,6 +1353,241 @@ color: #444444;
 }
 
 /* ==========================================================================
+   ELEMENTOS DA PÁGINA PERFIL
+   ========================================================================== */
+
+.body-perfil {
+    font-family: 'Public Sans', sans-serif;
+    background-color: var(--fundo-principal);
+    color: var(--texto-escuro);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+.body-perfil input {
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.body-perfil input:read-only {
+    background-color: var(--borda-suave);
+    color: var(--texto-mutado);
+}
+
+.painel-controle {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--fundo-principal);
+}
+
+.container-painel {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--fundo-footer);
+    color: var(--texto-claro);
+    padding: 20px;
+}
+
+.sidebar a.active {
+    background-color: var(--senac-laranja); !important;
+    color: #000; !important;
+}
+
+.conteudo-principal {
+    flex: 1; /* Ocupa o restante da tela */
+    padding: 40px;
+    background-color: #fff;
+    max-width: 800px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Botoes */
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0
+}
+
+.button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.button:hover {
+    color: #000; !important;
+    background-color: var(--senac-laranja); !important;
+}
+
+.btn {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    background: var(--senac-laranja);
+    color: var(--texto-claro);
+}
+
+.btn:hover {
+    box-shadow: none;
+    background-color: var(--senac-laranja-hover);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.group-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 12px 0 12px 0;
+}
+
+.group-button {
+    display: flex;
+    padding: 12px 0 0 0;
+}
+
+.group-info {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.success {
+    border-color: var(--sucesso);
+    background-color: rgba(0, 255, 161, 0.5);
+}
+
+.error {
+    border-color: var(--error);
+    background-color: rgba(255, 132, 123, 0.5);
+}
+
+/*
+Seções
+ */
+
+.secao-painel {
+    background: var(--fundo-card);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
+    /* ===== Formulário de Depoimento (Avaliações) ===== */
+
+    #depoimento-form textarea,
+    #depoimento-form select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: var(--fundo-input);
+        color: var(--texto-escuro);
+    }
+    #depoimento-form textarea { min-height: 90px; resize: vertical; }
+
+    #depoimento-form textarea:focus,
+    #depoimento-form select:focus,
+    #depoimento-form input:focus {
+        outline: none;
+        border-color: var(--senac-laranja);
+        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+    }
+
+    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
+    .depoimento-checkbox-linha {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--fundo-card);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--borda-suave);
+    }
+    .depoimento-checkbox-linha input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+        border: none;
+        margin-top: 3px;
+    }
+    .depoimento-checkbox-linha label {
+        font-size: 0.85rem;
+        color: var(--texto-mutado);
+        line-height: 1.4;
+    }
+
+    .depoimento-foto-preview {
+        display: none;
+        margin-top: 10px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--borda-suave);
+    }
+
+    .depoimento-erro {
+        background: #fef2f2;
+        color: #dc2626;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .depoimento-sucesso {
+        text-align: center;
+        padding: 16px 0;
+    }
+    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
+    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
+
+    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
+       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
+    #depoimento-form .group-input:has(textarea),
+    #depoimento-form .group-input:has(input[type="file"]),
+    #depoimento-form .depoimento-checkbox-linha,
+    #depoimento-form .depoimento-erro {
+        grid-column: 1 / -1;
+    }
+}
+
+
+/* ==========================================================================
    AJUSTES PARA CELULAR (MOBILE)
    ========================================================================== */
 @media (max-width: 480px) {

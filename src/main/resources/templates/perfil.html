@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
-<body>
+<body class="body-perfil">
 <div class="painel-controle">
     <div class="container-painel">
         <div class="sidebar">
@@ -25,10 +25,10 @@
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
-                <div th:class="'group-info ' + 'success'" th:if="${mensagemSucesso}">
+                <div class="group-info success" th:if="${mensagemSucesso}">
                     <span th:text="${mensagemSucesso}"></span>
                 </div>
-                <div th:class="'group-info ' + 'error'" th:if="${mensagemError}">
+                <div class="group-info error" th:if="${mensagemError}">
                     <span th:text="${mensagemError}"></span>
                 </div>
                 <div class="form-grid">
@@ -66,10 +66,10 @@
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
                 <h3>Atualizar Senha</h3>
-                <div th:class="'group-info ' + 'success'" th:if="${mensagemSucesso}">
+                <div class="group-info success" th:if="${mensagemSucesso}">
                     <span th:text="${mensagemSucesso}"></span>
                 </div>
-                <div th:class="'group-info ' + 'error'" th:if="${mensagemError}">
+                <div class="group-info error" th:if="${mensagemError}">
                     <span th:text="${mensagemError}"></span>
                 </div>
 
