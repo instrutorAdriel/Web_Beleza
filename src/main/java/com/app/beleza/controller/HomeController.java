@@ -16,8 +16,10 @@ public class HomeController {
 
     // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
-    public String exibirHome(HttpSession session, Model model) {
+    public String exibirHome(HttpSession session,Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        model.addAttribute("servicos", homeService.listarServicos());
+        model.addAttribute("depoimentos", homeService.listarDepoimentos());
         model.addAttribute("servicos", homeService.listarServicos());
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);
