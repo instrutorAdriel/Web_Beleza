@@ -21,7 +21,7 @@
             <a href="#hero" class="nav-link ativo">Home</a>
             <a href="#sobre-salao" class="nav-link">Sobre</a>
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
-            <a href="#avaliacoes" class="nav-link">Avaliações</a>
+            <a href="#avaliacoes" class="nav-link">Depoimentos</a>
         </nav>
 
         <a th:if="${usuario == null}"
@@ -30,13 +30,13 @@
         </a>
 
         <div th:if="${usuario != null}" class="usuario-logado">
-            <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
+            <a th:href="@{/perfil}" th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
         </div>
     </div>
 </header>
 
-<section class="hero-banner" id="hero">
+<section id="hero" class="hero-banner">
     <div class="slider" id="heroSlider">
         <div class="slide" id="slide1"></div>
         <div class="slide" id="slide2"></div>
@@ -146,7 +146,6 @@
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-
         <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>

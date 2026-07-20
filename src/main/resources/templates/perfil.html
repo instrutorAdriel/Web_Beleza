@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${tituloPagina}">Perfil</title>
+</head>
+<body class="body-perfil">
+<div class="painel-controle">
+    <div class="container-painel">
+        <div class="sidebar">
+            <h3 class="bar-item">Painel</h3>
+            <a th:href="@{/perfil}" data-target="perfil-informacao" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
+            <a th:href="@{/perfil(aba='configuracao')}" data-target="perfil-configuracao" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
+            <a th:href="@{/perfil(aba='agendamento')}" data-target="perfil-agendamento" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
+            <a th:href="@{/perfil(aba='avaliacao')}" class="bar-item button" th:classappend="${abaAtiva == 'avaliacao'} ? 'active'">Avaliações</a>
+            <a th:href="@{/}" class="bar-item button">Voltar</a>
+        </div>
+    </div>
+    <div class="conteudo-principal">
+        <section id="perfil-informacao" class="secao-painel" th:if="${abaAtiva == 'informacao'}">
+            <div class="secao-header">
+                <h2>Informação do Perfil</h2>
+            </div>
+
+            <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
+                <div class="group-info success" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div class="group-info error" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
+                </div>
+                <div class="form-grid">
+                    <div class="group-input">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
+                    </div>
+                    <div class="group-input">
+                        <label for="data_nascimento">Data de Nascimento</label>
+                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10" min="1900-01-01">
+                    </div>
+                    <div class="group-input">
+                        <label for="telefone">Telefone</label>
+                        <input type="text" id="telefone" name="telefone" th:field="*{telefone}" maxlength="15">
+                    </div>
+                    <div class="group-input">
+                        <label for="email">E-mail</label>
+                        <input type="text" id="email" name="email" th:field="*{email}" readonly>
+                    </div>
+                    <div class="group-input">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" id="endereco" name="endereco" th:field="*{endereco}">
+                    </div>
+                    <div class="group-input"></div>
+                    <div class="group-button">
+                        <button type="submit" class="btn">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="perfil-configuracao" class="secao-painel" th:if="${abaAtiva == 'configuracao'}">
+            <div class="secao-header">
+                <h2>Configuração do Perfil</h2>
+            </div>
+
+            <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
+                <h3>Atualizar Senha</h3>
+                <div class="group-info success" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div class="group-info error" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
+                </div>
+
+                <div class="group-input">
+                    <label for="senha-atual">Senha Atual</label>
+                    <input th:field="*{senha}" type="password" id="senha-atual" name="senha-atual">
+                </div>
+                <div class="group-input">
+                    <label for="senha-nova">Nova Senha</label>
+                    <input th:field="*{novaSenha}" type="password" id="senha-nova" name="senha-nova">
+                </div>
+                <div class="group-input">
+                    <label for="senha-confirmar">Confirmar Nova Senha</label>
+                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" name="senha-confirmar">
+                </div>
+                <div class="group-button">
+                    <button type="submit" class="btn">Atualizar Senha</button>
+                </div>
+            </form>
+        </section>
+        <section id="perfil-agendamento" class="secao-painel" th:if="${abaAtiva == 'agendamento'}">
+            <div class="secao-header">
+                <h2>Agendamentos</h2>
+            </div>
+        </section>
+        <section id="perfil-avaliacao" class="secao-painel" th:if="${abaAtiva == 'avaliacao'}">
+            <div class="secao-header">
+                <h2>Avaliações</h2>
+            </div>
+
+            <form class="form-perfil" id="depoimento-form" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="depoimento-erro" id="depoimento-erro" style="display:none;"></div>
+
+                    <div class="group-input">
+                        <label for="dep-nome">Seu nome</label>
+                        <input type="text" id="dep-nome" name="nome" placeholder="Como podemos te chamar" required>
+                    </div>
+
+                    <div class="group-input">
+                        <label for="dep-procedimento">Procedimento avaliado</label>
+                        <select id="dep-procedimento" name="procedimento" required>
+                            <option value="" selected disabled>Selecione o procedimento</option>
+                        </select>
+                    </div>
+
+                    <div class="group-input">
+                        <label for="dep-texto">Seu depoimento</label>
+                        <textarea id="dep-texto" name="texto" placeholder="Escreva aqui o que achou..." required></textarea>
+                    </div>
+
+                    <div class="group-input">
+                        <label for="dep-foto">Foto (opcional)</label>
+                        <input type="file" id="dep-foto" name="foto" accept="image/*">
+                        <img id="dep-foto-preview" class="depoimento-foto-preview" alt="Prévia da foto">
+                    </div>
+
+                    <div class="depoimento-checkbox-linha">
+                        <input type="checkbox" id="dep-mostrar-nome" name="mostrarNome" checked>
+                        <label for="dep-mostrar-nome">Pode mostrar meu nome junto com o depoimento no site. Se desmarcar, publicamos como anônimo.</label>
+                    </div>
+
+                    <div class="group-button">
+                        <button type="submit" class="btn" id="depoimento-btn-enviar">Enviar depoimento</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="depoimento-sucesso" id="depoimento-sucesso" style="display:none;">
+                <h3>Obrigado! 🎉</h3>
+                <p>Seu depoimento foi recebido com sucesso.</p>
+            </div>
+        </section>
+    </div>
+    <div class="modal" hidden>
+    </div>
+</div>
+
+<script th:if="${abaAtiva == 'informacao'}">
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById("data_nascimento").addEventListener('input', function (e) {
+            let num = e.target.value.replace(/\D/g, "");
+            if (num.length > 8) num = num.substring(0, 8);
+
+            if (num.length > 4) {
+                e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
+            } else if (num.length > 2) {
+                e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
+            } else {
+                e.target.value = num;
+            }
+        });
+
+        document.getElementById("telefone").addEventListener("input", function (e) {
+            // Remove tudo que não for número
+            let num = e.target.value.replace(/\D/g, "");
+            if (num.length > 11) {
+                num = num.substring(0, 11);
+            }
+            if (num.length > 6) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
+            } else if (num.length > 2) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2)}`;
+            } else if (num.length > 0) {
+                e.target.value = `(${num}`;
+            } else {
+                e.target.value = "";
+            }
+        });
+    });
+</script>
+<script th:if="${abaAtiva == 'avaliacao'}">
+    const DEPOIMENTO_API_URL = 'http://localhost:8080/api/depoimentos';
+
+    document.getElementById("dep-foto").addEventListener('change', function (event) {
+        const arquivo = event.target.files[0];
+        const preview = document.getElementById('dep-foto-preview');
+
+        console.log(arquivo);
+        if (arquivo) {
+            const leitor = new FileReader();
+            leitor.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            leitor.readAsDataURL(arquivo);
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+
+    document.getElementById('depoimento-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const form = this;
+        const btnEnviar = document.getElementById('depoimento-btn-enviar');
+        const caixaErro = document.getElementById('depoimento-erro');
+
+        caixaErro.style.display = 'none';
+        caixaErro.textContent = '';
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando...';
+
+        const dados = new FormData();
+        dados.append('nome', form.nome.value);
+        dados.append('texto', form.texto.value);
+        dados.append('procedimento', document.getElementById('dep-procedimento').value);
+        dados.append('mostrarNome', document.getElementById('dep-mostrar-nome').checked);
+
+        if (form.foto.files[0]) {
+            dados.append('foto', form.foto.files[0]);
+        }
+
+        fetch(DEPOIMENTO_API_URL, { method: 'POST', body: dados })
+            .then(async (resposta) => {
+                if (!resposta.ok) {
+                    const texto = await resposta.text();
+                    throw new Error(texto || 'Não foi possível enviar o depoimento.');
+                }
+                form.style.display = 'none';
+                document.getElementById('depoimento-sucesso').style.display = 'block';
+            })
+            .catch((erro) => {
+                caixaErro.textContent = erro.message || 'Erro ao enviar. Tente novamente.';
+                caixaErro.style.display = 'block';
+            })
+            .finally(() => {
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = 'Enviar depoimento';
+            });
+    });
+</script>
+</body>
+</html>

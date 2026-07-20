@@ -8,6 +8,7 @@ public class UsuarioDTO {
     private String endereco;
     private String email;
     private String senha;
+    private String novaSenha;
     private String confirmacaoSenha;
     protected String token;
 
@@ -17,6 +18,14 @@ public class UsuarioDTO {
 
     public String getConfirmacaoSenha() {
         return confirmacaoSenha;
+    }
+
+    public String getNovaSenha() {
+        return novaSenha;
+    }
+
+    public void setNovaSenha(String novaSenha) {
+        this.novaSenha = novaSenha;
     }
 
     public void setNomeCompleto(String nomeCompleto) {
