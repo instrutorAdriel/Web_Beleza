@@ -6,7 +6,7 @@
   <title th:text="${tituloPagina}">Recuperar Senha</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body class="ssp-page">
 
 <div class="ssp-logo-fixed-container">
   <img src="/img/branca_senac.png" alt="Logo SENAC" class="ssp-logo-senac">
@@ -17,7 +17,7 @@
 
     <header class="ssp-header-page-login">
       <a class="ssp-login-button-back" th:href="@{/login}">&larr; Voltar para o Login</a>
-      <h1 style="color: #F29301;" th:text="${tituloPagina}">Recuperar Senha</h1>
+      <h1 th:text="${tituloPagina}">Recuperar Senha</h1>
       <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
         Insira o e-mail associado à sua conta para receber o código de verificação.
       </p>

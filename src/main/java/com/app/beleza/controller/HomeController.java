@@ -18,6 +18,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(HttpSession session,Model model) {
         model.addAttribute("servicos", homeService.listarServicos());
+        model.addAttribute("depoimentos", homeService.listarDepoimentos());
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);

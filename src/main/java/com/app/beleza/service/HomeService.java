@@ -1,11 +1,19 @@
 package com.app.beleza.service;
 
+import com.app.beleza.model.*;
+import com.app.beleza.model.DepoimentoDTO;
+import com.app.beleza.model.Home;
+import com.app.beleza.model.AgendamentoDTO;
+import com.app.beleza.respository.DepoimentoRepository;
+import com.app.beleza.respository.HomeRepository;
 import com.app.beleza.model.Home;
 import com.app.beleza.model.AgendamentoDTO;
 import com.app.beleza.respository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.app.beleza.model.DepoimentoDTO;
+import com.app.beleza.respository.DepoimentoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +47,27 @@ public class HomeService {
             lista.add(dto);
         }
 
+        return lista;
+    }
+    @Autowired
+    private DepoimentoRepository depoimentoRepository;
+
+    public List<DepoimentoDTO> listarDepoimentos() {
+
+        List<DepoimentoDTO> lista = new ArrayList<>();
+
+        List<Depoimento> depoimentos = depoimentoRepository.findAll();
+
+        for (Depoimento dep : depoimentos) {
+            DepoimentoDTO dto = new DepoimentoDTO();
+            dto.setNome(dep.getNome());
+            dto.setServico(dep.getServico());
+            dto.setUnidade(dep.getUnidade());
+            dto.setTexto(dep.getTexto());
+            dto.setImagem1(dep.getImagem1());
+            dto.setImagem2(dep.getImagem2());
+            lista.add(dto);
+        }
         return lista;
     }
 }
