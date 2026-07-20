@@ -45,7 +45,7 @@ public class HomeController {
         model.addAttribute("tituloPagina", "Página Indefinida");
         return "undefined";
     }
-        @PostMapping("/perfil")
+    @PostMapping("/perfil/depoimento")
     @ResponseBody
     public ResponseEntity<?> salvarDepoimento(
             @RequestParam String nome,

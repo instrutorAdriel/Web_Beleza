@@ -169,23 +169,32 @@
     </div>
 </div>
 
-<script th:if="${abaAtiva == 'informacao'}">
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById("data_nascimento").addEventListener('input', function (e) {
-            let num = e.target.value.replace(/\D/g, "");
-            if (num.length > 8) num = num.substring(0, 8);
+<script th:if="${abaAtiva == 'avaliacao'}">
+    function configurarPreviewFoto(inputId, previewId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
 
-            if (num.length > 4) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
-            } else if (num.length > 2) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
+        input.addEventListener('change', function (event) {
+            const arquivo = event.target.files[0];
+            if (arquivo) {
+                const leitor = new FileReader();
+                leitor.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                leitor.readAsDataURL(arquivo);
             } else {
-                e.target.value = num;
+                preview.style.display = 'none';
             }
         });
+    }
+    configurarPreviewFoto('dep-foto1', 'dep-foto1-preview');
+    configurarPreviewFoto('dep-foto2', 'dep-foto2-preview');
 
-        document.getElementById("telefone").addEventListener("input", function (e) {
-            // Remove tudo que não for número
+    const inputTelefone = document.getElementById("telefone");
+    if (inputTelefone) {
+        inputTelefone.addEventListener("input", function (e) {
             let num = e.target.value.replace(/\D/g, "");
             if (num.length > 11) {
                 num = num.substring(0, 11);
@@ -200,68 +209,46 @@
                 e.target.value = "";
             }
         });
-    });
-</script>
-<script th:if="${abaAtiva == 'avaliacao'}">
-    const DEPOIMENTO_API_URL = 'http://localhost:8080/api/depoimentos';
+    }
 
-    document.getElementById("dep-foto").addEventListener('change', function (event) {
-        const arquivo = event.target.files[0];
-        const preview = document.getElementById('dep-foto-preview');
+    const formDepoimento = document.getElementById('depoimento-form');
+    if (formDepoimento) {
+        formDepoimento.addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        console.log(arquivo);
-        if (arquivo) {
-            const leitor = new FileReader();
-            leitor.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            leitor.readAsDataURL(arquivo);
-        } else {
-            preview.style.display = 'none';
-        }
-    });
+            const form = this;
+            const btnEnviar = document.getElementById('depoimento-btn-enviar');
+            const erroDiv = document.getElementById('depoimento-erro');
 
-    document.getElementById('depoimento-form').addEventListener('submit', function (e) {
-        e.preventDefault();
+            erroDiv.style.display = 'none';
+            erroDiv.textContent = '';
+            btnEnviar.disabled = true;
+            btnEnviar.textContent = 'Enviando...';
 
-        const form = this;
-        const btnEnviar = document.getElementById('depoimento-btn-enviar');
-        const caixaErro = document.getElementById('depoimento-erro');
+            const formData = new FormData(form);
 
-        caixaErro.style.display = 'none';
-        caixaErro.textContent = '';
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = 'Enviando...';
+            try {
+                const response = await fetch('/perfil/depoimento', {
+                    method: 'POST',
+                    body: formData
+                });
 
-        const dados = new FormData();
-        dados.append('nome', form.nome.value);
-        dados.append('texto', form.texto.value);
-        dados.append('procedimento', document.getElementById('dep-procedimento').value);
-        dados.append('mostrarNome', document.getElementById('dep-mostrar-nome').checked);
-
-        if (form.foto.files[0]) {
-            dados.append('foto', form.foto.files[0]);
-        }
-
-        fetch(DEPOIMENTO_API_URL, { method: 'POST', body: dados })
-            .then(async (resposta) => {
-                if (!resposta.ok) {
-                    const texto = await resposta.text();
-                    throw new Error(texto || 'Não foi possível enviar o depoimento.');
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar depoimento');
                 }
+
                 form.style.display = 'none';
                 document.getElementById('depoimento-sucesso').style.display = 'block';
-            })
-            .catch((erro) => {
-                caixaErro.textContent = erro.message || 'Erro ao enviar. Tente novamente.';
-                caixaErro.style.display = 'block';
-            })
-            .finally(() => {
+
+            } catch (erro) {
+                erroDiv.textContent = erro.message || 'Não foi possível enviar seu depoimento. Tente novamente.';
+                erroDiv.style.display = 'block';
+            } finally {
                 btnEnviar.disabled = false;
                 btnEnviar.textContent = 'Enviar depoimento';
-            });
-    });
+            }
+        });
+    }
 </script>
 </body>
 </html>
