@@ -69,6 +69,7 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 4px solid var(--senac-laranja);
 }
 
 .header-container {
@@ -1012,8 +1013,8 @@
 }
 
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
@@ -1022,12 +1023,18 @@
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
 
-    /* ESCONDE AS SETAS GERAIS */
     .seta-carrossel { display: none; }
     .sobre-cards { grid-template-columns: 1fr; }
 
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
+}
+
+/* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
+.card-curso-completo[style*="display: none"],
+.card-servico[style*="display: none"] {
+    display: none !important;
+}
 
     /* ==========================================================================
        CORREÇÃO EXCLUSIVA PARA O CARROSSEL DE SERVIÇOS NO MOBILE
@@ -1711,44 +1718,87 @@ Seções
 
 
 /* ==========================================================================
+
    AJUSTES PARA CELULAR (MOBILE)
+
    ========================================================================== */
+
 @media (max-width: 480px) {
+
     .ssp-logo-fixed-container {
+
         position: static;
+
         margin: 2rem auto 0 auto;
+
         display: flex;
+
         justify-content: center;
+
     }
+
     .ssp-login-centered-container {
+
         min-height: auto;
+
         padding-top: 1rem;
+
     }
+
     .ssp-form-card {
+
         padding: 2rem 1.5rem;
+
         box-shadow: none;
+
         background-color: transparent; /* Remove o fundo do card no mobile */
+
         border: none;
+
         backdrop-filter: none;
+
     }
+
     .ssp-divider span {
+
         background-color: transparent;
+
         color: #FFFFFF;
+
     }
+
     /* Altera as fontes para Branco no mobile para dar contraste com o fundo escuro da tela */
+
     .ssp-form-group label,
+
     .ssp-header-page-login h1,
+
     .ssp-login-button-back,
+
     .ssp-forgot-password,
+
     .ssp-register-footer {
+
         color: #FFFFFF;
+
     }
+
     .ssp-register-footer a {
+
         color: var(--e-global-color-secondary);
+
     }
+
     /* No mobile, faz com que os botões sociais herdem o comportamento correto */
+
     .ssp-btn-social {
+
         background-color: rgba(255, 255, 255, 0.9);
+
         color: #2D3748;
+
     }
+
 }
+
+
