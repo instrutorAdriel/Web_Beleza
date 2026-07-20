@@ -110,9 +110,24 @@
                     </div>
 
                     <div class="group-input">
-                        <label for="dep-procedimento">Procedimento avaliado</label>
-                        <select id="dep-procedimento" name="procedimento" required>
-                            <option value="" selected disabled>Selecione o procedimento</option>
+                        <label for="dep-servico">Serviço avaliado</label>
+                        <select id="dep-servico" name="servico" required>
+                            <option value="" selected disabled>Selecione o serviço</option>
+                            <option th:each="serv : ${servicos}"
+                                    th:value="${serv}"
+                                    th:text="${serv}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="group-input">
+                        <label for="dep-unidade">Unidade</label>
+                        <select id="dep-unidade" name="unidade" required>
+                            <option value="" selected disabled>Selecione a unidade</option>
+                            <option th:each="uni : ${unidades}"
+                                    th:value="${uni}"
+                                    th:text="${uni}">
+                            </option>
                         </select>
                     </div>
 
@@ -122,9 +137,15 @@
                     </div>
 
                     <div class="group-input">
-                        <label for="dep-foto">Foto (opcional)</label>
-                        <input type="file" id="dep-foto" name="foto" accept="image/*">
-                        <img id="dep-foto-preview" class="depoimento-foto-preview" alt="Prévia da foto">
+                        <label for="dep-foto1">Foto 1 (opcional)</label>
+                        <input type="file" id="dep-foto1" name="foto1" accept="image/*">
+                        <img id="dep-foto1-preview" class="depoimento-foto-preview" alt="Prévia da foto 1">
+                    </div>
+
+                    <div class="group-input">
+                        <label for="dep-foto2">Foto 2 (opcional)</label>
+                        <input type="file" id="dep-foto2" name="foto2" accept="image/*">
+                        <img id="dep-foto2-preview" class="depoimento-foto-preview" alt="Prévia da foto 2">
                     </div>
 
                     <div class="depoimento-checkbox-linha">
