@@ -16,16 +16,24 @@ public class SessaoAtendimentoService {
     @Autowired
     private SessaoAtendimentoRepository repository;
 
-    public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId) {
+    public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
         List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
 
-        return sessoes.stream().map(s -> new SessaoAtendimentoDTO(
-                s.getId(),
-                s.getDataAtendimento(),
-                s.getHorarioInicial(),
-                s.getVagasDisponiveis(),
-                s.isAgendadoPeloUsuario()
-        )).collect(Collectors.toList());
+        return sessoes.stream().map(sessao -> {
+            // 1. Calcula se o agendamento pertence ao usuário logado
+            boolean pertenceAoUsuarioLogado = usuarioLogado != null
+                    && sessao.getUsuario() != null
+                    && sessao.getUsuario().getId().equals(usuarioLogado.getId());
+
+            // 2. Cria o DTO passando TODOS os 5 argumentos direto no construtor
+            return new SessaoAtendimentoDTO(
+                    sessao.getId(),
+                    sessao.getDataAtendimento().toString(), // Ou sessao.getDataAtendimento() se já for String
+                    sessao.getHorarioInicial().toString(),   // Ou sessao.getHorarioInicial() se já for String
+                    sessao.getVagasDisponiveis(),
+                    pertenceAoUsuarioLogado
+            );
+        }).collect(Collectors.toList());
     }
 
     public void agendarSessao(Long id, Usuario usuario) {
@@ -45,18 +53,18 @@ public class SessaoAtendimentoService {
     }
 
     // NOVO MÉTODO METICULOSAMENTE CONSTRUÍDO PARA O SEU CÓDIGO:
-    public void cancelarSessao(Long id, Usuario usuario) {
+    public void cancelarSessao(Long id, Usuario usuarioLogado) {
         SessaoAtendimento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
-        // Segurança extra: impede que o usuário A cancele a sessão do usuário B
-        if (sessao.getUsuario() == null || !sessao.getUsuario().getId().equals(usuario.getId())) {
-            throw new RuntimeException("Você não tem permissão para cancelar este agendamento.");
+        // Validação de Segurança: Se não há usuário vinculado ou se o ID é diferente do logado, trava!
+        if (sessao.getUsuario() == null || !sessao.getUsuario().getId().equals(usuarioLogado.getId())) {
+            throw new RuntimeException("Você não tem permissão para cancelar o agendamento de outro usuário.");
         }
 
         sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
         sessao.setAgendadoPeloUsuario(false);
-        sessao.setUsuario(null); // Remove o vínculo do usuário daquela vaga
+        sessao.setUsuario(null); // Desvincula o usuário da sessão
 
         repository.save(sessao);
     }
