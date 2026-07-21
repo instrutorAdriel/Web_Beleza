@@ -1172,23 +1172,6 @@
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
 }
-@media (max-width: 768px) {
-    /* ...outras regras de celular... */
-
-    /* OCULTAR SETAS DO CARROSSEL E HERO NO CELULAR */
-    .seta-carrossel,
-    .arrow,
-    .prev,
-    .next {
-        display: none !important;
-    }
-
-    .carrossel-wrapper {
-        padding: 0 10px; /* Reduz o espaçamento lateral que antes era reservado para as setas */
-    }
-
-    /* ...outras regras de celular... */
-}
 
 /* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
 .card-curso-completo[style*="display: none"],
@@ -1401,7 +1384,7 @@ body.ssp-page::after {
     transition: color 0.2s ease;
 }
 .ssp-login-button-back:hover{
-color: #444444;
+    color: #444444;
 
 }
 
