@@ -51,6 +51,9 @@
                 </div>
             </div>
 
+            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
+            <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
+
             <div class="ssp-form-group">
                 <label th:for="endereco">Endereço Completo</label>
                 <input type="text" th:field="*{endereco}" id="endereco" class="ssp-form-control" placeholder="Rua, número, bairro e cidade" required>
