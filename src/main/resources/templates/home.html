@@ -21,7 +21,8 @@
             <a href="#hero" class="nav-link ativo">Home</a>
             <a href="#sobre-salao" class="nav-link">Sobre</a>
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
-            <a href="#depoimentos" class="nav-link">Depoimentos</a> </nav>
+            <a href="#avaliacoes" class="nav-link">Depoimentos</a>
+        </nav>
 
         <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
@@ -112,7 +113,6 @@
 
     </div>
 
-
     <div class="salao-termo" style="background: #fff; border-left: 4px solid #2b4c7e; border-radius: 8px; padding: 28px 24px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
         <h3 style="color: #2b4c7e; margin-top: 0;">
             <i class="fa-solid fa-file-signature"></i> Regras
@@ -135,7 +135,7 @@
             <li>Não é permitido realizar corte de cabelo em crianças menores de 6 anos;</li>
             <li>O Senac-DF não se responsabiliza por danos causados por imperícia ou negligência, caso o usuário não siga as instruções estipuladas pelo salão-escola;</li>
             <li>O Senac-DF não se responsabiliza caso o procedimento não saia como o esperado pelo usuário, uma vez que o resultado pode variar de pessoa para pessoa;</li>
-            <li>Este serviço tem natureza gratuita, e a participação do usuário se dá na condition de voluntário para o treinamento dos alunos da instituição, sempre supervisionados pelo instrutor do respectivo curso.</li>
+            <li>Este serviço tem natureza gratuita, e a participação do usuário se dá na condição de voluntário para o treinamento dos alunos da instituição, sempre supervisionados pelo instrutor do respectivo curso.</li>
         </ul>
     </div>
 </section>
@@ -154,10 +154,12 @@
         <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
+    <!-- CARROSSEL DE SERVIÇOS -->
     <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
 
+        <!-- Seta Esquerda capturada pelo seu inicializarCarrossel() -->
         <button type="button" class="seta-carrossel seta-esquerda"
-                style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                style="position: absolute; left: -15px; z-index: 10; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
@@ -208,8 +210,9 @@
 
         </div>
 
+        <!-- Seta Direita capturada pelo seu inicializarCarrossel() -->
         <button type="button" class="seta-carrossel seta-direita"
-                style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                style="position: absolute; right: -15px; z-index: 10; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;  box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
@@ -279,7 +282,6 @@
     </div>
 </section>
 
-<!--<div id="modal-agendamento" class="modal-plataforma">-->
 <div id="avaliacoes" class="modal-plataforma">
     <div class="modal-painel">
         <a href="#" class="btn-fechar-modal">&times; Fechar</a>
@@ -326,7 +328,7 @@
     <div class="footer-container">
         <div class="footer-bloco">
             <h4>Sobre o Senac</h4>
-            <p>O Serviço Nacional de Aprendizagem Comercial é o principal agente de educação profissional focado no sector de comércio de bens, serviços e turismo do país.</p>
+            <p>O Serviço Nacional de Aprendizagem Comercial é o principal agente de educação profissional focado no setor de comércio de bens, serviços e turismo do país.</p>
         </div>
         <div class="footer-bloco">
             <h4>Contato rápido</h4>
