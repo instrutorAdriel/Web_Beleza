@@ -921,6 +921,7 @@
 .btn-enviar-formulario:hover { background: var(--senac-laranja-hover); }
 
 /* Tabela de horários */
+.tabela { overflow-x: hidden; }
 .tabela-horarios { width: 100%; border-collapse: collapse; margin-top: 25px; }
 .tabela-horarios th, .tabela-horarios td { padding: 14px; text-align: left; border-bottom: 1px solid var(--borda-suave); color: var(--texto-escuro); }
 .tabela-horarios th { background-color: var(--fundo-card); color: var(--texto-escuro); font-weight: 700; }
@@ -1012,6 +1013,7 @@
 }
 
 @media (max-width: 768px) {
+    .tabela { overflow-x: scroll; }
     .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
     .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
