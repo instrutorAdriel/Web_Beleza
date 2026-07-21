@@ -1,5 +1,7 @@
 package com.app.beleza.utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,5 +17,10 @@ public class Validador {
         } catch (InputMismatchException e){
             return false;
         }
+    }
+
+    public static boolean isDataNascimentoValido(String data_nascimento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.parse(data_nascimento, formatter).isAfter(LocalDate.of(1901, 1, 1));
     }
 }

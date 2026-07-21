@@ -21,8 +21,7 @@
             <a href="#hero" class="nav-link ativo">Home</a>
             <a href="#sobre-salao" class="nav-link">Sobre</a>
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
-            <a href="#avaliacoes" class="nav-link">Avaliações</a>
-        </nav>
+            <a href="#depoimentos" class="nav-link">Depoimentos</a> </nav>
 
         <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
@@ -30,13 +29,13 @@
         </a>
 
         <div th:if="${usuario != null}" class="usuario-logado">
-            <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
+            <a th:href="@{/perfil}" th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
         </div>
     </div>
 </header>
 
-<section class="hero-banner" id="hero">
+<section id="hero" class="hero-banner">
     <div class="slider" id="heroSlider">
         <div class="slide" id="slide1"></div>
         <div class="slide" id="slide2"></div>
@@ -146,7 +145,6 @@
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
-
         <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
@@ -288,6 +286,7 @@
         <span class="tag-modal">Serviços Práticos</span>
         <h2>Horários Disponíveis para Atendimento</h2>
 
+        <div class="tabela">
         <table class="tabela-horarios">
             <thead>
             <tr>
@@ -342,18 +341,19 @@
             </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 
 <div id="sucesso" class="modal-plataforma">
     <div class="modal-painel box-sucesso">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+        <a href="#agendamentos" class="btn-fechar-modal">&times; Fechar</a>
         <div class="icone-sucesso">
             <i class="fa-solid fa-circle-check"></i>
         </div>
         <h2>Operação Realizada com Sucesso!</h2>
         <p>Seus dados foram processados. Enviamos um e-mail de confirmação com os próximos passos e orientações detalhadas.</p>
-        <a href="#" class="btn-principal">Voltar para a Home</a>
+        <a href="#hero" class="btn-principal">Voltar para a Home</a>
     </div>
 </div>
 
