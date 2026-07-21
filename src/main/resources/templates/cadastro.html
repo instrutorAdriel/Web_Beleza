@@ -5,41 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Criar Conta</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
-
-    <style>
-        /* Checklist de requisitos de senha - mova para style.css se preferir */
-        .ssp-password-checklist {
-            list-style: none;
-            padding: 0;
-            margin: 0.6rem 0 0 0;
-            font-size: 0.85rem;
-        }
-        .ssp-password-checklist li {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            color: #9CA3AF;
-            margin-bottom: 0.3rem;
-            transition: color 0.2s ease;
-        }
-        .ssp-password-checklist li i {
-            width: 14px;
-        }
-        .ssp-password-checklist li.valid {
-            color: #16A34A;
-        }
-        .ssp-password-checklist li .fa-circle-check {
-            color: #16A34A;
-        }
-        .ssp-password-checklist li .fa-circle-xmark {
-            color: #DC2626;
-        }
-    </style>
 </head>
 <body class="ssp-page">
 
@@ -80,6 +50,9 @@
                     <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
             </div>
+
+            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
+            <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
 
             <div class="ssp-form-group">
                 <label th:for="endereco">Endereço Completo</label>
