@@ -1051,7 +1051,7 @@
     #agendamentos .card-curso-completo {
         scroll-snap-align: start;
     }
-}
+
 
 /* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
 .card-curso-completo[style*="display: none"],
