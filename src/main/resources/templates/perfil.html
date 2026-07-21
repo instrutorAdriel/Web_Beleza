@@ -154,13 +154,33 @@
             let num = e.target.value.replace(/\D/g, "");
             if (num.length > 8) num = num.substring(0, 8);
 
-            if (num.length > 4) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
-            } else if (num.length > 2) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
-            } else {
-                e.target.value = num;
+            let dia = num.substring(0, 2);
+            let mes = num.substring(2, 4);
+            let ano = num.substring(4, 8);
+
+            if (dia.length === 2) {
+                let diaNum = parseInt(dia, 10);
+                if (diaNum > 31) dia = "31";
+                if (diaNum === 0) dia = "01";
             }
+
+            if (mes.length === 2) {
+                let mesNum = parseInt(mes, 10);
+                if (mesNum > 12) mes = "12";
+                if (mesNum === 0) mes = "01";
+            }
+
+            const anoAtual = new Date().getFullYear();
+            if (ano.length === 4) {
+                let anoNum = parseInt(ano, 10);
+                if (anoNum > anoAtual) ano = anoAtual.toString();
+            }
+
+            let resultado = dia;
+            if (mes) resultado += "/" + mes;
+            if (ano) resultado += "/" + ano;
+
+            e.target.value = resultado;
         });
 
         document.getElementById("telefone").addEventListener("input", function (e) {
