@@ -413,6 +413,109 @@
 /* ==========================================================================
    SEÇÃO SOBRE
    ========================================================================== */
+
+.secao-sobre {
+    margin-bottom: 0;
+}
+
+.secao-sobre h3 {
+    text-align: center;
+    color: #2b4c7e;
+    margin-bottom: 1.5rem;
+}
+
+.salao-etapas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin: 2rem 0 3rem;
+}
+
+.etapa-card {
+    flex: 1 1 220px;
+    max-width: 260px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.etapa-card i {
+    font-size: 2rem;
+    color: #2b4c7e;
+}
+
+.etapa-card h3 {
+    margin: 14px 0 8px;
+    font-size: 1.05rem;
+}
+
+.etapa-card p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+}
+
+.salao-requisitos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.requisito-card i {
+    color: #2b4c7e;
+}
+
+.requisito-card strong {
+    margin-left: 8px;
+}
+
+.requisito-card p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 8px 0 0;
+}
+
+.salao-termo {
+    background: #fff;
+    border-left: 4px solid #2b4c7e;
+    border-radius: 8px;
+    padding: 28px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.salao-termo h3 {
+    color: #2b4c7e; margin-top: 0;
+}
+
+.salao-termo p {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.salao-termo ul {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.7;
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.requisito-card {
+    flex: 1 1 260px;
+    max-width: 320px;
+    background: #f4f6fa;
+    border-radius: 12px;
+    padding: 22px;
+}
+
 .sobre-section {
     background: #ffffff;
     padding: 80px 20px;
@@ -469,17 +572,22 @@
    CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
    ========================================================================== */
 .carrossel-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
     padding: 0 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 .carrossel-track {
-    display: flex !important;
-    gap: 24px;
-    overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 20px 5px;
+    display: flex;
+    overflow-x: auto;
+    gap: 24px;
+    width: 100%;
+    padding: 15px 5px;
+    scrollbar-width: none;
 }
 
 .carrossel-track::-webkit-scrollbar { height: 6px; }
@@ -562,13 +670,44 @@
     text-decoration: none;
     transition: var(--transicao);
 }
+
 .seta-carrossel:hover {
     background-color: var(--senac-laranja);
     color: #000000;
     border-color: var(--senac-laranja);
 }
-.seta-esquerda { left: 0px; }
-.seta-direita { right: 0px; }
+
+.seta-esquerda {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seta-direita {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* ==========================================================================
    PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
@@ -615,6 +754,9 @@
     flex-direction: column;
     height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
     transition: var(--transicao);
+    flex: 0 0 auto;
+    width: 320px;
+    box-sizing: border-box;
 }
 
 .card-curso-completo:hover {
@@ -1352,6 +1494,33 @@ color: #444444;
 .ssp-forgot-password:hover {
     color: var(--e-global-color-secondary);
     text-decoration: underline;
+}
+
+.ssp-password-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0 0;
+    font-size: 0.85rem;
+}
+.ssp-password-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #9CA3AF;
+    margin-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+.ssp-password-checklist li i {
+    width: 14px;
+}
+.ssp-password-checklist li.valid {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-check {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-xmark {
+    color: #DC2626;
 }
 
 /* ==========================================================================
