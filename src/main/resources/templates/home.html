@@ -21,8 +21,7 @@
             <a href="#hero" class="nav-link ativo">Home</a>
             <a href="#sobre-salao" class="nav-link">Sobre</a>
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
-            <a href="#avaliacoes" class="nav-link">Depoimentos</a>
-        </nav>
+            <a href="#depoimentos" class="nav-link">Depoimentos</a> </nav>
 
         <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
@@ -80,6 +79,7 @@
             <h3>4. Participação voluntária</h3>
             <p>O serviço é gratuito: você participa como voluntário, contribuindo com a formação prática dos alunos.</p>
         </div>
+
     </div>
 
     <h3>O que é necessário para realizar os procedimentos</h3>
@@ -267,12 +267,14 @@
     </div>
 </section>
 
-<div id="avaliacoes" class="modal-plataforma">
+<div id="modal-agendamento" class="modal-plataforma">
+<!--<div id="avaliacoes" class="modal-plataforma">-->>
     <div class="modal-painel">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+        <a href="#agendamentos" class="btn-fechar-modal">&times; Fechar</a>
         <span class="tag-modal">Serviços Práticos</span>
         <h2>Horários Disponíveis para Atendimento</h2>
 
+        <div class="tabela">
         <table class="tabela-horarios">
             <thead>
             <tr>
@@ -294,18 +296,19 @@
             </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 
 <div id="sucesso" class="modal-plataforma">
     <div class="modal-painel box-sucesso">
-        <a href="#" class="btn-fechar-modal">&times; Fechar</a>
+        <a href="#agendamentos" class="btn-fechar-modal">&times; Fechar</a>
         <div class="icone-sucesso">
             <i class="fa-solid fa-circle-check"></i>
         </div>
         <h2>Operação Realizada com Sucesso!</h2>
         <p>Seus dados foram processados. Enviamos um e-mail de confirmação com os próximos passos e orientações detalhadas.</p>
-        <a href="#" class="btn-principal">Voltar para a Home</a>
+        <a href="#hero" class="btn-principal">Voltar para a Home</a>
     </div>
 </div>
 
@@ -326,6 +329,7 @@
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
             </div>
+
         </div>
     </div>
     <div class="footer-bottom">
