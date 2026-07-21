@@ -20,16 +20,17 @@ public class SessaoAtendimentoService {
         List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
 
         return sessoes.stream().map(sessao -> {
-            // 1. Calcula se o agendamento pertence ao usuário logado
+            // 1. O agendamento pertence ao usuário logado se o ID dele estiver DENTRO da lista de usuários da sessão
             boolean pertenceAoUsuarioLogado = usuarioLogado != null
-                    && sessao.getUsuario() != null
-                    && sessao.getUsuario().getId().equals(usuarioLogado.getId());
+                    && sessao.getUsuarios() != null
+                    && sessao.getUsuarios().stream()
+                    .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
 
-            // 2. Cria o DTO passando TODOS os 5 argumentos direto no construtor
+            // 2. Cria o DTO com o boolean correto
             return new SessaoAtendimentoDTO(
                     sessao.getId(),
-                    sessao.getDataAtendimento().toString(), // Ou sessao.getDataAtendimento() se já for String
-                    sessao.getHorarioInicial().toString(),   // Ou sessao.getHorarioInicial() se já for String
+                    sessao.getDataAtendimento().toString(),
+                    sessao.getHorarioInicial().toString(),
                     sessao.getVagasDisponiveis(),
                     pertenceAoUsuarioLogado
             );
@@ -44,27 +45,36 @@ public class SessaoAtendimentoService {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
 
-        // VÍNCULO REAL AQUI:
+        // Evita que o mesmo usuário agende 2 vezes a mesma sessão
+        boolean jaAgendou = sessao.getUsuarios().stream()
+                .anyMatch(u -> u.getId().equals(usuario.getId()));
+
+        if (jaAgendou) {
+            throw new RuntimeException("Você já agendou este horário!");
+        }
+
+        // Adiciona o usuário na lista e reduz a vaga
         sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() - 1);
-        sessao.setAgendadoPeloUsuario(true);
-        sessao.setUsuario(usuario); // Agora o banco sabe EXATAMENTE quem agendou!
+        sessao.getUsuarios().add(usuario);
 
         repository.save(sessao);
     }
 
-    // NOVO MÉTODO METICULOSAMENTE CONSTRUÍDO PARA O SEU CÓDIGO:
     public void cancelarSessao(Long id, Usuario usuarioLogado) {
         SessaoAtendimento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
-        // Validação de Segurança: Se não há usuário vinculado ou se o ID é diferente do logado, trava!
-        if (sessao.getUsuario() == null || !sessao.getUsuario().getId().equals(usuarioLogado.getId())) {
-            throw new RuntimeException("Você não tem permissão para cancelar o agendamento de outro usuário.");
+        // Verifica se o usuário realmente agendou essa sessão para poder cancelar
+        boolean estaNaLista = sessao.getUsuarios().stream()
+                .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
+
+        if (!estaNaLista) {
+            throw new RuntimeException("Você não tem permissão para cancelar este agendamento.");
         }
 
+        // Remove o usuário específico da lista e devolve a vaga
         sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
-        sessao.setAgendadoPeloUsuario(false);
-        sessao.setUsuario(null); // Desvincula o usuário da sessão
+        sessao.getUsuarios().removeIf(u -> u.getId().equals(usuarioLogado.getId()));
 
         repository.save(sessao);
     }

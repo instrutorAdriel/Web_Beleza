@@ -314,7 +314,8 @@
                     th:text="${sessao.vagasDisponiveis == 0} ? 'Esgotado' : ${sessao.vagasDisponiveis} + ' restantes'">
                 </td>
 
-                <td>
+                <td class="align-middle text-center">
+                    <!-- 1. Se o usuário logado JÁ agendou (Prioridade Total: SEMPRE exibe Desfazer) -->
                     <button th:if="${sessao.agendadoPeloUsuario}"
                             class="btn-cancelar"
                             style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;"
@@ -322,11 +323,15 @@
                         ✕ Desfazer
                     </button>
 
+                    <!-- 2. Se NÃO agendou E as vagas esgotaram -->
                     <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis <= 0}"
-                            class="btn-confirmar" disabled style="background-color: #bdc3c7; color: #7f8c8d;">
+                            class="btn-confirmar"
+                            disabled
+                            style="background-color: #bdc3c7; color: #7f8c8d;">
                         Indisponível
                     </button>
 
+                    <!-- 3. Se NÃO agendou E AINDA TEM vaga disponível -->
                     <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
                             class="btn-confirmar"
                             style="background-color: #f39c12; color: white;"

@@ -2,6 +2,9 @@ package com.app.beleza.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "sessoesAtendimento")
 public class SessaoAtendimento {
@@ -25,20 +28,18 @@ public class SessaoAtendimento {
     @Column(name = "agendado_pelo_usuario", nullable = false)
     private boolean agendadoPeloUsuario;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario; // Relaciona a sessão com o Usuário real do banco
-
-    // ... mantenha os getters e setters iguais abaixo
 
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "sessao_usuarios",
+            joinColumns = @JoinColumn(name = "sessao_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private List<Usuario> usuarios = new ArrayList<>();
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+    public List<Usuario> getUsuarios() { return usuarios; }
+    public void setUsuarios(List<Usuario> usuarios) { this.usuarios = usuarios; }
 
     public Long getServicoId() {
         return servicoId;
