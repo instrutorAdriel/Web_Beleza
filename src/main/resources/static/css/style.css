@@ -53,6 +53,7 @@
     border-left: 5px solid var(--senac-laranja);
     padding-left: 15px;
 }
+
 .subtitulo-secao {
     color: var(--texto-mutado);
     font-size: 16px;
@@ -114,9 +115,9 @@
     padding: 5px 0;
 }
 
-
 .nav-menu a:hover {
-    color: #ffffff;}
+    color: var(--senac-laranja);
+}
 
 /* Link ativo - quando está na seção selecionada */
 .nav-menu a.ativo {
@@ -125,7 +126,6 @@
     padding-bottom: 3px;
 }
 
-/* Campo de busca adaptado para o fundo preto */
 .btn-entrar {
     text-decoration: none;
     background-color: transparent;
@@ -147,6 +147,7 @@
     color: #000000;
     transform: translateY(-2px);
 }
+
 .usuario-logado {
     display: flex;
     align-items: center;
@@ -155,10 +156,12 @@
     font-weight: 600;
     font-size: 14px;
 }
+
 .usuario-logado i {
     font-size: 22px;
     color: var(--senac-laranja);
 }
+
 .btn-sair {
     text-decoration: none;
     color: var(--senac-laranja);
@@ -169,10 +172,12 @@
     font-size: 13px;
     transition: var(--transicao);
 }
+
 .btn-sair:hover {
     background-color: var(--senac-laranja);
     color: #000000;
 }
+
 .popover-logout {
     position: fixed;
     top: 70px;
@@ -242,7 +247,7 @@
     width: 100%;
     height: 550px;
     border-bottom: 1px solid #1e293b;
-    overflow: hidden; /* Garante que as imagens que estão estocadas do lado de fora fiquem invisíveis */
+    overflow: hidden;
     background-color: #020617;
 }
 
@@ -260,32 +265,16 @@
 .slide {
     width: 100%;
     height: 100%;
-    flex: 1 0 100%; /* Força o slide a ocupar exatamente 100% da largura da tela, sem encolher */
+    flex: 1 0 100%;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
 }
-.slide {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-#slide1{
-    background-image:
-            url('/img/1.png');
-}
 
-#slide2{
-    background-image:
-            url('/img/2.png');
-}
+#slide1 { background-image: url('/img/1.png'); }
+#slide2 { background-image: url('/img/2.png'); }
+#slide3 { background-image: url('/img/3.png'); }
 
-#slide3{
-    background-image:
-            url('/img/3.png');
-}
-
-/* TEXTO FIXO CENTRALIZADO */
 .hero-conteudo {
     position: relative;
     max-width: 800px;
@@ -294,18 +283,17 @@
     padding-top: 140px;
     padding-left: 20px;
     padding-right: 20px;
-    z-index: 5; /* Fica acima do slider, mas abaixo das setas */
+    z-index: 5;
     pointer-events: auto;
 }
 
-/* SETAS ESTILO DISNEY+ (COM CAMADA DE CLIQUE ISOLADA) */
 .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     font-size: 36px;
     color: rgba(255, 255, 255, 0.6) !important;
-    background: rgba(0, 0, 0, 0.4) !important; /* Fundo escuro sutil para testar a área exata do clique */
+    background: rgba(0, 0, 0, 0.4) !important;
     border: none;
     border-radius: 50%;
     width: 60px;
@@ -315,8 +303,8 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 9999 !important; /* Máxima prioridade no clique da página */
-    pointer-events: auto !important; /* Obriga o browser a capturar o clique */
+    z-index: 9999 !important;
+    pointer-events: auto !important;
     user-select: none;
 }
 
@@ -329,8 +317,6 @@
 .prev { left: 20px; }
 .next { right: 20px; }
 
-
-/* Badge estilizada em Laranja Senac */
 .badge-hero {
     background-color: rgba(247, 148, 30, 0.12);
     border: 2px solid var(--senac-laranja);
@@ -346,7 +332,6 @@
     box-shadow: 0 0 15px rgba(247, 148, 30, 0.2);
 }
 
-/* Título principal em Branco Puro */
 .hero-conteudo h1 {
     font-size: 52px;
     font-weight: 800;
@@ -356,7 +341,6 @@
     letter-spacing: -0.5px;
 }
 
-/* Subtítulo em cinza claro */
 .hero-conteudo p {
     font-size: 19px;
     margin-bottom: 45px;
@@ -387,6 +371,7 @@
     text-align: center;
     box-shadow: 0 4px 14px rgba(247, 148, 30, 0.3);
 }
+
 .btn-principal:hover {
     background-color: var(--senac-laranja-hover);
     transform: translateY(-3px);
@@ -406,6 +391,7 @@
     text-align: center;
     background: transparent;
 }
+
 .btn-secundario:hover {
     background-color: rgba(247, 148, 30, 0.08);
     transform: translateY(-3px);
@@ -418,6 +404,7 @@
     background: #ffffff;
     padding: 80px 20px;
 }
+
 .sobre-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -426,22 +413,26 @@
     gap: 50px;
     align-items: center;
 }
+
 .sobre-texto h2 {
     color: var(--texto-escuro);
     font-size: 36px;
     margin-bottom: 20px;
     font-weight: 800;
 }
+
 .sobre-texto p {
     color: var(--texto-mutado);
     line-height: 1.7;
     font-size: 16px;
 }
+
 .sobre-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
+
 .mini-card {
     background-color: var(--fundo-card);
     padding: 30px 20px;
@@ -451,15 +442,18 @@
     transition: var(--transicao);
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
 }
+
 .mini-card:hover {
     transform: translateY(-5px);
     border-color: var(--senac-laranja);
 }
+
 .mini-card h3 {
     color: var(--texto-escuro);
     font-size: 16px;
     font-weight: 700;
 }
+
 .mini-card i {
     font-size: 40px;
     color: var(--senac-laranja);
@@ -467,7 +461,7 @@
 }
 
 /* ==========================================================================
-   CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
+   CARROSSEL DE AGENDAMENTOS
    ========================================================================== */
 .carrossel-wrapper {
     position: relative;
@@ -475,6 +469,7 @@
     width: 100%;
     padding: 0 40px;
 }
+
 .carrossel-track {
     display: flex !important;
     gap: 24px;
@@ -488,9 +483,9 @@
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
 .card-servico {
-    min-width: 320px; /* Alargado ligeiramente para acompanhar a altura */
+    min-width: 320px;
     max-width: 320px;
-    height: 380px; /* <--- AUMENTADO (ANTES ERA 320px) */
+    height: 380px;
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
@@ -500,11 +495,13 @@
     flex-direction: column;
     transition: var(--transicao);
 }
+
 .card-servico:hover {
     transform: translateY(-6px);
     border-color: var(--senac-laranja);
     box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
 }
+
 .card-tag-unidade {
     font-size: 11px;
     text-transform: uppercase;
@@ -514,12 +511,14 @@
     display: inline-block;
     letter-spacing: 0.5px;
 }
+
 .card-titulo-servico {
     font-size: 19px;
     color: var(--texto-escuro);
     margin-bottom: 10px;
     font-weight: 700;
 }
+
 .card-descricao {
     font-size: 14px;
     color: var(--texto-mutado);
@@ -541,6 +540,7 @@
     transition: var(--transicao);
     margin-top: auto;
 }
+
 .btn-card:hover {
     background-color: var(--senac-laranja-hover);
 }
@@ -563,16 +563,18 @@
     text-decoration: none;
     transition: var(--transicao);
 }
+
 .seta-carrossel:hover {
     background-color: var(--senac-laranja);
     color: #000000;
     border-color: var(--senac-laranja);
 }
+
 .seta-esquerda { left: 0px; }
 .seta-direita { right: 0px; }
 
 /* ==========================================================================
-   PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
+   PLATAFORMA DE CURSOS
    ========================================================================== */
 .abas-categorias {
     display: flex;
@@ -614,7 +616,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
-    height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
+    height: 520px;
     transition: var(--transicao);
 }
 
@@ -625,7 +627,7 @@
 }
 
 .img-placeholder-curso {
-    height: 200px; /* Aumentado ligeiramente o banner do curso */
+    height: 200px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -700,6 +702,7 @@
     border: 1px solid var(--borda-suave);
     margin-top: auto;
 }
+
 .detalhes-rapidos-curso i {
     color: var(--senac-laranja);
 }
@@ -715,6 +718,7 @@
     font-weight: 700;
     transition: var(--transicao);
 }
+
 .btn-detalhes:hover {
     background: var(--senac-laranja-hover);
 }
@@ -736,11 +740,13 @@
     gap: 1rem;
     transition: var(--transicao);
 }
+
 .card-depoimento:hover {
     border-color: var(--senac-laranja);
     transform: translateY(-4px);
     box-shadow: 0 10px 20px rgba(247,148,30,0.1);
 }
+
 .depoimento-texto {
     color: var(--texto-mutado);
     font-style: italic;
@@ -748,6 +754,7 @@
     flex: 1;
     font-size: 15px;
 }
+
 .depoimento-autor {
     display: flex;
     align-items: center;
@@ -755,26 +762,27 @@
     border-top: 1px solid var(--borda-suave);
     padding-top: 1rem;
 }
-.depoimento-imagens{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    width:100%;
-    height:180px;
-    overflow:hidden;
-    border-radius:8px;
+
+.depoimento-imagens {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
-.depoimento-imagem{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+.depoimento-imagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Se houver apenas UMA imagem */
-.depoimento-imagens:not(:has(img + img)){
-    grid-template-columns:1fr;
+.depoimento-imagens:not(:has(img + img)) {
+    grid-template-columns: 1fr;
 }
+
 .avatar-inicial {
     width: 42px;
     height: 42px;
@@ -788,9 +796,9 @@
     justify-content: center;
     flex-shrink: 0;
 }
+
 .depoimento-autor strong { display: block; color: var(--texto-escuro); font-size: 0.95rem; }
 .depoimento-autor span { font-size: 0.8rem; color: var(--texto-mutado); }
-
 
 /* ==========================================================================
    MODAIS E FORMULÁRIOS
@@ -839,6 +847,7 @@
     font-size: 15px;
     transition: var(--transicao);
 }
+
 .btn-fechar-modal:hover { color: #ef4444; }
 
 .tag-modal {
@@ -857,6 +866,7 @@
     font-size: 28px;
     font-weight: 800;
 }
+
 .modal-grid-conteudo {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -891,6 +901,7 @@
     color: var(--texto-escuro);
     text-transform: uppercase;
 }
+
 .formulario-matricula input, .formulario-matricula select {
     background: var(--fundo-input);
     color: var(--texto-escuro);
@@ -903,6 +914,7 @@
     font-size: 14px;
     transition: var(--transicao);
 }
+
 .formulario-matricula input:focus, .formulario-matricula select:focus {
     border-color: var(--senac-laranja);
     box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
@@ -919,6 +931,7 @@
     font-size: 15px;
     transition: var(--transicao);
 }
+
 .btn-enviar-formulario:hover { background: var(--senac-laranja-hover); }
 
 /* Tabela de horários */
@@ -940,9 +953,11 @@
     font-size: 13px;
     transition: var(--transicao);
 }
+
 .btn-confirmar:hover:not(:disabled) {
     background: var(--senac-laranja-hover);
 }
+
 .btn-confirmar:disabled {
     background-color: var(--borda-suave);
     color: var(--texto-mutado);
@@ -955,7 +970,7 @@
 .box-sucesso p { color: var(--texto-mutado); line-height: 1.7; margin-bottom: 30px; }
 
 /* ==========================================================================
-   RODAPÉ (FOOTER - CORPORATIVO ESCURO)
+   RODAPÉ (FOOTER)
    ========================================================================== */
 .site-footer {
     background-color: var(--fundo-footer);
@@ -964,6 +979,7 @@
     margin-top: 80px;
     border-top: 4px solid var(--senac-laranja);
 }
+
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -971,6 +987,7 @@
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 40px;
 }
+
 .footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
 .footer-bloco h4 {
     font-size: 18px;
@@ -981,20 +998,24 @@
     color: var(--texto-claro);
     font-weight: 700;
 }
+
 .redes-sociais {
     display: flex;
     gap: 15px;
     margin-top: 10px;
 }
+
 .redes-sociais a {
     color: white;
     font-size: 22px;
     transition: var(--transicao);
 }
+
 .redes-sociais a:hover {
     color: var(--senac-laranja);
     transform: scale(1.1);
 }
+
 .footer-bottom {
     text-align: center;
     border-top: 1px solid #1e293b;
@@ -1014,7 +1035,7 @@
 
 @media (max-width: 768px) {
     .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px; }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
@@ -1028,18 +1049,7 @@
 
     .titulo-secao { font-size: 26px; }
     .container-interno { padding: 50px 20px; }
-}
 
-/* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
-.card-curso-completo[style*="display: none"],
-.card-servico[style*="display: none"] {
-    display: none !important;
-}
-
-    /* ==========================================================================
-       CORREÇÃO EXCLUSIVA PARA O CARROSSEL DE SERVIÇOS NO MOBILE
-       (Garante o sumiço total das setas inline e ativa o touch suave)
-       ========================================================================== */
     #agendamentos .seta-carrossel {
         display: none !important;
     }
@@ -1051,9 +1061,8 @@
     #agendamentos .card-curso-completo {
         scroll-snap-align: start;
     }
+}
 
-
-/* CORREÇÃO DO FILTRO: Remove completamente do fluxo os cards ocultos */
 .card-curso-completo[style*="display: none"],
 .card-servico[style*="display: none"] {
     display: none !important;
@@ -1062,47 +1071,31 @@
 /* ===== STYLE.CSS (ISOLADO) ===== */
 
 /* ==========================================================================
-   VARIÁVEIS INSTITUCIONAIS ESSA E STYLE
+   VARIÁVEIS INSTITUCIONAIS
    ========================================================================== */
 :root {
-    --e-global-color-primary: #000000;       /* Preto Senac */
-    --e-global-color-secondary: #F29301;     /* Laranja Senac */
-    --e-global-color-text: #7A7A7A;          /* Cinza de apoio */
+    --e-global-color-primary: #000000;
+    --e-global-color-secondary: #F29301;
+    --e-global-color-text: #7A7A7A;
     --e-global-color-accent: #F29301;
     --e-global-color-c968c9f: #FFFFFF;
     --e-global-typography-primary-font-family: "Poppins", sans-serif;
     --wp--preset--shadow--natural: 0px 15px 35px rgba(0, 0, 0, 0.2);
 }
 
-/* ==========================================================================
-   RESETS E CONFIGURAÇÕES DE PÁGINA
-   ========================================================================== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body.ssp-page {
-
     width: 100%;
     min-height: 100vh;
     font-family: var(--e-global-typography-primary-font-family);
-
-    /* GRADIENTE: Transição do Preto/Grafite para o Laranja Senac */
     background: linear-gradient(
             135deg,
             #000000 0%,
             #1A1A1A 40%,
             #F29301 100%
     );
-
     position: relative;
 }
 
-/* ==========================================================================
-   EFEITOS DE FUNDO (ESFERAS BLUR)
-   ========================================================================== */
 body.ssp-page::before {
     position: absolute;
     width: 600px;
@@ -1133,7 +1126,7 @@ body.ssp-page::after {
     color: #DC2626;
     font-size: 0.85rem;
     margin-top: 0.4rem;
-    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
+    display: none;
     font-weight: 500;
 }
 
@@ -1146,7 +1139,7 @@ body.ssp-page::after {
     color: #b2ff6a;
     font-size: 0.85rem;
     margin-top: 0.4rem;
-    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
+    display: none;
     font-weight: 500;
 }
 
@@ -1219,586 +1212,17 @@ body.ssp-page::after {
     align-items: center;
     padding: 2rem 1.5rem;
     position: relative;
-    z-index: 1; /* Mantém o formulário à frente do efeito borrado do fundo */
+    z-index: 1;
 }
 
-/* Quadro de Login/Cadastro Semi-Transparente e Visível */
 .ssp-form-card {
     width: 100%;
     max-width: 440px;
-
-    /* Fundo semi-transparente (65% de opacidade branca para contraste) */
     background-color: rgba(255, 255, 255, 0.65);
-
-    /* Efeito de desfoque de fundo (Glassmorphism) */
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-
-    /* Borda sutil para destacar o card no fundo escuro */
     border: 1px solid rgba(255, 255, 255, 0.4);
-
     padding: 3rem 2.5rem;
     border-radius: 16px;
     box-shadow: var(--wp--preset--shadow--natural);
 }
-
-/* Tela de cadastro maior para acomodar confortavelmente os novos campos */
-.cadastro-container {
-    max-width: 540px;
-}
-
-/* ==========================================================================
-   CABEÇALHO DO FORMULÁRIO
-   ========================================================================== */
-.ssp-header-page-login {
-    margin-bottom: 2rem;
-}
-
-.ssp-login-button-back {
-    display: inline-block;
-    color: var(--e-global-color-primary);
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 500;
-    margin-bottom: 0.8rem;
-    transition: color 0.2s ease;
-}
-.ssp-login-button-back:hover{
-color: #444444;
-
-}
-
-.ssp-header-page-login h1 {
-    color: #000000;
-    font-size: 2.2rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-}
-
-/* ==========================================================================
-   CAMPOS DE ENTRADA, LABELS E BOTÃO DO OLHO
-   ========================================================================== */
-.ssp-form-group {
-    margin-bottom: 1.4rem;
-}
-
-.ssp-form-group label {
-    display: block;
-    color: var(--e-global-color-primary);
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-
-.ssp-password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-.ssp-form-control {
-    width: 100%;
-    padding: 0.85rem 1.2rem;
-    font-family: inherit;
-    border: 1px solid #D2D6DC;
-    border-radius: 6px;
-    font-size: 1rem;
-    color: #2D3748;
-    background-color: rgba(250, 250, 250, 0.9); /* Input levemente transparente */
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.ssp-password-wrapper .ssp-form-control {
-    padding-right: 3rem;
-}
-
-.ssp-form-control:focus {
-    outline: none;
-    background-color: #FFFFFF;
-    border-color: var(--e-global-color-secondary);
-    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2); /* Glow Laranja */
-}
-
-.ssp-toggle-password {
-    position: absolute;
-    right: 14px;
-    background: none;
-    border: none;
-    color: #A0AEC0;
-    cursor: pointer;
-    font-size: 1.15rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-}
-
-.ssp-toggle-password:hover {
-    color: var(--e-global-color-primary);
-}
-
-.ssp-form-options {
-    display: flex;
-    margin-bottom: 1.8rem;
-    font-size: 0.88rem;
-}
-
-.text-right {
-    justify-content: flex-end;
-}
-
-.ssp-forgot-password {
-    color: var(--e-global-color-primary);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.ssp-forgot-password:hover {
-    color: var(--e-global-color-secondary);
-    text-decoration: underline;
-}
-
-/* ==========================================================================
-   BOTÕES E LOGIN SOCIAL
-   ========================================================================== */
-.ssp-btn-submit {
-    width: 100%;
-    padding: 0.95rem;
-    background-color: var(--e-global-color-secondary); /* Laranja */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.ssp-btn-submit:hover {
-    background-color: #d68100; /* Laranja escuro no hover */
-}
-
-.ssp-btn-submit:active {
-    transform: scale(0.98);
-}
-
-.ssp-divider {
-    text-align: center;
-    margin: 1.6rem 0;
-    position: relative;
-}
-
-.ssp-divider::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 1;
-}
-
-.ssp-divider span {
-    background-color: rgb(220, 220, 220); /* Compatibilidade de mesclagem com o glassmorphism */
-    padding: 0 12px;
-    font-size: 0.85rem;
-    color: var(--e-global-color-text);
-    position: relative;
-    z-index: 2;
-    border-radius: 4px;
-}
-
-.ssp-social-login {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.8rem;
-}
-
-.ssp-btn-social {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-decoration: none;
-    color: #4A5568;
-    background-color: rgba(255, 255, 255, 0.5);
-    transition: background-color 0.2s, border-color 0.2s, transform 0.1s ease;
-}
-
-.ssp-btn-social:hover {
-    background-color: #FFFFFF;
-    border-color: rgba(0, 0, 0, 0.2);
-}
-
-.ssp-btn-social:active {
-    transform: scale(0.98);
-}
-
-/* Estilos específicos para o botão do Google */
-.ssp-btn-google {
-    border-color: rgba(66, 133, 244, 0.2);
-}
-.ssp-btn-google:hover {
-    background-color: rgba(66, 133, 244, 0.05);
-    border-color: #4285F4;
-}
-
-/* Estilos específicos para o botão da Microsoft */
-.ssp-btn-microsoft {
-    border-color: rgba(5, 166, 240, 0.2);
-}
-.ssp-btn-microsoft:hover {
-    background-color: rgba(5, 166, 240, 0.05);
-    border-color: #05a6f0;
-}
-
-.ssp-btn-social svg {
-    display: block;
-    flex-shrink: 0;
-}
-
-.ssp-register-footer {
-    text-align: center;
-    font-size: 0.95rem;
-    color: var(--e-global-color-text);
-}
-
-.ssp-register-footer a {
-    color: var(--e-global-color-secondary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.ssp-register-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ==========================================================================
-   ELEMENTOS DA PÁGINA PERFIL
-   ========================================================================== */
-
-.body-perfil {
-    font-family: 'Public Sans', sans-serif;
-    background-color: var(--fundo-principal);
-    color: var(--texto-escuro);
-    overflow-x: hidden;
-    line-height: 1.5;
-}
-
-.body-perfil input {
-    padding: 0.75rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.body-perfil input:read-only {
-    background-color: var(--borda-suave);
-    color: var(--texto-mutado);
-}
-
-.painel-controle {
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--fundo-principal);
-}
-
-.container-painel {
-    display: flex;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: var(--fundo-footer);
-    color: var(--texto-claro);
-    padding: 20px;
-}
-
-.sidebar a.active {
-    background-color: var(--senac-laranja); !important;
-    color: #000; !important;
-}
-
-.conteudo-principal {
-    flex: 1; /* Ocupa o restante da tela */
-    padding: 40px;
-    background-color: #fff;
-    max-width: 800px;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Botoes */
-.bar-item {
-    width: 100%;
-    display: block;
-    padding: 8px 16px;
-    text-align: left;
-    border: none;
-    white-space: normal;
-    float: none;
-    outline: 0
-}
-
-.button {
-    border: none;
-    display: inline-block;
-    padding: 8px 16px;
-    vertical-align: middle;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    background-color: inherit;
-    cursor: pointer;
-    white-space: nowrap
-}
-
-.button:hover {
-    color: #000; !important;
-    background-color: var(--senac-laranja); !important;
-}
-
-.btn {
-    border: none;
-    display: inline-block;
-    padding: 8px 16px;
-    vertical-align: middle;
-    overflow: hidden;
-    text-decoration: none;
-    cursor: pointer;
-    white-space: nowrap;
-    background: var(--senac-laranja);
-    color: var(--texto-claro);
-}
-
-.btn:hover {
-    box-shadow: none;
-    background-color: var(--senac-laranja-hover);
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.group-input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 12px 0 12px 0;
-}
-
-.group-button {
-    display: flex;
-    padding: 12px 0 0 0;
-}
-
-.group-info {
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 4px;
-    padding: 8px;
-}
-
-.success {
-    border-color: var(--sucesso);
-    background-color: rgba(0, 255, 161, 0.5);
-}
-
-.error {
-    border-color: var(--error);
-    background-color: rgba(255, 132, 123, 0.5);
-}
-
-/*
-Seções
- */
-
-.secao-painel {
-    background: var(--fundo-card);
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
-
-    /* ===== Formulário de Depoimento (Avaliações) ===== */
-
-    #depoimento-form textarea,
-    #depoimento-form select {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-family: inherit;
-        background-color: var(--fundo-input);
-        color: var(--texto-escuro);
-    }
-    #depoimento-form textarea { min-height: 90px; resize: vertical; }
-
-    #depoimento-form textarea:focus,
-    #depoimento-form select:focus,
-    #depoimento-form input:focus {
-        outline: none;
-        border-color: var(--senac-laranja);
-        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
-    }
-
-    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
-    .depoimento-checkbox-linha {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 8px;
-        background: var(--fundo-card);
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid var(--borda-suave);
-    }
-    .depoimento-checkbox-linha input[type="checkbox"] {
-        width: auto;
-        padding: 0;
-        border: none;
-        margin-top: 3px;
-    }
-    .depoimento-checkbox-linha label {
-        font-size: 0.85rem;
-        color: var(--texto-mutado);
-        line-height: 1.4;
-    }
-
-    .depoimento-foto-preview {
-        display: none;
-        margin-top: 10px;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid var(--borda-suave);
-    }
-
-    .depoimento-erro {
-        background: #fef2f2;
-        color: #dc2626;
-        border-radius: 8px;
-        padding: 10px 12px;
-        font-size: 0.9rem;
-    }
-
-    .depoimento-sucesso {
-        text-align: center;
-        padding: 16px 0;
-    }
-    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
-    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
-
-    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
-       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
-    #depoimento-form .group-input:has(textarea),
-    #depoimento-form .group-input:has(input[type="file"]),
-    #depoimento-form .depoimento-checkbox-linha,
-    #depoimento-form .depoimento-erro {
-        grid-column: 1 / -1;
-    }
-}
-
-
-/* ==========================================================================
-
-   AJUSTES PARA CELULAR (MOBILE)
-
-   ========================================================================== */
-
-@media (max-width: 480px) {
-
-    .ssp-logo-fixed-container {
-
-        position: static;
-
-        margin: 2rem auto 0 auto;
-
-        display: flex;
-
-        justify-content: center;
-
-    }
-
-    .ssp-login-centered-container {
-
-        min-height: auto;
-
-        padding-top: 1rem;
-
-    }
-
-    .ssp-form-card {
-
-        padding: 2rem 1.5rem;
-
-        box-shadow: none;
-
-        background-color: transparent; /* Remove o fundo do card no mobile */
-
-        border: none;
-
-        backdrop-filter: none;
-
-    }
-
-    .ssp-divider span {
-
-        background-color: transparent;
-
-        color: #FFFFFF;
-
-    }
-
-    /* Altera as fontes para Branco no mobile para dar contraste com o fundo escuro da tela */
-
-    .ssp-form-group label,
-
-    .ssp-header-page-login h1,
-
-    .ssp-login-button-back,
-
-    .ssp-forgot-password,
-
-    .ssp-register-footer {
-
-        color: #FFFFFF;
-
-    }
-
-    .ssp-register-footer a {
-
-        color: var(--e-global-color-secondary);
-
-    }
-
-    /* No mobile, faz com que os botões sociais herdem o comportamento correto */
-
-    .ssp-btn-social {
-
-        background-color: rgba(255, 255, 255, 0.9);
-
-        color: #2D3748;
-
-    }
-
-}
-
-

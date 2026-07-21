@@ -348,10 +348,4 @@ function inicializarHeroBanner() {
             reiniciarIntervalo();
         });
     }
-
-
-
-
-
-
 }
