@@ -29,7 +29,11 @@ public class UsuarioController {
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
-    public String exibirLogin(Model model) {
+    public String exibirLogin(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Entrar");
         return "login";
@@ -37,6 +41,10 @@ public class UsuarioController {
 
     @PostMapping("/login")
     public String processarLogin(@ModelAttribute UsuarioDTO form, Model model,  HttpSession session){
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         System.out.println("=== TENTATIVA DE LOGIN ===");
         System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
         System.out.println("Senha vinda do HTML: [ PROTEGIDO ]");
@@ -63,14 +71,22 @@ public class UsuarioController {
 
     /* ─── CADASTRO ────────────────────────────────────────────────────────── */
     @GetMapping("/cadastro")
-    public String exibirCadastro(Model model) {
+    public String exibirCadastro(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Criar Conta");
         return "cadastro";
     }
 
     @PostMapping("/cadastro")
-    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model) {
+    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         String erro = usuarioService.cadastrar(form);
 
         if (erro != null) {
@@ -87,14 +103,22 @@ public class UsuarioController {
     Rota de recuperar a senha e alterar senha
      */
     @GetMapping("/recuperar-senha")
-    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
+    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         model.addAttribute("tituloPagina", "Alterar Senha");
         model.addAttribute("usuarioDTO", form);
         return "recuperar-senha";
     }
 
     @PostMapping("/recuperar-senha")
-    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model){
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
         if (form.getEmail().isBlank()){
@@ -174,7 +198,7 @@ public class UsuarioController {
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
         model.addAttribute("usuarioDTO", usuarioAtualizado);
 
-        IO.println("Param (/perfil) = " + aba);
+        System.out.println("Param (/perfil) = " + aba);
         if (aba == null) {
             model.addAttribute("abaAtiva", "informacao");
         } else if (aba.equals("configuracao")) {
