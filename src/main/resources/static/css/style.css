@@ -154,18 +154,19 @@
     font-weight: 600;
     font-size: 14px;
 }
+.usuario-logado i {
+    font-size: 22px;
+    color: var(--senac-laranja);
+}
 .usuario-logado a {
     color: #ffffff;
     text-decoration: none;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .usuario-logado a:hover {
     color: var(--senac-laranja);
-}
-.usuario-logado i {
-    font-size: 22px;
-    color: white;
 }
 .btn-sair {
     text-decoration: none;
