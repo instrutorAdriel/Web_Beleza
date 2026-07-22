@@ -60,7 +60,6 @@ public class AgendamentoController {
         }
 
         try {
-            // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE SE CERTIFICAR DE QUE É ELE MESMO CANCELANDO
             service.cancelarSessao(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento cancelado com sucesso!");
         } catch (RuntimeException e) {

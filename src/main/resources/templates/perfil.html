@@ -94,6 +94,47 @@
             <div class="secao-header">
                 <h2>Agendamentos</h2>
             </div>
+
+            <div class="group-info" th:if="${agendamentoMensagem}">
+                <span th:text="${agendamentoMensagem}"></span>
+            </div>
+
+            <div class="lista-agendamentos" th:if="${agendamentos != null and !agendamentos.isEmpty()}">
+                <div class="card-agendamento" th:each="agendamento : ${agendamentos}">
+                    <div class="card-agendamento-info">
+                        <h3 th:text="${agendamento.servico.nomeServico}">Serviço</h3>
+
+                        <p>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${agendamento.servico.unidade}">Unidade</span>
+                        </p>
+
+                        <p>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${agendamento.horario}">Horário</span>
+                        </p>
+
+                        <span class="status-badge"
+                              th:classappend="${agendamento.status == 'CONFIRMADO'} ? 'status-confirmado' : 'status-cancelado'"
+                              th:text="${agendamento.status == 'CONFIRMADO'} ? 'Confirmado' : 'Cancelado'">
+                            Status
+                        </span>
+                    </div>
+
+                    <div class="card-agendamento-acoes" th:if="${agendamento.status == 'CONFIRMADO'}">
+                        <form th:action="@{/agendamentos/cancelar/{id}(id=${agendamento.id})}"
+                              method="POST" class="form-cancelar-agendamento">
+                            <button type="submit" class="btn-cancelar">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sem-agendamentos" th:if="${agendamentos == null or agendamentos.isEmpty()}">
+                <p>Você ainda não possui nenhum agendamento.</p>
+            </div>
         </section>
         <section id="perfil-avaliacao" class="secao-painel" th:if="${abaAtiva == 'avaliacao'}">
             <div class="secao-header">
