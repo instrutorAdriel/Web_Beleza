@@ -2,6 +2,8 @@ package com.app.beleza.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +21,19 @@ public class SessaoAtendimento {
     @Column(name = "data_atendimento", nullable = false, length = 100)
     private String dataAtendimento;
 
+    @Column(name = "lembrete_enviado", nullable = false)
+    private boolean lembreteEnviado = false;
+
+    public boolean isLembreteEnviado() {
+        return lembreteEnviado;
+    }
+
+    public void setLembreteEnviado(boolean lembreteEnviado) {
+        this.lembreteEnviado = lembreteEnviado;
+    }
+
     @Column(name = "horario_inicial", nullable = false, length = 100)
-    private String horarioInicial;
+    private LocalTime horarioInicial;
 
     @Column(name = "vagas_disponiveis", nullable = false)
     private Integer vagasDisponiveis;
@@ -63,10 +76,10 @@ public class SessaoAtendimento {
         this.dataAtendimento = dataAtendimento;
     }
 
-    public String getHorarioInicial() {
+    public LocalTime getHorarioInicial() {
         return horarioInicial;
     }
-    public void setHorarioInicial(String horarioInicial) {
+    public void setHorarioInicial(LocalTime horarioInicial) {
         this.horarioInicial = horarioInicial;
     }
 

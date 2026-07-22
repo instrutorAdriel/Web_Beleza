@@ -8,5 +8,6 @@ import java.util.List;
 public interface SessaoAtendimentoRepository extends JpaRepository<SessaoAtendimento, Long> {
 
     List<SessaoAtendimento>findByServicoId (long servicoId);
+    List<SessaoAtendimento> findByLembreteEnviadoFalse();
 
 }

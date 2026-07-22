@@ -16,6 +16,9 @@ public class SessaoAtendimentoService {
     @Autowired
     private SessaoAtendimentoRepository repository;
 
+    @Autowired
+    private EmailService emailService;
+
     public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
         List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
 
@@ -41,6 +44,8 @@ public class SessaoAtendimentoService {
         SessaoAtendimento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
+        IO.println("agendarSessao: " + usuario.getId());
+
         if (sessao.getVagasDisponiveis() <= 0) {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
@@ -58,6 +63,19 @@ public class SessaoAtendimentoService {
         sessao.getUsuarios().add(usuario);
 
         repository.save(sessao);
+
+        // NOVO: envia email de confirmação (não trava o agendamento se falhar)
+        try {
+            emailService.enviarConfirmacao(
+                    usuario.getEmail(),
+                    usuario.getNomeCompleto(),
+
+                    sessao.getHorarioInicial(),
+                    sessao.getDataAtendimento()
+            );
+        } catch (Exception e) {
+            System.out.println("Erro ao enviar email de confirmação: " + e.getMessage());
+        }
     }
 
     public void cancelarSessao(Long id, Usuario usuarioLogado) {
