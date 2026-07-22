@@ -154,9 +154,18 @@
     font-weight: 600;
     font-size: 14px;
 }
+.usuario-logado a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.usuario-logado a:hover {
+    color: var(--senac-laranja);
+}
 .usuario-logado i {
     font-size: 22px;
-    color: var(--senac-laranja);
+    color: white;
 }
 .btn-sair {
     text-decoration: none;
