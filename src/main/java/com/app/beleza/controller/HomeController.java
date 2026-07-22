@@ -1,5 +1,6 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.UploadConfig;
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.service.HomeService;
@@ -26,17 +27,19 @@ public class HomeController {
     private HomeService homeService;
     @Autowired
     private DepoimentoRepository depoimentoRepository;
+    @Autowired
+    private UploadConfig uploadConfig;
 
     // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
-    public String exibirHome(HttpSession session,Model model) {
+    public String exibirHome(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("servicos", homeService.listarServicos());
+        model.addAttribute("nomesServicos", homeService.listarNomesServicos());
+        model.addAttribute("unidades", homeService.listarUnidades());
         model.addAttribute("depoimentos", homeService.listarDepoimentos());
-        model.addAttribute("servicos", homeService.listarServicos());
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);
-
         return "home";
     }
 
@@ -62,18 +65,19 @@ public class HomeController {
             depoimento.setUnidade(unidade);
             depoimento.setTexto(texto);
 
+            Path baseDir = uploadConfig.getUploadPath();
+            Files.createDirectories(baseDir);
+
             if (foto1 != null && !foto1.isEmpty()) {
                 String nomeArquivo1 = System.currentTimeMillis() + "_1_" + foto1.getOriginalFilename();
-                Path caminho1 = Paths.get("uploads/depoimentos/" + nomeArquivo1);
-                Files.createDirectories(caminho1.getParent());
+                Path caminho1 = baseDir.resolve(nomeArquivo1);
                 Files.write(caminho1, foto1.getBytes());
                 depoimento.setImagem1(nomeArquivo1);
             }
 
             if (foto2 != null && !foto2.isEmpty()) {
                 String nomeArquivo2 = System.currentTimeMillis() + "_2_" + foto2.getOriginalFilename();
-                Path caminho2 = Paths.get("uploads/depoimentos/" + nomeArquivo2);
-                Files.createDirectories(caminho2.getParent());
+                Path caminho2 = baseDir.resolve(nomeArquivo2);
                 Files.write(caminho2, foto2.getBytes());
                 depoimento.setImagem2(nomeArquivo2);
             }

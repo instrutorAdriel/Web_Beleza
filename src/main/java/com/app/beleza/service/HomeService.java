@@ -67,4 +67,25 @@ public class HomeService {
         }
         return lista;
     }
+    public List<String> listarNomesServicos() {
+        List<Home> servicos = homeRepository.findAll();
+        List<String> nomes = new ArrayList<>();
+        for (Home servico : servicos) {
+            if (!nomes.contains(servico.getNomeServico())) {
+                nomes.add(servico.getNomeServico());
+            }
+        }
+        return nomes;
+    }
+
+    public List<String> listarUnidades() {
+        List<Home> servicos = homeRepository.findAll();
+        List<String> unidades = new ArrayList<>();
+        for (Home servico : servicos) {
+            if (!unidades.contains(servico.getUnidade())) {
+                unidades.add(servico.getUnidade());
+            }
+        }
+        return unidades;
+    }
 }

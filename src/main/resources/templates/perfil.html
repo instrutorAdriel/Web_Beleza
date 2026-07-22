@@ -113,13 +113,9 @@
                         <label for="dep-servico">Serviço avaliado</label>
                         <select id="dep-servico" name="servico" required>
                             <option value="" selected disabled>Selecione o serviço</option>
-                            <option th:each="serv : ${servicos}"
+                            <option th:each="serv : ${nomesServicos}"
                                     th:value="${serv}"
                                     th:text="${serv}">
-                            <option value="Botox">Botox</option>
-                            <option value="Preenchimento">Preenchimento</option>
-                            <option value="Limpeza de Pele">Limpeza de Pele</option>
-                            <option value="Peeling">Peeling</option>
                             </option>
                         </select>
                     </div>
@@ -131,9 +127,6 @@
                             <option th:each="uni : ${unidades}"
                                     th:value="${uni}"
                                     th:text="${uni}">
-                            <option value="Unidade Centro">Unidade Centro</option>
-                            <option value="Unidade Sul">Unidade Sul</option>
-                            <option value="Unidade Norte">Unidade Norte</option>
                             </option>
                         </select>
                     </div>

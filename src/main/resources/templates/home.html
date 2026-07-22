@@ -243,13 +243,13 @@
 
                     <img
                             th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}"
-                            th:src="${dep.imagem1}"
+                            th:src="@{'/uploads/depoimentos/' + ${dep.imagem1}}"
                             class="depoimento-imagem"
                             alt="Imagem do depoimento">
 
                     <img
                             th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}"
-                            th:src="${dep.imagem2}"
+                            th:src="@{'/uploads/depoimentos/' + ${dep.imagem2}}"
                             class="depoimento-imagem"
                             alt="Imagem do depoimento">
 

@@ -3,6 +3,7 @@ package com.app.beleza.controller;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.UsuarioDTO;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.HomeService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private HomeService homeService;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -197,6 +201,9 @@ public class UsuarioController {
 
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
         model.addAttribute("usuarioDTO", usuarioAtualizado);
+
+        model.addAttribute("nomesServicos", homeService.listarNomesServicos());
+        model.addAttribute("unidades", homeService.listarUnidades());
 
         System.out.println("Param (/perfil) = " + aba);
         if (aba == null) {
