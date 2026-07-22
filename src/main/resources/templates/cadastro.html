@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Criar Conta</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -104,6 +104,9 @@
                     <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
             </div>
+
+            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
+            <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
 
             <div class="ssp-form-group">
                 <label th:for="endereco">Endereço Completo</label>
