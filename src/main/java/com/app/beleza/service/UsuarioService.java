@@ -21,6 +21,14 @@ public class UsuarioService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
+        // Validação de Emojis nos campos do cadastro
+        if (Validador.contemEmoji(form.getNomeCompleto()) ||
+                Validador.contemEmoji(form.getEmail()) ||
+                Validador.contemEmoji(form.getEndereco()) ||
+                Validador.contemEmoji(form.getSenha())) {
+            return "Os campos do formulário não podem conter emojis.";
+        }
+
         if (!form.getSenha().equals(form.getConfirmacaoSenha())) {
             return "As senhas não conferem.";
         }
@@ -50,7 +58,6 @@ public class UsuarioService {
         }
 
         Optional<Usuario> resultado = usuarioRepository.findByEmail(email);
-        IO.println(resultado);
 
         if (resultado.isEmpty()) {
             System.out.println("[AVISO] O e-mail '" + email + "' não foi encontrado na tabela 'usuarios'.");
@@ -70,6 +77,11 @@ public class UsuarioService {
     }
 
     public String alterarSenha(UsuarioDTO form) {
+        // Validação de Emojis na nova senha
+        if (Validador.contemEmoji(form.getSenha())) {
+            return "A nova senha não pode conter emojis.";
+        }
+
         if (!form.getSenha().equals(form.getConfirmacaoSenha())) {
             return "As senhas não conferem.";
         }
@@ -87,6 +99,11 @@ public class UsuarioService {
     }
 
     public String atualizarSenha(UsuarioDTO form) {
+        // Validação de Emojis na alteração de senha do perfil
+        if (Validador.contemEmoji(form.getNovaSenha())) {
+            return "A nova senha não pode conter emojis.";
+        }
+
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
         if (res.isEmpty()) return "Esse conta não existe.";
 
@@ -104,6 +121,11 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
+        // Validação de Emojis ao atualizar o perfil
+        if (Validador.contemEmoji(form.getEndereco())) {
+            return "O endereço não pode conter emojis.";
+        }
+
         if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
             return "Data de nascimento inválido!";
         }

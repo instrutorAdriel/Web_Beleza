@@ -69,7 +69,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro")
-    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model) {
+    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+        if (session.getAttribute("usuarioLogado") != null) {
+            return "redirect:/";
+        }
+
         String erro = usuarioService.cadastrar(form);
 
         if (erro != null) {
