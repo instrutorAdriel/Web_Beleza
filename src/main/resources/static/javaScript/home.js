@@ -7,8 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
+<<<<<<< HEAD
     inicializarNavAtiva();
     inicializarLogout();
+=======
+    inicializarCarrosselDepoimentos();
+    inicializarNavAtiva();
+    inicializarLogout();
+    inicializarTermoConsentimento(); // NOVO: Exige aceite do termo antes de confirmar agendamento
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 });
 
 /**
@@ -16,8 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function inicializarCarrossel() {
     const track = document.querySelector('.carrossel-track');
+<<<<<<< HEAD
     const setaEsquerda = document.querySelector('.seta-esquerda');
     const setaDireita = document.querySelector('.seta-direita');
+=======
+    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
+    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
@@ -33,6 +45,29 @@ function inicializarCarrossel() {
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * MODULE: CARROSSEL DE DEPOIMENTOS
+ */
+function inicializarCarrosselDepoimentos() {
+    const track = document.querySelector('.carrossel-depoimentos');
+    const setas = document.querySelectorAll('.depoimento-seta');
+
+    if (!track || setas.length === 0) return;
+
+    setas.forEach(seta => {
+        seta.addEventListener('click', (e) => {
+            e.preventDefault();
+            const primeiroCard = track.querySelector('.card-depoimento');
+            if (!primeiroCard) return;
+            const largura = primeiroCard.offsetWidth + 24;
+            track.scrollLeft += seta.classList.contains('seta-esquerda') ? -largura : largura;
+        });
+    });
+}
+
+/**
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
  * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE
  * Remove acentuações e normaliza os termos para garantir o funcionamento do filtro.
  */
@@ -117,6 +152,31 @@ function inicializarFormularios() {
 
 }
 /**
+<<<<<<< HEAD
+=======
+ * MODULE: CARROSSEL DE DEPOIMENTOS
+ */
+function inicializarCarrosselDepoimentos() {
+    const track = document.querySelector('.carrossel-depoimentos');
+    const setas = document.querySelectorAll('.depoimento-seta');
+
+    if (!track || setas.length === 0) return;
+
+    setas.forEach(seta => {
+        seta.addEventListener('click', (e) => {
+            e.preventDefault();
+            const primeiroCard = track.querySelector('.card-depoimento');
+            if (!primeiroCard) return;
+            const largura = primeiroCard.offsetWidth + 24;
+            track.scrollLeft += seta.classList.contains('seta-esquerda') ? -largura : largura;
+
+        });
+
+    });
+
+}
+/**
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
  * MODULE: NAVEGAÇÃO ATIVA POR SCROLL
  * Destaca o link do nav em laranja conforme a seção visível na tela.
  */
@@ -304,4 +364,14 @@ function inicializarHeroBanner() {
             reiniciarIntervalo();
         });
     }
+<<<<<<< HEAD
 }11
+=======
+
+
+
+
+
+
+}
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)

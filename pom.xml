@@ -8,7 +8,11 @@
 		<version>4.0.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+<<<<<<< HEAD
 	<groupId>com.example</groupId>
+=======
+	<groupId>com.app</groupId>
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 	<artifactId>Web_Beleza</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>

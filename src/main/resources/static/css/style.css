@@ -69,6 +69,10 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+<<<<<<< HEAD
+=======
+    border-bottom: 4px solid var(--senac-laranja);
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 }
 
 .header-container {
@@ -718,6 +722,82 @@
 }
 
 /* ==========================================================================
+<<<<<<< HEAD
+=======
+   CARDS DE DEPOIMENTOS
+   ========================================================================== */
+.card-depoimento {
+    min-width: 340px;
+    max-width: 340px;
+    background: var(--fundo-card);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    border: 1px solid var(--borda-suave);
+    border-top: 4px solid var(--senac-laranja);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: var(--transicao);
+}
+.card-depoimento:hover {
+    border-color: var(--senac-laranja);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(247,148,30,0.1);
+}
+.depoimento-texto {
+    color: var(--texto-mutado);
+    font-style: italic;
+    line-height: 1.7;
+    flex: 1;
+    font-size: 15px;
+}
+.depoimento-autor {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 1px solid var(--borda-suave);
+    padding-top: 1rem;
+}
+.depoimento-imagens{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    width:100%;
+    height:180px;
+    overflow:hidden;
+    border-radius:8px;
+}
+
+.depoimento-imagem{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* Se houver apenas UMA imagem */
+.depoimento-imagens:not(:has(img + img)){
+    grid-template-columns:1fr;
+}
+.avatar-inicial {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--senac-laranja);
+    color: #000000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.depoimento-autor strong { display: block; color: var(--texto-escuro); font-size: 0.95rem; }
+.depoimento-autor span { font-size: 0.8rem; color: var(--texto-mutado); }
+
+
+/* ==========================================================================
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
    MODAIS E FORMULÁRIOS
    ========================================================================== */
 .modal-plataforma {
@@ -938,6 +1018,7 @@
 }
 
 @media (max-width: 768px) {
+<<<<<<< HEAD
     .header-container { flex-direction: column; gap: 20px; text-align: center; }
     .nav-menu {
         position: static;
@@ -952,10 +1033,27 @@
     .header-busca input { width: 100%; }
     .hero-banner { min-height: auto; padding: 80px 20px; }
     .slide { background-size: contain; background-color: #020617; }
+=======
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
+    .header-busca { width: 100%; max-width: 300px; }
+    .header-busca input { width: 100%; }
+
+    .hero-banner { height: auto; aspect-ratio: 2659 / 984; min-height: unset; max-height: none; padding: 0; }
+    .slide { background-size: contain; background-color: #020617; }
+    .hero-conteudo { padding-top: 20px; }
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
 
+<<<<<<< HEAD
+=======
+    .arrow { width: 36px; height: 36px; font-size: 20px; }
+    .prev { left: 8px; }
+    .next { right: 8px; }
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     .seta-carrossel { display: none; }
     .sobre-cards { grid-template-columns: 1fr; }
 
@@ -1007,7 +1105,10 @@ body.ssp-page {
             #F29301 100%
     );
 
+<<<<<<< HEAD
     overflow-x: hidden;
+=======
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     position: relative;
 }
 
@@ -1015,7 +1116,10 @@ body.ssp-page {
    EFEITOS DE FUNDO (ESFERAS BLUR)
    ========================================================================== */
 body.ssp-page::before {
+<<<<<<< HEAD
     content: '';
+=======
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     position: absolute;
     width: 600px;
     height: 500px;
@@ -1063,6 +1167,44 @@ body.ssp-page::after {
 }
 
 /* ==========================================================================
+<<<<<<< HEAD
+=======
+   ALERTA DE FAIXA ETÁRIA (CADASTRO)
+   ========================================================================== */
+.ssp-alert {
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: sspFadeIn 0.3s ease-in;
+}
+
+.ssp-alert-erro {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: #DC2626;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.ssp-alert-aviso {
+    background-color: rgba(242, 147, 1, 0.12);
+    color: #92400e;
+    border: 1px solid rgba(242, 147, 1, 0.35);
+}
+
+.ssp-alert-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #1e40af;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+@keyframes sspFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
    LOGO NO CANTO SUPERIOR ESQUERDO
    ========================================================================== */
 .ssp-logo-fixed-container {
@@ -1141,11 +1283,18 @@ body.ssp-page::after {
     transition: color 0.2s ease;
 }
 .ssp-login-button-back:hover{
+<<<<<<< HEAD
 color: #444444;
 
 }
 
 
+=======
+    color: #444444;
+
+}
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 .ssp-header-page-login h1 {
     color: #000000;
     font-size: 2.2rem;
@@ -1361,9 +1510,255 @@ color: #444444;
 }
 
 /* ==========================================================================
+<<<<<<< HEAD
    AJUSTES PARA CELULAR (MOBILE)
    ========================================================================== */
 @media (max-width: 480px) {
+=======
+   ELEMENTOS DA PÁGINA PERFIL
+   ========================================================================== */
+
+.body-perfil {
+    font-family: 'Public Sans', sans-serif;
+    background-color: var(--fundo-principal);
+    color: var(--texto-escuro);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+.body-perfil input {
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.body-perfil input:read-only {
+    background-color: var(--borda-suave);
+    color: var(--texto-mutado);
+}
+
+.painel-controle {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--fundo-principal);
+}
+
+.container-painel {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--fundo-footer);
+    color: var(--texto-claro);
+    padding: 20px;
+}
+
+.sidebar a.active {
+    background-color: var(--senac-laranja); !important;
+    color: #000; !important;
+}
+
+.conteudo-principal {
+    flex: 1; /* Ocupa o restante da tela */
+    padding: 40px;
+    background-color: #fff;
+    max-width: 800px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Botoes */
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0
+}
+
+.button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.button:hover {
+    color: #000; !important;
+    background-color: var(--senac-laranja); !important;
+}
+
+.btn {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    background: var(--senac-laranja);
+    color: var(--texto-claro);
+}
+
+.btn:hover {
+    box-shadow: none;
+    background-color: var(--senac-laranja-hover);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.group-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 12px 0 12px 0;
+}
+
+.group-button {
+    display: flex;
+    padding: 12px 0 0 0;
+}
+
+.group-info {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.success {
+    border-color: var(--sucesso);
+    background-color: rgba(0, 255, 161, 0.5);
+}
+
+.error {
+    border-color: var(--error);
+    background-color: rgba(255, 132, 123, 0.5);
+}
+
+/*
+Seções
+ */
+
+.secao-painel {
+    background: var(--fundo-card);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
+    /* ===== Formulário de Depoimento (Avaliações) ===== */
+
+    #depoimento-form textarea,
+    #depoimento-form select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: var(--fundo-input);
+        color: var(--texto-escuro);
+    }
+    #depoimento-form textarea { min-height: 90px; resize: vertical; }
+
+    #depoimento-form textarea:focus,
+    #depoimento-form select:focus,
+    #depoimento-form input:focus {
+        outline: none;
+        border-color: var(--senac-laranja);
+        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+    }
+
+    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
+    .depoimento-checkbox-linha {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--fundo-card);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--borda-suave);
+    }
+    .depoimento-checkbox-linha input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+        border: none;
+        margin-top: 3px;
+    }
+    .depoimento-checkbox-linha label {
+        font-size: 0.85rem;
+        color: var(--texto-mutado);
+        line-height: 1.4;
+    }
+
+    .depoimento-foto-preview {
+        display: none;
+        margin-top: 10px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--borda-suave);
+    }
+
+    .depoimento-erro {
+        background: #fef2f2;
+        color: #dc2626;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .depoimento-sucesso {
+        text-align: center;
+        padding: 16px 0;
+    }
+    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
+    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
+
+    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
+       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
+    #depoimento-form .group-input:has(textarea),
+    #depoimento-form .group-input:has(input[type="file"]),
+    #depoimento-form .depoimento-checkbox-linha,
+    #depoimento-form .depoimento-erro {
+        grid-column: 1 / -1;
+    }
+}
+
+
+/* ==========================================================================
+   AJUSTES PARA CELULAR (MOBILE)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .hero-conteudo { padding-top: 15px; }
+    .hero-conteudo h1 { font-size: 26px; }
+    .hero-conteudo p { font-size: 14px; }
+    .arrow { width: 30px; height: 30px; font-size: 16px; }
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     .ssp-logo-fixed-container {
         position: static;
         margin: 2rem auto 0 auto;

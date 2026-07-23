@@ -19,16 +19,25 @@
         </div>
         <nav class="nav-menu">
             <a href="#hero" class="nav-link ativo">Home</a>
+<<<<<<< HEAD
             <a href="#agendamentos" class="nav-link">Agendamentos</a>
             <a href="#avaliacoes" class="nav-link">Avaliações</a>
         </nav>
 
         <!-- Não logado -->
+=======
+            <a href="#sobre-salao" class="nav-link">Sobre</a>
+            <a href="#agendamentos" class="nav-link">Agendamentos</a>
+            <a href="#avaliacoes" class="nav-link">Depoimentos</a>
+        </nav>
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
         <a th:if="${usuario == null}"
            th:href="@{/login}" class="btn-entrar">
             <i class="fa-solid fa-right-to-bracket"></i> Entrar
         </a>
 
+<<<<<<< HEAD
         <!-- Logado -->
         <div th:if="${usuario != null}" class="usuario-logado">
             <span th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</span>
@@ -42,6 +51,16 @@
   </header>
 
 <section class="hero-banner">
+=======
+        <div th:if="${usuario != null}" class="usuario-logado">
+            <a th:href="@{/perfil}" th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</a>
+            <a th:href="@{/logout}" class="btn-sair">Sair</a>
+        </div>
+    </div>
+</header>
+
+<section id="hero" class="hero-banner">
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     <div class="slider" id="heroSlider">
         <div class="slide" id="slide1"></div>
         <div class="slide" id="slide2"></div>
@@ -56,12 +75,109 @@
     <button class="arrow next" id="heroBtnNext">&#10095;</button>
 </section>
 
+<<<<<<< HEAD
 <section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+=======
+<section id="sobre-salao" class="cursos-secao-avancada container-interno" style="margin-bottom: 0;">
+    <h2 class="titulo-secao">Como Funciona o Nosso Salão de Beleza</h2>
+    <p class="subtitulo-secao">Um salão-escola: você recebe o serviço gratuitamente e ajuda a formar os futuros profissionais do Senac-DF.</p>
+
+    <div class="salao-etapas" style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; margin: 2rem 0 3rem;">
+
+        <div class="etapa-card" style="flex: 1 1 220px; max-width: 260px; background: #fff; border-radius: 12px; padding: 28px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+            <i class="fa-solid fa-calendar-check" style="font-size: 2rem; color: #2b4c7e;"></i>
+            <h3 style="margin: 14px 0 8px; font-size: 1.05rem;">1. Escolha o serviço</h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0;">Navegue pelos procedimentos disponíveis e selecione a unidade mais próxima de você.</p>
+        </div>
+
+        <div class="etapa-card" style="flex: 1 1 220px; max-width: 260px; background: #fff; border-radius: 12px; padding: 28px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+            <i class="fa-regular fa-clock" style="font-size: 2rem; color: #2b4c7e;"></i>
+            <h3 style="margin: 14px 0 8px; font-size: 1.05rem;">2. Agende um horário</h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0;">Escolha entre os horários disponíveis e confirme seu agendamento em poucos cliques.</p>
+        </div>
+
+        <div class="etapa-card" style="flex: 1 1 220px; max-width: 260px; background: #fff; border-radius: 12px; padding: 28px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+            <i class="fa-solid fa-user-graduate" style="font-size: 2rem; color: #2b4c7e;"></i>
+            <h3 style="margin: 14px 0 8px; font-size: 1.05rem;">3. Atendimento supervisionado</h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0;">O procedimento é realizado por alunos do curso, sempre acompanhados por um instrutor qualificado.</p>
+        </div>
+
+        <div class="etapa-card" style="flex: 1 1 220px; max-width: 260px; background: #fff; border-radius: 12px; padding: 28px 20px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+            <i class="fa-solid fa-hand-holding-heart" style="font-size: 2rem; color: #2b4c7e;"></i>
+            <h3 style="margin: 14px 0 8px; font-size: 1.05rem;">4. Participação voluntária</h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0;">O serviço é gratuito: você participa como voluntário, contribuindo com a formação prática dos alunos.</p>
+        </div>
+
+    </div>
+
+    <h3 style="text-align: center; color: #2b4c7e; margin-bottom: 1.5rem;">O que é necessário para realizar os procedimentos</h3>
+
+    <div class="salao-requisitos" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 3rem;">
+
+        <div class="requisito-card" style="flex: 1 1 260px; max-width: 320px; background: #f4f6fa; border-radius: 12px; padding: 22px;">
+            <i class="fa-solid fa-id-card" style="color: #2b4c7e;"></i>
+            <strong style="margin-left: 8px;">Chegue no horário marcado</strong>
+            <p style="font-size: 0.9rem; color: #555; margin: 8px 0 0;">Compareça com um documento de identificação e com alguns minutos de antecedência para o acolhimento.</p>
+        </div>
+
+        <div class="requisito-card" style="flex: 1 1 260px; max-width: 320px; background: #f4f6fa; border-radius: 12px; padding: 22px;">
+            <i class="fa-solid fa-camera" style="color: #2b4c7e;"></i>
+            <strong style="margin-left: 8px;">Autorização de imagem</strong>
+            <p style="font-size: 0.9rem; color: #555; margin: 8px 0 0;">É necessário autorizar o uso de imagem (fotos, vídeos e documentos) do serviço prestado para fins de divulgação e publicidade do salão-escola.</p>
+        </div>
+
+        <div class="requisito-card" style="flex: 1 1 260px; max-width: 320px; background: #f4f6fa; border-radius: 12px; padding: 22px;">
+            <i class="fa-solid fa-child" style="color: #2b4c7e;"></i>
+            <strong style="margin-left: 8px;">Atenção com o público infantil</strong>
+            <p style="font-size: 0.9rem; color: #555; margin: 8px 0 0;">Existem restrições específicas para o atendimento de crianças. Veja os detalhes no termo abaixo.</p>
+        </div>
+
+        <div class="requisito-card" style="flex: 1 1 260px; max-width: 320px; background: #f4f6fa; border-radius: 12px; padding: 22px;">
+            <i class="fa-solid fa-circle-info" style="color: #2b4c7e;"></i>
+            <strong style="margin-left: 8px;">Resultado pode variar</strong>
+            <p style="font-size: 0.9rem; color: #555; margin: 8px 0 0;">Por se tratar de um serviço didático, o resultado do procedimento pode variar de pessoa para pessoa.</p>
+        </div>
+
+    </div>
+
+
+    <div class="salao-termo" style="background: #fff; border-left: 4px solid #2b4c7e; border-radius: 8px; padding: 28px 24px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+        <h3 style="color: #2b4c7e; margin-top: 0;">
+            <i class="fa-solid fa-file-signature"></i> Regras
+        </h3>
+
+        <p style="font-size: 0.92rem; color: #444; line-height: 1.6;">
+            Ao agendar um procedimento, o usuário autoriza o uso de sua imagem em todo e qualquer material de vídeo,
+            foto ou documento relativo ao serviço prestado, podendo esse material ser compartilhado em mídias sociais
+            para fins de divulgação e publicidade do Senac-DF.
+        </p>
+
+        <p style="font-size: 0.92rem; color: #444; line-height: 1.6; margin-bottom: 8px;">
+            O usuário declara também estar ciente de que:
+        </p>
+
+        <ul style="font-size: 0.92rem; color: #444; line-height: 1.7; padding-left: 20px; margin-bottom: 0;">
+            <li>Menores de 12 anos apenas na presença de um responsável, maiores de 12 podem realizar procedimentos sem a presença de um responsável;</li>
+            <li>Não é permitido o uso de produtos químicos em crianças, independentemente da idade;</li>
+            <li>Não é permitido o uso de fontes de calor, como secadores e pranchas alisadoras, em crianças menores de 12 anos;</li>
+            <li>Não é permitido realizar corte de cabelo em crianças menores de 6 anos;</li>
+            <li>O Senac-DF não se responsabiliza por danos causados por imperícia ou negligência, caso o usuário não siga as instruções estipuladas pelo salão-escola;</li>
+            <li>O Senac-DF não se responsabiliza caso o procedimento não saia como o esperado pelo usuário, uma vez que o resultado pode variar de pessoa para pessoa;</li>
+            <li>Este serviço tem natureza gratuita, e a participação do usuário se dá na condition de voluntário para o treinamento dos alunos da instituição, sempre supervisionados pelo instrutor do respectivo curso.</li>
+        </ul>
+    </div>
+</section>
+
+<section id="agendamentos" class="cursos-secao-avancada container-interno" style="margin-top: 0; padding-top: 0; margin-bottom: 2rem;">
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
     <div class="abas-categorias">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
         <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
@@ -133,6 +249,73 @@
     </div>
 </section>
 
+<<<<<<< HEAD
+=======
+<!-- SEÇÃO DEPOIMENTOS -->
+<section id="depoimentos" class="container-interno" style="margin-bottom: 4rem;">
+    <h2 class="titulo-secao">Depoimentos</h2>
+    <p class="subtitulo-secao">
+        Veja o que nossos clientes dizem sobre os serviços do salão.
+    </p>
+
+    <div class="carrossel-wrapper">
+
+        <a href="#" class="seta-carrossel seta-esquerda depoimento-seta">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+
+        <div class="carrossel-track carrossel-depoimentos">
+
+            <div class="card-depoimento" th:each="dep : ${depoimentos}">
+
+                <p class="depoimento-texto"
+                   th:text="'&quot;' + ${dep.texto} + '&quot;'">
+                </p>
+
+                <!-- IMAGENS -->
+                <div class="depoimento-imagens"
+                     th:if="${(dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)) or (dep.imagem2 != null and !#strings.isEmpty(dep.imagem2))}">
+
+                    <img
+                            th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}"
+                            th:src="${dep.imagem1}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
+                    <img
+                            th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}"
+                            th:src="${dep.imagem2}"
+                            class="depoimento-imagem"
+                            alt="Imagem do depoimento">
+
+                </div>
+
+                <!-- AUTOR -->
+                <div class="depoimento-autor">
+
+                    <div class="avatar-inicial"
+                         th:text="${dep.inicialAvatar}">
+                    </div>
+
+                    <div>
+                        <strong th:text="${dep.nome}"></strong>
+                        <span th:text="${dep.servico} + ' — ' + ${dep.unidade}"></span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <a href="#" class="seta-carrossel seta-direita depoimento-seta">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+    </div>
+</section>
+
+<!--<div id="modal-agendamento" class="modal-plataforma">-->
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 <div id="avaliacoes" class="modal-plataforma">
     <div class="modal-painel">
         <a href="#" class="btn-fechar-modal">&times; Fechar</a>
@@ -192,6 +375,10 @@
                 <a href="#"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#"><i class="fa-brands fa-linkedin"></i></a>
             </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
         </div>
     </div>
     <div class="footer-bottom">

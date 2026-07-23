@@ -1,5 +1,10 @@
 package com.app.beleza.utils;
 
+<<<<<<< HEAD
+=======
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 import java.util.InputMismatchException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,4 +21,12 @@ public class Validador {
             return false;
         }
     }
+<<<<<<< HEAD
+=======
+
+    public static boolean isDataNascimentoValido(String data_nascimento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.parse(data_nascimento, formatter).isAfter(LocalDate.of(1901, 1, 1));
+    }
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 }

@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
+<<<<<<< HEAD
+=======
+    const alertaIdade = document.getElementById("alertaIdade");
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
 
     // Itens do checklist de força da senha
     const reqMaiuscula = document.getElementById("req-maiuscula");
@@ -59,8 +63,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+<<<<<<< HEAD
     // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
     // 2. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa)
+=======
+    // 3. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa) + ALERTA DE FAIXA ETÁRIA EM TEMPO REAL
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     dataNascimentoInput.addEventListener("input", function (e) {
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 8) num = num.substring(0, 8);
@@ -84,9 +92,17 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             e.target.value = num;
         }
+<<<<<<< HEAD
     });
 
     // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+=======
+
+        atualizarAlertaIdade();
+    });
+
+    // 4. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     form.addEventListener("submit", function (event) {
         let erros = [];
 
@@ -99,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
             limparErro(emailInput);
         }
 
+<<<<<<< HEAD
         // Validação da Idade Mínima (Mínimo 14 anos)
         if (dataNascimentoInput.value) {
             const dataNascimento = new Date(dataNascimentoInput.value);
@@ -145,6 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+=======
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
         // Validação da FORÇA da senha
         let senhaValida = true;
         if (!senhaEhForte(senhaInput.value)) {
@@ -173,6 +192,56 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+<<<<<<< HEAD
+=======
+    // Calcula a idade e mostra o alerta correspondente enquanto o usuário digita a data
+    function atualizarAlertaIdade() {
+        const partes = dataNascimentoInput.value.split("/");
+
+        // Só calcula quando a data estiver completa (dd/mm/aaaa)
+        if (partes.length !== 3 || partes[2].length !== 4) {
+            alertaIdade.style.display = "none";
+            return;
+        }
+
+        const dia = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10) - 1;
+        const ano = parseInt(partes[2], 10);
+        const nascimento = new Date(ano, mes, dia);
+        const hoje = new Date();
+
+        // Data inválida (ex: 31/02) - não mostra alerta de idade
+        if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
+            alertaIdade.style.display = "none";
+            return;
+        }
+
+        let idade = hoje.getFullYear() - ano;
+        const diffMes = hoje.getMonth() - mes;
+        if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < dia)) {
+            idade--;
+        }
+
+        alertaIdade.className = "ssp-alert"; // reseta as classes de cor antes de reaplicar
+
+        if (idade < 8) {
+            alertaIdade.classList.add("ssp-alert-erro");
+            alertaIdade.textContent = "⚠️ Menores de 8 anos não podem se cadastrar para realizar procedimentos no salão.";
+            alertaIdade.style.display = "block";
+        } else if (idade < 12) {
+            alertaIdade.classList.add("ssp-alert-aviso");
+            alertaIdade.textContent = "⚠️ Para se inscrever é preciso ter prévia autorização dos responsáveis legais.";
+            alertaIdade.style.display = "block";
+        } else if (idade < 18) {
+            alertaIdade.classList.add("ssp-alert-info");
+            alertaIdade.textContent = "ℹ️ De 12 a 17 anos podem realizar procedimentos sem autorização dos responsáveis.";
+            alertaIdade.style.display = "block";
+        } else {
+            alertaIdade.style.display = "none";
+        }
+    }
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
     function senhaEhForte(senha) {
         const temMaiuscula = /[A-Z]/.test(senha);

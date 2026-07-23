@@ -8,6 +8,10 @@ public class UsuarioDTO {
     private String endereco;
     private String email;
     private String senha;
+<<<<<<< HEAD
+=======
+    private String novaSenha;
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     private String confirmacaoSenha;
     protected String token;
 
@@ -19,6 +23,17 @@ public class UsuarioDTO {
         return confirmacaoSenha;
     }
 
+<<<<<<< HEAD
+=======
+    public String getNovaSenha() {
+        return novaSenha;
+    }
+
+    public void setNovaSenha(String novaSenha) {
+        this.novaSenha = novaSenha;
+    }
+
+>>>>>>> 6b5bcaa (Correção responsividade plataforma mobile)
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
     }
