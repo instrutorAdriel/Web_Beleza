@@ -1,0 +1,162 @@
+/* ==========================================================================
+   PERFIL - ABA "AGENDAMENTOS"
+   Estilos exclusivos da seção #perfil-agendamento (perfil.html).
+   Segue o mesmo padrão de variáveis e espaçamentos do style.css.
+   ========================================================================== */
+
+#perfil-agendamento .secao-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--borda-suave);
+}
+
+#perfil-agendamento .secao-header h2 {
+    font-size: 22px;
+    color: var(--texto-escuro);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   LISTA DE AGENDAMENTOS
+   ========================================================================== */
+.lista-agendamentos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+/* ==========================================================================
+   CARD DE AGENDAMENTO
+   ========================================================================== */
+.card-agendamento {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--fundo-card);
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    padding: 20px 24px;
+    transition: var(--transicao);
+}
+
+.card-agendamento:hover {
+    border-color: var(--senac-laranja);
+    box-shadow: 0 8px 20px rgba(247, 148, 30, 0.10);
+}
+
+.card-agendamento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-agendamento-info h3 {
+    font-size: 18px;
+    color: var(--texto-escuro);
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.card-agendamento-info p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--texto-mutado);
+}
+
+.card-agendamento-info p i {
+    color: var(--senac-laranja);
+    width: 14px;
+    text-align: center;
+}
+
+/* Selo de status (Confirmado / Cancelado) */
+.status-badge {
+    display: inline-block;
+    width: fit-content;
+    margin-top: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.status-confirmado {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: var(--sucesso);
+}
+
+.status-cancelado {
+    background-color: rgba(220, 38, 38, 0.10);
+    color: #dc2626;
+}
+
+/* ==========================================================================
+   AÇÕES DO CARD (BOTÃO CANCELAR)
+   ========================================================================== */
+.card-agendamento-acoes {
+    flex-shrink: 0;
+}
+
+.form-cancelar-agendamento {
+    display: inline-block;
+}
+
+.btn-cancelar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #dc2626;
+    background: transparent;
+    color: #dc2626;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transicao);
+}
+
+.btn-cancelar:hover {
+    background-color: #dc2626;
+    color: var(--texto-claro);
+}
+
+/* ==========================================================================
+   ESTADO VAZIO (SEM AGENDAMENTOS)
+   ========================================================================== */
+.sem-agendamentos {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--texto-mutado);
+    font-size: 15px;
+}
+
+/* ==========================================================================
+   AJUSTES PARA CELULAR (MOBILE)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .card-agendamento {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-agendamento-acoes {
+        width: 100%;
+    }
+
+    .form-cancelar-agendamento,
+    .btn-cancelar {
+        width: 100%;
+        justify-content: center;
+    }
+}

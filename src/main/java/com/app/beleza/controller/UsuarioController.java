@@ -3,6 +3,7 @@ package com.app.beleza.controller;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.UsuarioDTO;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.AgendamentoService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private AgendamentoService agendamentoService;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -205,6 +209,7 @@ public class UsuarioController {
             model.addAttribute("abaAtiva", "configuracao");
         } else if (aba.equals("agendamento")) {
             model.addAttribute("abaAtiva", "agendamento");
+            model.addAttribute("agendamentos", agendamentoService.listarPorUsuario(usuario));
         } else if (aba.equals("avaliacao")) {
             model.addAttribute("abaAtiva", "avaliacao");
         }
@@ -252,5 +257,21 @@ public class UsuarioController {
         redirectAttributes.addFlashAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
         return "redirect:/perfil?aba=configuracao";
+    }
+
+    @PostMapping("/agendamentos/cancelar/{id}")
+    public String cancelarAgendamento(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuario == null) return "redirect:/login";
+
+        boolean cancelado = agendamentoService.cancelar(id, usuario);
+
+        if (cancelado) {
+            redirectAttributes.addFlashAttribute("agendamentoMensagem", "Agendamento cancelado com sucesso!");
+        } else {
+            redirectAttributes.addFlashAttribute("agendamentoMensagem", "Não foi possível cancelar este agendamento.");
+        }
+
+        return "redirect:/perfil?aba=agendamento";
     }
 }

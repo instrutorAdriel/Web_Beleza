@@ -29,6 +29,12 @@ public class Agendamento {
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
 
+    // Referência à SessaoAtendimento que originou este agendamento (pode ser nulo
+    // para agendamentos criados por outro fluxo). Usada para cancelar dos dois
+    // lados sem deixar vaga "presa" na sessão.
+    @Column(name = "sessao_id")
+    private Long sessaoId;
+
     public Agendamento() {
     }
 
@@ -38,6 +44,11 @@ public class Agendamento {
         this.horario = horario;
         this.status = "CONFIRMADO";
         this.dataCriacao = LocalDateTime.now();
+    }
+
+    public Agendamento(Usuario usuario, Home servico, String horario, Long sessaoId) {
+        this(usuario, servico, horario);
+        this.sessaoId = sessaoId;
     }
 
     public Long getId() {
@@ -82,5 +93,13 @@ public class Agendamento {
 
     public void setDataCriacao(LocalDateTime dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public Long getSessaoId() {
+        return sessaoId;
+    }
+
+    public void setSessaoId(Long sessaoId) {
+        this.sessaoId = sessaoId;
     }
 }
