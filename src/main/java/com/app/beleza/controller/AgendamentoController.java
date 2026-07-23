@@ -17,7 +17,7 @@ import java.util.List;
 public class AgendamentoController {
 
     @Autowired
-    private SessaoAtendimentoService service;
+    private SessaoAtendimentoService sessaoAtendimentoService;
 
     // 1. Retorna o pedaço de HTML da tabela com os botões calculados pelo Java
     @GetMapping("/modal-tabela")
@@ -26,7 +26,7 @@ public class AgendamentoController {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 
         // Passa o usuário logado para a service calcular se aquela vaga é 'deste' usuário
-        List<SessaoAtendimentoDTO> sessoes = service.listarPorServico(servicoId, usuarioLogado);
+        List<SessaoAtendimentoDTO> sessoes = sessaoAtendimentoService.listarPorServico(servicoId, usuarioLogado);
 
         model.addAttribute("sessoes", sessoes);
         return "home :: tabela-modal-fragment";
@@ -43,7 +43,7 @@ public class AgendamentoController {
 
         try {
             // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE
-            service.agendarSessao(id, usuarioLogado);
+            sessaoAtendimentoService.agendarSessao(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento Realizado com Sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -61,7 +61,7 @@ public class AgendamentoController {
 
         try {
             // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE SE CERTIFICAR DE QUE É ELE MESMO CANCELANDO
-            service.cancelarSessao(id, usuarioLogado);
+            sessaoAtendimentoService.cancelarSessao(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento cancelado com sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

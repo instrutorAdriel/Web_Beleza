@@ -32,7 +32,7 @@ public class SessaoAtendimentoService {
             // 2. Cria o DTO com o boolean correto
             return new SessaoAtendimentoDTO(
                     sessao.getId(),
-                    sessao.getDataAtendimento().toString(),
+                    sessao.getDataAtendimento(),
                     sessao.getHorarioInicial().toString(),
                     sessao.getVagasDisponiveis(),
                     pertenceAoUsuarioLogado

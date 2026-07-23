@@ -18,19 +18,8 @@ public class SessaoAtendimento {
     @Column(name = "servico_id", nullable = false)
     private Long servicoId;
 
-    @Column(name = "data_atendimento", nullable = false, length = 100)
+    @Column(name = "data_atendimento", nullable = false)
     private String dataAtendimento;
-
-    @Column(name = "lembrete_enviado", nullable = false)
-    private boolean lembreteEnviado = false;
-
-    public boolean isLembreteEnviado() {
-        return lembreteEnviado;
-    }
-
-    public void setLembreteEnviado(boolean lembreteEnviado) {
-        this.lembreteEnviado = lembreteEnviado;
-    }
 
     @Column(name = "horario_inicial", nullable = false, length = 100)
     private LocalTime horarioInicial;
@@ -41,18 +30,19 @@ public class SessaoAtendimento {
     @Column(name = "agendado_pelo_usuario", nullable = false)
     private boolean agendadoPeloUsuario;
 
-
-
+    /*
     @ManyToMany
     @JoinTable(
             name = "sessao_usuarios",
             joinColumns = @JoinColumn(name = "sessao_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
+
     private List<Usuario> usuarios = new ArrayList<>();
 
     public List<Usuario> getUsuarios() { return usuarios; }
     public void setUsuarios(List<Usuario> usuarios) { this.usuarios = usuarios; }
+     */
 
     public Long getServicoId() {
         return servicoId;
