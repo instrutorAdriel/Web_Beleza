@@ -158,6 +158,16 @@
     font-size: 22px;
     color: var(--senac-laranja);
 }
+.usuario-logado a:not(.btn-sair) {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.usuario-logado a:not(.btn-sair):hover {
+    color: var(--senac-laranja);
+}
 .btn-sair {
     text-decoration: none;
     color: var(--senac-laranja);
