@@ -30,7 +30,7 @@ public class SessaoAtendimento {
 
 
 
-    @ManyToMany
+    @ManyToOne
     @JoinTable(
             name = "sessao_usuarios",
             joinColumns = @JoinColumn(name = "sessao_id"),
