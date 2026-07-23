@@ -8,6 +8,7 @@ import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import com.app.beleza.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Import do BCrypt
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ import java.util.Optional;
 
 @Controller
 public class UsuarioController {
+
+    // Instância do Encoder solicitada
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     private UsuarioService usuarioService;
@@ -164,7 +168,6 @@ public class UsuarioController {
             return "redirect:/";
         }
 
-        // Carrega dados atualizados do banco
         UsuarioDTO usuarioAtualizado = usuarioService.converterModelParaDTO(resultado.get());
 
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
@@ -195,19 +198,19 @@ public class UsuarioController {
         return "redirect:/perfil?aba=informacao";
     }
 
-    /* ─── ATUALIZAR SENHA (VALIDAÇÃO COMPLETA) ────────────────────────────── */
+    /* ─── ATUALIZAR SENHA (COM VERIFICAÇÃO BCRYPT) ────────────────────────── */
     @PostMapping("/perfil/atualizar-senha")
     public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
 
         String senhaAtual = form.getSenha();
-        String novaSenha = form.getSenha();
+        String novaSenha = form.getNovaSenha();
         String confirmacaoSenha = form.getConfirmacaoSenha();
 
-        // 1. CAMPOS EM BRANCO
+        // 1. VERIFICAÇÃO DE CAMPOS EM BRANCO
         if (senhaAtual == null || senhaAtual.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("mensagemError", "Digite a sua senha atual.");
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha atual não pode estar em branco.");
             return "redirect:/perfil?aba=configuracao";
         }
 
@@ -217,38 +220,51 @@ public class UsuarioController {
         }
 
         if (confirmacaoSenha == null || confirmacaoSenha.trim().isEmpty()) {
-            redirectAttributes.addFlashAttribute("mensagemError", "Por favor, confirme a sua nova senha.");
+            redirectAttributes.addFlashAttribute("mensagemError", "A confirmação da nova senha não pode estar em branco.");
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 2. SENHA ATUAL INCORRETA
-        Usuario usuarioValidado = usuarioService.autenticar(usuario.getEmail(), senhaAtual);
-        if (usuarioValidado == null) {
+        Optional<Usuario> usuarioBanco = usuarioRepository.findById(usuario.getId());
+
+        if (!encoder.matches(senhaAtual, usuarioBanco.get().getSenha())) {
             redirectAttributes.addFlashAttribute("mensagemError", "Senha atual incorreta.");
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 3. REQUISITOS DE SENHA FORTE (Maiúscula, Minúscula, Número e Especial)
-        boolean temMaiuscula = novaSenha.matches(".*[A-Z].*");
-        boolean temMinuscula = novaSenha.matches(".*[a-z].*");
-        boolean temNumero    = novaSenha.matches(".*[0-9].*");
-        boolean temEspecial  = novaSenha.matches(".*[!@#$%^&*(),.?\":{}|<>" + "_\\-+=\\[\\]\\\\/;'`~].*");
-
-        if (!temMaiuscula || !temMinuscula || !temNumero || !temEspecial) {
-            redirectAttributes.addFlashAttribute("mensagemError",
-                    "A senha precisa conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
-            return "redirect:/perfil?aba=configuracao";
-        }
-
-        // 4. SENHAS NÃO COINCIDEM
+        // 3. VERIFICAÇÃO SE AS SENHAS COINCIDEM
         if (!novaSenha.equals(confirmacaoSenha)) {
-            redirectAttributes.addFlashAttribute("mensagemError", "As senhas não coincidem.");
+            redirectAttributes.addFlashAttribute("mensagemError", "A nova senha e a confirmar nova senha não bate.");
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 5. ATUALIZAR SENHA NO BANCO VIA SERVICE
+        // 4. REQUISITOS DA NOVA SENHA (UM POR UM)
+        if (!novaSenha.matches(".*[A-Z].*")) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        if (!novaSenha.matches(".*[a-z].*")) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        if (!novaSenha.matches(".*[0-9].*")) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        if (!novaSenha.matches(".*[!@#$%^&*(),.?\":{}|<>" + "_\\-+=\\[\\]\\\\/;'`~].*")) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+
+        // 5. ATRIBUIÇÃO E ATUALIZAÇÃO NO BANCO DE DADOS
         form.setEmail(usuario.getEmail());
-        String res = usuarioService.atualizarSenha(form);
+        form.setSenha(novaSenha);
+        form.setNovaSenha(novaSenha);
+
+        String res = usuarioService.alterarSenha(form);
 
         if (res != null) {
             redirectAttributes.addFlashAttribute("mensagemError", res);
@@ -257,9 +273,6 @@ public class UsuarioController {
 
         // 6. SUCESSO
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha alterada com sucesso!");
-        redirectAttributes.addFlashAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
-        redirectAttributes.addFlashAttribute("usuarioDTO", form);
-
         return "redirect:/perfil?aba=configuracao";
     }
 }
