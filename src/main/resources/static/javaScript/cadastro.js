@@ -14,14 +14,13 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.querySelector("form");
+    const nomeInput = document.getElementById("nomeCompleto");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
-    // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
-    // O th:field="*{senha}" NÃO sobrescreve um id já definido manualmente no input,
-    // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
+    const enderecoInput = document.getElementById("endereco");
     const alertaIdade = document.getElementById("alertaIdade");
 
     // Itens do checklist de força da senha
@@ -30,9 +29,54 @@ document.addEventListener("DOMContentLoaded", function () {
     const reqNumero = document.getElementById("req-numero");
     const reqEspecial = document.getElementById("req-especial");
 
+    // =======================================================
+// 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
+// =======================================================
+
+// Captura surroagtes high/low (faixa de emojis) + símbolos comuns + seletores de variação
+    // 1. Regex universal para emojis em JS tradicional
+    // 1. Regex universal de Emoji
+    const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
+
+// 2. Regex para identificar domínios Punycode (ex: xn--...)
+    const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
+
+    const todosOsCamposTexto = document.querySelectorAll(
+        'input[type="text"], input[type="email"], input[type="password"], textarea'
+    );
+
+    todosOsCamposTexto.forEach(function(campo) {
+
+        // Processa a digitação ao vivo
+        campo.addEventListener('input', function (e) {
+            const input = e.target;
+            const valorOriginal = input.value;
+            let valorLimpo = valorOriginal.replace(regexEmoji, "");
+
+            if (input.type === "email" || input.name === "email" || input.id === "email") {
+                valorLimpo = valorLimpo.replace(regexPunycode, "");
+            }
+
+            if (valorLimpo !== valorOriginal) {
+                const posicaoAtual = input.selectionStart;
+                const diferencaTamanho = valorOriginal.length - valorLimpo.length;
+
+                input.value = valorLimpo;
+
+                const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
+                input.setSelectionRange(novaPosicao, novaPosicao);
+            }
+        });
+
+        // Limpeza extra para e-mails quando o usuário sai do campo (Garante que o Punycode convertido pelo navegador suma)
+        if (campo.type === "email" || campo.name === "email" || campo.id === "email") {
+            campo.addEventListener('change', function (e) {
+                e.target.value = e.target.value.replace(regexPunycode, "").replace(regexEmoji, "");
+            });
+        }
+    });
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
-        // Remove tudo que não for número
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 11) {
             num = num.substring(0, 11);
@@ -48,19 +92,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL (máscara de senha forte)
+    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL
     senhaInput.addEventListener("input", function (e) {
         atualizarChecklistSenha(e.target.value);
 
         if (senhaEhForte(e.target.value)) {
             limparErro(senhaInput);
         } else {
-            // feedback visual leve enquanto digita, sem bloquear nada aqui
             senhaInput.classList.remove("input-error");
         }
     });
 
-    // 3. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa) + ALERTA DE FAIXA ETÁRIA EM TEMPO REAL
+    // 3. MÁSCARA PARA DATA DE NASCIMENTO + ALERTA DE FAIXA ETÁRIA
     dataNascimentoInput.addEventListener("input", function (e) {
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 8) num = num.substring(0, 8);
@@ -92,7 +135,15 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (event) {
         let erros = [];
 
-        // Validação do E-mail (precisa ter @ e .)
+        // Validação Global de Emojis no Submit (Garantia extra)
+        camposSemEmoji.forEach(function(campo) {
+            if (campo && regexEmoji.test(campo.value)) {
+                erros.push(`O campo não pode conter emojis.`);
+                marcarErro(campo);
+            }
+        });
+
+        // Validação do E-mail
         const emailValue = emailInput.value;
         if (!emailValue.includes("@") || !emailValue.includes(".")) {
             erros.push("O e-mail inserido é inválido. Certifique-se de que possui '@' e '.'.");
@@ -125,15 +176,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (erros.length > 0) {
             event.preventDefault();
-            alert(erros.join("\n"));
+            // Exibe apenas a primeira mensagem de erro se houver emojis duplicados na array
+            alert([...new Set(erros)].join("\n"));
         }
     });
 
-    // Calcula a idade e mostra o alerta correspondente enquanto o usuário digita a data
+    // Calcula a idade e mostra o alerta correspondente
     function atualizarAlertaIdade() {
         const partes = dataNascimentoInput.value.split("/");
 
-        // Só calcula quando a data estiver completa (dd/mm/aaaa)
         if (partes.length !== 3 || partes[2].length !== 4) {
             alertaIdade.style.display = "none";
             return;
@@ -145,7 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 
-        // Data inválida (ex: 31/02) - não mostra alerta de idade
         if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
             alertaIdade.style.display = "none";
             return;
@@ -157,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
             idade--;
         }
 
-        alertaIdade.className = "ssp-alert"; // reseta as classes de cor antes de reaplicar
+        alertaIdade.className = "ssp-alert";
 
         if (idade < 8) {
             alertaIdade.classList.add("ssp-alert-erro");
@@ -176,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
+    // Verifica se a senha atende aos requisitos
     function senhaEhForte(senha) {
         const temMaiuscula = /[A-Z]/.test(senha);
         const temMinuscula = /[a-z]/.test(senha);
@@ -186,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return temMaiuscula && temMinuscula && temNumero && temEspecial;
     }
 
-    // Atualiza visualmente o checklist (máscara) de requisitos da senha
+    // Atualiza visualmente o checklist
     function atualizarChecklistSenha(senha) {
         const regras = [
             { elemento: reqMaiuscula, regex: /[A-Z]/ },
@@ -211,10 +261,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function marcarErro(input) {
-        input.classList.add("input-error");
+        if(input) input.classList.add("input-error");
     }
 
     function limparErro(input) {
-        input.classList.remove("input-error");
+        if(input) input.classList.remove("input-error");
     }
 });
