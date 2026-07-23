@@ -10,6 +10,56 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
+
+    <style>
+        /* Checklist de requisitos de senha - mova para style.css se preferir */
+        .ssp-password-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0.6rem 0 0 0;
+            font-size: 0.85rem;
+        }
+        .ssp-password-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #9CA3AF;
+            margin-bottom: 0.3rem;
+            transition: color 0.2s ease;
+        }
+        .ssp-password-checklist li i {
+            width: 14px;
+        }
+        .ssp-password-checklist li.valid {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-check {
+            color: #16A34A;
+        }
+        .ssp-password-checklist li .fa-circle-xmark {
+            color: #DC2626;
+        }
+
+        /* Caixa de aviso de erro (estilo alerta) */
+        .ssp-aviso-erro {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-top: 0.6rem;
+            padding: 0.75rem 1rem;
+            background-color: rgba(220, 38, 38, 0.12);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 8px;
+            color: #DC2626;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .ssp-aviso-erro i {
+            color: #F59E0B;
+            font-size: 1rem;
+            margin-top: 0.1rem;
+        }
+    </style>
 </head>
 <body class="ssp-page">
 
@@ -37,6 +87,10 @@
             <div class="ssp-form-group">
                 <label th:for="nomeCompleto">Nome Completo</label>
                 <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
+                <small id="nomeCompleto-erro" class="ssp-aviso-erro" style="display: none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Não é permitido digitar números no nome.</span>
+                </small>
             </div>
 
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">

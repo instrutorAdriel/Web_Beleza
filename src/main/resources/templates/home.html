@@ -279,60 +279,60 @@
         <h2>Horários Disponíveis para Atendimento</h2>
 
         <div class="tabela">
-        <table class="tabela-horarios">
-            <thead>
-            <tr>
-                <th>Data do Atendimento</th>
-                <th>Horário Inicial</th>
-                <th>Vagas Disponíveis</th>
-                <th>Ação</th>
-            </tr>
-            </thead>
-            <tbody id="tabela-sessoes-body" th:fragment="tabela-modal-fragment">
+            <table class="tabela-horarios">
+                <thead>
+                <tr>
+                    <th>Data do Atendimento</th>
+                    <th>Horário Inicial</th>
+                    <th>Vagas Disponíveis</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-sessoes-body" th:fragment="tabela-modal-fragment">
 
-            <tr th:if="${#lists.isEmpty(sessoes)}">
-                <td colspan="4" style="text-align: center; padding: 2rem; color: #7f8c8d; font-style: italic;">
-                    <i class="fa-regular fa-calendar-times" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block; color: #bdc3c7;"></i>
-                    Não há horários disponíveis para este serviço no momento.
-                </td>
-            </tr>
+                <tr th:if="${#lists.isEmpty(sessoes)}">
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: #7f8c8d; font-style: italic;">
+                        <i class="fa-regular fa-calendar-times" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block; color: #bdc3c7;"></i>
+                        Não há horários disponíveis para este serviço no momento.
+                    </td>
+                </tr>
 
-            <tr th:unless="${#lists.isEmpty(sessoes)}" th:each="sessao : ${sessoes}">
-                <td th:text="${sessao.dataAtendimento}"></td>
-                <td th:text="${sessao.horarioInicial}"></td>
+                <tr th:unless="${#lists.isEmpty(sessoes)}" th:each="sessao : ${sessoes}">
+                    <td th:text="${sessao.dataAtendimento}"></td>
+                    <td th:text="${sessao.horarioInicial}"></td>
 
-                <td th:style="'font-weight: bold; color: ' + (${sessao.vagasDisponiveis == 0} ? '#ef4444' : '#2ecc71')"
-                    th:text="${sessao.vagasDisponiveis == 0} ? 'Esgotado' : ${sessao.vagasDisponiveis} + ' restantes'">
-                </td>
+                    <td th:style="'font-weight: bold; color: ' + (${sessao.vagasDisponiveis == 0} ? '#ef4444' : '#2ecc71')"
+                        th:text="${sessao.vagasDisponiveis == 0} ? 'Esgotado' : ${sessao.vagasDisponiveis} + ' restantes'">
+                    </td>
 
-                <td class="align-middle text-center">
-                    <!-- 1. Se o usuário logado JÁ agendou (Prioridade Total: SEMPRE exibe Desfazer) -->
-                    <button th:if="${sessao.agendadoPeloUsuario}"
-                            class="btn-cancelar"
-                            style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;"
-                            th:onclick="|desfazerAgendamento(${sessao.id})|">
-                        ✕ Desfazer
-                    </button>
+                    <td class="align-middle text-center">
+                        <!-- 1. Se o usuário logado JÁ agendou (Prioridade Total: SEMPRE exibe Desfazer) -->
+                        <button th:if="${sessao.agendadoPeloUsuario}"
+                                class="btn-cancelar"
+                                style="background-color: #e74c3c; color: white; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px;"
+                                th:onclick="|desfazerAgendamento(${sessao.id})|">
+                            ✕ Desfazer
+                        </button>
 
-                    <!-- 2. Se NÃO agendou E as vagas esgotaram -->
-                    <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis <= 0}"
-                            class="btn-confirmar"
-                            disabled
-                            style="background-color: #bdc3c7; color: #7f8c8d;">
-                        Indisponível
-                    </button>
+                        <!-- 2. Se NÃO agendou E as vagas esgotaram -->
+                        <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis <= 0}"
+                                class="btn-confirmar"
+                                disabled
+                                style="background-color: #bdc3c7; color: #7f8c8d;">
+                            Indisponível
+                        </button>
 
-                    <!-- 3. Se NÃO agendou E AINDA TEM vaga disponível -->
-                    <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
-                            class="btn-confirmar"
-                            style="background-color: #f39c12; color: white;"
-                            th:onclick="|confirmarAgendamento(${sessao.id})|">
-                        Agendar ➔
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <!-- 3. Se NÃO agendou E AINDA TEM vaga disponível -->
+                        <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
+                                class="btn-confirmar"
+                                style="background-color: #f39c12; color: white;"
+                                th:onclick="|confirmarAgendamento(${sessao.id})|">
+                            Agendar ➔
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

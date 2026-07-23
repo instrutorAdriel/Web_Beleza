@@ -14,13 +14,16 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.querySelector("form");
-    const nomeInput = document.getElementById("nomeCompleto");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
+    // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
+    // O th:field="*{senha}" NÃO sobrescreve um id já definido manualmente no input,
+    // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
-    const enderecoInput = document.getElementById("endereco");
+    const nomeCompletoInput = document.getElementById("nomeCompleto");
+    const nomeCompletoErro = document.getElementById("nomeCompleto-erro"); // NOVO
     const alertaIdade = document.getElementById("alertaIdade");
 
     // Itens do checklist de força da senha
@@ -77,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
+        // Remove tudo que não for número
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 11) {
             num = num.substring(0, 11);
@@ -92,18 +96,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL
+    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL (máscara de senha forte)
     senhaInput.addEventListener("input", function (e) {
         atualizarChecklistSenha(e.target.value);
 
         if (senhaEhForte(e.target.value)) {
             limparErro(senhaInput);
         } else {
+            // feedback visual leve enquanto digita, sem bloquear nada aqui
             senhaInput.classList.remove("input-error");
         }
     });
 
-    // 3. MÁSCARA PARA DATA DE NASCIMENTO + ALERTA DE FAIXA ETÁRIA
+    // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+    // 2. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa)
     dataNascimentoInput.addEventListener("input", function (e) {
         let num = e.target.value.replace(/\D/g, "");
         if (num.length > 8) num = num.substring(0, 8);
@@ -120,6 +126,14 @@ document.addEventListener("DOMContentLoaded", function () {
             num = num.substring(0, 2) + String(mes).padStart(2, "0") + num.substring(4);
         }
 
+        // Limita o ano ao ano atual (dinâmico, se atualiza sozinho a cada ano)
+        if (num.length === 8) {
+            const anoAtual = new Date().getFullYear();
+            let ano = parseInt(num.substring(4, 8), 10);
+            if (ano > anoAtual) ano = anoAtual;
+            num = num.substring(0, 4) + String(ano).padStart(4, "0");
+        }
+
         if (num.length > 4) {
             e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
         } else if (num.length > 2) {
@@ -131,7 +145,26 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarAlertaIdade();
     });
 
-    // 4. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+    // 4. BLOQUEIA NÚMEROS E SÍMBOLOS NO NOME COMPLETO (permite letras, acentos e espaços)
+    // O aviso fica visível enquanto houver caractere inválido e some quando a pessoa apagar
+    nomeCompletoInput.addEventListener("input", function (e) {
+        const valorOriginal = e.target.value;
+        const valorLimpo = valorOriginal.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+
+        if (valorOriginal !== valorLimpo) {
+            // Havia número ou símbolo digitado — mostra o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "flex";
+            nomeCompletoInput.classList.add("input-error");
+        } else {
+            // Não há mais número/símbolo — esconde o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "none";
+            nomeCompletoInput.classList.remove("input-error");
+        }
+
+        e.target.value = valorLimpo;
+    });
+
+    // 5. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
     form.addEventListener("submit", function (event) {
         let erros = [];
 
@@ -150,6 +183,44 @@ document.addEventListener("DOMContentLoaded", function () {
             marcarErro(emailInput);
         } else {
             limparErro(emailInput);
+        }
+
+        // Validação da Idade Mínima (Mínimo 14 anos)
+        if (dataNascimentoInput.value) {
+            const partes = dataNascimentoInput.value.split("/");
+
+            if (partes.length !== 3 || partes[2].length !== 4) {
+                erros.push("Data de nascimento inválida. Use o formato dd/mm/aaaa.");
+                marcarErro(dataNascimentoInput);
+            } else {
+                const dia = parseInt(partes[0], 10);
+                const mes = parseInt(partes[1], 10) - 1;
+                const ano = parseInt(partes[2], 10);
+                const dataNascimento = new Date(ano, mes, dia);
+                const hoje = new Date();
+
+                if (
+                    dataNascimento.getFullYear() !== ano ||
+                    dataNascimento.getMonth() !== mes ||
+                    dataNascimento.getDate() !== dia
+                ) {
+                    erros.push("Data de nascimento inválida. Verifique o dia e o mês informados.");
+                    marcarErro(dataNascimentoInput);
+                } else {
+                    let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+                    const diffMes = hoje.getMonth() - dataNascimento.getMonth();
+                    if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+                        idade--;
+                    }
+
+                    if (idade < 14) {
+                        erros.push("É necessário ter no mínimo 14 anos para se cadastrar.");
+                        marcarErro(dataNascimentoInput);
+                    } else {
+                        limparErro(dataNascimentoInput);
+                    }
+                }
+            }
         }
 
         // Validação da FORÇA da senha
@@ -176,15 +247,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (erros.length > 0) {
             event.preventDefault();
-            // Exibe apenas a primeira mensagem de erro se houver emojis duplicados na array
-            alert([...new Set(erros)].join("\n"));
+            alert(erros.join("\n"));
         }
     });
 
-    // Calcula a idade e mostra o alerta correspondente
+    // Calcula a idade e mostra o alerta correspondente enquanto o usuário digita a data
     function atualizarAlertaIdade() {
         const partes = dataNascimentoInput.value.split("/");
 
+        // Só calcula quando a data estiver completa (dd/mm/aaaa)
         if (partes.length !== 3 || partes[2].length !== 4) {
             alertaIdade.style.display = "none";
             return;
@@ -196,6 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 
+        // Data inválida (ex: 31/02) - não mostra alerta de idade
         if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
             alertaIdade.style.display = "none";
             return;
@@ -207,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
             idade--;
         }
 
-        alertaIdade.className = "ssp-alert";
+        alertaIdade.className = "ssp-alert"; // reseta as classes de cor antes de reaplicar
 
         if (idade < 8) {
             alertaIdade.classList.add("ssp-alert-erro");
@@ -226,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Verifica se a senha atende aos requisitos
+    // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
     function senhaEhForte(senha) {
         const temMaiuscula = /[A-Z]/.test(senha);
         const temMinuscula = /[a-z]/.test(senha);
@@ -236,7 +308,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return temMaiuscula && temMinuscula && temNumero && temEspecial;
     }
 
-    // Atualiza visualmente o checklist
+    // Atualiza visualmente o checklist (máscara) de requisitos da senha
     function atualizarChecklistSenha(senha) {
         const regras = [
             { elemento: reqMaiuscula, regex: /[A-Z]/ },
@@ -261,10 +333,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function marcarErro(input) {
-        if(input) input.classList.add("input-error");
+        input.classList.add("input-error");
     }
 
     function limparErro(input) {
-        if(input) input.classList.remove("input-error");
+        input.classList.remove("input-error");
     }
 });

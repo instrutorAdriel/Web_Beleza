@@ -158,6 +158,16 @@
     font-size: 22px;
     color: var(--senac-laranja);
 }
+.usuario-logado a:not(.btn-sair) {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.usuario-logado a:not(.btn-sair):hover {
+    color: var(--senac-laranja);
+}
 .btn-sair {
     text-decoration: none;
     color: var(--senac-laranja);
@@ -314,7 +324,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 9999 !important; /* Máxima prioridade no clique da página */
+    z-index: 99!important; /* Máxima prioridade no clique da página */
     pointer-events: auto !important; /* Obriga o browser a capturar o clique */
     user-select: none;
 }
@@ -681,8 +691,8 @@
     position: absolute;
     left: -20px;
     z-index: 10;
-    background: #2b4c7e;
-    color: white;
+    background: #ffffff;
+    color: #f29301;
     border: none;
     border-radius: 50%;
     width: 45px;
@@ -697,8 +707,8 @@
     position: absolute;
     right: -20px;
     z-index: 10;
-    background: #2b4c7e;
-    color: white;
+    background: #ffffff;
+    color: #f29301;
     border: none;
     border-radius: 50%;
     width: 45px;
@@ -1384,7 +1394,7 @@ body.ssp-page::after {
     transition: color 0.2s ease;
 }
 .ssp-login-button-back:hover{
-color: #444444;
+    color: #444444;
 
 }
 
