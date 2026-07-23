@@ -36,11 +36,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model,  HttpSession session){
-        System.out.println("=== TENTATIVA DE LOGIN ===");
-        System.out.println("Email vindo do HTML: [" + form.getEmail() + "]");
-        System.out.println("Senha vinda do HTML: [ PROTEGIDO ]");
-
+    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
         Usuario usuario = usuarioService.autenticar(form.getEmail(), form.getSenha());
 
         if (usuario == null) {
@@ -50,14 +46,13 @@ public class UsuarioController {
             return "login";
         }
 
-        // Sucesso! Redireciona para a rota da Home interna do Portal
         session.setAttribute("usuarioLogado", usuario);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // limpa toda a sessão
+        session.invalidate();
         return "redirect:/";
     }
 
@@ -83,9 +78,7 @@ public class UsuarioController {
         return "redirect:/login";
     }
 
-    /*
-    Rota de recuperar a senha e alterar senha
-     */
+    /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
     @GetMapping("/recuperar-senha")
     public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
         model.addAttribute("tituloPagina", "Alterar Senha");
@@ -133,12 +126,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/alterar-senha/{token}")
-    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute  UsuarioDTO form, Model model){
-        // Vericação se o token do alterar senha é de fato valido antes de alterar a senha
+    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model){
         if (passwordResetService.verificarToken(token) != null) {
-            // Exibir uma mensagem na página dizendo que ocorreu um erro, sem necessidade de retornar para uma página
-            // de erro
-
             return "redirect:/indefinido";
         }
 
@@ -156,77 +145,121 @@ public class UsuarioController {
         return "alterar-senha";
     }
 
-    /*
-    SEÇÃO PERFIL
-     */
-
+    /* ─── SEÇÃO PERFIL (EXIBIÇÃO COM SUPORTE A ABAS E DTO) ─────────────────── */
     @GetMapping("/perfil")
-    public String exibirPerfil(@RequestParam(required = false) String aba, Model model, HttpSession session) {
-        Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+    public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
+                               @ModelAttribute("usuarioDTO") UsuarioDTO form,
+                               Model model,
+                               HttpSession session) {
+
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
         Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
 
         if (resultado.isEmpty()) {
             return "redirect:/";
         }
 
+        // Carrega dados atualizados do banco
         UsuarioDTO usuarioAtualizado = usuarioService.converterModelParaDTO(resultado.get());
 
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
         model.addAttribute("usuarioDTO", usuarioAtualizado);
-
-        IO.println("Param (/perfil) = " + aba);
-        if (aba == null) {
-            model.addAttribute("abaAtiva", "informacao");
-        } else if (aba.equals("configuracao")) {
-            model.addAttribute("abaAtiva", "configuracao");
-        } else if (aba.equals("agendamento")) {
-            model.addAttribute("abaAtiva", "agendamento");
-        } else if (aba.equals("avaliacao")) {
-            model.addAttribute("abaAtiva", "avaliacao");
-        }
+        model.addAttribute("abaAtiva", aba);
 
         return "perfil";
     }
 
+    /* ─── ATUALIZAR INFORMAÇÕES DO PERFIL ─────────────────────────────────── */
     @PostMapping("/perfil/atualizar-perfil")
     public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes){
-        Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
 
-        // Passo de validação dos campos
         String res = usuarioService.salvarUsuarioInfo(form);
         if (res != null) {
             redirectAttributes.addFlashAttribute("mensagemError", res);
-            return "redirect:/perfil";
+            return "redirect:/perfil?aba=informacao";
         }
 
-        // Busca o usuario e atualiza o formulario
         Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
-
         session.setAttribute("usuarioLogado", resultado.get());
 
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Informações atualizadas com sucesso!");
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
 
-        return "redirect:/perfil";
+        return "redirect:/perfil?aba=informacao";
     }
 
+    /* ─── ATUALIZAR SENHA (VALIDAÇÃO COMPLETA) ────────────────────────────── */
     @PostMapping("/perfil/atualizar-senha")
-    public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes){
-        Usuario usuario = (Usuario)session.getAttribute("usuarioLogado");
+    public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
 
-        form.setEmail(usuario.getEmail());
+        String senhaAtual = form.getSenha();
+        String novaSenha = form.getSenha();
+        String confirmacaoSenha = form.getConfirmacaoSenha();
 
+        // 1. CAMPOS EM BRANCO
+        if (senhaAtual == null || senhaAtual.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Digite a sua senha atual.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        if (novaSenha == null || novaSenha.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A nova senha não pode estar em branco.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        if (confirmacaoSenha == null || confirmacaoSenha.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Por favor, confirme a sua nova senha.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        // 2. SENHA ATUAL INCORRETA
+        Usuario usuarioValidado = usuarioService.autenticar(usuario.getEmail(), senhaAtual);
+        if (usuarioValidado == null) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Senha atual incorreta.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        // 3. REQUISITOS DE SENHA FORTE (Maiúscula, Minúscula, Número e Especial)
+        boolean temMaiuscula = novaSenha.matches(".*[A-Z].*");
+        boolean temMinuscula = novaSenha.matches(".*[a-z].*");
+        boolean temNumero    = novaSenha.matches(".*[0-9].*");
+        boolean temEspecial  = novaSenha.matches(".*[!@#$%^&*(),.?\":{}|<>" + "_\\-+=\\[\\]\\\\/;'`~].*");
+
+        if (!temMaiuscula || !temMinuscula || !temNumero || !temEspecial) {
+            redirectAttributes.addFlashAttribute("mensagemError",
+                    "A senha precisa conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        // 4. SENHAS NÃO COINCIDEM
+        if (!novaSenha.equals(confirmacaoSenha)) {
+            redirectAttributes.addFlashAttribute("mensagemError", "As senhas não coincidem.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        // 5. ATUALIZAR SENHA NO BANCO VIA SERVICE
+        form.setEmail(usuario.getEmail());
         String res = usuarioService.atualizarSenha(form);
+
         if (res != null) {
             redirectAttributes.addFlashAttribute("mensagemError", res);
             return "redirect:/perfil?aba=configuracao";
         }
 
-        redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha atualizado com sucesso!");
+        // 6. SUCESSO
+        redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha alterada com sucesso!");
         redirectAttributes.addFlashAttribute("tituloPagina", "Bem-vindo " + usuario.getNomeCompleto());
         redirectAttributes.addFlashAttribute("usuarioDTO", form);
+
         return "redirect:/perfil?aba=configuracao";
     }
 }

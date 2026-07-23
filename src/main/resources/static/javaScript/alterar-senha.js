@@ -1,20 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Seleção dos elementos do formulário e de validação
     const form = document.getElementById("form-alterar-senha");
     const senhaInput = document.getElementById("senha");
     const confirmaSenhaInput = document.getElementById("confirmacaoSenha");
     const errorWarning = document.getElementById("password-error");
 
-    // Seleção dos botões de alternar senha e de seus respectivos ícones
     const btnToggle1 = document.getElementById("btnToggle1");
     const btnToggle2 = document.getElementById("btnToggle2");
     const eyeIcon1 = document.getElementById("eyeIcon1");
     const eyeIcon2 = document.getElementById("eyeIcon2");
 
-    /**
-     * Verifica se a senha atende aos requisitos
-     */
+    // Checklist
+    const reqMaiuscula = document.getElementById("req-maiuscula");
+    const reqMinuscula = document.getElementById("req-minuscula");
+    const reqNumero = document.getElementById("req-numero");
+    const reqEspecial = document.getElementById("req-especial");
+
     function senhaEhForte(senha) {
         const temMaiuscula = /[A-Z]/.test(senha);
         const temMinuscula = /[a-z]/.test(senha);
@@ -27,40 +28,71 @@ document.addEventListener("DOMContentLoaded", function () {
             temEspecial;
     }
 
-    /**
-     * Valida senha forte e igualdade entre as senhas
-     */
+    function atualizarChecklistSenha(senha) {
+
+        const regras = [
+            { elemento: reqMaiuscula, regex: /[A-Z]/ },
+            { elemento: reqMinuscula, regex: /[a-z]/ },
+            { elemento: reqNumero, regex: /[0-9]/ },
+            { elemento: reqEspecial, regex: /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/ }
+        ];
+
+        regras.forEach(({ elemento, regex }) => {
+
+            if (!elemento) return;
+
+            const icone = elemento.querySelector(".req-icon");
+
+            if (regex.test(senha)) {
+                elemento.classList.add("valid");
+                icone.classList.remove("fa-circle-xmark");
+                icone.classList.add("fa-circle-check");
+            } else {
+                elemento.classList.remove("valid");
+                icone.classList.remove("fa-circle-check");
+                icone.classList.add("fa-circle-xmark");
+            }
+        });
+    }
+
+    function marcarErro(input) {
+        input.classList.add("input-error");
+    }
+
+    function limparErro(input) {
+        input.classList.remove("input-error");
+    }
+
     function verificarSenhas() {
 
-        // Limpa erros
+        atualizarChecklistSenha(senhaInput.value);
+
+        limparErro(senhaInput);
+        limparErro(confirmaSenhaInput);
+
         errorWarning.style.display = "none";
-        senhaInput.classList.remove("input-error");
-        confirmaSenhaInput.classList.remove("input-error");
 
-        // Não faz nada enquanto confirmação estiver vazia
-        if (confirmaSenhaInput.value === "") {
-            return true;
-        }
+        if (senhaInput.value !== "" && !senhaEhForte(senhaInput.value)) {
 
-        // Verifica força da senha
-        if (!senhaEhForte(senhaInput.value)) {
             errorWarning.innerText =
                 "A senha deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.";
 
             errorWarning.style.display = "block";
-            senhaInput.classList.add("input-error");
+
+            marcarErro(senhaInput);
 
             return false;
         }
 
-        // Verifica se as senhas são iguais
-        if (senhaInput.value !== confirmaSenhaInput.value) {
+        if (confirmaSenhaInput.value !== "" &&
+            senhaInput.value !== confirmaSenhaInput.value) {
 
             errorWarning.innerText = "As senhas não coincidem.";
 
             errorWarning.style.display = "block";
-            senhaInput.classList.add("input-error");
-            confirmaSenhaInput.classList.add("input-error");
+
+            marcarErro(senhaInput);
+            marcarErro(confirmaSenhaInput);
 
             return false;
         }
@@ -68,10 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-    /**
-     * Alterna entre mostrar e ocultar senha
-     */
     function togglePasswordVisibility(inputElement, iconElement) {
+
         if (inputElement.type === "password") {
             inputElement.type = "text";
             iconElement.classList.replace("fa-eye-slash", "fa-eye");
@@ -81,41 +111,45 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Validação em tempo real
     senhaInput.addEventListener("input", verificarSenhas);
     confirmaSenhaInput.addEventListener("input", verificarSenhas);
 
-    // Botões de visualizar senha
-    if (btnToggle1 && eyeIcon1) {
-        btnToggle1.addEventListener("click", function () {
-            togglePasswordVisibility(senhaInput, eyeIcon1);
-        });
-    }
+    btnToggle1.addEventListener("click", function () {
+        togglePasswordVisibility(senhaInput, eyeIcon1);
+    });
 
-    if (btnToggle2 && eyeIcon2) {
-        btnToggle2.addEventListener("click", function () {
-            togglePasswordVisibility(confirmaSenhaInput, eyeIcon2);
-        });
-    }
+    btnToggle2.addEventListener("click", function () {
+        togglePasswordVisibility(confirmaSenhaInput, eyeIcon2);
+    });
 
-    // Validação antes de enviar o formulário
     form.addEventListener("submit", function (event) {
 
         let erros = [];
 
+        atualizarChecklistSenha(senhaInput.value);
+
         if (!senhaEhForte(senhaInput.value)) {
+
             erros.push("A senha deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
-            senhaInput.classList.add("input-error");
+
+            marcarErro(senhaInput);
         }
 
         if (senhaInput.value !== confirmaSenhaInput.value) {
+
             erros.push("As senhas não coincidem.");
-            senhaInput.classList.add("input-error");
-            confirmaSenhaInput.classList.add("input-error");
+
+            marcarErro(senhaInput);
+            marcarErro(confirmaSenhaInput);
         }
 
         if (erros.length > 0) {
+
             event.preventDefault();
+
+            errorWarning.innerHTML = erros.join("<br>");
+            errorWarning.style.display = "block";
+
             alert(erros.join("\n"));
         }
     });
