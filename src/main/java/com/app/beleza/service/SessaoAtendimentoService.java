@@ -1,32 +1,43 @@
 package com.app.beleza.service;
 
 import com.app.beleza.model.SessaoAtendimento;
+import com.app.beleza.model.SessaoUsuario;
 import com.app.beleza.model.SessaoAtendimentoDTO;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.respository.SessaoAtendimentoRepository;
+import com.app.beleza.respository.SessaoUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class SessaoAtendimentoService {
 
     @Autowired
     private SessaoAtendimentoRepository repository;
+    
+    @Autowired
+    private SessaoUsuarioRepository sessaoUsuarioRepository;
 
     @Autowired
     private EmailService emailService;
 
     public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
-        List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
+        Optional<List<SessaoAtendimento>> sessoes = sessaoUsuarioRepository.findBySessaoAtendimentos();
+        
+        Optional<List<Usuario>> usuarios = sessaoUsuarioRepository.findByUsuarios();
 
-        return sessoes.stream().map(sessao -> {
+        List<SessaoAtendimento> resultadoSessoes = sessoes.get();
+        List<Usuario> resultadoUsuarios = usuarios.get();
+        
+        return resultadoSessoes.stream().map(sessao -> {
             // 1. O agendamento pertence ao usuário logado se o ID dele estiver DENTRO da lista de usuários da sessão
             boolean pertenceAoUsuarioLogado = usuarioLogado != null
-                    && sessao.getUsuarios() != null
-                    && sessao.getUsuarios().stream()
+                    && resultadoUsuarios != null
+                    && resultadoUsuarios.stream()
                     .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
 
             // 2. Cria o DTO com o boolean correto
@@ -43,15 +54,16 @@ public class SessaoAtendimentoService {
     public void agendarSessao(Long id, Usuario usuario) {
         SessaoAtendimento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
-
-        IO.println("agendarSessao: " + usuario.getId());
+        
+        Optional<List<Usuario>> usuarios = sessaoUsuarioRepository.findByUsuarios();
+        List<Usuario> resultadoUsuario = usuarios.get();
 
         if (sessao.getVagasDisponiveis() <= 0) {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
 
         // Evita que o mesmo usuário agende 2 vezes a mesma sessão
-        boolean jaAgendou = sessao.getUsuarios().stream()
+        boolean jaAgendou = resultadoUsuario.stream()
                 .anyMatch(u -> u.getId().equals(usuario.getId()));
 
         if (jaAgendou) {
