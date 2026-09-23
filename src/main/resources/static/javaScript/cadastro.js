@@ -108,40 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 3. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
-    // 2. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa)
-    dataNascimentoInput.addEventListener("input", function (e) {
-        let num = e.target.value.replace(/\D/g, "");
-        if (num.length > 8) num = num.substring(0, 8);
-
-        if (num.length >= 2) {
-            let dia = parseInt(num.substring(0, 2), 10);
-            if (dia > 31) dia = 31;
-            num = String(dia).padStart(2, "0") + num.substring(2);
-        }
-
-        if (num.length >= 4) {
-            let mes = parseInt(num.substring(2, 4), 10);
-            if (mes > 12) mes = 12;
-            num = num.substring(0, 2) + String(mes).padStart(2, "0") + num.substring(4);
-        }
-
-        // Limita o ano ao ano atual (dinâmico, se atualiza sozinho a cada ano)
-        if (num.length === 8) {
-            const anoAtual = new Date().getFullYear();
-            let ano = parseInt(num.substring(4, 8), 10);
-            if (ano > anoAtual) ano = anoAtual;
-            num = num.substring(0, 4) + String(ano).padStart(4, "0");
-        }
-
-        if (num.length > 4) {
-            e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
-        } else if (num.length > 2) {
-            e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
-        } else {
-            e.target.value = num;
-        }
-
+    // 2b. DATA DE NASCIMENTO — input type="date" já entrega o valor pronto (yyyy-MM-dd),
+    // não precisa (e não pode) de máscara manual aqui. Só disparamos o alerta de idade.
+    dataNascimentoInput.addEventListener("input", function () {
         atualizarAlertaIdade();
     });
 
@@ -186,16 +155,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Validação da Idade Mínima (Mínimo 14 anos)
+        // input type="date" entrega o valor em ISO: yyyy-MM-dd
         if (dataNascimentoInput.value) {
-            const partes = dataNascimentoInput.value.split("/");
+            const partes = dataNascimentoInput.value.split("-");
 
-            if (partes.length !== 3 || partes[2].length !== 4) {
-                erros.push("Data de nascimento inválida. Use o formato dd/mm/aaaa.");
+            if (partes.length !== 3 || partes[0].length !== 4) {
+                erros.push("Data de nascimento inválida.");
                 marcarErro(dataNascimentoInput);
             } else {
-                const dia = parseInt(partes[0], 10);
+                const ano = parseInt(partes[0], 10);
                 const mes = parseInt(partes[1], 10) - 1;
-                const ano = parseInt(partes[2], 10);
+                const dia = parseInt(partes[2], 10);
                 const dataNascimento = new Date(ano, mes, dia);
                 const hoje = new Date();
 
@@ -251,23 +221,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Calcula a idade e mostra o alerta correspondente enquanto o usuário digita a data
+    // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
+    // input type="date" entrega o valor em ISO: yyyy-MM-dd
     function atualizarAlertaIdade() {
-        const partes = dataNascimentoInput.value.split("/");
+        const partes = dataNascimentoInput.value.split("-");
 
-        // Só calcula quando a data estiver completa (dd/mm/aaaa)
-        if (partes.length !== 3 || partes[2].length !== 4) {
+        // Só calcula quando a data estiver completa (yyyy-MM-dd)
+        if (partes.length !== 3 || partes[0].length !== 4) {
             alertaIdade.style.display = "none";
             return;
         }
 
-        const dia = parseInt(partes[0], 10);
+        const ano = parseInt(partes[0], 10);
         const mes = parseInt(partes[1], 10) - 1;
-        const ano = parseInt(partes[2], 10);
+        const dia = parseInt(partes[2], 10);
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 
-        // Data inválida (ex: 31/02) - não mostra alerta de idade
+        // Data inválida - não mostra alerta de idade
         if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
             alertaIdade.style.display = "none";
             return;
@@ -339,4 +310,5 @@ document.addEventListener("DOMContentLoaded", function () {
     function limparErro(input) {
         input.classList.remove("input-error");
     }
+
 });
