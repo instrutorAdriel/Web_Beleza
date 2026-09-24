@@ -38,7 +38,7 @@
                     </div>
                     <div class="group-input">
                         <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10" min="1900-01-01">
+                        <input type="date" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" min="1900-01-01" th:max="${T(java.time.LocalDate).now().minusYears(14)}">
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -150,19 +150,6 @@
 
 <script th:if="${abaAtiva == 'informacao'}">
     document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById("data_nascimento").addEventListener('input', function (e) {
-            let num = e.target.value.replace(/\D/g, "");
-            if (num.length > 8) num = num.substring(0, 8);
-
-            if (num.length > 4) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
-            } else if (num.length > 2) {
-                e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
-            } else {
-                e.target.value = num;
-            }
-        });
-
         document.getElementById("telefone").addEventListener("input", function (e) {
             // Remove tudo que não for número
             let num = e.target.value.replace(/\D/g, "");
