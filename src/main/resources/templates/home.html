@@ -140,8 +140,11 @@
 
 <section id="agendamentos" class="container-interno">
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
-    <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
-
+    <p class="subtitulo-secao" id="subtituloServicos"
+       th:text="${servicos == null or #lists.isEmpty(servicos)}
+             ? 'Ainda não há serviços cadastrados.'
+             : 'Escolha o procedimento desejado e filtre pela unidade mais próxima de você.'">
+    </p>
     <div class="abas-categorias">
         <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
@@ -212,8 +215,10 @@
 <!-- SEÇÃO DEPOIMENTOS -->
 <section id="depoimentos" class="container-interno" style="margin-bottom: 4rem;">
     <h2 class="titulo-secao">Depoimentos</h2>
-    <p class="subtitulo-secao">
-        Veja o que nossos clientes dizem sobre os serviços do salão.
+    <p class="subtitulo-secao"
+       th:text="${depoimentos == null or #lists.isEmpty(depoimentos)}
+             ? 'Ainda não há depoimentos cadastrados.'
+             : 'Veja o que nossos clientes dizem sobre os serviços do salão.'">
     </p>
 
     <div class="carrossel-wrapper">
