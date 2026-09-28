@@ -34,10 +34,24 @@ public class Validador {
         }
     }
 
-    // Mantido original
+    // ATUALIZADO: agora espera formato ISO (yyyy-MM-dd), padrão enviado pelo <input type="date">
     public static boolean isDataNascimentoValido(String data_nascimento) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return LocalDate.parse(data_nascimento, formatter).isAfter(LocalDate.of(1901, 1, 1));
+        if (data_nascimento == null || data_nascimento.isBlank()) {
+            return false;
+        }
+
+        try {
+            LocalDate data = LocalDate.parse(data_nascimento); // formato ISO yyyy-MM-dd
+            LocalDate hoje = LocalDate.now();
+            LocalDate idadeMinima = hoje.minusYears(14);
+
+            boolean depoisDoLimiteAntigo = data.isAfter(LocalDate.of(1901, 1, 1));
+            boolean temIdadeMinima = !data.isAfter(idadeMinima); // precisa ter nascido até 14 anos atrás
+
+            return depoisDoLimiteAntigo && temIdadeMinima;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     // Método de verificação de emojis
