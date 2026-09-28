@@ -69,6 +69,7 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border-bottom: 4px solid var(--senac-laranja);
 }
 
 .header-container {
@@ -82,7 +83,6 @@
 
 .logo {
     flex-shrink: 0;
-    margin-left: -200px;
 }
 
 .logo img {
@@ -156,6 +156,16 @@
 }
 .usuario-logado i {
     font-size: 22px;
+    color: var(--senac-laranja);
+}
+.usuario-logado a:not(.btn-sair) {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.usuario-logado a:not(.btn-sair):hover {
     color: var(--senac-laranja);
 }
 .btn-sair {
@@ -314,7 +324,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 9999 !important; /* Máxima prioridade no clique da página */
+    z-index: 99!important; /* Máxima prioridade no clique da página */
     pointer-events: auto !important; /* Obriga o browser a capturar o clique */
     user-select: none;
 }
@@ -413,6 +423,109 @@
 /* ==========================================================================
    SEÇÃO SOBRE
    ========================================================================== */
+
+.secao-sobre {
+    margin-bottom: 0;
+}
+
+.secao-sobre h3 {
+    text-align: center;
+    color: #2b4c7e;
+    margin-bottom: 1.5rem;
+}
+
+.salao-etapas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin: 2rem 0 3rem;
+}
+
+.etapa-card {
+    flex: 1 1 220px;
+    max-width: 260px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.etapa-card i {
+    font-size: 2rem;
+    color: #2b4c7e;
+}
+
+.etapa-card h3 {
+    margin: 14px 0 8px;
+    font-size: 1.05rem;
+}
+
+.etapa-card p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+}
+
+.salao-requisitos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.requisito-card i {
+    color: #2b4c7e;
+}
+
+.requisito-card strong {
+    margin-left: 8px;
+}
+
+.requisito-card p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 8px 0 0;
+}
+
+.salao-termo {
+    background: #fff;
+    border-left: 4px solid #2b4c7e;
+    border-radius: 8px;
+    padding: 28px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.salao-termo h3 {
+    color: #2b4c7e; margin-top: 0;
+}
+
+.salao-termo p {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.salao-termo ul {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.7;
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.requisito-card {
+    flex: 1 1 260px;
+    max-width: 320px;
+    background: #f4f6fa;
+    border-radius: 12px;
+    padding: 22px;
+}
+
 .sobre-section {
     background: #ffffff;
     padding: 80px 20px;
@@ -469,17 +582,22 @@
    CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
    ========================================================================== */
 .carrossel-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
     padding: 0 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 .carrossel-track {
-    display: flex !important;
-    gap: 24px;
-    overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 20px 5px;
+    display: flex;
+    overflow-x: auto;
+    gap: 24px;
+    width: 100%;
+    padding: 15px 5px;
+    scrollbar-width: none;
 }
 
 .carrossel-track::-webkit-scrollbar { height: 6px; }
@@ -562,13 +680,44 @@
     text-decoration: none;
     transition: var(--transicao);
 }
+
 .seta-carrossel:hover {
     background-color: var(--senac-laranja);
     color: #000000;
     border-color: var(--senac-laranja);
 }
-.seta-esquerda { left: 0px; }
-.seta-direita { right: 0px; }
+
+.seta-esquerda {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seta-direita {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 /* ==========================================================================
    PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
@@ -615,6 +764,9 @@
     flex-direction: column;
     height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
     transition: var(--transicao);
+    flex: 0 0 auto;
+    width: 320px;
+    box-sizing: border-box;
 }
 
 .card-curso-completo:hover {
@@ -921,6 +1073,7 @@
 .btn-enviar-formulario:hover { background: var(--senac-laranja-hover); }
 
 /* Tabela de horários */
+.tabela { overflow-x: hidden; }
 .tabela-horarios { width: 100%; border-collapse: collapse; margin-top: 25px; }
 .tabela-horarios th, .tabela-horarios td { padding: 14px; text-align: left; border-bottom: 1px solid var(--borda-suave); color: var(--texto-escuro); }
 .tabela-horarios th { background-color: var(--fundo-card); color: var(--texto-escuro); font-weight: 700; }
@@ -1012,8 +1165,9 @@
 }
 
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; gap: 20px; text-align: center; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .tabela { overflow-x: scroll; }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
@@ -1240,10 +1394,9 @@ body.ssp-page::after {
     transition: color 0.2s ease;
 }
 .ssp-login-button-back:hover{
-color: #444444;
+    color: #444444;
 
 }
-
 
 .ssp-header-page-login h1 {
     color: #000000;
@@ -1334,6 +1487,33 @@ color: #444444;
 .ssp-forgot-password:hover {
     color: var(--e-global-color-secondary);
     text-decoration: underline;
+}
+
+.ssp-password-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0 0;
+    font-size: 0.85rem;
+}
+.ssp-password-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #9CA3AF;
+    margin-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+.ssp-password-checklist li i {
+    width: 14px;
+}
+.ssp-password-checklist li.valid {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-check {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-xmark {
+    color: #DC2626;
 }
 
 /* ==========================================================================
@@ -1458,6 +1638,241 @@ color: #444444;
 .ssp-register-footer a:hover {
     text-decoration: underline;
 }
+
+/* ==========================================================================
+   ELEMENTOS DA PÁGINA PERFIL
+   ========================================================================== */
+
+.body-perfil {
+    font-family: 'Public Sans', sans-serif;
+    background-color: var(--fundo-principal);
+    color: var(--texto-escuro);
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+.body-perfil input {
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.body-perfil input:read-only {
+    background-color: var(--borda-suave);
+    color: var(--texto-mutado);
+}
+
+.painel-controle {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--fundo-principal);
+}
+
+.container-painel {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--fundo-footer);
+    color: var(--texto-claro);
+    padding: 20px;
+}
+
+.sidebar a.active {
+    background-color: var(--senac-laranja); !important;
+    color: #000; !important;
+}
+
+.conteudo-principal {
+    flex: 1; /* Ocupa o restante da tela */
+    padding: 40px;
+    background-color: #fff;
+    max-width: 800px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Botoes */
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    float: none;
+    outline: 0
+}
+
+.button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.button:hover {
+    color: #000; !important;
+    background-color: var(--senac-laranja); !important;
+}
+
+.btn {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    background: var(--senac-laranja);
+    color: var(--texto-claro);
+}
+
+.btn:hover {
+    box-shadow: none;
+    background-color: var(--senac-laranja-hover);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.group-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 12px 0 12px 0;
+}
+
+.group-button {
+    display: flex;
+    padding: 12px 0 0 0;
+}
+
+.group-info {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.success {
+    border-color: var(--sucesso);
+    background-color: rgba(0, 255, 161, 0.5);
+}
+
+.error {
+    border-color: var(--error);
+    background-color: rgba(255, 132, 123, 0.5);
+}
+
+/*
+Seções
+ */
+
+.secao-painel {
+    background: var(--fundo-card);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
+    /* ===== Formulário de Depoimento (Avaliações) ===== */
+
+    #depoimento-form textarea,
+    #depoimento-form select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: var(--fundo-input);
+        color: var(--texto-escuro);
+    }
+    #depoimento-form textarea { min-height: 90px; resize: vertical; }
+
+    #depoimento-form textarea:focus,
+    #depoimento-form select:focus,
+    #depoimento-form input:focus {
+        outline: none;
+        border-color: var(--senac-laranja);
+        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+    }
+
+    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
+    .depoimento-checkbox-linha {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--fundo-card);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--borda-suave);
+    }
+    .depoimento-checkbox-linha input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+        border: none;
+        margin-top: 3px;
+    }
+    .depoimento-checkbox-linha label {
+        font-size: 0.85rem;
+        color: var(--texto-mutado);
+        line-height: 1.4;
+    }
+
+    .depoimento-foto-preview {
+        display: none;
+        margin-top: 10px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--borda-suave);
+    }
+
+    .depoimento-erro {
+        background: #fef2f2;
+        color: #dc2626;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .depoimento-sucesso {
+        text-align: center;
+        padding: 16px 0;
+    }
+    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
+    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
+
+    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
+       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
+    #depoimento-form .group-input:has(textarea),
+    #depoimento-form .group-input:has(input[type="file"]),
+    #depoimento-form .depoimento-checkbox-linha,
+    #depoimento-form .depoimento-erro {
+        grid-column: 1 / -1;
+    }
+}
+
 
 /* ==========================================================================
    AJUSTES PARA CELULAR (MOBILE)

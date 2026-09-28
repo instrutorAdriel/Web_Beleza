@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title th:text="${tituloPagina}">Perfil</title>
+</head>
+<body class="body-perfil">
+<div class="painel-controle">
+    <div class="container-painel">
+        <!-- MENU LATERAL -->
+        <div class="sidebar">
+            <h3 class="bar-item">Painel</h3>
+            <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
+            <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
+            <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
+            <a th:href="@{/perfil(aba='avaliacao')}" class="bar-item button" th:classappend="${abaAtiva == 'avaliacao'} ? 'active'">Avaliações</a>
+            <a th:href="@{/}" class="bar-item button">Voltar</a>
+        </div>
+    </div>
+
+    <div class="conteudo-principal">
+
+        <!-- ABA: INFORMAÇÃO DO PERFIL -->
+        <section id="perfil-informacao" class="secao-painel" th:if="${abaAtiva == 'informacao'}">
+            <div class="secao-header">
+                <h2>Informação do Perfil</h2>
+            </div>
+
+            <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
+                <div class="group-info success" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div class="group-info error" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
+                </div>
+                <div class="form-grid">
+                    <div class="group-input">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
+                    </div>
+                    <div class="group-input">
+                        <label for="data_nascimento">Data de Nascimento</label>
+                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10">
+                    </div>
+                    <div class="group-input">
+                        <label for="telefone">Telefone</label>
+                        <input type="text" id="telefone" name="telefone" th:field="*{telefone}" maxlength="15">
+                    </div>
+                    <div class="group-input">
+                        <label for="email">E-mail</label>
+                        <input type="text" id="email" name="email" th:field="*{email}" readonly>
+                    </div>
+                    <div class="group-input">
+                        <label for="endereco">Endereço</label>
+                        <input type="text" id="endereco" name="endereco" th:field="*{endereco}">
+                    </div>
+                    <div class="group-input"></div>
+                    <div class="group-button">
+                        <button type="submit" class="btn">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="perfil-configuracao" class="secao-painel" th:if="${abaAtiva == 'configuracao'}">
+            <div class="secao-header">
+                <h2>Configuração do Perfil</h2>
+            </div>
+
+            <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
+                <h3>Atualizar Senha</h3>
+
+                <div class="group-info success" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div class="group-info error" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
+                </div>
+
+                <div class="group-input">
+                    <label for="senha-atual">Senha Atual</label>
+                    <input th:field="*{senha}" type="password" id="senha-atual">
+                </div>
+                <div class="group-input">
+                    <label for="senha-nova">Nova Senha</label>
+                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                </div>
+                <div class="group-input">
+                    <label for="senha-confirmar">Confirmar Nova Senha</label>
+                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                </div>
+                <div class="group-button">
+                    <button type="submit" class="btn">Atualizar Senha</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ABA: AGENDAMENTOS -->
+        <section id="perfil-agendamento" class="secao-painel" th:if="${abaAtiva == 'agendamento'}">
+            <div class="secao-header">
+                <h2>Agendamentos</h2>
+            </div>
+            <p>Seus agendamentos aparecerão aqui.</p>
+        </section>
+
+        <!-- ABA: AVALIAÇÕES -->
+        <section id="perfil-avaliacao" class="secao-painel" th:if="${abaAtiva == 'avaliacao'}">
+            <div class="secao-header">
+                <h2>Avaliações</h2>
+            </div>
+            <p>Suas avaliações aparecerão aqui.</p>
+        </section>
+
+    </div>
+</div>
+</body>
+</html>

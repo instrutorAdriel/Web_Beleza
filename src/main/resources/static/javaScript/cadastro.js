@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
+    const nomeCompletoInput = document.getElementById("nomeCompleto");
+    const nomeCompletoErro = document.getElementById("nomeCompleto-erro"); // NOVO
     const alertaIdade = document.getElementById("alertaIdade");
 
     // Itens do checklist de força da senha
@@ -30,6 +32,52 @@ document.addEventListener("DOMContentLoaded", function () {
     const reqNumero = document.getElementById("req-numero");
     const reqEspecial = document.getElementById("req-especial");
 
+    // =======================================================
+// 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
+// =======================================================
+
+// Captura surroagtes high/low (faixa de emojis) + símbolos comuns + seletores de variação
+    // 1. Regex universal para emojis em JS tradicional
+    // 1. Regex universal de Emoji
+    const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
+
+// 2. Regex para identificar domínios Punycode (ex: xn--...)
+    const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
+
+    const todosOsCamposTexto = document.querySelectorAll(
+        'input[type="text"], input[type="email"], input[type="password"], textarea'
+    );
+
+    todosOsCamposTexto.forEach(function(campo) {
+
+        // Processa a digitação ao vivo
+        campo.addEventListener('input', function (e) {
+            const input = e.target;
+            const valorOriginal = input.value;
+            let valorLimpo = valorOriginal.replace(regexEmoji, "");
+
+            if (input.type === "email" || input.name === "email" || input.id === "email") {
+                valorLimpo = valorLimpo.replace(regexPunycode, "");
+            }
+
+            if (valorLimpo !== valorOriginal) {
+                const posicaoAtual = input.selectionStart;
+                const diferencaTamanho = valorOriginal.length - valorLimpo.length;
+
+                input.value = valorLimpo;
+
+                const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
+                input.setSelectionRange(novaPosicao, novaPosicao);
+            }
+        });
+
+        // Limpeza extra para e-mails quando o usuário sai do campo (Garante que o Punycode convertido pelo navegador suma)
+        if (campo.type === "email" || campo.name === "email" || campo.id === "email") {
+            campo.addEventListener('change', function (e) {
+                e.target.value = e.target.value.replace(regexPunycode, "").replace(regexEmoji, "");
+            });
+        }
+    });
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
         // Remove tudo que não for número
@@ -60,45 +108,89 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 3. MÁSCARA PARA DATA DE NASCIMENTO (dd/mm/aaaa) + ALERTA DE FAIXA ETÁRIA EM TEMPO REAL
-    dataNascimentoInput.addEventListener("input", function (e) {
-        let num = e.target.value.replace(/\D/g, "");
-        if (num.length > 8) num = num.substring(0, 8);
-
-        if (num.length >= 2) {
-            let dia = parseInt(num.substring(0, 2), 10);
-            if (dia > 31) dia = 31;
-            num = String(dia).padStart(2, "0") + num.substring(2);
-        }
-
-        if (num.length >= 4) {
-            let mes = parseInt(num.substring(2, 4), 10);
-            if (mes > 12) mes = 12;
-            num = num.substring(0, 2) + String(mes).padStart(2, "0") + num.substring(4);
-        }
-
-        if (num.length > 4) {
-            e.target.value = `${num.substring(0, 2)}/${num.substring(2, 4)}/${num.substring(4)}`;
-        } else if (num.length > 2) {
-            e.target.value = `${num.substring(0, 2)}/${num.substring(2)}`;
-        } else {
-            e.target.value = num;
-        }
-
+    // 2b. DATA DE NASCIMENTO — input type="date" já entrega o valor pronto (yyyy-MM-dd),
+    // não precisa (e não pode) de máscara manual aqui. Só disparamos o alerta de idade.
+    dataNascimentoInput.addEventListener("input", function () {
         atualizarAlertaIdade();
     });
 
-    // 4. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
+    // 4. BLOQUEIA NÚMEROS E SÍMBOLOS NO NOME COMPLETO (permite letras, acentos e espaços)
+    // O aviso fica visível enquanto houver caractere inválido e some quando a pessoa apagar
+    nomeCompletoInput.addEventListener("input", function (e) {
+        const valorOriginal = e.target.value;
+        const valorLimpo = valorOriginal.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+
+        if (valorOriginal !== valorLimpo) {
+            // Havia número ou símbolo digitado — mostra o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "flex";
+            nomeCompletoInput.classList.add("input-error");
+        } else {
+            // Não há mais número/símbolo — esconde o aviso
+            if (nomeCompletoErro) nomeCompletoErro.style.display = "none";
+            nomeCompletoInput.classList.remove("input-error");
+        }
+
+        e.target.value = valorLimpo;
+    });
+
+    // 5. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
     form.addEventListener("submit", function (event) {
         let erros = [];
 
-        // Validação do E-mail (precisa ter @ e .)
+        // Validação Global de Emojis no Submit (Garantia extra)
+        camposSemEmoji.forEach(function(campo) {
+            if (campo && regexEmoji.test(campo.value)) {
+                erros.push(`O campo não pode conter emojis.`);
+                marcarErro(campo);
+            }
+        });
+
+        // Validação do E-mail
         const emailValue = emailInput.value;
         if (!emailValue.includes("@") || !emailValue.includes(".")) {
             erros.push("O e-mail inserido é inválido. Certifique-se de que possui '@' e '.'.");
             marcarErro(emailInput);
         } else {
             limparErro(emailInput);
+        }
+
+        // Validação da Idade Mínima (Mínimo 14 anos)
+        // input type="date" entrega o valor em ISO: yyyy-MM-dd
+        if (dataNascimentoInput.value) {
+            const partes = dataNascimentoInput.value.split("-");
+
+            if (partes.length !== 3 || partes[0].length !== 4) {
+                erros.push("Data de nascimento inválida.");
+                marcarErro(dataNascimentoInput);
+            } else {
+                const ano = parseInt(partes[0], 10);
+                const mes = parseInt(partes[1], 10) - 1;
+                const dia = parseInt(partes[2], 10);
+                const dataNascimento = new Date(ano, mes, dia);
+                const hoje = new Date();
+
+                if (
+                    dataNascimento.getFullYear() !== ano ||
+                    dataNascimento.getMonth() !== mes ||
+                    dataNascimento.getDate() !== dia
+                ) {
+                    erros.push("Data de nascimento inválida. Verifique o dia e o mês informados.");
+                    marcarErro(dataNascimentoInput);
+                } else {
+                    let idade = hoje.getFullYear() - dataNascimento.getFullYear();
+                    const diffMes = hoje.getMonth() - dataNascimento.getMonth();
+                    if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+                        idade--;
+                    }
+
+                    if (idade < 14) {
+                        erros.push("É necessário ter no mínimo 14 anos para se cadastrar.");
+                        marcarErro(dataNascimentoInput);
+                    } else {
+                        limparErro(dataNascimentoInput);
+                    }
+                }
+            }
         }
 
         // Validação da FORÇA da senha
@@ -129,23 +221,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Calcula a idade e mostra o alerta correspondente enquanto o usuário digita a data
+    // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
+    // input type="date" entrega o valor em ISO: yyyy-MM-dd
     function atualizarAlertaIdade() {
-        const partes = dataNascimentoInput.value.split("/");
+        const partes = dataNascimentoInput.value.split("-");
 
-        // Só calcula quando a data estiver completa (dd/mm/aaaa)
-        if (partes.length !== 3 || partes[2].length !== 4) {
+        // Só calcula quando a data estiver completa (yyyy-MM-dd)
+        if (partes.length !== 3 || partes[0].length !== 4) {
             alertaIdade.style.display = "none";
             return;
         }
 
-        const dia = parseInt(partes[0], 10);
+        const ano = parseInt(partes[0], 10);
         const mes = parseInt(partes[1], 10) - 1;
-        const ano = parseInt(partes[2], 10);
+        const dia = parseInt(partes[2], 10);
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 
-        // Data inválida (ex: 31/02) - não mostra alerta de idade
+        // Data inválida - não mostra alerta de idade
         if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
             alertaIdade.style.display = "none";
             return;
@@ -217,4 +310,5 @@ document.addEventListener("DOMContentLoaded", function () {
     function limparErro(input) {
         input.classList.remove("input-error");
     }
+
 });

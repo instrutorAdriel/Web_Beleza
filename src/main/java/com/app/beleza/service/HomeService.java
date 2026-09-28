@@ -35,6 +35,9 @@ public class HomeService {
 
             AgendamentoDTO dto = new AgendamentoDTO();
 
+
+            dto.setServicoId(servico.getId());
+
             dto.setNomeServico(servico.getNomeServico());
             dto.setDescricao(servico.getDescricao());
             dto.setImagem(servico.getImagem());
