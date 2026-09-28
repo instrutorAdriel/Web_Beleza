@@ -12,7 +12,6 @@
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
 
     <style>
-        /* Checklist de requisitos de senha - mova para style.css se preferir */
         .ssp-password-checklist {
             list-style: none;
             padding: 0;
@@ -33,14 +32,13 @@
         .ssp-password-checklist li.valid {
             color: #16A34A;
         }
-        .ssp-password-checklist li .fa-circle-check {
+        .ssp-password-checklist li.valid .fa-circle-check {
             color: #16A34A;
         }
         .ssp-password-checklist li .fa-circle-xmark {
             color: #DC2626;
         }
 
-        /* Caixa de aviso de erro (estilo alerta) */
         .ssp-aviso-erro {
             display: flex;
             align-items: flex-start;
@@ -59,10 +57,6 @@
             font-size: 1rem;
             margin-top: 0.1rem;
         }
-        .ssp-password-checklist li.valid .fa-circle-check {
-            color: #16A34A; /* Verde */
-        }
-
     </style>
 </head>
 <body class="ssp-page">
@@ -96,6 +90,7 @@
                     <span>Não é permitido digitar números no nome.</span>
                 </small>
             </div>
+
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
                 <div class="ssp-form-group" style="flex: 1;">
                     <label th:for="dataNascimento">Data de Nascimento</label>
@@ -115,10 +110,7 @@
                 </div>
             </div>
 
-            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
             <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
-
-
 
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
@@ -128,7 +120,6 @@
             <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
-                    <!-- ATUALIZADO: Adicionado minlength="8" -->
                     <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
                         <i class="fa-solid fa-eye-slash" id="eyeIcon1"></i>
@@ -136,6 +127,10 @@
                 </div>
 
                 <ul class="ssp-password-checklist" id="password-checklist">
+                    <!-- ID REQ-TAMANHO ADICIONADO AQUI -->
+                    <li id="req-tamanho" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Mínimo de 8 caracteres
+                    </li>
                     <li id="req-maiuscula" class="req-item">
                         <i class="fa-solid fa-circle-xmark req-icon"></i> Letra maiúscula
                     </li>
