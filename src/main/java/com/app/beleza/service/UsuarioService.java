@@ -37,7 +37,9 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(form.getEmail())) {
             return "E-mail já cadastrado.";
         }
-
+        if (form.getEndereco() == null || form.getEndereco().isBlank()) {
+            return "O endereço é obrigatório.";
+        }
         String senhaCriptografada = encoder.encode(form.getSenha());
 
         Usuario novoUsuario = new Usuario();
