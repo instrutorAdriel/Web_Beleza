@@ -122,6 +122,11 @@
             </div>
 
             <div class="ssp-form-group">
+                <label th:for="endereco">Endereço</label>
+                <input type="text" th:field="*{endereco}" id="endereco" class="ssp-form-control" placeholder="Rua, número, bairro, cidade" required autocomplete="street-address">
+            </div>
+
+            <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" required autocomplete="new-password">

@@ -41,8 +41,14 @@
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
                     </div>
                     <div class="group-input">
-                        <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <input type="date"
+                               id="dataNascimento"
+                               name="dataNascimento"
+                               class="ssp-form-control"
+                               th:field="*{dataNascimento}"
+                               th:max="${T(java.time.LocalDate).now().minusYears(14)}"
+                               min="1900-01-01"/>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -114,5 +120,49 @@
 
     </div>
 </div>
+
+<script th:if="${abaAtiva == 'informacao'}">
+    document.addEventListener('DOMContentLoaded', function () {
+        const dataNascimentoInput = document.getElementById("dataNascimento");
+        const telefoneInput = document.getElementById("telefone");
+        const formInformacao = document.querySelector('form[action$="/atualizar-perfil"]');
+
+        // Feedback imediato: destaca o campo se a data digitada estiver fora do min/max
+        dataNascimentoInput.addEventListener("input", function () {
+            if (!dataNascimentoInput.checkValidity()) {
+                dataNascimentoInput.classList.add("input-error");
+            } else {
+                dataNascimentoInput.classList.remove("input-error");
+            }
+        });
+
+        // Bloqueia o envio se a data estiver fora do intervalo permitido (mínimo 14 anos, máximo 1900)
+        formInformacao.addEventListener("submit", function (event) {
+            if (!dataNascimentoInput.checkValidity()) {
+                event.preventDefault();
+                dataNascimentoInput.classList.add("input-error");
+                alert("Data de nascimento inválida ou fora do intervalo permitido (mínimo 14 anos).");
+            }
+        });
+
+        // Máscara de telefone
+        telefoneInput.addEventListener("input", function (e) {
+            let num = e.target.value.replace(/\D/g, "");
+            if (num.length > 11) {
+                num = num.substring(0, 11);
+            }
+            if (num.length > 6) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
+            } else if (num.length > 2) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2)}`;
+            } else if (num.length > 0) {
+                e.target.value = `(${num}`;
+            } else {
+                e.target.value = "";
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
