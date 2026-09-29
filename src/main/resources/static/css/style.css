@@ -249,9 +249,12 @@
 .hero-banner {
     position: relative;
     width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
     aspect-ratio: 1917 / 550;
     max-height: 650px;
-    border-bottom: 1px solid #1e293b;
+    border-radius: 0;
+    border-bottom: none;
     overflow: hidden;
     background-color: #020617;
 }
@@ -273,8 +276,7 @@
     flex: 1 0 100%;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 100% 100%;
-}
+    background-size: cover;}
 #slide1{
     background-image:
             url('/img/1.png');
@@ -308,13 +310,13 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 36px;
+    font-size: 28px;
     color: rgba(255, 255, 255, 0.6) !important;
     background: rgba(0, 0, 0, 0.4) !important; /* Fundo escuro sutil para testar a área exata do clique */
     border: none;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -331,8 +333,8 @@
     transform: translateY(-50%) scale(1.1);
 }
 
-.prev { left: 20px; }
-.next { right: 20px; }
+.prev { left: 12px; }
+.next { right: 12px; }
 
 
 /* Badge estilizada em Laranja Senac */
@@ -1161,6 +1163,7 @@
 }
 
 @media (max-width: 768px) {
+
     .tabela { overflow-x: scroll; }
 
     .header-container {
@@ -1184,6 +1187,19 @@
     .arrow { width: 36px; height: 36px; font-size: 20px; }
     .prev { left: 8px; }
     .next { right: 8px; }
+
+    .hero-banner {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 5 / 2;
+        max-height: none;
+    }
+
+    .slide {
+        background-size: cover;
+        background-position: center;
+    }
 
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
@@ -1431,7 +1447,7 @@ body.ssp-page::after {
     font-weight: 500;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-}
+}.
 
 .ssp-password-wrapper {
     position: relative;
