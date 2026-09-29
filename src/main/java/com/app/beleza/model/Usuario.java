@@ -3,78 +3,38 @@ package com.app.beleza.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
+@Table(name = "usuario")
+public class
+Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 100)
-    private String nomeCompleto;
-
-    @Column(nullable = false, length = 100)
-    private String dataNascimento;
-
-    @Column(nullable = false, length = 100)
-    private String telefone;
-
-    @Column(nullable = false, length = 100)
-    private String endereco;
+    private Long id_usuario;
 
     @Column(nullable = false, length = 100)
     private String email;
 
     @Column(nullable = false, length = 100)
+    private String nome_usuario;
+
+    @Column(nullable = false, length = 100)
     private String senha;
+
+    @Column(nullable = false, length = 100)
+    private String situacao;
+
 
     public Usuario() {
     }
-
-    public Usuario(String nomeCompleto, String dataNascimento, String telefone, String endereco, String email, String senha) {
-        this.nomeCompleto = nomeCompleto;
-        this.dataNascimento = dataNascimento;
-        this.telefone = telefone;
-        this.endereco = endereco;
+    public Usuario(String email, String nome_usuario, String senha, String situacao) {
         this.email = email;
+        this.nome_usuario = nome_usuario;
         this.senha = senha;
+        this.situacao = situacao;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNomeCompleto() {
-        return nomeCompleto;
-    }
-
-    public void setNomeCompleto(String nomeCompleto) {
-        this.nomeCompleto = nomeCompleto;
-    }
-
-    public String getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public Long getId_usuario() {
+        return id_usuario;
     }
 
     public String getEmail() {
@@ -85,6 +45,14 @@ public class Usuario {
         this.email = email;
     }
 
+    public String getNome_usuario() {
+        return nome_usuario;
+    }
+
+    public void setNome_usuario(String nome_usuario) {
+        this.nome_usuario = nome_usuario;
+    }
+
     public String getSenha() {
         return senha;
     }
@@ -93,4 +61,11 @@ public class Usuario {
         this.senha = senha;
     }
 
+    public String getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(String situacao) {
+        this.situacao = situacao;
+    }
 }
