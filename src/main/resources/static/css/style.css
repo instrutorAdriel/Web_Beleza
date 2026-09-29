@@ -1120,11 +1120,16 @@
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 60px;
 }
-.footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+
+.footer-bloco {
+    flex: 0 1 auto;   /* usa a largura natural do conteúdo, sem forçar mínimo de 260px */
+    max-width: 300px; /* evita que o texto do "Sobre o Senac" fique largo demais */
+}
 .footer-bloco h4 {
     font-size: 18px;
     margin-bottom: 20px;
