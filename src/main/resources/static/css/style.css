@@ -279,19 +279,20 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
 #slide1{
     background-image:
-            url('/img/1.png');
+            url('../img/img1.jpeg');
 }
 
 #slide2{
     background-image:
-            url('/img/2.png');
+            url('../img/img2.jpeg');
 }
 
 #slide3{
     background-image:
-            url('/img/3.png');
+            url('../img/img3.png');
 }
 
 /* TEXTO FIXO CENTRALIZADO */
