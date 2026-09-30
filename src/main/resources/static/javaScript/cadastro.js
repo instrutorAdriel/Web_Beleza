@@ -4,10 +4,12 @@ function togglePasswordVisibility(inputId, iconId) {
 
     if (input.type === "password") {
         input.type = "text";
-        icone.classList.replace("fa-eye-slash", "fa-eye");
+        // Ao mostrar a senha, coloca o olho riscado
+        icone.classList.replace("fa-eye", "fa-eye-slash");
     } else {
         input.type = "password";
-        icone.classList.replace("fa-eye", "fa-eye-slash");
+        // Ao ocultar a senha, volta ao olho aberto
+        icone.classList.replace("fa-eye-slash", "fa-eye");
     }
 }
 

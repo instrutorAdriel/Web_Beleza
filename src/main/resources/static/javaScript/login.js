@@ -18,14 +18,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnToggle && passwordInput) {
 
         btnToggle.addEventListener("click", function () {
-            const icon = document.getElementById("eyeIcon1"); // id correto do HTML
+            const icon = document.getElementById("eyeIcon1");
 
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
-                if (icon) icon.classList.replace("fa-eye-slash", "fa-eye");
+                // Troca de olho aberto para olho riscado
+                if (icon) icon.classList.replace("fa-eye", "fa-eye-slash");
             } else {
                 passwordInput.type = "password";
-                if (icon) icon.classList.replace("fa-eye", "fa-eye-slash");
+                // Troca de olho riscado para olho aberto
+                if (icon) icon.classList.replace("fa-eye-slash", "fa-eye");
             }
         });
     }

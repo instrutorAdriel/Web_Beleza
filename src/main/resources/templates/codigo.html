@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
@@ -18,7 +18,7 @@
       <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
     </div>
 
-    <nav class="nav-menu" style="display: flex; justify-content: center; gap: 30px; margin: 0 auto;">
+    <nav class="nav-menu nav-menu-center">
       <a href="#" class="destaque-menu">Home</a>
       <a href="#sobre">Sobre</a>
       <a href="#servicos-agendamento">Serviços</a>
@@ -57,7 +57,7 @@
   </div>
 </section>
 
-<section id="servicos-agendamento" class="cursos-secao-avancada container-interno" style="margin-bottom: 4rem;">
+<section id="servicos-agendamento" class="cursos-secao-avancada container-interno secao-servicos-mb">
   <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
   <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
@@ -72,20 +72,17 @@
     <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
   </div>
 
-  <div class="carrossel-wrapper" style="position: relative; display: flex; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+  <div class="carrossel-wrapper carrossel-wrapper-custom">
 
-    <button type="button" class="seta-carrossel seta-esquerda"
-            style="position: absolute; left: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    <button type="button" class="seta-carrossel seta-esquerda seta-carrossel-custom-left">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
 
-    <div class="carrossel-track"
-         style="display: flex; overflow-x: auto; scroll-behavior: smooth; gap: 24px; width: 100%; padding: 15px 5px; scrollbar-width: none;">
+    <div class="carrossel-track carrossel-track-custom">
 
-      <div class="card-curso-completo"
+      <div class="card-curso-completo card-curso-custom"
            th:each="servico : ${servicos}"
-           th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}"
-           style="flex: 0 0 auto; width: 320px; box-sizing: border-box;">
+           th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
 
         <div class="img-placeholder-curso">
           <img th:src="${servico.imagem}"
@@ -94,9 +91,9 @@
 
         <div class="corpo-curso">
 
-                    <span class="tipo-curso"
-                          th:text="${servico.unidade}">
-                    </span>
+          <span class="tipo-curso"
+                th:text="${servico.unidade}">
+          </span>
 
           <h3 th:text="${servico.nomeServico}"></h3>
 
@@ -104,15 +101,15 @@
 
           <div class="detalhes-rapidos-curso">
 
-                        <span>
-                            <i class="fa-regular fa-clock"></i>
-                            <span th:text="${servico.duracao}"></span>
-                        </span>
+            <span>
+                <i class="fa-regular fa-clock"></i>
+                <span th:text="${servico.duracao}"></span>
+            </span>
 
             <span>
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span th:text="${servico.unidade}"></span>
-                        </span>
+                <i class="fa-solid fa-location-dot"></i>
+                <span th:text="${servico.unidade}"></span>
+            </span>
 
           </div>
 
@@ -130,8 +127,7 @@
 
     </div>
 
-    <button type="button" class="seta-carrossel seta-direita"
-            style="position: absolute; right: -20px; z-index: 10; background: #2b4c7e; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    <button type="button" class="seta-carrossel seta-direita seta-carrossel-custom-right">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
 
@@ -180,11 +176,6 @@
   </div>
 </div>
 
-<!--
-  ===================================================================
-  MODAL: AVALIAÇÃO DE MODELOS
-  ===================================================================
--->
 <div id="modal-avaliacao" class="modal-plataforma">
   <div class="modal-painel">
     <a href="#" class="btn-fechar-modal" id="btn-fechar-avaliacao">&times; Fechar</a>
