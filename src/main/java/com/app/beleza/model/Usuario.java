@@ -4,68 +4,46 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuario")
-public class
-Usuario {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 100)
-    private String nome_usuario;
+    @Column(name = "nome_usuario", nullable = false, length = 127)
+    private String nomeCompleto;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "senha", nullable = false, length = 255)
     private String senha;
 
-    @Column(nullable = false, length = 100)
-    private String situacao;
-
+    @Column(name = "situacao", nullable = false, length = 1)
+    private String situacao = "A"; // A = Ativo; D = Desativado; E = Excluído
 
     public Usuario() {
     }
-    public Usuario(String email, String nome_usuario, String senha, String situacao) {
+
+    public Usuario(String email, String nomeCompleto, String senha) {
         this.email = email;
-        this.nome_usuario = nome_usuario;
-        this.senha = senha;
-        this.situacao = situacao;
-    }
-
-    public Long getId_usuario() {
-        return id_usuario;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNome_usuario() {
-        return nome_usuario;
-    }
-
-    public void setNome_usuario(String nome_usuario) {
-        this.nome_usuario = nome_usuario;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
+        this.nomeCompleto = nomeCompleto;
         this.senha = senha;
     }
 
-    public String getSituacao() {
-        return situacao;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setSituacao(String situacao) {
-        this.situacao = situacao;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getNomeCompleto() { return nomeCompleto; }
+    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+
+    public String getSituacao() { return situacao; }
+    public void setSituacao(String situacao) { this.situacao = situacao; }
 }

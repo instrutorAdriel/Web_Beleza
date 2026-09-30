@@ -45,7 +45,7 @@ public class UsuarioService {
         String senhaCriptografada = encoder.encode(form.getSenha());
 
         Usuario novoUsuario = new Usuario();
-        novoUsuario.setNome_usuario(form.getNomeCompleto());
+        novoUsuario.setNomeCompleto(form.getNomeCompleto());
         novoUsuario.setEmail(form.getEmail());
         novoUsuario.setSenha(senhaCriptografada);
         usuarioRepository.save(novoUsuario);
@@ -155,7 +155,7 @@ public class UsuarioService {
 
     public UsuarioDTO converterModelParaDTO(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
-        dto.setNomeCompleto(usuario.setNome_usuario());
+        dto.setNomeCompleto(usuario.getNomeCompleto());
         dto.setEmail(usuario.getEmail());
 
         modeloRepository.findByUsuario(usuario).ifPresent(m -> {
