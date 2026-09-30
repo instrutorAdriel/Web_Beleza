@@ -251,7 +251,7 @@
     width: 100%;
     max-width: 1140px;
     margin: 0 auto;
-    aspect-ratio: 1140 / 550;   /* proporção da sua arte nova no desktop */
+    aspect-ratio: 1140 / 550;   
     max-height: 650px;
     overflow: hidden;
     background-color: #020617;
@@ -1185,14 +1185,14 @@
     .hero-banner {
         margin: 0;
         max-width: 100%;
-        aspect-ratio: 1140 / 550;   /* mesma proporção da arte: sem deformar */
+        aspect-ratio: 1140 / 550;
         max-height: none;
     }
-
     .slide {
-        background-size: cover;      /* nunca estica; no máximo corta um pouco */
+        background-size: cover;
         background-position: center;
     }
+
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
