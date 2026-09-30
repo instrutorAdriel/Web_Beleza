@@ -26,8 +26,7 @@ public class Usuario {
     // Construtor limpo
     public Usuario(){}
 
-    public Usuario(Long id, String nomeUsuario, String email, String senha, char situacao) {
-        this.id = id;
+    public Usuario(String nomeUsuario, String email, String senha, char situacao) {
         this.nomeUsuario = nomeUsuario;
         this.email = email;
         this.senha = senha;
