@@ -3,79 +3,48 @@ package com.app.beleza.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
-public class
-Usuario {
+@Table(name = "usuario")
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id_usuario")
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String nomeCompleto;
+    @Column(name="nome_usuario", nullable = false, length = 127)
+    private String nomeUsuario;
 
-    @Column(nullable = false, length = 100)
-    private String dataNascimento;
-
-    @Column(nullable = false, length = 100)
-    private String telefone;
-
-    @Column(nullable = false, length = 100)
-    private String endereco;
-
-    @Column(nullable = false, length = 100)
+    @Column(name="email", nullable = false, length = 100)
     private String email;
 
-    @Column(nullable = false, length = 100)
+    @Column(name="senha", nullable = false, length = 255)
     private String senha;
 
-    public Usuario() {
-    }
+    @Column(name="situacao", nullable = false)
+    private char situacao;
 
-    public Usuario(String nomeCompleto, String dataNascimento, String telefone, String endereco, String email, String senha) {
-        this.nomeCompleto = nomeCompleto;
-        this.dataNascimento = dataNascimento;
-        this.telefone = telefone;
-        this.endereco = endereco;
+    // Construtor limpo
+    public Usuario(){}
+
+    public Usuario(Long id, String nomeUsuario, String email, String senha, char situacao) {
+        this.id = id;
+        this.nomeUsuario = nomeUsuario;
         this.email = email;
         this.senha = senha;
+        this.situacao = situacao;
     }
 
-
+    // Getters e Setters
     public Long getId() {
         return id;
     }
 
-    public String getNomeCompleto() {
-        return nomeCompleto;
+    public String getNomeUsuario() {
+        return nomeUsuario;
     }
 
-    public void setNomeCompleto(String nomeCompleto) {
-        this.nomeCompleto = nomeCompleto;
-    }
-
-    public String getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
     }
 
     public String getEmail() {
@@ -94,4 +63,11 @@ Usuario {
         this.senha = senha;
     }
 
+    public char getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(char situacao) {
+        this.situacao = situacao;
+    }
 }
