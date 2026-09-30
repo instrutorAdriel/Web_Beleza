@@ -1192,12 +1192,11 @@
         margin: 0;
         width: 100%;
         max-width: 100%;
-        aspect-ratio: 5 / 2;
+        aspect-ratio: 1917 / 550;
         max-height: none;
     }
-
     .slide {
-        background-size: cover;
+        background-size: 100% 100%;
         background-position: center;
     }
 
