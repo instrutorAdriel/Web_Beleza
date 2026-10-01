@@ -15,7 +15,7 @@
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
-            <a th:href="@{/perfil(aba='avaliacao')}" class="bar-item button" th:classappend="${abaAtiva == 'avaliacao'} ? 'active'">Avaliações</a>
+            <a th:href="@{/perfil(aba='depoimento')}" class="bar-item button" th:classappend="${abaAtiva == 'depoimento'} ? 'active'">Depoimentos</a>
             <a th:href="@{/}" class="bar-item button">Voltar</a>
         </div>
     </div>
@@ -212,12 +212,49 @@
             -->
         </section>
 
-        <!-- ABA: AVALIAÇÕES -->
-        <section id="perfil-avaliacao" class="secao-painel" th:if="${abaAtiva == 'avaliacao'}">
+        <!-- ABA: DEPOIMENTOS -->
+        <section id="perfil-depoimento" class="secao-painel" th:if="${abaAtiva == 'depoimento'}">
             <div class="secao-header">
-                <h2>Avaliações</h2>
+                <h2>Depoimentos</h2>
             </div>
-            <p>Suas avaliações aparecerão aqui.</p>
+
+            <form class="form-perfil" th:action="@{/perfil/enviar-depoimento}" method="POST" enctype="multipart/form-data">
+                <div class="group-info success" th:if="${mensagemSucesso}">
+                    <span th:text="${mensagemSucesso}"></span>
+                </div>
+                <div class="group-info error" th:if="${mensagemError}">
+                    <span th:text="${mensagemError}"></span>
+                </div>
+
+                <div class="group-input">
+                    <label for="servico">Selecione o Serviço</label>
+                    <select id="servico" name="servicoId" required>
+                        <option value="" disabled selected>Selecione um serviço...</option>
+                        <option th:each="servico : ${listaServicos}"
+                                th:value="${servico.id}"
+                                th:text="${servico.nome}">Serviço Exemplo</option>
+                    </select>
+                </div>
+
+                <div class="group-input">
+                    <label for="comentario">Seu Depoimento</label>
+                    <textarea id="comentario" name="comentario" rows="4" placeholder="Escreva aqui seu depoimento..." required></textarea>
+                </div>
+
+                <div class="group-input">
+                    <label for="imagem">Adicionar Imagem</label>
+                    <input type="file" id="imagem" name="imagem" accept="image/*">
+
+                    <!-- Quadrado exibido caso a imagem já tenha sido enviada/processada pelo servidor -->
+                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}">
+                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem">
+                    </div>
+                </div>
+
+                <div class="group-button">
+                    <button type="submit" class="btn">Enviar Depoimento</button>
+                </div>
+            </form>
         </section>
 
     </div>
