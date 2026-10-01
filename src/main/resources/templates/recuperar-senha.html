@@ -18,16 +18,16 @@
     <header class="ssp-header-page-login">
       <a class="ssp-login-button-back" th:href="@{/login}">&larr; Voltar para o Login</a>
       <h1 th:text="${tituloPagina}">Recuperar Senha</h1>
-      <p class="ssp-register-footer" style="text-align: left; margin-top: 0.5rem;">
+      <p class="ssp-register-footer ssp-text-left-top">
         Insira o e-mail associado à sua conta para receber o código de verificação.
       </p>
     </header>
 
-    <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
-      <span class="ssp-error-message" style="display: block;" th:text="${erro}">E-mail não localizado.</span>
+    <div th:if="${erro}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
+      <span class="ssp-error-message ssp-message-display" th:text="${erro}">E-mail não localizado.</span>
     </div>
-    <div th:if="${succ}" class="ssp-form-control" style="display: block; margin-bottom: 1rem; background-color: rgba(0, 213, 111, 0.1); padding: 0.8rem; border-radius: 6px;">
-      <span class="ssp-success-message" style="display: block;" th:text="${succ}"></span>
+    <div th:if="${succ}" class="ssp-form-control ssp-status-box ssp-success-box">
+      <span class="ssp-success-message ssp-message-display" th:text="${succ}"></span>
     </div>
 
     <form id="kc-form-recovery" th:action="@{/recuperar-senha}" th:object="${usuarioDTO}" method="POST">
@@ -36,7 +36,7 @@
         <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required>
       </div>
 
-      <button type="submit" class="ssp-btn-submit" style="margin-top: 1rem;">Continuar</button>
+      <button type="submit" class="ssp-btn-submit ssp-mt-1">Continuar</button>
 
     </form>
   </div>

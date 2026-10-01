@@ -26,12 +26,12 @@
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
-            <span class="ssp-error-message" style="display: block;" th:text="${erro}"></span>
+        <div th:if="${erro}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
+            <span class="ssp-error-message ssp-message-display" th:text="${erro}"></span>
         </div>
 
-        <div th:if="${succ}" class="ssp-form-control" style="display: block; margin-bottom: 1rem; background-color: rgba(0, 213, 111, 0.1); padding: 0.8rem; border-radius: 6px;">
-            <span class="ssp-success-message" style="display: block;" th:text="${succ}"></span>
+        <div th:if="${succ}" class="ssp-form-control ssp-status-box ssp-success-box">
+            <span class="ssp-success-message ssp-message-display" th:text="${succ}"></span>
         </div>
 
         <form id="form-alterar-senha" th:action="@{/alterar-senha/{token}(token=${token})}" th:object="${usuarioDTO}" method="POST">
