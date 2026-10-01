@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface SessaoAtendimentoRepository extends JpaRepository<Agendamento, Integer> {
 
-    List<Agendamento>findByServicoId (Integer servicoId);
+    List<Agendamento> findAgendamentoById(Integer id);
 
 }

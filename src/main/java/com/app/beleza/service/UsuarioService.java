@@ -26,8 +26,6 @@ public class UsuarioService {
     private ModeloRepository modeloRepository;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    @Autowired
-    private ResponseEntityExceptionHandler responseEntityExceptionHandler;
 
     public String cadastrar(UsuarioDTO form) {
         // Validação de Emojis nos campos do cadastro

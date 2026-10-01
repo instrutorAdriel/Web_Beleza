@@ -10,6 +10,4 @@ public interface ModeloRepository extends JpaRepository<Modelo, Integer> {
     Optional<Modelo> findById(Integer id);
 
     Optional<Modelo> findByUsuario(Usuario usuario);
-
-    Boolean existsByEmail(String email);
 }
