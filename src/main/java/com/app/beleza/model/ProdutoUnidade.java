@@ -8,7 +8,7 @@ public class ProdutoUnidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_produto_unidade")
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_produto")
@@ -27,7 +27,7 @@ public class ProdutoUnidade {
 
     // Getters e Setters
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

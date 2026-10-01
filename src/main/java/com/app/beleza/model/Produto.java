@@ -8,7 +8,7 @@ public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_produto")
-    private Long id;
+    private Integer id;
 
     @Column(name="nome_produto", nullable = false, length = 60)
     private String nomeProduto;
@@ -28,7 +28,7 @@ public class Produto {
     }
 
     // Getters e Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

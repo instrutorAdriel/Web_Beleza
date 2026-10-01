@@ -2,11 +2,8 @@ package com.app.beleza.model;
 
 import com.app.beleza.model.enums.SituacaoAgendamento;
 import jakarta.persistence.*;
-import org.springframework.boot.Banner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "agendamento")
@@ -14,12 +11,16 @@ public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_agendamento")
-    private Long id;
+    private Integer id;
 
-    private LocalDateTime data_hora_agendamento;
+    @Column(name="data_hora_agendamento", nullable = false)
+    private LocalDateTime dataHoraAgendamento;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="situacao", nullable = false)
     private SituacaoAgendamento situacao;
 
+    @Column(name="observacao", nullable = false, length = 255)
     private String observacao;
 
     @ManyToOne
@@ -36,8 +37,8 @@ public class Agendamento {
 
     public Agendamento() {}
 
-    public Agendamento(LocalDateTime data_hora_agendamento, SituacaoAgendamento situacao, String observacao, Disponibilidade disponibilidade, Modelo modelo, Instrutor instrutor) {
-        this.data_hora_agendamento = data_hora_agendamento;
+    public Agendamento(LocalDateTime dataHoraAgendamento, SituacaoAgendamento situacao, String observacao, Disponibilidade disponibilidade, Modelo modelo, Instrutor instrutor) {
+        this.dataHoraAgendamento = dataHoraAgendamento;
         this.situacao = situacao;
         this.observacao = observacao;
         this.disponibilidade = disponibilidade;
@@ -46,16 +47,16 @@ public class Agendamento {
     }
 
     // Getters e Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public LocalDateTime getData_hora_agendamento() {
-        return data_hora_agendamento;
+    public LocalDateTime getDataHoraAgendamento() {
+        return dataHoraAgendamento;
     }
 
-    public void setData_hora_agendamento(LocalDateTime data_hora_agendamento) {
-        this.data_hora_agendamento = data_hora_agendamento;
+    public void setDataHoraAgendamento(LocalDateTime dataHoraAgendamento) {
+        this.dataHoraAgendamento = dataHoraAgendamento;
     }
 
     public SituacaoAgendamento getSituacao() {

@@ -8,9 +8,9 @@ public class Instrutor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_instrutor")
-    private Long id;
+    private Integer idInstrutor;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_usuario", nullable = false)
     private Usuario usuario;
 
@@ -22,8 +22,8 @@ public class Instrutor {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Integer getIdInstrutor() {
+        return idInstrutor;
     }
 
     public Usuario getUsuario() {

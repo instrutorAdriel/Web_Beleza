@@ -1,17 +1,15 @@
-package com.app.beleza.model;
+package com.app.beleza.model.dto;
 
-public class AgendamentoDTO {
+public class ServicoDisponibilidadeDTO {
 
-    private Long servicoId;
+    private Integer servicoId;
 
     private String nomeServico;
     private String descricao;
     private String imagem;
     private String unidade;
-    private String bairro;
-    private String duracao;
-
-
+    private String hora_inicio;
+    private String hora_fim;
 
     public void setNomeServico(String nomeServico) {
         this.nomeServico = nomeServico;
@@ -27,14 +25,6 @@ public class AgendamentoDTO {
 
     public void setUnidade(String unidade) {
         this.unidade = unidade;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public void setDuracao(String duracao) {
-        this.duracao = duracao;
     }
 
     public String getNomeServico() {
@@ -53,19 +43,27 @@ public class AgendamentoDTO {
         return unidade;
     }
 
-    public String getBairro() {
-        return bairro;
+    public String getHora_inicio() {
+        return hora_inicio;
     }
 
-    public String getDuracao() {
-        return duracao;
-    }
-
-    public Long getServicoId() {
+    public Integer getServicoId() {
         return servicoId;
     }
 
-    public void setServicoId(Long servicoId) {
+    public void setHora_inicio(String hora_inicio) {
+        this.hora_inicio = hora_inicio;
+    }
+
+    public String getHora_fim() {
+        return hora_fim;
+    }
+
+    public void setHora_fim(String hora_fim) {
+        this.hora_fim = hora_fim;
+    }
+
+    public void setServicoId(Integer servicoId) {
         this.servicoId = servicoId;
     }
 

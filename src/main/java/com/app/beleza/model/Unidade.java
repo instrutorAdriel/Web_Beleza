@@ -8,7 +8,7 @@ public class Unidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_unidade")
-    private Long id;
+    private Integer id;
 
     @Column(name="nome_unidade", nullable = false, length = 60)
     private String nomeUnidade;
@@ -41,7 +41,7 @@ public class Unidade {
         this.endereco = endereco;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -1,14 +1,15 @@
 package com.app.beleza.respository;
 
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    Optional<Usuario> findByEmail(String email);
+public interface ModeloRepository extends JpaRepository<Modelo, Integer> {
+    Optional<Modelo> findById(Integer id);
 
-    Optional<Usuario> findById(Integer id);
+    Optional<Modelo> findByUsuario(Usuario usuario);
 
     Boolean existsByEmail(String email);
 }

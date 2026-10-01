@@ -1,19 +1,15 @@
 package com.app.beleza.service;
 
 import com.app.beleza.model.*;
-import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.model.Home;
-import com.app.beleza.model.AgendamentoDTO;
+import com.app.beleza.model.dto.DepoimentoDTO;
+import com.app.beleza.model.Disponibilidade;
+import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
-import com.app.beleza.respository.HomeRepository;
-import com.app.beleza.model.Home;
-import com.app.beleza.model.AgendamentoDTO;
+import com.app.beleza.respository.DisponibilidadeRepository;
 import com.app.beleza.respository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.respository.DepoimentoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,30 +21,34 @@ public class HomeService {
     @Autowired
     private HomeRepository homeRepository;
 
-    public List<AgendamentoDTO> listarServicos() {
+    @Autowired
+    private DisponibilidadeRepository disponibilidadeRepository;
 
-        List<AgendamentoDTO> lista = new ArrayList<>();
+    public List<ServicoDisponibilidadeDTO> listarServicos() {
 
-        List<Home> servicos = homeRepository.findAll();
+        List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
 
-        for (Home servico : servicos) {
+        List<Disponibilidade> servicos = disponibilidadeRepository.findAll();
 
-            AgendamentoDTO dto = new AgendamentoDTO();
+        for (Disponibilidade servico : servicos) {
 
+            ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
 
             dto.setServicoId(servico.getId());
-
-            dto.setNomeServico(servico.getNomeServico());
-            dto.setDescricao(servico.getDescricao());
-            dto.setImagem(servico.getImagem());
-            dto.setUnidade(servico.getUnidade());
-            dto.setDuracao(servico.getDuracao());
+            dto.setNomeServico(servico.getProdutoUnidade().getProduto().getNomeProduto());
+            dto.setDescricao(servico.getProdutoUnidade().getProduto().getDescricao());
+            dto.setImagem(servico.getProdutoUnidade().getProduto().getImagemAnexo());
+            dto.setUnidade(servico.getProdutoUnidade().getUnidade().getNomeUnidade());
+            dto.setHora_inicio(servico.getHoraInicio().toString());
+            dto.setHora_fim(servico.getHoraFim().toString());
 
             lista.add(dto);
         }
 
         return lista;
     }
+
+    /*
     @Autowired
     private DepoimentoRepository depoimentoRepository;
 
@@ -70,4 +70,5 @@ public class HomeService {
         }
         return lista;
     }
+    */
 }

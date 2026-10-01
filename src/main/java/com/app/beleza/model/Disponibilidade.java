@@ -10,10 +10,10 @@ public class Disponibilidade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_disponibilidade")
-    private Long id;
+    private Integer id;
 
     @Column(name="total_vagas", nullable = false)
-    private int totalVagas;
+    private Integer totalVagas;
 
     @Column(name="hora_inicio", nullable = false)
     private LocalTime horaInicio;
@@ -30,7 +30,7 @@ public class Disponibilidade {
 
     public Disponibilidade() {}
 
-    public Disponibilidade(int totalVagas, LocalTime horaInicio, LocalTime horaFim, LocalDate dataDisponibilidade, ProdutoUnidade produtoUnidade) {
+    public Disponibilidade(Integer totalVagas, LocalTime horaInicio, LocalTime horaFim, LocalDate dataDisponibilidade, ProdutoUnidade produtoUnidade) {
         this.totalVagas = totalVagas;
         this.horaInicio = horaInicio;
         this.horaFim = horaFim;
@@ -40,11 +40,11 @@ public class Disponibilidade {
 
     // Getter e Setters
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int getTotalVagas() {
+    public Integer getTotalVagas() {
         return totalVagas;
     }
 

@@ -10,7 +10,7 @@ public class Modelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_modelo")
-    private Long id;
+    private Integer idModelo;
 
     @Column(name="data_nascimento")
     private LocalDate dataNascimento;
@@ -18,7 +18,7 @@ public class Modelo {
     @Column(name="telefone", unique = true)
     private String telefone;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_usuario", nullable = false)
     private Usuario usuario;
 
@@ -32,8 +32,8 @@ public class Modelo {
     }
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Integer getIdModelo() {
+        return idModelo;
     }
 
     public LocalDate getDataNascimento() {

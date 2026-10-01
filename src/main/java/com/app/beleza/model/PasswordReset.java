@@ -12,11 +12,12 @@ import jakarta.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "passwordreset_token")
+@Table(name = "passwordresettoken")
 public class PasswordReset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name="id_passwordresettoken")
+    private Integer id;
 
     @Column(nullable = false, length = 255)
     private String token;
@@ -38,7 +39,7 @@ public class PasswordReset {
 
     // Getters e Setters
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

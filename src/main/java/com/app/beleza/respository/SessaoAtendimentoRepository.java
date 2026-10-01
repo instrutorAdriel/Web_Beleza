@@ -1,12 +1,12 @@
 package com.app.beleza.respository;
 
-import com.app.beleza.model.SessaoAtendimento;
+import com.app.beleza.model.Agendamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SessaoAtendimentoRepository extends JpaRepository<SessaoAtendimento, Long> {
+public interface SessaoAtendimentoRepository extends JpaRepository<Agendamento, Integer> {
 
-    List<SessaoAtendimento>findByServicoId (long servicoId);
+    List<Agendamento>findByServicoId (Integer servicoId);
 
 }

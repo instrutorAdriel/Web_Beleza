@@ -1,6 +1,6 @@
 package com.app.beleza.controller;
 
-import com.app.beleza.model.SessaoAtendimentoDTO;
+import com.app.beleza.model.dto.SessaoAtendimentoDTO;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.service.SessaoAtendimentoService;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,7 @@ import java.util.List;
 @Controller // Usamos @Controller para renderizar fragmentos HTML
 @RequestMapping("/api/agendamento")
 public class AgendamentoController {
-
+    /*
     @Autowired
     private SessaoAtendimentoService service;
 
@@ -67,4 +67,5 @@ public class AgendamentoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+     */
 }

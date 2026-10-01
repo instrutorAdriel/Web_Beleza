@@ -1,30 +1,38 @@
 package com.app.beleza.service;
 
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
-import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.model.dto.UsuarioDTO;
+import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class UsuarioService {
-
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ModeloRepository modeloRepository;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    @Autowired
+    private ResponseEntityExceptionHandler responseEntityExceptionHandler;
 
     public String cadastrar(UsuarioDTO form) {
         // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
                 Validador.contemEmoji(form.getEmail()) ||
-                Validador.contemEmoji(form.getEndereco()) ||
                 Validador.contemEmoji(form.getSenha())) {
             return "Os campos do formulário não podem conter emojis.";
         }
@@ -40,15 +48,15 @@ public class UsuarioService {
 
         String senhaCriptografada = encoder.encode(form.getSenha());
 
-        Usuario novoUsuario = new Usuario();
-        novoUsuario.setNomeCompleto(form.getNomeCompleto());
-        novoUsuario.setEmail(form.getEmail()); // E-mail normal
-        novoUsuario.setDataNascimento(form.getDataNascimento());
-        novoUsuario.setEndereco(form.getEndereco());
+        Modelo novoUsuario = new Modelo();
+        novoUsuario.getUsuario().setNomeUsuario(form.getNomeCompleto());
+        novoUsuario.getUsuario().setEmail(form.getEmail()); // E-mail normal
+        novoUsuario.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
         novoUsuario.setTelefone(form.getTelefone());
-        novoUsuario.setSenha(senhaCriptografada);
+        novoUsuario.getUsuario().setSenha(senhaCriptografada);
 
-        usuarioRepository.save(novoUsuario);
+        modeloRepository.save(novoUsuario);
+
         return null;
     }
 
@@ -122,34 +130,31 @@ public class UsuarioService {
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
         // Validação de Emojis ao atualizar o perfil
-        if (Validador.contemEmoji(form.getEndereco())) {
-            return "O endereço não pode conter emojis.";
-        }
 
         if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
             return "Data de nascimento inválido!";
         }
 
-        Optional<Usuario> resultado = usuarioRepository.findByEmail(form.getEmail());
+        Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
 
-        if (resultado.isEmpty()) {
+        if (usuarioBusca.isEmpty()) {
             return "E-mail não encontrado.";
         }
 
-        Usuario usuario = resultado.get();
-        usuario.setDataNascimento(form.getDataNascimento());
-        usuario.setEndereco(form.getEndereco());
-        usuario.setTelefone(form.getTelefone());
+        Optional<Modelo> modeloBusca = modeloRepository.findByUsuario(usuarioBusca.get());
+
+        Modelo modelo = modeloBusca.get();
+        modelo.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
+        modelo.setTelefone(form.getTelefone());
 
         return null;
     }
 
-    public UsuarioDTO converterModelParaDTO(Usuario usuario) {
+    public UsuarioDTO converterModelParaDTO(Modelo usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setNomeCompleto(usuario.getNomeCompleto());
-        usuarioDTO.setDataNascimento(usuario.getDataNascimento());
-        usuarioDTO.setEmail(usuario.getEmail());
-        usuarioDTO.setEndereco(usuario.getEndereco());
+        usuarioDTO.setNomeCompleto(usuario.getUsuario().getNomeUsuario());
+        usuarioDTO.setDataNascimento(usuario.getDataNascimento().toString());
+        usuarioDTO.setEmail(usuario.getUsuario().getEmail());
         usuarioDTO.setTelefone(usuario.getTelefone());
 
         return usuarioDTO;

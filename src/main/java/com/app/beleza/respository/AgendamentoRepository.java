@@ -9,8 +9,8 @@ import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
-    Optional<Agendamento> findAgendamentoById(Long id);
+public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer> {
+    Optional<Agendamento> findAgendamentoById(Integer id);
 
     Optional<List<Agendamento>> findAgendamentoByModelo(Modelo modelo);
 

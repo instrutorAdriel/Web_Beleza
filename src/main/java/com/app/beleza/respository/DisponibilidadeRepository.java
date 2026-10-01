@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade, Long> {
-    Optional<Disponibilidade> findById(Long id);
+public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade, Integer> {
+    Optional<Disponibilidade> findById(Integer id);
 
     Optional<List<Disponibilidade>> findByDataDisponibilidade(LocalDate dataDisponibilidade);
 }
