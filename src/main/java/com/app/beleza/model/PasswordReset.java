@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tb_passwordresettoken")
+@Table(name = "passwordreset_token")
 public class PasswordReset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
