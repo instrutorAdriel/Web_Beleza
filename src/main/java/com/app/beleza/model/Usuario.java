@@ -21,7 +21,7 @@ public class Usuario {
     private String senha;
 
     @Column(name = "situacao", nullable = false, length = 1)
-    private String situacao = "A"; // A = Ativo; D = Desativado; E = Excluído
+    private String situacao = "A";
 
     public Usuario() {
     }

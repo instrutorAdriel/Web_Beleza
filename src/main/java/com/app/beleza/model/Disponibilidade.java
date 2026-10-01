@@ -31,11 +31,6 @@ public class Disponibilidade {
     @JoinColumn(name = "id_produto_unidade", nullable = false)
     private ProdutoUnidade produtoUnidade;
 
-    private List<Usuario> usuarios = new ArrayList<>();
-
-    public List<Usuario> getUsuarios() { return usuarios; }
-    public void setUsuarios(List<Usuario> usuarios) { this.usuarios = usuarios; }
-
     public Long getId() {
         return id;
     }

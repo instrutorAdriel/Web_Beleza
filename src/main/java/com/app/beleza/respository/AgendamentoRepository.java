@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer> {
 
-    long countByDisponibilidadeIdAndSituacaoNot(Integer disponibilidadeId, String situacao);
-
-    Optional<Agendamento> findByDisponibilidadeIdAndUsuarioIdAndSituacaoNot(
-            Integer disponibilidadeId, Integer usuarioId, String situacao);
+    long countByDisponibilidadeIdAndSituacaoAgendamentoNot(Long id, String situacaoAgendamento
+    );
+    Optional<Agendamento> findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(
+            Long disponibilidadeId, Long usuarioId, String situacaoAgendamento);
 }

@@ -16,9 +16,8 @@ public class Agendamento {
     @Column(name = "data_hora_agendamento")
     private LocalDateTime dataHora;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "situacao")
-    private String SituacaoAgendamento;   // enum: CONFIRMADO, PENDENTE...
+    private String SituacaoAgendamento;
 
     @Column(name = "observacao", length = 255)
     private String observacao;
@@ -37,7 +36,7 @@ public class Agendamento {
 
     public Agendamento(LocalDateTime dataHora, String situacaoAgendamento, String observacao, Disponibilidade disponibilidade, Modelo modelo, Usuario usuario) {
         this.dataHora = dataHora;
-        SituacaoAgendamento = situacaoAgendamento;
+        this.SituacaoAgendamento = situacaoAgendamento;
         this.observacao = observacao;
         this.disponibilidade = disponibilidade;
         this.modelo = modelo;

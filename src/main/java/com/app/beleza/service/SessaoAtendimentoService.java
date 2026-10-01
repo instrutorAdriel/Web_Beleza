@@ -33,13 +33,13 @@ public class SessaoAtendimentoService {
     private ModeloRepository modeloRepository;
 
     @Transactional(readOnly = true)
-    public List<SessaoAtendimentoDTO> listarPorServico(Integer produtoUnidadeId, Usuario usuarioLogado) {
+    public List<SessaoAtendimentoDTO> listarPorServico(Long produtoUnidadeId, Usuario usuarioLogado) {
         List<Disponibilidade> sessoes = disponibilidadeRepository.findByProdutoUnidadeId(produtoUnidadeId);
 
         return sessoes.stream().map(sessao -> {
             boolean pertenceAoUsuarioLogado = usuarioLogado != null
                     && agendamentoRepository
-                    .findByDisponibilidadeIdAndUsuarioIdAndSituacaoNot(
+                    .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(
                             sessao.getId(), usuarioLogado.getId(), CANCELADO)
                     .isPresent();
 
@@ -53,7 +53,7 @@ public class SessaoAtendimentoService {
         }).collect(Collectors.toList());
     }
 
-    public void agendarSessao(Integer id, Usuario usuario) {
+    public void agendarSessao(Long id, Usuario usuario) {
         Disponibilidade sessao = disponibilidadeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
@@ -62,7 +62,7 @@ public class SessaoAtendimentoService {
         }
 
         boolean jaAgendou = agendamentoRepository
-                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoNot(id, usuario.getId(), CANCELADO)
+                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(id, usuario.getId(), CANCELADO)
                 .isPresent();
 
         if (jaAgendou) {
@@ -83,9 +83,9 @@ public class SessaoAtendimentoService {
         agendamentoRepository.save(agendamento);
     }
 
-    public void cancelarSessao(Integer id, Usuario usuarioLogado) {
+    public void cancelarSessao(Long id, Usuario usuarioLogado) {
         Agendamento agendamento = agendamentoRepository
-                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoNot(id, usuarioLogado.getId(), CANCELADO)
+                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(id, usuarioLogado.getId(), CANCELADO)
                 .orElseThrow(() -> new RuntimeException(
                         "Você não tem permissão para cancelar este agendamento."));
 
@@ -96,7 +96,7 @@ public class SessaoAtendimentoService {
 
     private int vagasLivres(Disponibilidade sessao) {
         long ocupadas = agendamentoRepository
-                .countByDisponibilidadeIdAndSituacaoNot(sessao.getId(), CANCELADO);
-        return (int) (sessao.getVagasDisponiveis() - ocupadas);
+                .countByDisponibilidadeIdAndSituacaoAgendamentoNot(sessao.getId(), CANCELADO);
+        return (int) (Long.parseLong(sessao.getVagasDisponiveis()) - ocupadas);
     }
 }

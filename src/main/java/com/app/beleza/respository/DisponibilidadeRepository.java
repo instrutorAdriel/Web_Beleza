@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade, Long> {
 
-    List<Disponibilidade>findByServicoId (long servicoId);
+    List<Disponibilidade> findByProdutoUnidadeId(Long produtoUnidadeId);
 
 }

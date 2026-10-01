@@ -2,18 +2,13 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.*;
 import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.model.Home;
+import com.app.beleza.model.Unidade;
 import com.app.beleza.model.AgendamentoDTO;
 import com.app.beleza.respository.DepoimentoRepository;
-import com.app.beleza.respository.HomeRepository;
-import com.app.beleza.model.Home;
-import com.app.beleza.model.AgendamentoDTO;
-import com.app.beleza.respository.HomeRepository;
+import com.app.beleza.respository.ProdutoUnidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.respository.DepoimentoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +18,25 @@ import java.util.List;
 public class HomeService {
 
     @Autowired
-    private HomeRepository homeRepository;
+    private ProdutoUnidadeRepository produtoUnidadeRepository;
+
+
 
     public List<AgendamentoDTO> listarServicos() {
 
         List<AgendamentoDTO> lista = new ArrayList<>();
 
-        List<Home> servicos = homeRepository.findAll();
+        for (ProdutoUnidade pu : produtoUnidadeRepository.findAll()) {
 
-        for (Home servico : servicos) {
+            Produto produto = pu.getProduto();
+            Unidade unidade = pu.getUnidade();
 
             AgendamentoDTO dto = new AgendamentoDTO();
-
-
-            dto.setServicoId(servico.getId());
-
-            dto.setNomeServico(servico.getNomeServico());
-            dto.setDescricao(servico.getDescricao());
-            dto.setImagem(servico.getImagem());
-            dto.setUnidade(servico.getUnidade());
-            dto.setDuracao(servico.getDuracao());
+            dto.setServicoId(pu.getId());                    // id do produto_unidade
+            dto.setNomeServico(produto.getNome());
+            dto.setDescricao(produto.getDescricao());
+            dto.setImagem(produto.getImagem());
+            dto.setUnidade(unidade.getNome());
 
             lista.add(dto);
         }
@@ -56,9 +50,7 @@ public class HomeService {
 
         List<DepoimentoDTO> lista = new ArrayList<>();
 
-        List<Depoimento> depoimentos = depoimentoRepository.findAll();
-
-        for (Depoimento dep : depoimentos) {
+        for (Depoimento dep : depoimentoRepository.findAll()) {
             DepoimentoDTO dto = new DepoimentoDTO();
             dto.setNome(dep.getNome());
             dto.setServico(dep.getServico());

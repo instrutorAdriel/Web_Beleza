@@ -21,7 +21,7 @@ public class AgendamentoController {
 
     // 1. Retorna o pedaço de HTML da tabela com os botões calculados pelo Java
     @GetMapping("/modal-tabela")
-    public String carregarTabelaModal(@RequestParam Integer servicoId, Model model, HttpSession session) {
+    public String carregarTabelaModal(@RequestParam Long servicoId, Model model, HttpSession session) {
         // Pega quem está navegando na sessão atual
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 
@@ -34,7 +34,7 @@ public class AgendamentoController {
 
     @PostMapping("/{id}/agendar")
     @ResponseBody
-    public ResponseEntity<String> agendar(@PathVariable Integer id, HttpSession session) {
+    public ResponseEntity<String> agendar(@PathVariable Long id, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 
         if (usuarioLogado == null) {
@@ -52,7 +52,7 @@ public class AgendamentoController {
 
     @PostMapping("/{id}/cancelar")
     @ResponseBody
-    public ResponseEntity<String> cancelar(@PathVariable Integer id, HttpSession session) {
+    public ResponseEntity<String> cancelar(@PathVariable Long id, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 
         if (usuarioLogado == null) {
