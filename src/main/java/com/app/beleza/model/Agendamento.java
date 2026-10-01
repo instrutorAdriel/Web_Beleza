@@ -1,5 +1,6 @@
 package com.app.beleza.model;
 
+import com.app.beleza.model.enums.SituacaoAgendamento;
 import jakarta.persistence.*;
 import org.springframework.boot.Banner;
 
@@ -17,7 +18,7 @@ public class Agendamento {
 
     private LocalDateTime data_hora_agendamento;
 
-    private String situacao;
+    private SituacaoAgendamento situacao;
 
     private String observacao;
 
@@ -35,7 +36,7 @@ public class Agendamento {
 
     public Agendamento() {}
 
-    public Agendamento(LocalDateTime data_hora_agendamento, String situacao, String observacao, Disponibilidade disponibilidade, Modelo modelo, Instrutor instrutor) {
+    public Agendamento(LocalDateTime data_hora_agendamento, SituacaoAgendamento situacao, String observacao, Disponibilidade disponibilidade, Modelo modelo, Instrutor instrutor) {
         this.data_hora_agendamento = data_hora_agendamento;
         this.situacao = situacao;
         this.observacao = observacao;
@@ -57,11 +58,11 @@ public class Agendamento {
         this.data_hora_agendamento = data_hora_agendamento;
     }
 
-    public String getSituacao() {
+    public SituacaoAgendamento getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(String situacao) {
+    public void setSituacao(SituacaoAgendamento situacao) {
         this.situacao = situacao;
     }
 
