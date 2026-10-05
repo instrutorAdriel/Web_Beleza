@@ -113,9 +113,9 @@
     padding: 5px 0;
 }
 
-
 .nav-menu a:hover {
-    color: #ffffff;}
+    color: #ffffff;
+}
 
 /* Link ativo - quando está na seção selecionada */
 .nav-menu a.ativo {
@@ -251,7 +251,7 @@
     width: 100%;
     height: 550px;
     border-bottom: 1px solid #1e293b;
-    overflow: hidden; /* Garante que as imagens que estão estocadas do lado de fora fiquem invisíveis */
+    overflow: hidden;
     background-color: #020617;
 }
 
@@ -269,30 +269,22 @@
 .slide {
     width: 100%;
     height: 100%;
-    flex: 1 0 100%; /* Força o slide a ocupar exatamente 100% da largura da tela, sem encolher */
+    flex: 1 0 100%;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
 }
-.slide {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+
+#slide1 {
+    background-image: url('../img/img1.jpeg');
 }
 
-#slide1{
-    background-image:
-            url('../img/img1.jpeg');
+#slide2 {
+    background-image: url('../img/img2.jpeg');
 }
 
-#slide2{
-    background-image:
-            url('../img/img2.jpeg');
-}
-
-#slide3{
-    background-image:
-            url('../img/img3.png');
+#slide3 {
+    background-image: url('../img/img3.png');
 }
 
 /* TEXTO FIXO CENTRALIZADO */
@@ -304,18 +296,18 @@
     padding-top: 140px;
     padding-left: 20px;
     padding-right: 20px;
-    z-index: 5; /* Fica acima do slider, mas abaixo das setas */
+    z-index: 5;
     pointer-events: auto;
 }
 
-/* SETAS ESTILO DISNEY+ (COM CAMADA DE CLIQUE ISOLADA) */
+/* SETAS ESTILO DISNEY+ */
 .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     font-size: 36px;
     color: rgba(255, 255, 255, 0.6) !important;
-    background: rgba(0, 0, 0, 0.4) !important; /* Fundo escuro sutil para testar a área exata do clique */
+    background: rgba(0, 0, 0, 0.4) !important;
     border: none;
     border-radius: 50%;
     width: 60px;
@@ -325,8 +317,8 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 99!important; /* Máxima prioridade no clique da página */
-    pointer-events: auto !important; /* Obriga o browser a capturar o clique */
+    z-index: 99 !important;
+    pointer-events: auto !important;
     user-select: none;
 }
 
@@ -338,7 +330,6 @@
 
 .prev { left: 20px; }
 .next { right: 20px; }
-
 
 /* Badge estilizada em Laranja Senac */
 .badge-hero {
@@ -356,7 +347,6 @@
     box-shadow: 0 0 15px rgba(247, 148, 30, 0.2);
 }
 
-/* Título principal em Branco Puro */
 .hero-conteudo h1 {
     font-size: 52px;
     font-weight: 800;
@@ -366,7 +356,6 @@
     letter-spacing: -0.5px;
 }
 
-/* Subtítulo em cinza claro */
 .hero-conteudo p {
     font-size: 19px;
     margin-bottom: 45px;
@@ -580,7 +569,7 @@
 }
 
 /* ==========================================================================
-   CARROSSEL DE AGENDAMENTOS (CARD MAIOR - ATUALIZADO)
+   CARROSSEL DE AGENDAMENTOS
    ========================================================================== */
 .carrossel-wrapper {
     padding: 0 40px;
@@ -606,9 +595,9 @@
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
 .card-servico {
-    min-width: 320px; /* Alargado ligeiramente para acompanhar a altura */
+    min-width: 320px;
     max-width: 320px;
-    height: 380px; /* <--- AUMENTADO (ANTES ERA 320px) */
+    height: 380px;
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
@@ -721,7 +710,7 @@
 }
 
 /* ==========================================================================
-   PLATAFORMA DE CURSOS (CARD MAIOR - ATUALIZADO)
+   PLATAFORMA DE CURSOS
    ========================================================================== */
 .abas-categorias {
     display: flex;
@@ -763,7 +752,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
-    height: 520px; /* <--- AUMENTADO (ANTES ERA 460px) */
+    height: 520px;
     transition: var(--transicao);
     flex: 0 0 auto;
     width: 320px;
@@ -777,7 +766,7 @@
 }
 
 .img-placeholder-curso {
-    height: 200px; /* Aumentado ligeiramente o banner do curso */
+    height: 200px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -907,25 +896,24 @@
     border-top: 1px solid var(--borda-suave);
     padding-top: 1rem;
 }
-.depoimento-imagens{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    width:100%;
-    height:180px;
-    overflow:hidden;
-    border-radius:8px;
+.depoimento-imagens {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
-.depoimento-imagem{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+.depoimento-imagem {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Se houver apenas UMA imagem */
-.depoimento-imagens:not(:has(img + img)){
-    grid-template-columns:1fr;
+.depoimento-imagens:not(:has(img + img)) {
+    grid-template-columns: 1fr;
 }
 .avatar-inicial {
     width: 42px;
@@ -942,7 +930,6 @@
 }
 .depoimento-autor strong { display: block; color: var(--texto-escuro); font-size: 0.95rem; }
 .depoimento-autor span { font-size: 0.8rem; color: var(--texto-mutado); }
-
 
 /* ==========================================================================
    MODAIS E FORMULÁRIOS
@@ -1120,11 +1107,16 @@
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 60px;
 }
-.footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+
+.footer-bloco {
+    flex: 0 1 auto;   /* usa a largura natural do conteúdo, sem forçar mínimo de 260px */
+    max-width: 300px; /* evita que o texto do "Sobre o Senac" fique largo demais */
+}
 .footer-bloco h4 {
     font-size: 18px;
     margin-bottom: 20px;
@@ -1215,19 +1207,15 @@
 }
 
 body.ssp-page {
-
     width: 100%;
     min-height: 100vh;
     font-family: var(--e-global-typography-primary-font-family);
-
-    /* GRADIENTE: Transição do Preto/Grafite para o Laranja Senac */
     background: linear-gradient(
             135deg,
             #000000 0%,
             #1A1A1A 40%,
             #F29301 100%
     );
-
     position: relative;
 }
 
@@ -1264,7 +1252,7 @@ body.ssp-page::after {
     color: #DC2626;
     font-size: 0.85rem;
     margin-top: 0.4rem;
-    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
+    display: none;
     font-weight: 500;
 }
 
@@ -1277,7 +1265,7 @@ body.ssp-page::after {
     color: #b2ff6a;
     font-size: 0.85rem;
     margin-top: 0.4rem;
-    display: none; /* Escondido por padrão se injetado via JS dinâmico, mas visível se controlado pelo Thymeleaf */
+    display: none;
     font-weight: 500;
 }
 
@@ -1355,30 +1343,21 @@ input::-ms-clear {
     align-items: center;
     padding: 2rem 1.5rem;
     position: relative;
-    z-index: 1; /* Mantém o formulário à frente do efeito borrado do fundo */
+    z-index: 1;
 }
 
-/* Quadro de Login/Cadastro Semi-Transparente e Visível */
 .ssp-form-card {
     width: 100%;
     max-width: 440px;
-
-    /* Fundo semi-transparente (65% de opacidade branca para contraste) */
     background-color: rgba(255, 255, 255, 0.65);
-
-    /* Efeito de desfoque de fundo (Glassmorphism) */
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-
-    /* Borda sutil para destacar o card no fundo escuro */
     border: 1px solid rgba(255, 255, 255, 0.4);
-
     padding: 3rem 2.5rem;
     border-radius: 16px;
     box-shadow: var(--wp--preset--shadow--natural);
 }
 
-/* Tela de cadastro maior para acomodar confortavelmente os novos campos */
 .cadastro-container {
     max-width: 540px;
 }
@@ -1401,7 +1380,6 @@ input::-ms-clear {
 }
 .ssp-login-button-back:hover{
     color: #444444;
-
 }
 
 .ssp-header-page-login h1 {
@@ -1441,7 +1419,7 @@ input::-ms-clear {
     border-radius: 6px;
     font-size: 1rem;
     color: #2D3748;
-    background-color: rgba(250, 250, 250, 0.9); /* Input levemente transparente */
+    background-color: rgba(250, 250, 250, 0.9);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
@@ -1453,7 +1431,7 @@ input::-ms-clear {
     outline: none;
     background-color: #FFFFFF;
     border-color: var(--e-global-color-secondary);
-    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2); /* Glow Laranja */
+    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2);
 }
 
 .ssp-toggle-password {
@@ -1528,7 +1506,7 @@ input::-ms-clear {
 .ssp-btn-submit {
     width: 100%;
     padding: 0.95rem;
-    background-color: var(--e-global-color-secondary); /* Laranja */
+    background-color: var(--e-global-color-secondary);
     color: white;
     border: none;
     border-radius: 6px;
@@ -1540,7 +1518,7 @@ input::-ms-clear {
 }
 
 .ssp-btn-submit:hover {
-    background-color: #d68100; /* Laranja escuro no hover */
+    background-color: #d68100;
 }
 
 .ssp-btn-submit:active {
@@ -1565,7 +1543,7 @@ input::-ms-clear {
 }
 
 .ssp-divider span {
-    background-color: rgb(220, 220, 220); /* Compatibilidade de mesclagem com o glassmorphism */
+    background-color: rgb(220, 220, 220);
     padding: 0 12px;
     font-size: 0.85rem;
     color: var(--e-global-color-text);
@@ -1606,7 +1584,6 @@ input::-ms-clear {
     transform: scale(0.98);
 }
 
-/* Estilos específicos para o botão do Google */
 .ssp-btn-google {
     border-color: rgba(66, 133, 244, 0.2);
 }
@@ -1615,7 +1592,6 @@ input::-ms-clear {
     border-color: #4285F4;
 }
 
-/* Estilos específicos para o botão da Microsoft */
 .ssp-btn-microsoft {
     border-color: rgba(5, 166, 240, 0.2);
 }
@@ -1689,12 +1665,12 @@ input::-ms-clear {
 }
 
 .sidebar a.active {
-    background-color: var(--senac-laranja); !important;
-    color: #000; !important;
+    background-color: var(--senac-laranja) !important;
+    color: #000 !important;
 }
 
 .conteudo-principal {
-    flex: 1; /* Ocupa o restante da tela */
+    flex: 1;
     padding: 40px;
     background-color: #fff;
     max-width: 800px;
@@ -1713,7 +1689,7 @@ input::-ms-clear {
     border: none;
     white-space: normal;
     float: none;
-    outline: 0
+    outline: 0;
 }
 
 .button {
@@ -1726,12 +1702,12 @@ input::-ms-clear {
     color: inherit;
     background-color: inherit;
     cursor: pointer;
-    white-space: nowrap
+    white-space: nowrap;
 }
 
 .button:hover {
-    color: #000; !important;
-    background-color: var(--senac-laranja); !important;
+    color: #000 !important;
+    background-color: var(--senac-laranja) !important;
 }
 
 .btn {
@@ -1784,101 +1760,163 @@ input::-ms-clear {
 }
 
 .error {
-    border-color: var(--error);
+    border-color: #dc2626;
     background-color: rgba(255, 132, 123, 0.5);
 }
 
-/*
-Seções
- */
-
+/* Seções do Painel */
 .secao-painel {
     background: var(--fundo-card);
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
-
-    /* ===== Formulário de Depoimento (Avaliações) ===== */
-
-    #depoimento-form textarea,
-    #depoimento-form select {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-family: inherit;
-        background-color: var(--fundo-input);
-        color: var(--texto-escuro);
-    }
-    #depoimento-form textarea { min-height: 90px; resize: vertical; }
-
-    #depoimento-form textarea:focus,
-    #depoimento-form select:focus,
-    #depoimento-form input:focus {
-        outline: none;
-        border-color: var(--senac-laranja);
-        box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
-    }
-
-    /* Reset do checkbox, já que o "input {}" global do seu CSS afetaria ele também */
-    .depoimento-checkbox-linha {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 8px;
-        background: var(--fundo-card);
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid var(--borda-suave);
-    }
-    .depoimento-checkbox-linha input[type="checkbox"] {
-        width: auto;
-        padding: 0;
-        border: none;
-        margin-top: 3px;
-    }
-    .depoimento-checkbox-linha label {
-        font-size: 0.85rem;
-        color: var(--texto-mutado);
-        line-height: 1.4;
-    }
-
-    .depoimento-foto-preview {
-        display: none;
-        margin-top: 10px;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid var(--borda-suave);
-    }
-
-    .depoimento-erro {
-        background: #fef2f2;
-        color: #dc2626;
-        border-radius: 8px;
-        padding: 10px 12px;
-        font-size: 0.9rem;
-    }
-
-    .depoimento-sucesso {
-        text-align: center;
-        padding: 16px 0;
-    }
-    .depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
-    .depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
-
-    /* Faz o textarea, a foto, o checkbox e o erro ocuparem a largura toda
-       do grid de 2 colunas, em vez de ficarem espremidos numa coluna só */
-    #depoimento-form .group-input:has(textarea),
-    #depoimento-form .group-input:has(input[type="file"]),
-    #depoimento-form .depoimento-checkbox-linha,
-    #depoimento-form .depoimento-erro {
-        grid-column: 1 / -1;
-    }
 }
 
+/* Estilização específica do formulário de perfil e depoimento */
+.form-perfil textarea,
+.form-perfil select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--fundo-input);
+    color: var(--texto-escuro);
+}
+
+.form-perfil textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-perfil textarea:focus,
+.form-perfil select:focus {
+    outline: none;
+    border-color: var(--senac-laranja);
+    box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+.form-perfil input[type="file"] {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--texto-escuro);
+    cursor: pointer;
+}
+
+.form-perfil input[type="file"]::-webkit-file-upload-button {
+    background-color: var(--fundo-card);
+    border: 1px solid var(--borda-suave);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--texto-escuro);
+    cursor: pointer;
+    transition: var(--transicao);
+    margin-right: 10px;
+}
+
+.form-perfil input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: var(--senac-laranja);
+    border-color: var(--senac-laranja);
+    color: #000000;
+}
+
+/* Quadrado da Pré-visualização de Imagem */
+.container-preview-imagem {
+    margin-top: 12px;
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--borda-suave);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--fundo-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-preview-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#depoimento-form textarea,
+#depoimento-form select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--fundo-input);
+    color: var(--texto-escuro);
+}
+#depoimento-form textarea { min-height: 90px; resize: vertical; }
+
+#depoimento-form textarea:focus,
+#depoimento-form select:focus,
+#depoimento-form input:focus {
+    outline: none;
+    border-color: var(--senac-laranja);
+    box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+.depoimento-checkbox-linha {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    background: var(--fundo-card);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--borda-suave);
+}
+.depoimento-checkbox-linha input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    border: none;
+    margin-top: 3px;
+}
+.depoimento-checkbox-linha label {
+    font-size: 0.85rem;
+    color: var(--texto-mutado);
+    line-height: 1.4;
+}
+
+.depoimento-foto-preview {
+    display: none;
+    margin-top: 10px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--borda-suave);
+}
+
+.depoimento-erro {
+    background: #fef2f2;
+    color: #dc2626;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+}
+
+.depoimento-sucesso {
+    text-align: center;
+    padding: 16px 0;
+}
+.depoimento-sucesso h3 { color: var(--sucesso); margin-bottom: 8px; }
+.depoimento-sucesso p { color: var(--texto-mutado); font-size: 0.9rem; }
+
+#depoimento-form .group-input:has(textarea),
+#depoimento-form .group-input:has(input[type="file"]),
+#depoimento-form .depoimento-checkbox-linha,
+#depoimento-form .depoimento-erro {
+    grid-column: 1 / -1;
+}
 
 /* ==========================================================================
    AJUSTES PARA CELULAR (MOBILE)
@@ -1897,7 +1935,7 @@ Seções
     .ssp-form-card {
         padding: 2rem 1.5rem;
         box-shadow: none;
-        background-color: transparent; /* Remove o fundo do card no mobile */
+        background-color: transparent;
         border: none;
         backdrop-filter: none;
     }
@@ -1905,7 +1943,6 @@ Seções
         background-color: transparent;
         color: #FFFFFF;
     }
-    /* Altera as fontes para Branco no mobile para dar contraste com o fundo escuro da tela */
     .ssp-form-group label,
     .ssp-header-page-login h1,
     .ssp-login-button-back,
@@ -1916,9 +1953,330 @@ Seções
     .ssp-register-footer a {
         color: var(--e-global-color-secondary);
     }
-    /* No mobile, faz com que os botões sociais herdem o comportamento correto */
     .ssp-btn-social {
         background-color: rgba(255, 255, 255, 0.9);
         color: #2D3748;
     }
+}
+
+
+/* ==========================================================================
+   HISTÓRICO DE AGENDAMENTOS (PERFIL)
+   ========================================================================== */
+.lista-agendamentos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+.card-agendamento {
+    background: #ffffff;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: var(--transicao);
+    position: relative;
+}
+
+.card-agendamento:hover {
+    transform: translateY(-4px);
+    border-color: var(--senac-laranja);
+    box-shadow: 0 10px 20px rgba(247, 148, 30, 0.1);
+}
+
+.card-agendamento-imagem {
+    width: 100%;
+    height: 130px;
+    background-color: var(--fundo-card);
+    background-size: cover;
+    background-position: center;
+}
+
+.card-agendamento-corpo {
+    padding: 1.1rem 1.3rem 1.3rem;
+}
+
+.card-agendamento-status {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+}
+
+.status-concluido {
+    background-color: rgba(100, 116, 139, 0.12);
+    color: #475569;
+}
+
+.status-confirmado {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.status-cancelado {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: #DC2626;
+}
+
+.card-agendamento-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--texto-escuro);
+    margin-bottom: 0.8rem;
+}
+
+.card-agendamento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    color: var(--texto-mutado);
+}
+
+.card-agendamento-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-agendamento-info i {
+    color: var(--senac-laranja);
+    width: 16px;
+    text-align: center;
+}
+
+/* Estado vazio (sem agendamentos) */
+.agendamentos-vazio {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--texto-mutado);
+}
+
+.agendamentos-vazio i {
+    font-size: 2.5rem;
+    color: var(--borda-suave);
+    margin-bottom: 0.8rem;
+    display: block;
+}
+/* ==========================================================================
+   NOVAS REGRAS CSS EXTRAÍDAS DAS TAGS HTML E ESTILOS INLINE
+   ========================================================================== */
+
+/* Regras de Checklist e Avisos de Erro (Extraídas do <style> do cadastro.html) */
+.ssp-password-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0.6rem 0 0 0;
+    font-size: 0.85rem;
+}
+.ssp-password-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #9CA3AF;
+    margin-bottom: 0.3rem;
+    transition: color 0.2s ease;
+}
+.ssp-password-checklist li i {
+    width: 14px;
+}
+.ssp-password-checklist li.valid {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-check {
+    color: #16A34A;
+}
+.ssp-password-checklist li .fa-circle-xmark {
+    color: #DC2626;
+}
+
+.ssp-aviso-erro {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: 8px;
+    color: #DC2626;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+.ssp-aviso-erro i {
+    color: #F59E0B;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+}
+
+/* Classes Utilitárias do Formulário e Alertas */
+.ssp-status-box {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+}
+
+.ssp-error-box {
+    background-color: rgba(220, 38, 38, 0.1);
+}
+
+.ssp-success-box {
+    background-color: rgba(0, 213, 111, 0.1);
+}
+
+.ssp-message-display {
+    display: block;
+}
+
+.ssp-error-text-red {
+    color: #dc2626;
+}
+
+.ssp-text-left-top {
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+.ssp-display-none {
+    display: none;
+}
+
+.ssp-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.ssp-flex-1 {
+    flex: 1;
+}
+
+.ssp-password-error-style {
+    color: #DC2626;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: none;
+    font-weight: 500;
+}
+
+.ssp-mt-1 {
+    margin-top: 1rem;
+}
+
+.ssp-mt-1-5 {
+    margin-top: 1.5rem;
+}
+
+.ssp-text-center-mt {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* Regras Específicas do codigo.html e home.html */
+.nav-menu-center {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 0 auto;
+}
+
+.secao-servicos-mb {
+    margin-bottom: 4rem;
+}
+
+.carrossel-wrapper-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.seta-carrossel-custom-left {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seta-carrossel-custom-right {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #2b4c7e;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrossel-track-custom {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 24px;
+    width: 100%;
+    padding: 15px 5px;
+    scrollbar-width: none;
+}
+
+.card-curso-custom {
+    flex: 0 0 auto;
+    width: 320px;
+    box-sizing: border-box;
+}
+
+/* Botões da Tabela de Sessões / Agendamento */
+.ssp-empty-table-td {
+    text-align: center;
+    padding: 2rem;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.ssp-empty-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #bdc3c7;
+}
+
+.ssp-btn-cancelar {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.ssp-btn-disabled {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+}
+
+.ssp-btn-confirm-active {
+    background-color: #f39c12;
+    color: white;
 }
