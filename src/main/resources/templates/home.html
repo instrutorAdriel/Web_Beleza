@@ -29,7 +29,7 @@
         </a>
 
         <div th:if="${usuario != null}" class="usuario-logado">
-            <a th:href="@{/perfil}" th:text="${usuario != null} ? ${usuario.nomeCompleto.trim().split(' ')[0]} : ''">>Usuário</a>
+            <a th:href="@{/perfil}" th:text="${usuarioNome}">>Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
         </div>
     </div>
@@ -182,7 +182,7 @@
 
                         <span>
                             <i class="fa-regular fa-clock"></i>
-                            <span th:text="${servico.duracao}"></span>
+                            <span th:text="${servico.hora_inicio}"></span>
                         </span>
 
                         <span>
@@ -224,25 +224,25 @@
 
         <div class="carrossel-track carrossel-depoimentos">
 
-            <div class="card-depoimento" th:each="dep : ${depoimentos}">
+            <div class="card-depoimento" th:each="depoimento : ${depoimentos}">
 
                 <p class="depoimento-texto"
-                   th:text="'&quot;' + ${dep.texto} + '&quot;'">
+                   th:text="'&quot;' + ${depoimento.texto} + '&quot;'">
                 </p>
 
                 <!-- IMAGENS -->
                 <div class="depoimento-imagens"
-                     th:if="${(dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)) or (dep.imagem2 != null and !#strings.isEmpty(dep.imagem2))}">
+                     th:if="${(depoimento.imagem1 != null and !#strings.isEmpty(depoimento.imagem1)) or (depoimento.imagem2 != null and !#strings.isEmpty(depoimento.imagem2))}">
 
                     <img
-                            th:if="${dep.imagem1 != null and !#strings.isEmpty(dep.imagem1)}"
-                            th:src="${dep.imagem1}"
+                            th:if="${depoimento.imagem1 != null and !#strings.isEmpty(depoimento.imagem1)}"
+                            th:src="${depoimento.imagem1}"
                             class="depoimento-imagem"
                             alt="Imagem do depoimento">
 
                     <img
-                            th:if="${dep.imagem2 != null and !#strings.isEmpty(dep.imagem2)}"
-                            th:src="${dep.imagem2}"
+                            th:if="${depoimento.imagem2 != null and !#strings.isEmpty(depoimento.imagem2)}"
+                            th:src="${depoimento.imagem2}"
                             class="depoimento-imagem"
                             alt="Imagem do depoimento">
 
@@ -252,12 +252,12 @@
                 <div class="depoimento-autor">
 
                     <div class="avatar-inicial"
-                         th:text="${dep.inicialAvatar}">
+                         th:text="${depoimento.inicialAvatar}">
                     </div>
 
                     <div>
-                        <strong th:text="${dep.nome}"></strong>
-                        <span th:text="${dep.servico} + ' — ' + ${dep.unidade}"></span>
+                        <strong th:text="${depoimento.nome}"></strong>
+                        <span th:text="${depoimento.servico} + ' — ' + ${depoimento.unidade}"></span>
                     </div>
 
                 </div>
