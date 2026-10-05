@@ -46,13 +46,16 @@ public class UsuarioService {
 
         String senhaCriptografada = encoder.encode(form.getSenha());
 
+        Usuario dadosUsuario = new Usuario();
         Modelo novoUsuario = new Modelo();
-        novoUsuario.getUsuario().setNomeUsuario(form.getNomeCompleto());
-        novoUsuario.getUsuario().setEmail(form.getEmail()); // E-mail normal
+        dadosUsuario.setNomeUsuario(form.getNomeCompleto());
+        dadosUsuario.setEmail(form.getEmail()); // E-mail normal
+        dadosUsuario.setSenha(senhaCriptografada);
         novoUsuario.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
         novoUsuario.setTelefone(form.getTelefone());
-        novoUsuario.getUsuario().setSenha(senhaCriptografada);
+        novoUsuario.setUsuario(dadosUsuario);
 
+        usuarioRepository.save(dadosUsuario);
         modeloRepository.save(novoUsuario);
 
         return null;
