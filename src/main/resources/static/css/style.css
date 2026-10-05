@@ -249,9 +249,9 @@
 .hero-banner {
     position: relative;
     width: 100%;
-    max-width: 1140px;
-    margin: 0 auto;
-    aspect-ratio: 1140 / 550;   
+    max-width: none;
+    margin: 0;
+    aspect-ratio: 1917 / 550;
     max-height: 650px;
     overflow: hidden;
     background-color: #020617;
