@@ -17,14 +17,11 @@ public class Unidade{
     @Column(name = "situacao", length = 1)
     private String situacao = "A";
 
-    @Column(name = "endereco", length = 100)
-    private String endereco;
 
     public Unidade() {}
-    public Unidade(String nome, String situacao, String endereco) {
+    public Unidade(String nome, String situacao) {
         this.nome = nome;
         this.situacao = situacao;
-        this.endereco = endereco;
     }
 
     public Integer getId() {
@@ -49,13 +46,5 @@ public class Unidade{
 
     public void setSituacao(String situacao) {
         this.situacao = situacao;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
     }
 }
