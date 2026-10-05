@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (num.length > 11) {
             num = num.substring(0, 11);
         }
-        if (num.length > 6) {
+        if (num.length > 7) {
             e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
         } else if (num.length > 2) {
             e.target.value = `(${num.substring(0, 2)}) ${num.substring(2)}`;
