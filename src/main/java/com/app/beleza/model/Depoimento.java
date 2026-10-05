@@ -3,17 +3,18 @@ package com.app.beleza.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "depoimentos")
+@Table(name = "depoimento")
 public class Depoimento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_depoimento")
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "depoimento", nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "avaliacao" , nullable = false, length = 100)
     private String servico;
 
     @Column(nullable = false, length = 100)
@@ -21,6 +22,14 @@ public class Depoimento {
 
     @Column(nullable = false, length = 500)
     private String texto;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_modelo", nullable = false)
+    private Modelo modelo;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 
     public Depoimento() {}
 

@@ -1,7 +1,9 @@
 package com.app.beleza.service;
 
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.utils.Validador;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -18,13 +21,15 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ModeloRepository modeloRepository;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
         // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
                 Validador.contemEmoji(form.getEmail()) ||
-                Validador.contemEmoji(form.getEndereco()) ||
                 Validador.contemEmoji(form.getSenha())) {
             return "Os campos do formulário não podem conter emojis.";
         }
@@ -43,12 +48,16 @@ public class UsuarioService {
 
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNomeCompleto(form.getNomeCompleto());
-        novoUsuario.setEmail(form.getEmail()); // E-mail normal
-        novoUsuario.setDataNascimento(form.getDataNascimento());
-        novoUsuario.setEndereco(form.getEndereco());
-        novoUsuario.setTelefone(form.getTelefone());
+        novoUsuario.setEmail(form.getEmail());
         novoUsuario.setSenha(senhaCriptografada);
+        usuarioRepository.save(novoUsuario);
 
+
+        Modelo modelo = new Modelo();
+        modelo.setTelefone(form.getTelefone());
+        modelo.setDataNascimento(LocalDate.parse(form.getDataNascimento())); // "2000-05-20"
+        modelo.setUsuario(novoUsuario);
+        modeloRepository.save(modelo);
         usuarioRepository.save(novoUsuario);
         return null;
     }
@@ -122,10 +131,6 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
-        // Validação de Emojis ao atualizar o perfil
-        if (Validador.contemEmoji(form.getEndereco())) {
-            return "O endereço não pode conter emojis.";
-        }
 
         if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
             return "Data de nascimento inválido!";
@@ -137,22 +142,29 @@ public class UsuarioService {
             return "E-mail não encontrado.";
         }
 
-        Usuario usuario = resultado.get();
-        usuario.setDataNascimento(form.getDataNascimento());
-        usuario.setEndereco(form.getEndereco());
-        usuario.setTelefone(form.getTelefone());
+        Modelo modelo = modeloRepository.findByUsuario(resultado.get())
+                .orElseGet(() -> {
+                    Modelo m = new Modelo();
+                    m.setUsuario(resultado.get());
+                    return m;
+                });
+        modelo.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
+        modelo.setTelefone(form.getTelefone());
+        modeloRepository.save(modelo);
 
         return null;
     }
 
     public UsuarioDTO converterModelParaDTO(Usuario usuario) {
-        UsuarioDTO usuarioDTO = new UsuarioDTO();
-        usuarioDTO.setNomeCompleto(usuario.getNomeCompleto());
-        usuarioDTO.setDataNascimento(usuario.getDataNascimento());
-        usuarioDTO.setEmail(usuario.getEmail());
-        usuarioDTO.setEndereco(usuario.getEndereco());
-        usuarioDTO.setTelefone(usuario.getTelefone());
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setNomeCompleto(usuario.getNomeCompleto());
+        dto.setEmail(usuario.getEmail());
 
-        return usuarioDTO;
+        modeloRepository.findByUsuario(usuario).ifPresent(m -> {
+            dto.setTelefone(m.getTelefone());
+            dto.setDataNascimento(m.getDataNascimento().toString());
+        });
+
+        return dto;
     }
 }

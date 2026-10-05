@@ -25,8 +25,8 @@
             <h1 th:text="${tituloPagina}">Entrar</h1>
         </div>
 
-        <div th:if="${erro}" class="ssp-form-control input-error" style="display: block; margin-bottom: 1rem; background-color: rgba(220, 38, 38, 0.1); padding: 0.8rem; border-radius: 6px;">
-            <span class="ssp-error-message" style="display: block; color: #dc2626;" th:text="${erro}">E-mail ou senha incorretos.</span>
+        <div th:if="${erro}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
+            <span class="ssp-error-message ssp-message-display ssp-error-text-red" th:text="${erro}">E-mail ou senha incorretos.</span>
         </div>
 
         <form th:action="@{/login}" th:object="${usuarioDTO}" method="POST">
@@ -40,7 +40,7 @@
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Digite sua senha" required>
                     <button type="button" class="ssp-toggle-password" id="btnToggleLogin" aria-label="Mostrar ou ocultar senha">
-                        <i class="fa-solid fa-eye-slash" id="eyeIcon1"></i>
+                        <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
             </div>
@@ -52,7 +52,7 @@
             <button type="submit" class="ssp-btn-submit">Entrar</button>
         </form>
 
-        <div class="ssp-register-footer" style="margin-top: 1.5rem;">
+        <div class="ssp-register-footer ssp-mt-1-5">
             Não possui conta? <a th:href="@{/cadastro}">Cadastre-se</a>
         </div>
     </div>

@@ -1,81 +1,102 @@
 package com.app.beleza.service;
 
-import com.app.beleza.model.SessaoAtendimento;
+import com.app.beleza.model.Agendamento;
+import com.app.beleza.model.Disponibilidade;
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.SessaoAtendimentoDTO;
 import com.app.beleza.model.Usuario;
-import com.app.beleza.respository.SessaoAtendimentoRepository;
+import com.app.beleza.respository.AgendamentoRepository;
+import com.app.beleza.respository.DisponibilidadeRepository;
+import com.app.beleza.respository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class SessaoAtendimentoService {
 
-    @Autowired
-    private SessaoAtendimentoRepository repository;
+    private static final String CANCELADO = "Cancelado";
+    private static final String CONFIRMADO = "Confirmado";
 
-    public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
-        List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
+    @Autowired
+    private DisponibilidadeRepository disponibilidadeRepository;
+
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private ModeloRepository modeloRepository;
+
+    @Transactional(readOnly = true)
+    public List<SessaoAtendimentoDTO> listarPorServico(Long produtoUnidadeId, Usuario usuarioLogado) {
+        List<Disponibilidade> sessoes = disponibilidadeRepository.findByProdutoUnidadeId(produtoUnidadeId);
 
         return sessoes.stream().map(sessao -> {
-            // 1. O agendamento pertence ao usuário logado se o ID dele estiver DENTRO da lista de usuários da sessão
             boolean pertenceAoUsuarioLogado = usuarioLogado != null
-                    && sessao.getUsuarios() != null
-                    && sessao.getUsuarios().stream()
-                    .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
+                    && agendamentoRepository
+                    .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(
+                            sessao.getId(), usuarioLogado.getId(), CANCELADO)
+                    .isPresent();
 
-            // 2. Cria o DTO com o boolean correto
             return new SessaoAtendimentoDTO(
                     sessao.getId(),
                     sessao.getDataAtendimento().toString(),
                     sessao.getHorarioInicial().toString(),
-                    sessao.getVagasDisponiveis(),
+                    vagasLivres(sessao),
                     pertenceAoUsuarioLogado
             );
         }).collect(Collectors.toList());
     }
 
     public void agendarSessao(Long id, Usuario usuario) {
-        SessaoAtendimento sessao = repository.findById(id)
+        Disponibilidade sessao = disponibilidadeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
-        if (sessao.getVagasDisponiveis() <= 0) {
+        if (vagasLivres(sessao) <= 0) {
             throw new RuntimeException("Não há vagas disponíveis nesse horário");
         }
 
-        // Evita que o mesmo usuário agende 2 vezes a mesma sessão
-        boolean jaAgendou = sessao.getUsuarios().stream()
-                .anyMatch(u -> u.getId().equals(usuario.getId()));
+        boolean jaAgendou = agendamentoRepository
+                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(id, usuario.getId(), CANCELADO)
+                .isPresent();
 
         if (jaAgendou) {
             throw new RuntimeException("Você já agendou este horário!");
         }
 
-        // Adiciona o usuário na lista e reduz a vaga
-        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() - 1);
-        sessao.getUsuarios().add(usuario);
+        Modelo modelo = modeloRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException(
+                        "Complete seu cadastro (telefone e data de nascimento) para agendar."));
 
-        repository.save(sessao);
+        Agendamento agendamento = new Agendamento();
+        agendamento.setDisponibilidade(sessao);
+        agendamento.setUsuario(usuario);
+        agendamento.setModelo(modelo);
+        agendamento.setSituacaoAgendamento(CONFIRMADO);
+        agendamento.setDataHora(LocalDateTime.now());
+
+        agendamentoRepository.save(agendamento);
     }
 
     public void cancelarSessao(Long id, Usuario usuarioLogado) {
-        SessaoAtendimento sessao = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
+        Agendamento agendamento = agendamentoRepository
+                .findByDisponibilidadeIdAndUsuarioIdAndSituacaoAgendamentoNot(id, usuarioLogado.getId(), CANCELADO)
+                .orElseThrow(() -> new RuntimeException(
+                        "Você não tem permissão para cancelar este agendamento."));
 
-        // Verifica se o usuário realmente agendou essa sessão para poder cancelar
-        boolean estaNaLista = sessao.getUsuarios().stream()
-                .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
+        // A vaga é devolvida automaticamente: vagasLivres() só conta agendamentos não cancelados
+        agendamento.setSituacaoAgendamento(CANCELADO);
+        agendamentoRepository.save(agendamento);
+    }
 
-        if (!estaNaLista) {
-            throw new RuntimeException("Você não tem permissão para cancelar este agendamento.");
-        }
-
-        // Remove o usuário específico da lista e devolve a vaga
-        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
-        sessao.getUsuarios().removeIf(u -> u.getId().equals(usuarioLogado.getId()));
-
-        repository.save(sessao);
+    private int vagasLivres(Disponibilidade sessao) {
+        long ocupadas = agendamentoRepository
+                .countByDisponibilidadeIdAndSituacaoAgendamentoNot(sessao.getId(), CANCELADO);
+        return (int) (Long.parseLong(sessao.getVagasDisponiveis()) - ocupadas);
     }
 }

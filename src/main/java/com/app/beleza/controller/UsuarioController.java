@@ -1,7 +1,9 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
@@ -24,6 +26,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ModeloRepository modeloRepository;
 
     @Autowired
     private PasswordResetService passwordResetService;
