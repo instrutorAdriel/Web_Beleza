@@ -1,17 +1,9 @@
 package com.app.beleza.service;
 
-import com.app.beleza.model.Agendamento;
-import com.app.beleza.model.dto.SessaoAtendimentoDTO;
-import com.app.beleza.model.Usuario;
-import com.app.beleza.respository.SessaoAtendimentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
-public class SessaoAtendimentoService {
+public class AgendamentoService {
     /*
     @Autowired
     private SessaoAtendimentoRepository repository;
