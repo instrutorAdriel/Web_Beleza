@@ -39,10 +39,6 @@ public class UsuarioService {
         }
 
         // Uso do e-mail normal sem alterações
-        if (usuarioRepository.existsByEmail(form.getEmail())) {
-            return "E-mail já cadastrado.";
-        }
-        if (form.getEndereco() == null || form.getEndereco().isBlank()) {    return "O endereço é obrigatório.";}
 
         String senhaCriptografada = encoder.encode(form.getSenha());
 
