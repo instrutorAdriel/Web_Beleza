@@ -2280,3 +2280,41 @@ input::-ms-clear {
     background-color: #f39c12;
     color: white;
 }
+
+/* ==========================================================================
+   NOVO: BOTÃO E PREVIEW EM QUADRADO DA ABA DE DEPOIMENTOS
+   ========================================================================== */
+
+/* Botão de pré-visualização da imagem */
+#perfil-depoimento button[value="preview"] {
+    background-color: var(--texto-mutado);
+    color: #ffffff;
+    margin-top: 10px;
+    align-self: flex-start;
+}
+
+#perfil-depoimento button[value="preview"]:hover {
+    background-color: #475569;
+}
+
+/* Quadrado da Pré-visualização da Imagem */
+.container-preview-imagem {
+    margin-top: 12px;
+    width: 120px;               /* Largura fixa do quadrado */
+    height: 120px;              /* Altura fixa do quadrado */
+    border: 2px dashed var(--borda-suave); /* Borda tracejada */
+    border-radius: 8px;          /* Cantos ligeiramente arredondados */
+    overflow: hidden;           /* Recorta qualquer excesso da imagem */
+    background-color: var(--fundo-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Enquadramento proporcional da imagem no quadrado */
+.container-preview-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;          /* Mantém a foto perfeita sem achatar */
+    display: block;
+}
