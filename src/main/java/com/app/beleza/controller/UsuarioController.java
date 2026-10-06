@@ -1,10 +1,15 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.model.Agendamento;
+import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.UsuarioDTO;
+import com.app.beleza.respository.AgendamentoRepository;
+import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -14,8 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Impo
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller

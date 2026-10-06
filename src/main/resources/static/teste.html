@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Teste de upload para o Cloudinary</h2>
+
+<select id="pasta">
+    <option value="produto">produtos</option>
+    <option value="depoimento">depoimentos</option>
+</select>
+<input type="file" id="foto" accept="image/*">
+<button onclick="enviar()">Enviar</button>
+
+<p id="resultado"></p>
+<img id="preview" style="max-width:300px">
+
+<script>
+    async function enviar() {
+        const arquivo = document.getElementById('foto').files[0];
+        if (!arquivo) { alert('Escolha uma imagem'); return; }
+
+        const formData = new FormData();
+        formData.append('file', arquivo);
+        formData.append('pasta', document.getElementById('pasta').value);
+
+        const resposta = await fetch('/imagens/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        const dados = await resposta.json();
+        document.getElementById('resultado').innerText = JSON.stringify(dados);
+        if (dados.url) document.getElementById('preview').src = dados.url;
+    }
+</script>
+</body>
+</html>
