@@ -1097,14 +1097,20 @@
 /* ==========================================================================
    RODAPÉ (FOOTER - CORPORATIVO ESCURO)
    ========================================================================== */
+
 .site-footer {
     background-color: var(--fundo-footer);
     color: var(--texto-claro);
     padding: 70px 20px 20px 20px;
     margin-top: 80px;
+    padding: 70px 20px 20px;
     border-top: 4px solid var(--senac-laranja);
+    box-sizing: border-box;
 }
+
+/* CONTAINER DO RODAPÉ */
 .footer-container {
+    width: 80%;
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
@@ -1117,7 +1123,14 @@
     flex: 0 1 auto;   /* usa a largura natural do conteúdo, sem forçar mínimo de 260px */
     max-width: 300px; /* evita que o texto do "Sobre o Senac" fique largo demais */
 }
+
+/* TÍTULOS */
 .footer-bloco h4 {
+    display: inline-block;
+
+    margin: 0 0 20px 0;
+    padding-bottom: 6px;
+
     font-size: 18px;
     margin-bottom: 20px;
     border-bottom: 2px solid var(--senac-laranja);
@@ -1126,29 +1139,84 @@
     color: var(--texto-claro);
     font-weight: 700;
 }
+
+/* TEXTOS */
+.footer-bloco p {
+    width: 300px;
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* REDES SOCIAIS */
 .redes-sociais {
     display: flex;
     gap: 15px;
     margin-top: 10px;
 }
+
 .redes-sociais a {
     color: white;
     font-size: 22px;
+
     transition: var(--transicao);
 }
+
 .redes-sociais a:hover {
     color: var(--senac-laranja);
     transform: scale(1.1);
 }
+
+/* PARTE INFERIOR */
 .footer-bottom {
+    width: 100%;
+
+    margin-top: 50px;
+    padding: 24px 20px 0;
+
     text-align: center;
     border-top: 1px solid #1e293b;
     margin-top: 50px;
     padding-top: 24px;
     font-size: 13px;
     color: #64748b;
+
+    box-sizing: border-box;
 }
 
+.footer-bottom p {
+    margin: 0;
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .site-footer {
+        padding: 50px 20px 20px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .footer-bloco {
+        max-width: 400px;
+    }
+
+    .footer-bloco p {
+        width: 100%;
+        max-width: 350px;
+    }
+}
 /* ==========================================================================
    RESPONSIVIDADE ACURADA (MOBILE & TABLET)
    ========================================================================== */
