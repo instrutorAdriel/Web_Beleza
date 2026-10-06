@@ -100,21 +100,6 @@
                 <h2>Agendamentos</h2>
             </div>
 
-            <!--
-                VISUAL ESTÁTICO (dados de exemplo) — trocar por th:each quando o back-end
-                estiver pronto, iterando sobre a lista real de agendamentos/sessões do usuário.
-
-                Campos já confirmados (vêm do AgendamentoDTO, catálogo do serviço):
-                    nomeServico, imagem, unidade, bairro, duracao
-
-                Campos ainda pendentes (prováveis de virem de um DTO de sessão, tipo
-                SessaoAtendimentoDTO — data, horário e status do agendamento específico):
-                    data, horario, status
-
-                Ex. de binding quando estiver pronto:
-                    th:each="ag : ${agendamentos}"
-                    th:src="@{${ag.imagem}}" / th:text="${ag.nomeServico}" / etc.
-            -->
             <div class="lista-agendamentos">
 
                 <div class="card-agendamento">
@@ -159,57 +144,7 @@
                     </div>
                 </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-escova.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-concluido">Concluído</div>
-                        <h3 class="card-agendamento-titulo">Escova Progressiva</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Ceilândia — Setor P Norte</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 2h</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 05/06/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 10:00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-maquiagem.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-confirmado">Confirmado</div>
-                        <h3 class="card-agendamento-titulo">Maquiagem Social</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 15/10/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 18:30</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-sobrancelha.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-concluido">Concluído</div>
-                        <h3 class="card-agendamento-titulo">Design de Sobrancelha</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Ceilândia — Setor P Norte</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 30 min</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 28/05/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 11:15</span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-
-            <!-- Estado vazio: mostrar quando a lista real não tiver nenhum agendamento -->
-            <!--
-            <div class="agendamentos-vazio">
-                <i class="fa-regular fa-calendar-xmark"></i>
-                <p>Você ainda não possui agendamentos.</p>
-            </div>
-            -->
         </section>
 
         <!-- ABA: DEPOIMENTOS -->
@@ -226,33 +161,45 @@
                     <span th:text="${mensagemError}"></span>
                 </div>
 
+                <!-- SELEÇÃO DO AGENDAMENTO CONCLUÍDO -->
                 <div class="group-input">
-                    <label for="servico">Selecione o Serviço</label>
-                    <select id="servico" name="servicoId" required>
-                        <option value="" disabled selected>Selecione um serviço...</option>
-                        <option th:each="servico : ${listaServicos}"
-                                th:value="${servico.id}"
-                                th:text="${servico.nome}">Serviço Exemplo</option>
+                    <label for="idAgendamento">Selecione o Agendamento Concluído</label>
+
+                    <select id="idAgendamento" name="idAgendamento" required th:if="${listaAgendamentosRealizados != null and !#lists.isEmpty(listaAgendamentosRealizados)}">
+                        <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
+                        <option th:each="ag : ${listaAgendamentosRealizados}"
+                                th:value="${ag.id}"
+                                th:text="${ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id} + ' - ' + ${ag.dataHoraAgendamento}"
+                                th:selected="${ag.id == agendamentoIdSelecionado}">
+                            Serviço Exemplo
+                        </option>
+                    </select>
+
+                    <select id="idAgendamentoVazio" disabled th:if="${listaAgendamentosRealizados == null or #lists.isEmpty(listaAgendamentosRealizados)}">
+                        <option selected>Nenhum serviço concluído disponível para avaliação</option>
                     </select>
                 </div>
 
+                <!-- TEXTO DO DEPOIMENTO -->
                 <div class="group-input">
-                    <label for="comentario">Seu Depoimento</label>
-                    <textarea id="comentario" name="comentario" rows="4" placeholder="Escreva aqui seu depoimento..." required></textarea>
+                    <label for="depoimento">Seu Depoimento</label>
+                    <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
+                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
                     <label for="imagem">Adicionar Imagem</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/*">
+                    <!-- Dispara o submit para a Controller gerar o preview -->
+                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- Quadrado exibido caso a imagem já tenha sido enviada/processada pelo servidor -->
-                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem">
+                    <!-- Renderizado apenas após a Controller processar a acao=preview -->
+                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
                 <div class="group-button">
-                    <button type="submit" class="btn">Enviar Depoimento</button>
+                    <button type="submit" name="acao" value="salvar" class="btn">Enviar Depoimento</button>
                 </div>
             </form>
         </section>

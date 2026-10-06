@@ -10,4 +10,6 @@ public interface ModeloRepository extends JpaRepository<Modelo, Integer> {
     Optional<Modelo> findById(Integer id);
 
     Optional<Modelo> findByUsuario(Usuario usuario);
+
+    Optional<Modelo> findByTelefone(String telefone);
 }
