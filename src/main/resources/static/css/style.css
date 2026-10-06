@@ -249,10 +249,8 @@
 .hero-banner {
     position: relative;
     width: 100%;
-    max-width: none;
-    margin: 0;
-    aspect-ratio: 1917 / 550;
-    max-height: 650px;
+    height: 550px;
+    border-bottom: 1px solid #1e293b;
     overflow: hidden;
     background-color: #020617;
 }
@@ -307,13 +305,13 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 28px;
+    font-size: 36px;
     color: rgba(255, 255, 255, 0.6) !important;
     background: rgba(0, 0, 0, 0.4) !important;
     border: none;
     border-radius: 50%;
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -330,9 +328,8 @@
     transform: translateY(-50%) scale(1.1);
 }
 
-.prev { left: 12px; }
-.next { right: 12px; }
-
+.prev { left: 20px; }
+.next { right: 20px; }
 
 /* Badge estilizada em Laranja Senac */
 .badge-hero {
@@ -934,7 +931,6 @@
 .depoimento-autor strong { display: block; color: var(--texto-escuro); font-size: 0.95rem; }
 .depoimento-autor span { font-size: 0.8rem; color: var(--texto-mutado); }
 
-
 /* ==========================================================================
    MODAIS E FORMULÁRIOS
    ========================================================================== */
@@ -1162,42 +1158,13 @@
 }
 
 @media (max-width: 768px) {
-
     .tabela { overflow-x: scroll; }
-
-    .header-container {
-        flex-direction: column;
-        gap: 16px;
-        text-align: center;
-        justify-content: center;
-        height: auto;
-    }
-    .nav-menu {
-        position: static;
-        transform: none;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        width: 100%;
-    }
+    .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
+    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
-    .arrow { width: 36px; height: 36px; font-size: 20px; }
-    .prev { left: 8px; }
-    .next { right: 8px; }
-
-    .hero-banner {
-        margin: 0;
-        max-width: 100%;
-        aspect-ratio: 1140 / 550;
-        max-height: none;
-    }
-    .slide {
-        background-size: cover;
-        background-position: center;
-    }
-
+    .hero-banner { min-height: auto; padding: 80px 20px; }
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
@@ -1435,7 +1402,7 @@ input::-ms-clear {
     font-weight: 500;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
-}.
+}
 
 .ssp-password-wrapper {
     position: relative;
