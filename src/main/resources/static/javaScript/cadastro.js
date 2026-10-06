@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let erros = [];
 
         // Validação Global de Emojis no Submit (Garantia extra)
-        camposSemEmoji.forEach(function(campo) {
+        todosOsCamposTexto.forEach(function(campo) {
             if (campo && regexEmoji.test(campo.value)) {
                 erros.push(`O campo não pode conter emojis.`);
                 marcarErro(campo);
@@ -225,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert(erros.join("\n"));
             }
         });
-    }
 
     // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
     // input type="date" entrega o valor em ISO: yyyy-MM-dd
