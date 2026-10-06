@@ -9,3 +9,4 @@ public class belezaApplication {
 		SpringApplication.run(belezaApplication.class, args);
 	}
 }
+ 
