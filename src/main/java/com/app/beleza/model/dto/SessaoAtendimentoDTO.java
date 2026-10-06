@@ -1,4 +1,4 @@
-package com.app.beleza.model;
+package com.app.beleza.model.dto;
 
 public class SessaoAtendimentoDTO {
 

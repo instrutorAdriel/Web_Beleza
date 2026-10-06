@@ -1,23 +1,15 @@
 package com.app.beleza.service;
 
-import com.app.beleza.model.SessaoAtendimento;
-import com.app.beleza.model.SessaoAtendimentoDTO;
-import com.app.beleza.model.Usuario;
-import com.app.beleza.respository.SessaoAtendimentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
-public class SessaoAtendimentoService {
-
+public class AgendamentoService {
+    /*
     @Autowired
     private SessaoAtendimentoRepository repository;
 
     public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
-        List<SessaoAtendimento> sessoes = repository.findByServicoId(servicoId);
+        List<Agendamento> sessoes = repository.findByServicoId(servicoId);
 
         return sessoes.stream().map(sessao -> {
             // 1. O agendamento pertence ao usuário logado se o ID dele estiver DENTRO da lista de usuários da sessão
@@ -38,7 +30,7 @@ public class SessaoAtendimentoService {
     }
 
     public void agendarSessao(Long id, Usuario usuario) {
-        SessaoAtendimento sessao = repository.findById(id)
+        Agendamento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
         if (sessao.getVagasDisponiveis() <= 0) {
@@ -61,7 +53,7 @@ public class SessaoAtendimentoService {
     }
 
     public void cancelarSessao(Long id, Usuario usuarioLogado) {
-        SessaoAtendimento sessao = repository.findById(id)
+        Agendamento sessao = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
 
         // Verifica se o usuário realmente agendou essa sessão para poder cancelar
@@ -78,4 +70,5 @@ public class SessaoAtendimentoService {
 
         repository.save(sessao);
     }
+    */
 }

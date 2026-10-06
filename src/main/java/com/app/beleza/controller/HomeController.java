@@ -22,7 +22,7 @@ public class HomeController {
         model.addAttribute("depoimentos", homeService.listarDepoimentos());
         model.addAttribute("servicos", homeService.listarServicos());
         model.addAttribute("usuario", usuario);
-        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeCompleto() : null);
+        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeUsuario() : null);
 
         return "home";
     }

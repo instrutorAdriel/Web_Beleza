@@ -1,19 +1,14 @@
 package com.app.beleza.service;
 
-import com.app.beleza.model.*;
-import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.model.Home;
-import com.app.beleza.model.AgendamentoDTO;
+import com.app.beleza.model.Depoimento;
+import com.app.beleza.model.Disponibilidade;
+import com.app.beleza.model.dto.DepoimentoDTO;
+import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
-import com.app.beleza.respository.HomeRepository;
-import com.app.beleza.model.Home;
-import com.app.beleza.model.AgendamentoDTO;
-import com.app.beleza.respository.HomeRepository;
+import com.app.beleza.respository.DisponibilidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.app.beleza.model.DepoimentoDTO;
-import com.app.beleza.respository.DepoimentoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,34 +18,34 @@ import java.util.List;
 public class HomeService {
 
     @Autowired
-    private HomeRepository homeRepository;
+    private DisponibilidadeRepository disponibilidadeRepository;
 
-    public List<AgendamentoDTO> listarServicos() {
+    @Autowired
+    private DepoimentoRepository depoimentoRepository;
 
-        List<AgendamentoDTO> lista = new ArrayList<>();
+    public List<ServicoDisponibilidadeDTO> listarServicos() {
 
-        List<Home> servicos = homeRepository.findAll();
+        List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
 
-        for (Home servico : servicos) {
+        List<Disponibilidade> servicos = disponibilidadeRepository.findAll();
 
-            AgendamentoDTO dto = new AgendamentoDTO();
+        for (Disponibilidade servico : servicos) {
 
+            ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
 
             dto.setServicoId(servico.getId());
-
-            dto.setNomeServico(servico.getNomeServico());
-            dto.setDescricao(servico.getDescricao());
-            dto.setImagem(servico.getImagem());
-            dto.setUnidade(servico.getUnidade());
-            dto.setDuracao(servico.getDuracao());
+            dto.setNomeServico(servico.getProdutoUnidade().getProduto().getNomeProduto());
+            dto.setDescricao(servico.getProdutoUnidade().getProduto().getDescricao());
+            dto.setImagem(servico.getProdutoUnidade().getProduto().getImagemAnexo());
+            dto.setUnidade(servico.getProdutoUnidade().getUnidade().getNomeUnidade());
+            dto.setHora_inicio(servico.getHoraInicio().toString());
+            dto.setHora_fim(servico.getHoraFim().toString());
 
             lista.add(dto);
         }
 
         return lista;
     }
-    @Autowired
-    private DepoimentoRepository depoimentoRepository;
 
     public List<DepoimentoDTO> listarDepoimentos() {
 
@@ -58,14 +53,14 @@ public class HomeService {
 
         List<Depoimento> depoimentos = depoimentoRepository.findAll();
 
-        for (Depoimento dep : depoimentos) {
+        for (Depoimento depoimento : depoimentos) {
             DepoimentoDTO dto = new DepoimentoDTO();
-            dto.setNome(dep.getNome());
-            dto.setServico(dep.getServico());
-            dto.setUnidade(dep.getUnidade());
-            dto.setTexto(dep.getTexto());
-            dto.setImagem1(dep.getImagem1());
-            dto.setImagem2(dep.getImagem2());
+            dto.setNome(depoimento.getUsuario().getNomeUsuario());
+            dto.setServico(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getProduto().getNomeProduto());
+            dto.setUnidade(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getUnidade().getNomeUnidade());
+            dto.setTexto(depoimento.getDepoimento());
+            dto.setImagem1(depoimento.getImagemAnexo1());
+            dto.setImagem2(depoimento.getImagemAnexo2());
             lista.add(dto);
         }
         return lista;

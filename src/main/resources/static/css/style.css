@@ -1111,11 +1111,16 @@
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 60px;
 }
-.footer-bloco p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+
+.footer-bloco {
+    flex: 0 1 auto;   /* usa a largura natural do conteúdo, sem forçar mínimo de 260px */
+    max-width: 300px; /* evita que o texto do "Sobre o Senac" fique largo demais */
+}
 .footer-bloco h4 {
     font-size: 18px;
     margin-bottom: 20px;
@@ -1788,7 +1793,7 @@ input::-ms-clear {
 }
 
 .error {
-    border-color: var(--error);
+    border-color: #dc2626;
     background-color: rgba(255, 132, 123, 0.5);
 }
 
@@ -1798,6 +1803,77 @@ input::-ms-clear {
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+}
+
+/* Estilização específica do formulário de perfil e depoimento */
+.form-perfil textarea,
+.form-perfil select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--fundo-input);
+    color: var(--texto-escuro);
+}
+
+.form-perfil textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-perfil textarea:focus,
+.form-perfil select:focus {
+    outline: none;
+    border-color: var(--senac-laranja);
+    box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+.form-perfil input[type="file"] {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--texto-escuro);
+    cursor: pointer;
+}
+
+.form-perfil input[type="file"]::-webkit-file-upload-button {
+    background-color: var(--fundo-card);
+    border: 1px solid var(--borda-suave);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--texto-escuro);
+    cursor: pointer;
+    transition: var(--transicao);
+    margin-right: 10px;
+}
+
+.form-perfil input[type="file"]::-webkit-file-upload-button:hover {
+    background-color: var(--senac-laranja);
+    border-color: var(--senac-laranja);
+    color: #000000;
+}
+
+/* Quadrado da Pré-visualização de Imagem */
+.container-preview-imagem {
+    margin-top: 12px;
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--borda-suave);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--fundo-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-preview-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 #depoimento-form textarea,
@@ -1916,6 +1992,111 @@ input::-ms-clear {
     }
 }
 
+
+/* ==========================================================================
+   HISTÓRICO DE AGENDAMENTOS (PERFIL)
+   ========================================================================== */
+.lista-agendamentos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+.card-agendamento {
+    background: #ffffff;
+    border: 1px solid var(--borda-suave);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: var(--transicao);
+    position: relative;
+}
+
+.card-agendamento:hover {
+    transform: translateY(-4px);
+    border-color: var(--senac-laranja);
+    box-shadow: 0 10px 20px rgba(247, 148, 30, 0.1);
+}
+
+.card-agendamento-imagem {
+    width: 100%;
+    height: 130px;
+    background-color: var(--fundo-card);
+    background-size: cover;
+    background-position: center;
+}
+
+.card-agendamento-corpo {
+    padding: 1.1rem 1.3rem 1.3rem;
+}
+
+.card-agendamento-status {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+}
+
+.status-concluido {
+    background-color: rgba(100, 116, 139, 0.12);
+    color: #475569;
+}
+
+.status-confirmado {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.status-cancelado {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: #DC2626;
+}
+
+.card-agendamento-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--texto-escuro);
+    margin-bottom: 0.8rem;
+}
+
+.card-agendamento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+    color: var(--texto-mutado);
+}
+
+.card-agendamento-info span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-agendamento-info i {
+    color: var(--senac-laranja);
+    width: 16px;
+    text-align: center;
+}
+
+/* Estado vazio (sem agendamentos) */
+.agendamentos-vazio {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--texto-mutado);
+}
+
+.agendamentos-vazio i {
+    font-size: 2.5rem;
+    color: var(--borda-suave);
+    margin-bottom: 0.8rem;
+    display: block;
+}
 /* ==========================================================================
    NOVAS REGRAS CSS EXTRAÍDAS DAS TAGS HTML E ESTILOS INLINE
    ========================================================================== */

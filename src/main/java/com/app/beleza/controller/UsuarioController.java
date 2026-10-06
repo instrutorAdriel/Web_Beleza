@@ -1,7 +1,9 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
-import com.app.beleza.model.UsuarioDTO;
+import com.app.beleza.model.dto.UsuarioDTO;
+import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
@@ -30,6 +32,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ModeloRepository modeloRepository;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -166,7 +171,7 @@ public class UsuarioController {
             return "redirect:/login";
         }
 
-        Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
+        Optional<Modelo> resultado = modeloRepository.findByUsuario(usuario);
 
         if (resultado.isEmpty()) {
             return "redirect:/";
