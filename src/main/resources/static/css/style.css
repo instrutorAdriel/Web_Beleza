@@ -1101,7 +1101,7 @@
 .site-footer {
     background-color: var(--fundo-footer);
     color: var(--texto-claro);
-    padding: 70px 20px 20px 20px;
+    width: 100%;
     margin-top: 80px;
     padding: 70px 20px 20px;
     border-top: 4px solid var(--senac-laranja);
@@ -1113,15 +1113,27 @@
     width: 80%;
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 60px;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    justify-items: center;
+    align-items: start;
+
+    text-align: center;
+    box-sizing: border-box;
 }
 
+/* CADA BLOCO */
 .footer-bloco {
-    flex: 0 1 auto;   /* usa a largura natural do conteúdo, sem forçar mínimo de 260px */
-    max-width: 300px; /* evita que o texto do "Sobre o Senac" fique largo demais */
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 0;
+
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* TÍTULOS */
@@ -1132,12 +1144,11 @@
     padding-bottom: 6px;
 
     font-size: 18px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--senac-laranja);
-    padding-bottom: 6px;
-    display: inline-block;
-    color: var(--texto-claro);
     font-weight: 700;
+
+    color: var(--texto-claro);
+
+    border-bottom: 2px solid var(--senac-laranja);
 }
 
 /* TEXTOS */
@@ -1154,7 +1165,11 @@
 /* REDES SOCIAIS */
 .redes-sociais {
     display: flex;
-    gap: 15px;
+    justify-content: center;
+    align-items: center;
+
+    gap: 25px;
+
     margin-top: 10px;
 }
 
@@ -1178,9 +1193,9 @@
     padding: 24px 20px 0;
 
     text-align: center;
+
     border-top: 1px solid #1e293b;
-    margin-top: 50px;
-    padding-top: 24px;
+
     font-size: 13px;
     color: #64748b;
 
@@ -2347,42 +2362,4 @@ input::-ms-clear {
 .ssp-btn-confirm-active {
     background-color: #f39c12;
     color: white;
-}
-
-/* ==========================================================================
-   NOVO: BOTÃO E PREVIEW EM QUADRADO DA ABA DE DEPOIMENTOS
-   ========================================================================== */
-
-/* Botão de pré-visualização da imagem */
-#perfil-depoimento button[value="preview"] {
-    background-color: var(--texto-mutado);
-    color: #ffffff;
-    margin-top: 10px;
-    align-self: flex-start;
-}
-
-#perfil-depoimento button[value="preview"]:hover {
-    background-color: #475569;
-}
-
-/* Quadrado da Pré-visualização da Imagem */
-.container-preview-imagem {
-    margin-top: 12px;
-    width: 120px;               /* Largura fixa do quadrado */
-    height: 120px;              /* Altura fixa do quadrado */
-    border: 2px dashed var(--borda-suave); /* Borda tracejada */
-    border-radius: 8px;          /* Cantos ligeiramente arredondados */
-    overflow: hidden;           /* Recorta qualquer excesso da imagem */
-    background-color: var(--fundo-card);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Enquadramento proporcional da imagem no quadrado */
-.container-preview-imagem img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;          /* Mantém a foto perfeita sem achatar */
-    display: block;
 }
