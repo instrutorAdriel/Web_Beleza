@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${tituloPagina}">Alterar Senha</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <script th:src="@{/javaScript/alterar-senha.js}" defer></script>
@@ -36,24 +37,31 @@
 
         <form id="form-alterar-senha" th:action="@{/alterar-senha/{token}(token=${token})}" th:object="${usuarioDTO}" method="POST">
             <div class="ssp-form-group">
-                <label th:for="senha">Nova Senha</label>
+                <label for="senha">Nova Senha</label>
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{senha}" id="senha" class="ssp-form-control" placeholder="Digite a nova senha" required>
                     <button type="button" class="ssp-toggle-password" id="btnToggle1" aria-label="Mostrar senha">
                         <i class="fa-solid fa-eye-slash" id="eyeIcon1"></i>
                     </button>
                 </div>
+
+                <ul class="ssp-password-checklist">
+                    <li id="req-maiuscula"><i class="fa-solid fa-circle-xmark req-icon"></i> Uma letra maiúscula</li>
+                    <li id="req-minuscula"><i class="fa-solid fa-circle-xmark req-icon"></i> Uma letra minúscula</li>
+                    <li id="req-numero"><i class="fa-solid fa-circle-xmark req-icon"></i> Um número</li>
+                    <li id="req-especial"><i class="fa-solid fa-circle-xmark req-icon"></i> Um caractere especial</li>
+                </ul>
             </div>
 
             <div class="ssp-form-group">
-                <label th:for="confirmacaoSenha">Confirmar Nova Senha</label>
+                <label for="confirmacaoSenha">Confirmar Nova Senha</label>
                 <div class="ssp-password-wrapper">
                     <input type="password" th:field="*{confirmacaoSenha}" id="confirmacaoSenha" class="ssp-form-control" placeholder="Repita a nova senha" required>
                     <button type="button" class="ssp-toggle-password" id="btnToggle2" aria-label="Mostrar senha">
                         <i class="fa-solid fa-eye-slash" id="eyeIcon2"></i>
                     </button>
                 </div>
-                <div id="password-error" class="ssp-error-message">As senhas não coincidem.</div>
+                <div id="password-error" class="ssp-error-message" style="display:none;"></div>
             </div>
 
             <button type="submit" class="ssp-btn-submit">Atualizar Senha</button>

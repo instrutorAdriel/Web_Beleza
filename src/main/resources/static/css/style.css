@@ -2386,3 +2386,7 @@ input::-ms-clear {
     object-fit: cover;          /* Mantém a foto perfeita sem achatar */
     display: block;
 }
+.form-perfil .ssp-password-wrapper input {
+    width: 100%;
+    padding-right: 3rem; /* espaço para o olhinho */
+}

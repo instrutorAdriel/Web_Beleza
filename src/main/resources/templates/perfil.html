@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
+<script>
+    document.addEventListener("click", function (event) {
+        const botao = event.target.closest(".ssp-toggle-password");
+        if (!botao) return;
+
+        const input = botao.parentElement.querySelector("input");
+        const icone = botao.querySelector("i");
+        const mostrando = input.type === "password";
+
+        input.type = mostrando ? "text" : "password";
+        icone.classList.toggle("fa-eye", mostrando);
+        icone.classList.toggle("fa-eye-slash", !mostrando);
+    });
+</script>
 <body class="body-perfil">
 <div class="painel-controle">
     <div class="container-painel">
@@ -78,16 +94,34 @@
 
                 <div class="group-input">
                     <label for="senha-atual">Senha Atual</label>
-                    <input th:field="*{senha}" type="password" id="senha-atual">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{senha}" type="password" id="senha-atual">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
