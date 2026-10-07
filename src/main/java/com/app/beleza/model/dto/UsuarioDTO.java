@@ -1,9 +1,15 @@
 package com.app.beleza.model.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+
 public class UsuarioDTO {
 
     private String nomeCompleto;
-    private String dataNascimento;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
+
     private String telefone;
     private String email;
     private String senha;            // Representa a Senha Atual no formulário de perfil
@@ -12,27 +18,59 @@ public class UsuarioDTO {
     protected String token;
 
     // Getters e Setters
-    public String getNomeCompleto() { return nomeCompleto; }
-    public void setNomeCompleto(String nomeCompleto) { this.nomeCompleto = nomeCompleto; }
+    public String getNomeCompleto() {
+        return nomeCompleto;
+    }
+    public void setNomeCompleto(String nomeCompleto) {
+        this.nomeCompleto = nomeCompleto;
+    }
 
-    public String getDataNascimento() { return dataNascimento; }
-    public void setDataNascimento(String dataNascimento) { this.dataNascimento = dataNascimento; }
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
 
-    public String getTelefone() { return telefone; }
-    public void setTelefone(String telefone) { this.telefone = telefone; }
+    public String getTelefone() {
+        return telefone;
+    }
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getSenha() { return senha; }
-    public void setSenha(String senha) { this.senha = senha; }
+    public String getSenha() {
+        return senha;
+    }
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
 
-    public String getNovaSenha() { return novaSenha; }
-    public void setNovaSenha(String novaSenha) { this.novaSenha = novaSenha; }
+    public String getNovaSenha() {
+        return novaSenha;
+    }
+    public void setNovaSenha(String novaSenha) {
+        this.novaSenha = novaSenha;
+    }
 
-    public String getConfirmacaoSenha() { return confirmacaoSenha; }
-    public void setConfirmacaoSenha(String confirmacaoSenha) { this.confirmacaoSenha = confirmacaoSenha; }
+    public String getConfirmacaoSenha() {
+        return confirmacaoSenha;
+    }
+    public void setConfirmacaoSenha(String confirmacaoSenha) {
+        this.confirmacaoSenha = confirmacaoSenha;
+    }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

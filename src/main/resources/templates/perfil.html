@@ -42,7 +42,7 @@
                     </div>
                     <div class="group-input">
                         <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10">
+                        <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa">
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -169,7 +169,7 @@
                         <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
                         <option th:each="ag : ${listaAgendamentosRealizados}"
                                 th:value="${ag.id}"
-                                th:text="${ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id} + ' - ' + ${ag.dataHoraAgendamento}"
+                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
                                 th:selected="${ag.id == agendamentoIdSelecionado}">
                             Serviço Exemplo
                         </option>
@@ -189,10 +189,8 @@
                 <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
                     <label for="imagem">Adicionar Imagem</label>
-                    <!-- Dispara o submit para a Controller gerar o preview -->
                     <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- Renderizado apenas após a Controller processar a acao=preview -->
                     <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
                         <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>

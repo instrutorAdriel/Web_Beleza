@@ -1740,11 +1740,60 @@ input::-ms-clear {
     font-family: Arial, sans-serif;
 }
 
+/* ==========================================================================
+   MENU LATERAL DA PÁGINA PERFIL (ATUALIZADO)
+   ========================================================================== */
+
 .sidebar {
-    width: 250px;
+    width: 280px;
     background-color: var(--fundo-footer);
     color: var(--texto-claro);
-    padding: 20px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 14px 20px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    outline: 0;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar h3.bar-item {
+    font-size: 18px;
+    color: var(--senac-laranja);
+    border-bottom: 2px solid var(--borda-suave);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.button {
+    border: none;
+    display: block;
+    padding: 14px 20px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 6px;
+    transition: var(--transicao);
+}
+
+.button:hover {
+    color: #000 !important;
+    background-color: var(--senac-laranja) !important;
 }
 
 .sidebar a.active {
@@ -1761,36 +1810,6 @@ input::-ms-clear {
 
 .hidden {
     display: none;
-}
-
-/* Botoes */
-.bar-item {
-    width: 100%;
-    display: block;
-    padding: 8px 16px;
-    text-align: left;
-    border: none;
-    white-space: normal;
-    float: none;
-    outline: 0;
-}
-
-.button {
-    border: none;
-    display: inline-block;
-    padding: 8px 16px;
-    vertical-align: middle;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    background-color: inherit;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.button:hover {
-    color: #000 !important;
-    background-color: var(--senac-laranja) !important;
 }
 
 .btn {
@@ -2042,7 +2061,6 @@ input::-ms-clear {
     }
 }
 
-
 /* ==========================================================================
    HISTÓRICO DE AGENDAMENTOS (PERFIL)
    ========================================================================== */
@@ -2147,11 +2165,12 @@ input::-ms-clear {
     margin-bottom: 0.8rem;
     display: block;
 }
+
 /* ==========================================================================
    NOVAS REGRAS CSS EXTRAÍDAS DAS TAGS HTML E ESTILOS INLINE
    ========================================================================== */
 
-/* Regras de Checklist e Avisos de Erro (Extraídas do <style> do cadastro.html) */
+/* Regras de Checklist e Avisos de Erro */
 .ssp-password-checklist {
     list-style: none;
     padding: 0;
@@ -2261,7 +2280,7 @@ input::-ms-clear {
     margin-top: 1.5rem;
 }
 
-/* Regras Específicas do codigo.html e home.html */
+/* Regras Específicas de Navegação e Carrossel */
 .nav-menu-center {
     display: flex;
     justify-content: center;
@@ -2362,4 +2381,39 @@ input::-ms-clear {
 .ssp-btn-confirm-active {
     background-color: #f39c12;
     color: white;
+}
+
+/* ==========================================================================
+   BOTÃO E PREVIEW EM QUADRADO DA ABA DE DEPOIMENTOS
+   ========================================================================== */
+
+#perfil-depoimento button[value="preview"] {
+    background-color: var(--texto-mutado);
+    color: #ffffff;
+    margin-top: 10px;
+    align-self: flex-start;
+}
+
+#perfil-depoimento button[value="preview"]:hover {
+    background-color: #475569;
+}
+
+.container-preview-imagem {
+    margin-top: 12px;
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--borda-suave);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--fundo-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-preview-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
