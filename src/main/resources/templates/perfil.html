@@ -188,18 +188,20 @@
 
                 <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagem</label>
-                    <!-- Dispara o submit para a Controller gerar o preview -->
-                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+                    <label for="imagem">Adicionar Imagem (opcional)</label>
+                    <input type="file" id="imagem" name="imagem" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- Renderizado apenas após a Controller processar a acao=preview -->
                     <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                        <img th:src="'data:' + ${imagemPreviewTipo} + ';base64,' + ${imagemPreviewBase64}"
+                             alt="Pré-visualização da imagem"
+                             style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
                 <div class="group-button">
-                    <button type="submit" name="acao" value="salvar" class="btn">Enviar Depoimento</button>
+                    <button type="submit" name="acao" value="salvar" class="btn"
+                            onclick="this.form.action='/perfil/enviar-depoimento';">Enviar Depoimento</button>
                 </div>
             </form>
         </section>

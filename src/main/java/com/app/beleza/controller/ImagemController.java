@@ -5,29 +5,26 @@ import com.app.beleza.model.Produto;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ProdutoRepository;
 import com.app.beleza.service.CloudinaryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/imagens")
 public class ImagemController {
 
-    private final CloudinaryService cloudinaryService;
-    private final ProdutoRepository produtoRepository;
-    private final DepoimentoRepository depoimentoRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
-    public ImagemController(CloudinaryService cloudinaryService,
-                            ProdutoRepository produtoRepository,
-                            DepoimentoRepository depoimentoRepository) {
-        this.cloudinaryService = cloudinaryService;
-        this.produtoRepository = produtoRepository;
-        this.depoimentoRepository = depoimentoRepository;
-    }
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private DepoimentoRepository depoimentoRepository;
 
     // PRODUTO -> imagemAnexo
     @PostMapping(value = "/produtos/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -5,10 +5,7 @@ import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.UsuarioDTO;
-<<<<<<< HEAD
-=======
 import com.app.beleza.model.enums.SituacaoAgendamento;
->>>>>>> 110910107149195fa2fd97d0f13ffcb67d29e4f5
 import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
@@ -26,13 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-<<<<<<< HEAD
 import java.util.List;
 import java.util.Map;
-=======
 import java.util.Base64;
 import java.util.List;
->>>>>>> 110910107149195fa2fd97d0f13ffcb67d29e4f5
 import java.util.Optional;
 
 @Controller
@@ -57,6 +51,8 @@ public class UsuarioController {
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
@@ -319,6 +315,7 @@ public class UsuarioController {
         List<Agendamento> agendamentosRealizados = agendamentoRepository
                 .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
+
         // AÇÃO DE PRÉ-VISUALIZAÇÃO (Carrega a imagem e devolve a página)
         if ("preview".equals(acao)) {
             if (imagem != null && !imagem.isEmpty()) {
@@ -361,14 +358,17 @@ public class UsuarioController {
             agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
 
             if (imagem != null && !imagem.isEmpty()) {
-                String caminhoBase64 = Base64.getEncoder().encodeToString(imagem.getBytes());
-                novoDepoimento.setImagemAnexo1(caminhoBase64);
+                System.out.println(">>> ENVIANDO IMAGEM PARA CLOUDINARY");
+                String urlImagem =
+                        cloudinaryService.upload(imagem, "depoimento");
+                System.out.println(">>> URL GERADA: " + urlImagem);
+                novoDepoimento.setImagemAnexo1(urlImagem);
                 novoDepoimento.setImagemAnexo2("");
             } else {
+                System.out.println(">>> NENHUMA IMAGEM RECEBIDA");
                 novoDepoimento.setImagemAnexo1("");
                 novoDepoimento.setImagemAnexo2("");
             }
-
             depoimentoRepository.save(novoDepoimento);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Depoimento enviado com sucesso!");
         } catch (Exception e) {
