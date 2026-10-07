@@ -708,7 +708,10 @@
     flex-direction: column;
     min-height: 520px;
     height: auto;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    min-height 0.3s ease;
     flex: 0 0 auto;
     width: 320px;
     box-sizing: border-box;
@@ -720,8 +723,8 @@
     min-height: 520px;
     height: auto;
     z-index: 50;
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(247, 148, 30, 0.1);
     border-color: var(--senac-laranja);
 }
 
