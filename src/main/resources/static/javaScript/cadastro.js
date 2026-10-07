@@ -15,7 +15,7 @@ function togglePasswordVisibility(inputId, iconId) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const form = document.querySelector("form");
+    const form = document.getElementById("kc-form-register") || document.querySelector("form");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
     // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
@@ -25,10 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("dataNascimento");
     const nomeCompletoInput = document.getElementById("nomeCompleto");
-    const nomeCompletoErro = document.getElementById("nomeCompleto-erro"); // NOVO
+    const nomeCompletoErro = document.getElementById("nomeCompleto-erro");
     const alertaIdade = document.getElementById("alertaIdade");
 
-    // Itens do checklist de força da senha
+    // Requisitos do checklist de senha
+    const reqTamanho = document.getElementById("req-tamanho");
     const reqMaiuscula = document.getElementById("req-maiuscula");
     const reqMinuscula = document.getElementById("req-minuscula");
     const reqNumero = document.getElementById("req-numero");
@@ -98,23 +99,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 2. VERIFICAÇÃO DE FORÇA DA SENHA EM TEMPO REAL (máscara de senha forte)
-    senhaInput.addEventListener("input", function (e) {
-        atualizarChecklistSenha(e.target.value);
+    // 2. CHECKLIST DA SENHA EM TEMPO REAL
+    if (senhaInput) {
+        senhaInput.addEventListener("input", function (e) {
+            atualizarChecklistSenha(e.target.value);
+            if (senhaEhForte(e.target.value)) {
+                limparErro(senhaInput);
+            } else {
+                senhaInput.classList.remove("input-error");
+            }
+        });
+    }
 
-        if (senhaEhForte(e.target.value)) {
-            limparErro(senhaInput);
-        } else {
-            // feedback visual leve enquanto digita, sem bloquear nada aqui
-            senhaInput.classList.remove("input-error");
-        }
-    });
-
-    // 2b. DATA DE NASCIMENTO — input type="date" já entrega o valor pronto (yyyy-MM-dd),
-    // não precisa (e não pode) de máscara manual aqui. Só disparamos o alerta de idade.
-    dataNascimentoInput.addEventListener("input", function () {
-        atualizarAlertaIdade();
-    });
+    // 3. TRATAMENTO PARA INPUT TYPE="DATE" (NÃO ALTERA O VALOR, SÓ DISPARA O ALERTA)
+    if (dataNascimentoInput) {
+        dataNascimentoInput.addEventListener("change", function () {
+            atualizarAlertaIdade();
+        });
+        dataNascimentoInput.addEventListener("input", function () {
+            atualizarAlertaIdade();
+        });
+    }
 
     // 4. BLOQUEIA NÚMEROS E SÍMBOLOS NO NOME COMPLETO (permite letras, acentos e espaços)
     // O aviso fica visível enquanto houver caractere inválido e some quando a pessoa apagar
@@ -140,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let erros = [];
 
         // Validação Global de Emojis no Submit (Garantia extra)
-        camposSemEmoji.forEach(function(campo) {
+        todosOsCamposTexto.forEach(function(campo) {
             if (campo && regexEmoji.test(campo.value)) {
                 erros.push(`O campo não pode conter emojis.`);
                 marcarErro(campo);
@@ -195,33 +200,31 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // Validação da FORÇA da senha
-        let senhaValida = true;
-        if (!senhaEhForte(senhaInput.value)) {
-            erros.push("A senha deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial.");
-            marcarErro(senhaInput);
-            senhaValida = false;
-        }
+            // Senha
+            if (senhaInput) {
+                if (!senhaEhForte(senhaInput.value)) {
+                    erros.push("A senha deve cumprir todos os requisitos do checklist.");
+                    marcarErro(senhaInput);
+                } else {
+                    limparErro(senhaInput);
+                }
+            }
 
-        // Validação das Senhas Iguais
-        if (senhaInput.value !== confirmaSenhaInput.value) {
-            erros.push("As senhas não coincidem.");
-            marcarErro(senhaInput);
-            marcarErro(confirmaSenhaInput);
-            senhaValida = false;
-        } else {
-            limparErro(confirmaSenhaInput);
-        }
+            // Confirmação de Senha
+            if (senhaInput && confirmaSenhaInput) {
+                if (senhaInput.value !== confirmaSenhaInput.value) {
+                    erros.push("As senhas não coincidem.");
+                    marcarErro(confirmaSenhaInput);
+                } else {
+                    limparErro(confirmaSenhaInput);
+                }
+            }
 
-        if (senhaValida) {
-            limparErro(senhaInput);
-        }
-
-        if (erros.length > 0) {
-            event.preventDefault();
-            alert(erros.join("\n"));
-        }
-    });
+            if (erros.length > 0) {
+                event.preventDefault();
+                alert(erros.join("\n"));
+            }
+        });
 
     // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
     // input type="date" entrega o valor em ISO: yyyy-MM-dd
@@ -273,44 +276,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
     function senhaEhForte(senha) {
-        const temMaiuscula = /[A-Z]/.test(senha);
-        const temMinuscula = /[a-z]/.test(senha);
-        const temNumero = /[0-9]/.test(senha);
-        const temEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha);
-
-        return temMaiuscula && temMinuscula && temNumero && temEspecial;
+        if (!senha) return false;
+        return senha.length >= 8 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /[0-9]/.test(senha) && /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha);
     }
 
     // Atualiza visualmente o checklist (máscara) de requisitos da senha
     function atualizarChecklistSenha(senha) {
         const regras = [
-            { elemento: reqMaiuscula, regex: /[A-Z]/ },
-            { elemento: reqMinuscula, regex: /[a-z]/ },
-            { elemento: reqNumero, regex: /[0-9]/ },
-            { elemento: reqEspecial, regex: /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/ }
+            { elemento: reqTamanho, valida: (s) => s.length >= 8 },
+            { elemento: reqMaiuscula, valida: (s) => /[A-Z]/.test(s) },
+            { elemento: reqMinuscula, valida: (s) => /[a-z]/.test(s) },
+            { elemento: reqNumero, valida: (s) => /[0-9]/.test(s) },
+            { elemento: reqEspecial, valida: (s) => /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(s) }
         ];
 
-        regras.forEach(({ elemento, regex }) => {
+        regras.forEach(({ elemento, valida }) => {
             if (!elemento) return;
             const icone = elemento.querySelector(".req-icon");
-            if (regex.test(senha)) {
+            if (valida(senha)) {
                 elemento.classList.add("valid");
-                icone.classList.remove("fa-circle-xmark");
-                icone.classList.add("fa-circle-check");
+                if (icone) {
+                    icone.classList.remove("fa-circle-xmark");
+                    icone.classList.add("fa-circle-check");
+                }
             } else {
                 elemento.classList.remove("valid");
-                icone.classList.remove("fa-circle-check");
-                icone.classList.add("fa-circle-xmark");
+                if (icone) {
+                    icone.classList.remove("fa-circle-check");
+                    icone.classList.add("fa-circle-xmark");
+                }
             }
         });
     }
 
     function marcarErro(input) {
-        input.classList.add("input-error");
+        if (input) input.classList.add("input-error");
     }
 
     function limparErro(input) {
-        input.classList.remove("input-error");
+        if (input) input.classList.remove("input-error");
     }
 
 });

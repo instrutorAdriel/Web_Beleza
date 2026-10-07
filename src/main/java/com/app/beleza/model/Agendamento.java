@@ -35,6 +35,11 @@ public class Agendamento {
     @JoinColumn(name="id_instrutor")
     private Instrutor instrutor;
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
+
     public Agendamento() {}
 
     public Agendamento(LocalDateTime dataHoraAgendamento, SituacaoAgendamento situacao, String observacao, Disponibilidade disponibilidade, Modelo modelo, Instrutor instrutor) {
@@ -97,5 +102,13 @@ public class Agendamento {
 
     public void setInstrutor(Instrutor instrutor) {
         this.instrutor = instrutor;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

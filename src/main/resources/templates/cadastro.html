@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/javaScript/cadastro.js}" defer></script>
+
 </head>
 <body class="ssp-page">
 
@@ -37,14 +38,13 @@
             <div class="ssp-form-group">
                 <label th:for="nomeCompleto">Nome Completo</label>
                 <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
-                <small id="nomeCompleto-erro" class="ssp-aviso-erro ssp-display-none">
+                <small id="nomeCompleto-erro" class="ssp-aviso-erro ssp-display-none" style="display: none;">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>Não é permitido digitar números no nome.</span>
                 </small>
             </div>
-
-            <div class="ssp-form-row">
-                <div class="ssp-form-group ssp-flex-1">
+            <div class="ssp-form-row" style="display: flex; gap: 1rem;">
+                <div class="ssp-form-group" style="flex: 1;">
                     <label th:for="dataNascimento">Data de Nascimento</label>
                     <input type="date"
                            id="dataNascimento"
@@ -62,23 +62,30 @@
                 </div>
             </div>
 
-            <!-- ALERTA DE FAIXA ETÁRIA -->
-            <div id="alertaIdade" class="ssp-alert ssp-display-none"></div>
+            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
+            <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
+
+
 
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
                 <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
             </div>
+
             <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" required autocomplete="new-password">
+                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
 
                 <ul class="ssp-password-checklist" id="password-checklist">
+                    <!-- ID REQ-TAMANHO ADICIONADO AQUI -->
+                    <li id="req-tamanho" class="req-item">
+                        <i class="fa-solid fa-circle-xmark req-icon"></i> Mínimo de 8 caracteres
+                    </li>
                     <li id="req-maiuscula" class="req-item">
                         <i class="fa-solid fa-circle-xmark req-icon"></i> Letra maiúscula
                     </li>
@@ -97,7 +104,7 @@
             <div class="ssp-form-group">
                 <label th:for="confirmacaoSenha">Confirmar Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" required autocomplete="new-password">
+                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eyeIcon2')">
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>
