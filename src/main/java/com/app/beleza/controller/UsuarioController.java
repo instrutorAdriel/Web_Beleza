@@ -1,27 +1,34 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.model.Agendamento;
+import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.UsuarioDTO;
+import com.app.beleza.model.enums.SituacaoAgendamento;
+import com.app.beleza.respository.AgendamentoRepository;
+import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
-import jakarta.servlet.http.HttpSession;
 import com.app.beleza.utils.Validador;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // Import do BCrypt
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class UsuarioController {
 
-    // Instância do Encoder solicitada
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -36,6 +43,12 @@ public class UsuarioController {
     @Autowired
     private ModeloRepository modeloRepository;
 
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private DepoimentoRepository depoimentoRepository;
+
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
     public String exibirLogin(Model model) {
@@ -45,7 +58,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model, HttpSession session){
+    public String processarLogin(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
         Usuario usuario = usuarioService.autenticar(form.getEmail(), form.getSenha());
 
         if (usuario == null) {
@@ -93,30 +106,30 @@ public class UsuarioController {
 
     /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
     @GetMapping("/recuperar-senha")
-    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model){
+    public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model) {
         model.addAttribute("tituloPagina", "Alterar Senha");
         model.addAttribute("usuarioDTO", form);
         return "recuperar-senha";
     }
 
     @PostMapping("/recuperar-senha")
-    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model){
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model) {
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
-        if (form.getEmail().isBlank()){
+        if (form.getEmail().isBlank()) {
             model.addAttribute("erro", "E-mail em branco");
             return "recuperar-senha";
-        } else if (!Validador.isEmailValido(form.getEmail())){
+        } else if (!Validador.isEmailValido(form.getEmail())) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
-        } else if (res.isEmpty()){
+        } else if (res.isEmpty()) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         }
 
         Usuario usuario = res.get();
 
-        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null){
+        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null) {
             model.addAttribute("succ", "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
         } else {
             model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
@@ -127,8 +140,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/alterar-senha/{token}")
-    public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model){
-        if (passwordResetService.verificarToken(token) != null){
+    public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
+        if (passwordResetService.verificarToken(token) != null) {
             return "redirect:/indefinido";
         }
 
@@ -139,7 +152,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/alterar-senha/{token}")
-    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model){
+    public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
         if (passwordResetService.verificarToken(token) != null) {
             return "redirect:/indefinido";
         }
@@ -147,7 +160,7 @@ public class UsuarioController {
         form.setEmail(passwordResetService.retornarUsuario(token).getEmail());
         String res = usuarioService.alterarSenha(form);
 
-        if (res != null){
+        if (res != null) {
             model.addAttribute("erro", res);
             model.addAttribute("usuarioDTO", form);
             return "alterar-senha";
@@ -158,7 +171,7 @@ public class UsuarioController {
         return "alterar-senha";
     }
 
-    /* ─── SEÇÃO PERFIL (EXIBIÇÃO COM SUPORTE A ABAS E DTO) ─────────────────── */
+    /* ─── SEÇÃO PERFIL (GET) ────────────────────────────────────────────── */
     @GetMapping("/perfil")
     public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
                                @ModelAttribute("usuarioDTO") UsuarioDTO form,
@@ -183,12 +196,24 @@ public class UsuarioController {
         model.addAttribute("usuarioDTO", usuarioAtualizado);
         model.addAttribute("abaAtiva", aba);
 
+        // AQUI ENTRA O BLOCO DE CÓDIGO
+        if ("depoimento".equals(aba)) {
+            System.out.println(">>> ID DO UTILIZADOR LOGADO NA SESSÃO: " + usuario.getId());
+
+            List<Agendamento> agendamentosRealizados = agendamentoRepository
+                    .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
+
+            System.out.println(">>> QTD DE AGENDAMENTOS RETORNADOS: " + agendamentosRealizados.size());
+
+            model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
+        }
+
         return "perfil";
     }
 
     /* ─── ATUALIZAR INFORMAÇÕES DO PERFIL ─────────────────────────────────── */
     @PostMapping("/perfil/atualizar-perfil")
-    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes){
+    public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
 
@@ -207,7 +232,7 @@ public class UsuarioController {
         return "redirect:/perfil?aba=informacao";
     }
 
-    /* ─── ATUALIZAR SENHA (COM VERIFICAÇÃO BCRYPT) ────────────────────────── */
+    /* ─── ATUALIZAR SENHA ─────────────────────────────────────────────────── */
     @PostMapping("/perfil/atualizar-senha")
     public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
@@ -217,7 +242,6 @@ public class UsuarioController {
         String novaSenha = form.getNovaSenha();
         String confirmacaoSenha = form.getConfirmacaoSenha();
 
-        // 1. VERIFICAÇÃO DE CAMPOS EM BRANCO
         if (senhaAtual == null || senhaAtual.trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("mensagemError", "A senha atual não pode estar em branco.");
             return "redirect:/perfil?aba=configuracao";
@@ -240,35 +264,19 @@ public class UsuarioController {
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 3. VERIFICAÇÃO SE AS SENHAS COINCIDEM
         if (!novaSenha.equals(confirmacaoSenha)) {
             redirectAttributes.addFlashAttribute("mensagemError", "A nova senha e a confirmar nova senha não bate.");
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 4. REQUISITOS DA NOVA SENHA (UM POR UM)
-        if (!novaSenha.matches(".*[A-Z].*")) {
+        if (!novaSenha.matches(".*[A-Z].*") ||
+                !novaSenha.matches(".*[a-z].*") ||
+                !novaSenha.matches(".*[0-9].*") ||
+                !novaSenha.matches(".*[!@#$%^&*(),.?\":{}|<>" + "_\\-+=\\[\\]\\\\/;'`~].*")) {
             redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
             return "redirect:/perfil?aba=configuracao";
         }
 
-        if (!novaSenha.matches(".*[a-z].*")) {
-            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
-            return "redirect:/perfil?aba=configuracao";
-        }
-
-        if (!novaSenha.matches(".*[0-9].*")) {
-            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
-            return "redirect:/perfil?aba=configuracao";
-        }
-
-        if (!novaSenha.matches(".*[!@#$%^&*(),.?\":{}|<>" + "_\\-+=\\[\\]\\\\/;'`~].*")) {
-            redirectAttributes.addFlashAttribute("mensagemError", "A senha nova deve conter ao menos uma letra maiúscula, uma minúscula, um número e um caractere especial. (ex: @, #, !, $).");
-            return "redirect:/perfil?aba=configuracao";
-        }
-
-
-        // 5. ATRIBUIÇÃO E ATUALIZAÇÃO NO BANCO DE DADOS
         form.setEmail(usuario.getEmail());
         form.setSenha(novaSenha);
         form.setNovaSenha(novaSenha);
@@ -280,8 +288,84 @@ public class UsuarioController {
             return "redirect:/perfil?aba=configuracao";
         }
 
-        // 6. SUCESSO
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha alterada com sucesso!");
         return "redirect:/perfil?aba=configuracao";
+    }
+
+    @PostMapping("/perfil/enviar-depoimento")
+    public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
+                                      @RequestParam(value = "depoimento", required = false) String depoimento,
+                                      @RequestParam(value = "imagem", required = false) MultipartFile imagem,
+                                      @RequestParam(value = "acao", defaultValue = "salvar") String acao,
+                                      HttpSession session,
+                                      Model model,
+                                      RedirectAttributes redirectAttributes) {
+
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuario == null) return "redirect:/login";
+
+        Optional<Modelo> modeloOpt = modeloRepository.findByUsuario(usuario);
+        if (modeloOpt.isEmpty()) return "redirect:/";
+
+        List<Agendamento> agendamentosRealizados = agendamentoRepository
+                .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
+
+        // AÇÃO DE PRÉ-VISUALIZAÇÃO (Carrega a imagem e devolve a página)
+        if ("preview".equals(acao)) {
+            if (imagem != null && !imagem.isEmpty()) {
+                try {
+                    String base64Image = Base64.getEncoder().encodeToString(imagem.getBytes());
+                    model.addAttribute("imagemPreviewBase64", base64Image);
+                } catch (Exception e) {
+                    model.addAttribute("mensagemError", "Erro ao processar imagem para visualização.");
+                }
+            }
+            model.addAttribute("abaAtiva", "depoimento");
+            model.addAttribute("agendamentoIdSelecionado", idAgendamento);
+            model.addAttribute("comentarioTexto", depoimento);
+            model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
+            model.addAttribute("usuarioDTO", usuarioService.converterModelParaDTO(modeloOpt.get()));
+
+            return "perfil";
+        }
+
+        // AÇÃO DE SALVAR O DEPOIMENTO
+        if (idAgendamento == null) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Por favor, selecione o agendamento correspondente.");
+            return "redirect:/perfil?aba=depoimento";
+        }
+
+        if (depoimento == null || depoimento.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensagemError", "O depoimento não pode estar em branco.");
+            return "redirect:/perfil?aba=depoimento";
+        }
+
+        try {
+            Depoimento novoDepoimento = new Depoimento();
+            novoDepoimento.setDepoimento(depoimento);
+            novoDepoimento.setUsuario(usuario);
+            novoDepoimento.setModelo(modeloOpt.get());
+
+            // DEFINE O VALOR PADRÃO DA AVALIAÇÃO PARA EVITAR O ERRO DE NOT-NULL
+            novoDepoimento.setAvaliacao(5);
+
+            agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
+
+            if (imagem != null && !imagem.isEmpty()) {
+                String caminhoBase64 = Base64.getEncoder().encodeToString(imagem.getBytes());
+                novoDepoimento.setImagemAnexo1(caminhoBase64);
+                novoDepoimento.setImagemAnexo2("");
+            } else {
+                novoDepoimento.setImagemAnexo1("");
+                novoDepoimento.setImagemAnexo2("");
+            }
+
+            depoimentoRepository.save(novoDepoimento);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Depoimento enviado com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Erro ao salvar depoimento: " + e.getMessage());
+        }
+
+        return "redirect:/perfil?aba=depoimento";
     }
 }
