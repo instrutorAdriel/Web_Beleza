@@ -150,13 +150,13 @@
         <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
-    <div class="carrossel-wrapper">
-
-        <button type="button" class="seta-carrossel seta-esquerda">
+    <div class="carrossel-wrapper carrossel-wrapper-servicos">
+        <button type="button" class="seta-carrossel seta-esquerda seta-servico">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <div class="carrossel-track">
+        <div class="carrossel-viewport carrossel-viewport-servicos">
+            <div class="carrossel-track carrossel-track-servicos">
             <div class="card-curso-completo"
                  th:each="servico : ${servicos}"
                  th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
@@ -198,9 +198,10 @@
 
             </div>
 
+            </div>
         </div>
 
-        <button type="button" class="seta-carrossel seta-direita">
+        <button type="button" class="seta-carrossel seta-direita seta-servico">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 

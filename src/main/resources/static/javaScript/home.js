@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
  * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
  */
 function inicializarCarrossel() {
-    const track = document.querySelector('.carrossel-track');
-    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
-    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
+    const track = document.querySelector('.carrossel-track-servicos');
+    const setaEsquerda = document.querySelector('.seta-servico.seta-esquerda');
+    const setaDireita = document.querySelector('.seta-servico.seta-direita');
+    const viewport = document.querySelector('.carrossel-viewport-servicos');
+    const cards = document.querySelectorAll('.carrossel-track-servicos .card-curso-completo');
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
@@ -31,6 +33,18 @@ function inicializarCarrossel() {
         e.preventDefault();
         track.scrollBy({ left: 344, behavior: 'smooth' });
     });
+
+    // Trava a altura do viewport quando o mouse entra no card
+    if (viewport && cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                viewport.style.height = viewport.offsetHeight + 'px';
+            });
+            card.addEventListener('mouseleave', () => {
+                viewport.style.height = '';
+            });
+        });
+    }
 }
 
 /**
