@@ -150,6 +150,11 @@
         <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
     </div>
 
+    <!-- MENSAGEM DE SERVIÇOS VAZIOS -->
+    <div id="mensagem-vazia" style="display: none; text-align: center; padding: 40px; color: #666; font-size: 1.1rem; width: 100%;">
+        Não há serviços disponíveis para unidade selecionada.
+    </div>
+
     <div class="carrossel-wrapper">
 
         <button type="button" class="seta-carrossel seta-esquerda">
@@ -304,21 +309,18 @@
                     </td>
 
                     <td class="align-middle text-center">
-                        <!-- 1. Se o usuário logado JÁ agendou -->
                         <button th:if="${sessao.agendadoPeloUsuario}"
                                 class="btn-cancelar ssp-btn-cancelar"
                                 th:onclick="|desfazerAgendamento(${sessao.id})|">
                             ✕ Desfazer
                         </button>
 
-                        <!-- 2. Se NÃO agendou E as vagas esgotaram -->
                         <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis <= 0}"
                                 class="btn-confirmar ssp-btn-disabled"
                                 disabled>
                             Indisponível
                         </button>
 
-                        <!-- 3. Se NÃO agendou E AINDA TEM vaga disponível -->
                         <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
                                 class="btn-confirmar ssp-btn-confirm-active"
                                 th:onclick="|confirmarAgendamento(${sessao.id})|">

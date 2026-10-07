@@ -54,12 +54,13 @@ function inicializarCarrosselDepoimentos() {
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE (COM MENSAGEM DE VAZIO)
  */
 function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
     const cardsServicos = document.querySelectorAll('.card-curso-completo');
     const track = document.querySelector('.carrossel-track');
+    const mensagemVazia = document.querySelector('#mensagem-vazia');
 
     if (!abas || cardsServicos.length === 0) return;
 
@@ -80,16 +81,27 @@ function inicializarFiltroBairros() {
             aba.classList.add('ativa');
 
             const unidadeSelecionada = normalizarTexto(aba.getAttribute('data-unidade'));
+            let contadorVisiveis = 0;
 
             cardsServicos.forEach(card => {
                 const unidadeCard = normalizarTexto(card.getAttribute('data-unidade'));
 
                 if (unidadeSelecionada === 'todos' || unidadeCard === unidadeSelecionada) {
                     card.style.setProperty('display', 'flex', 'important');
+                    contadorVisiveis++;
                 } else {
                     card.style.setProperty('display', 'none', 'important');
                 }
             });
+
+            // Se nenhum card estiver visível, mostra a mensagem e esconde o carrossel
+            if (contadorVisiveis === 0) {
+                if (mensagemVazia) mensagemVazia.style.display = 'block';
+                if (track) track.style.display = 'none';
+            } else {
+                if (mensagemVazia) mensagemVazia.style.display = 'none';
+                if (track) track.style.display = 'flex';
+            }
 
             if (track) {
                 track.scrollLeft = 0;
