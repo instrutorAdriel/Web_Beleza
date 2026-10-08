@@ -313,5 +313,9 @@ function inicializarHeroBanner() {
             slideAnterior();
             reiniciarIntervalo();
         });
+
     }
+
 }
+
+

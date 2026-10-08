@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/javaScript/home.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -189,15 +190,21 @@
                 <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
                     <label for="imagem">Adicionar Imagem</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+                    <input type="file" id="imagem" name="imagem" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
                     <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                        <img class="preview-imagem-depoimento"
+                             th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}"
+                             alt="Pré-visualização da imagem"
+                             title="Clique para ampliar"
+                             style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover; cursor: zoom-in;">
                     </div>
                 </div>
 
                 <div class="group-button">
-                    <button type="submit" name="acao" value="salvar" class="btn">Enviar Depoimento</button>
+                    <button type="submit" name="acao" value="salvar" class="btn"
+                            onclick="this.form.action='/perfil/enviar-depoimento';">Enviar Depoimento</button>
                 </div>
             </form>
         </section>
