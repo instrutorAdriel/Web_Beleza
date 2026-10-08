@@ -1857,7 +1857,7 @@ input::-ms-clear {
 .secao-painel {
     width: 95%;
     max-width: 1200px;
-    min-height: 85vh;
+    min-height: 50vh;
     background: var(--fundo-card);
     padding: 50px 60px;
     border-radius: 16px;
