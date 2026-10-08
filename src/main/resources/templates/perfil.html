@@ -188,11 +188,18 @@
 
                 <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagem</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+                    <label for="imagem">Adicionar Imagens</label>
 
-                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
+                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
+                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
+                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
+                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
+                                 alt="Pré-visualização da imagem">
+                        </div>
                     </div>
                 </div>
 
