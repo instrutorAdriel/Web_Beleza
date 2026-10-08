@@ -1908,9 +1908,9 @@ input::-ms-clear {
 
 /* Quadrado da Pré-visualização de Imagem */
 .container-preview-imagem {
-    margin-top: 12px;
-    width: 120px;
-    height: 120px;
+    margin-top: 10px;
+    width: 150px;
+    height: 150px;
     border: 2px dashed var(--borda-suave);
     border-radius: 8px;
     overflow: hidden;
@@ -1921,9 +1921,19 @@ input::-ms-clear {
 }
 
 .container-preview-imagem img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+}
+
+.nome-arquivo-carregado {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: #10b981;
+    font-weight: 600;
 }
 
 #depoimento-form textarea,
@@ -2147,6 +2157,7 @@ input::-ms-clear {
     margin-bottom: 0.8rem;
     display: block;
 }
+
 /* ==========================================================================
    NOVAS REGRAS CSS EXTRAÍDAS DAS TAGS HTML E ESTILOS INLINE
    ========================================================================== */

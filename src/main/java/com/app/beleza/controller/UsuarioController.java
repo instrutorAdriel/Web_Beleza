@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +50,7 @@ public class UsuarioController {
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
+
     @Autowired
     private CloudinaryService cloudinaryService;
 
@@ -201,14 +201,9 @@ public class UsuarioController {
         model.addAttribute("usuarioDTO", usuarioAtualizado);
         model.addAttribute("abaAtiva", aba);
 
-        // AQUI ENTRA O BLOCO DE CÓDIGO
         if ("depoimento".equals(aba)) {
-            System.out.println(">>> ID DO UTILIZADOR LOGADO NA SESSÃO: " + usuario.getId());
-
             List<Agendamento> agendamentosRealizados = agendamentoRepository
                     .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
-
-            System.out.println(">>> QTD DE AGENDAMENTOS RETORNADOS: " + agendamentosRealizados.size());
 
             model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
         }
@@ -297,10 +292,11 @@ public class UsuarioController {
         return "redirect:/perfil?aba=configuracao";
     }
 
+    /* ─── PROCESSAR DEPOIMENTO (COM LIMITE DE 2 IMAGENS) ───────────────────── */
     @PostMapping("/perfil/enviar-depoimento")
     public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
                                       @RequestParam(value = "depoimento", required = false) String depoimento,
-                                      @RequestParam(value = "imagem", required = false) MultipartFile imagem,
+                                      @RequestParam(value = "imagens", required = false) List<MultipartFile> imagens,
                                       @RequestParam(value = "acao", defaultValue = "salvar") String acao,
                                       HttpSession session,
                                       Model model,
@@ -315,17 +311,63 @@ public class UsuarioController {
         List<Agendamento> agendamentosRealizados = agendamentoRepository
                 .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
-
-        // AÇÃO DE PRÉ-VISUALIZAÇÃO (Carrega a imagem e devolve a página)
-        if ("preview".equals(acao)) {
-            if (imagem != null && !imagem.isEmpty()) {
-                try {
-                    String base64Image = Base64.getEncoder().encodeToString(imagem.getBytes());
-                    model.addAttribute("imagemPreviewBase64", base64Image);
-                } catch (Exception e) {
-                    model.addAttribute("mensagemError", "Erro ao processar imagem para visualização.");
+        // Remove arquivos vazios da lista enviada
+        List<MultipartFile> imagensValidas = new ArrayList<>();
+        if (imagens != null) {
+            for (MultipartFile img : imagens) {
+                if (img != null && !img.isEmpty()) {
+                    imagensValidas.add(img);
                 }
             }
+        }
+
+        // Validação estrita do limite de 2 imagens
+        if (imagensValidas.size() > 2) {
+            model.addAttribute("mensagemError", "Você pode enviar no máximo 2 imagens por depoimento.");
+            model.addAttribute("abaAtiva", "depoimento");
+            model.addAttribute("agendamentoIdSelecionado", idAgendamento);
+            model.addAttribute("comentarioTexto", depoimento);
+            model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
+            model.addAttribute("usuarioDTO", usuarioService.converterModelParaDTO(modeloOpt.get()));
+            return "perfil";
+        }
+
+        // ─── 1. AÇÃO DE PRÉ-VISUALIZAÇÃO (PREVIEW) ───────────────────────────────
+        if ("preview".equals(acao)) {
+            if (!imagensValidas.isEmpty()) {
+                try {
+                    List<byte[]> listaBytes = new ArrayList<>();
+                    List<String> listaBase64 = new ArrayList<>();
+                    List<String> listaTipos = new ArrayList<>();
+
+                    for (MultipartFile img : imagensValidas) {
+                        byte[] bytes = img.getBytes();
+                        listaBytes.add(bytes);
+                        listaBase64.add(Base64.getEncoder().encodeToString(bytes));
+                        listaTipos.add(img.getContentType() != null ? img.getContentType() : "image/jpeg");
+                    }
+
+                    // Armazena na sessão para persistir no reload do form
+                    session.setAttribute("tempImagensBytes", listaBytes);
+                    session.setAttribute("tempImagensPreviewBase64", listaBase64);
+                    session.setAttribute("tempImagensTipos", listaTipos);
+
+                    model.addAttribute("listaPreviewBase64", listaBase64);
+                    model.addAttribute("listaPreviewTipos", listaTipos);
+                } catch (Exception e) {
+                    model.addAttribute("mensagemError", "Erro ao processar imagens para visualização.");
+                }
+            } else {
+                // Recupera da sessão se já tiver sido pré-carregado antes
+                List<String> tempPreview = (List<String>) session.getAttribute("tempImagensPreviewBase64");
+                List<String> tempTipos = (List<String>) session.getAttribute("tempImagensTipos");
+
+                if (tempPreview != null) {
+                    model.addAttribute("listaPreviewBase64", tempPreview);
+                    model.addAttribute("listaPreviewTipos", tempTipos);
+                }
+            }
+
             model.addAttribute("abaAtiva", "depoimento");
             model.addAttribute("agendamentoIdSelecionado", idAgendamento);
             model.addAttribute("comentarioTexto", depoimento);
@@ -335,7 +377,7 @@ public class UsuarioController {
             return "perfil";
         }
 
-        // AÇÃO DE SALVAR O DEPOIMENTO
+        // ─── 2. AÇÃO DE SALVAR O DEPOIMENTO ─────────────────────────────────────
         if (idAgendamento == null) {
             redirectAttributes.addFlashAttribute("mensagemError", "Por favor, selecione o agendamento correspondente.");
             return "redirect:/perfil?aba=depoimento";
@@ -351,25 +393,44 @@ public class UsuarioController {
             novoDepoimento.setDepoimento(depoimento);
             novoDepoimento.setUsuario(usuario);
             novoDepoimento.setModelo(modeloOpt.get());
-
-            // DEFINE O VALOR PADRÃO DA AVALIAÇÃO PARA EVITAR O ERRO DE NOT-NULL
             novoDepoimento.setAvaliacao(5);
 
             agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
 
-            if (imagem != null && !imagem.isEmpty()) {
-                System.out.println(">>> ENVIANDO IMAGEM PARA CLOUDINARY");
-                String urlImagem =
-                        cloudinaryService.upload(imagem, "depoimento");
-                System.out.println(">>> URL GERADA: " + urlImagem);
-                novoDepoimento.setImagemAnexo1(urlImagem);
-                novoDepoimento.setImagemAnexo2("");
-            } else {
-                System.out.println(">>> NENHUMA IMAGEM RECEBIDA");
-                novoDepoimento.setImagemAnexo1("");
-                novoDepoimento.setImagemAnexo2("");
+            List<byte[]> bytesParaUpload = new ArrayList<>();
+
+            // Se vieram arquivos novos na submissão, usa eles; caso contrário, usa os salvos na sessão
+            if (!imagensValidas.isEmpty()) {
+                for (MultipartFile f : imagensValidas) {
+                    bytesParaUpload.add(f.getBytes());
+                }
+            } else if (session.getAttribute("tempImagensBytes") != null) {
+                bytesParaUpload = (List<byte[]>) session.getAttribute("tempImagensBytes");
             }
+
+            // Realiza upload de até 2 imagens para o Cloudinary e associa ao depoimento
+            String urlImg1 = "";
+            String urlImg2 = "";
+
+            if (bytesParaUpload != null && !bytesParaUpload.isEmpty()) {
+                if (bytesParaUpload.size() > 0) {
+                    urlImg1 = cloudinaryService.upload(bytesParaUpload.get(0), "depoimento");
+                }
+                if (bytesParaUpload.size() > 1) {
+                    urlImg2 = cloudinaryService.upload(bytesParaUpload.get(1), "depoimento");
+                }
+            }
+
+            novoDepoimento.setImagemAnexo1(urlImg1);
+            novoDepoimento.setImagemAnexo2(urlImg2);
+
             depoimentoRepository.save(novoDepoimento);
+
+            // Limpa as imagens temporárias da sessão
+            session.removeAttribute("tempImagensBytes");
+            session.removeAttribute("tempImagensPreviewBase64");
+            session.removeAttribute("tempImagensTipos");
+
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Depoimento enviado com sucesso!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemError", "Erro ao salvar depoimento: " + e.getMessage());

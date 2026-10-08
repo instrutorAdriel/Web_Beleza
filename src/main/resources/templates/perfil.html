@@ -103,7 +103,7 @@
             <div class="lista-agendamentos">
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-corte.jpg');"></div>
+                    <div class="card-agendamento-imagem"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-concluido">Concluído</div>
                         <h3 class="card-agendamento-titulo">Corte de Cabelo</h3>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-manicure.jpg');"></div>
+                    <div class="card-agendamento-imagem"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-confirmado">Confirmado</div>
                         <h3 class="card-agendamento-titulo">Manicure e Pedicure</h3>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-coloracao.jpg');"></div>
+                    <div class="card-agendamento-imagem"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-cancelado">Cancelado</div>
                         <h3 class="card-agendamento-titulo">Coloração Capilar</h3>
@@ -186,16 +186,20 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
+                <!-- ANEXAR ATÉ 2 IMAGENS E PRÉ-VISUALIZAÇÃO EM LISTA -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagem (opcional)</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/*"
+                    <label for="imagem">Adicionar Imagens</label>
+
+                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
+                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
                            onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:' + ${imagemPreviewTipo} + ';base64,' + ${imagemPreviewBase64}"
-                             alt="Pré-visualização da imagem"
-                             style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
+                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
+                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
+                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
+                                 alt="Pré-visualização da imagem">
+                        </div>
                     </div>
                 </div>
 
