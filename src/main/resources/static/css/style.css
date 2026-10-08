@@ -1740,11 +1740,61 @@ input::-ms-clear {
     font-family: Arial, sans-serif;
 }
 
+/* ==========================================================================
+   MENU LATERAL DA PÁGINA PERFIL (MANTIDO)
+   ========================================================================== */
+
 .sidebar {
-    width: 250px;
+    width: 280px;
+    flex-shrink: 0;
     background-color: var(--fundo-footer);
     color: var(--texto-claro);
-    padding: 20px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bar-item {
+    width: 100%;
+    display: block;
+    padding: 14px 20px;
+    text-align: left;
+    border: none;
+    white-space: normal;
+    outline: 0;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar h3.bar-item {
+    font-size: 18px;
+    color: var(--senac-laranja);
+    border-bottom: 2px solid var(--borda-suave);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.button {
+    border: none;
+    display: block;
+    padding: 14px 20px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 6px;
+    transition: var(--transicao);
+}
+
+.button:hover {
+    color: #000 !important;
+    background-color: var(--senac-laranja) !important;
 }
 
 .sidebar a.active {
