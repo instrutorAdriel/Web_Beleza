@@ -42,7 +42,7 @@
                     </div>
                     <div class="group-input">
                         <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10">
+                        <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa">
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -103,7 +103,7 @@
             <div class="lista-agendamentos">
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem"></div>
+                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-corte.jpg');"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-concluido">Concluído</div>
                         <h3 class="card-agendamento-titulo">Corte de Cabelo</h3>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem"></div>
+                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-manicure.jpg');"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-confirmado">Confirmado</div>
                         <h3 class="card-agendamento-titulo">Manicure e Pedicure</h3>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="card-agendamento">
-                    <div class="card-agendamento-imagem"></div>
+                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-coloracao.jpg');"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status status-cancelado">Cancelado</div>
                         <h3 class="card-agendamento-titulo">Coloração Capilar</h3>
@@ -169,7 +169,7 @@
                         <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
                         <option th:each="ag : ${listaAgendamentosRealizados}"
                                 th:value="${ag.id}"
-                                th:text="${ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id} + ' - ' + ${ag.dataHoraAgendamento}"
+                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
                                 th:selected="${ag.id == agendamentoIdSelecionado}">
                             Serviço Exemplo
                         </option>
@@ -186,7 +186,7 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR ATÉ 2 IMAGENS E PRÉ-VISUALIZAÇÃO EM LISTA -->
+                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
                     <label for="imagem">Adicionar Imagens</label>
 
@@ -204,8 +204,7 @@
                 </div>
 
                 <div class="group-button">
-                    <button type="submit" name="acao" value="salvar" class="btn"
-                            onclick="this.form.action='/perfil/enviar-depoimento';">Enviar Depoimento</button>
+                    <button type="submit" name="acao" value="salvar" class="btn">Enviar Depoimento</button>
                 </div>
             </form>
         </section>
