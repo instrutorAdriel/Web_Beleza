@@ -742,6 +742,9 @@
     width: 100%;
     background-size: cover;
     background-position: center;
+    /* Adiciona estas linhas para arredondar os cantos superiores */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .img-placeholder-curso img {
@@ -751,6 +754,9 @@
     position: absolute;
     top: 0;
     left: 0;
+    /* Garante que a imagem em si também respeite o arredondamento */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .img-placeholder-curso i {
