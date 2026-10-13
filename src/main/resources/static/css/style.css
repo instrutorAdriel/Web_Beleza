@@ -1730,6 +1730,64 @@ input::-ms-clear {
     font-family: Arial, sans-serif;
 }
 
+/* Status dos Agendamentos */
+.card-agendamento-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.status-confirmado {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-concluido {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.status-cancelado {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-pendente {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-paginacao {
+    padding: 8px 16px;
+    background-color: #0056b3;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-paginacao:hover {
+    background-color: #003d82;
+}
+
+.btn-paginacao.disabled {
+    pointer-events: none;
+    background-color: #cccccc;
+    color: #666666;
+}
+
 /* ==========================================================================
    MENU LATERAL DA PÁGINA PERFIL (ATUALIZADO)
    ========================================================================== */
@@ -1795,7 +1853,6 @@ input::-ms-clear {
     flex: 1;
     padding: 40px;
     background-color: #fff;
-    max-width: 800px;
 }
 
 .hidden {
