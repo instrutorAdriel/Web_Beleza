@@ -52,7 +52,7 @@ public class PerfilController {
 
     @GetMapping
     public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
-                               @RequestParam(value = "0") int pagina,
+                               @RequestParam(defaultValue = "0") int pagina,
                                @RequestParam(defaultValue = "5") int tamanho,
                                @ModelAttribute("usuarioDTO") UsuarioDTO form,
                                Model model,
