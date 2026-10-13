@@ -1,74 +1,42 @@
 package com.app.beleza.service;
 
+import com.app.beleza.model.dto.AgendamentoDTO;
+import com.app.beleza.respository.AgendamentoRepository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AgendamentoService {
-    /*
-    @Autowired
-    private SessaoAtendimentoRepository repository;
+    private final AgendamentoRepository agendamentoRepository;
 
-    public List<SessaoAtendimentoDTO> listarPorServico(Long servicoId, Usuario usuarioLogado) {
-        List<Agendamento> sessoes = repository.findByServicoId(servicoId);
-
-        return sessoes.stream().map(sessao -> {
-            // 1. O agendamento pertence ao usuário logado se o ID dele estiver DENTRO da lista de usuários da sessão
-            boolean pertenceAoUsuarioLogado = usuarioLogado != null
-                    && sessao.getUsuarios() != null
-                    && sessao.getUsuarios().stream()
-                    .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
-
-            // 2. Cria o DTO com o boolean correto
-            return new SessaoAtendimentoDTO(
-                    sessao.getId(),
-                    sessao.getDataAtendimento().toString(),
-                    sessao.getHorarioInicial().toString(),
-                    sessao.getVagasDisponiveis(),
-                    pertenceAoUsuarioLogado
-            );
-        }).collect(Collectors.toList());
+    public AgendamentoService(AgendamentoRepository agendamentoRepository) {
+        this.agendamentoRepository = agendamentoRepository;
     }
 
-    public void agendarSessao(Long id, Usuario usuario) {
-        Agendamento sessao = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
+    @Transactional(readOnly = true)
+    @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho")
+    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho) {
 
-        if (sessao.getVagasDisponiveis() <= 0) {
-            throw new RuntimeException("Não há vagas disponíveis nesse horário");
-        }
+        // Regra de Proteção: Aplica um delay de 300ms para amortecer requisições em rajada/spam
+        aplicarDelayProtecao(300);
 
-        // Evita que o mesmo usuário agende 2 vezes a mesma sessão
-        boolean jaAgendou = sessao.getUsuarios().stream()
-                .anyMatch(u -> u.getId().equals(usuario.getId()));
+        // Cria a paginação ordenada pelos agendamentos mais recentes primeiro
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
 
-        if (jaAgendou) {
-            throw new RuntimeException("Você já agendou este horário!");
-        }
-
-        // Adiciona o usuário na lista e reduz a vaga
-        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() - 1);
-        sessao.getUsuarios().add(usuario);
-
-        repository.save(sessao);
+        return agendamentoRepository.findByModeloOrUsuarioPaginado(idModelo, idUsuario, pageable)
+                .map(AgendamentoDTO::new);
     }
 
-    public void cancelarSessao(Long id, Usuario usuarioLogado) {
-        Agendamento sessao = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada!"));
-
-        // Verifica se o usuário realmente agendou essa sessão para poder cancelar
-        boolean estaNaLista = sessao.getUsuarios().stream()
-                .anyMatch(u -> u.getId().equals(usuarioLogado.getId()));
-
-        if (!estaNaLista) {
-            throw new RuntimeException("Você não tem permissão para cancelar este agendamento.");
+    private void aplicarDelayProtecao(long milissegundos) {
+        try {
+            Thread.sleep(milissegundos);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
-
-        // Remove o usuário específico da lista e devolve a vaga
-        sessao.setVagasDisponiveis(sessao.getVagasDisponiveis() + 1);
-        sessao.getUsuarios().removeIf(u -> u.getId().equals(usuarioLogado.getId()));
-
-        repository.save(sessao);
     }
-    */
 }

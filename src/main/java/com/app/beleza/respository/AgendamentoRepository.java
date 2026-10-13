@@ -4,6 +4,8 @@ import com.app.beleza.model.Agendamento;
 import com.app.beleza.model.Instrutor;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.enums.SituacaoAgendamento;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +29,13 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "WHERE a.usuario.id = :usuarioId AND a.situacao = :situacao")
     List<Agendamento> findAgendamentosRealizadosPorUsuario(@Param("usuarioId") Integer usuarioId,
                                                            @Param("situacao") SituacaoAgendamento situacao);
+
+    @Query(value = "SELECT a FROM Agendamento a " +
+            "JOIN FETCH a.disponibilidade d " +
+            "JOIN FETCH d.produtoUnidade pu " +
+            "JOIN FETCH pu.produto p " +
+            "JOIN FETCH pu.unidade u " +
+            "WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario",
+            countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
+    Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
 }
