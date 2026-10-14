@@ -220,13 +220,14 @@
         Veja o que nossos clientes dizem sobre os serviços do salão.
     </p>
 
-    <div class="carrossel-wrapper">
+    <div class="carrossel-wrapper carrossel-wrapper-depoimentos">
 
         <a href="#" class="seta-carrossel seta-esquerda depoimento-seta">
             <i class="fa-solid fa-chevron-left"></i>
         </a>
 
-        <div class="carrossel-track carrossel-depoimentos">
+        <div class="carrossel-viewport-depoimentos">
+            <div class="carrossel-track carrossel-track-depoimentos carrossel-depoimentos">
 
             <div class="card-depoimento" th:each="depoimento : ${depoimentos}">
 
@@ -267,6 +268,7 @@
                 </div>
 
             </div>
+        </div>
         </div>
 
         <a href="#" class="seta-carrossel seta-direita depoimento-seta">

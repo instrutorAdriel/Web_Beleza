@@ -597,6 +597,19 @@
     overflow: visible;
 }
 
+/* Viewport dos depoimentos mantém espaço para o card expandir no hover */
+.carrossel-wrapper-depoimentos {
+    align-items: flex-start;
+    z-index: 1;
+}
+
+.carrossel-viewport-depoimentos {
+    position: relative;
+    width: 100%;
+    height: 550px;
+    overflow: visible;
+}
+
 /* Track específico dos serviços */
 .carrossel-track-servicos {
     scroll-behavior: smooth;
@@ -613,6 +626,12 @@
 .carrossel-track-servicos::-webkit-scrollbar { height: 6px; }
 .carrossel-track-servicos::-webkit-scrollbar-track { background: var(--fundo-card); border-radius: 10px; }
 .carrossel-track-servicos::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
+
+/* Track específico dos depoimentos */
+.carrossel-track-depoimentos {
+    overflow-y: visible;
+    align-items: flex-start;
+}
 
 /* Track genérico (usado por depoimentos) */
 .carrossel-track {
@@ -860,8 +879,7 @@
    CARDS DE DEPOIMENTOS
    ========================================================================== */
 .card-depoimento {
-    min-width: 340px;
-    max-width: 340px;
+    flex: 0 0 340px;
     background: var(--fundo-card);
     border-radius: 12px;
     padding: 2rem;
@@ -871,12 +889,22 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    transition: var(--transicao);
+    min-height: 400px;
+    height: auto;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .card-depoimento:hover {
     border-color: var(--senac-laranja);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(247,148,30,0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(247,148,30,0.1);
+    z-index: 50;
+}
+.card-depoimento.expandido-horizontal {
+    flex-basis: var(--largura-expandida);
+    margin-right: calc(340px - var(--largura-expandida));
+    transform: translate(var(--deslocamento-horizontal), -8px);
 }
 .depoimento-texto {
     color: var(--texto-mutado);
@@ -884,6 +912,15 @@
     line-height: 1.7;
     flex: 1;
     font-size: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-depoimento:hover .depoimento-texto {
+    display: block;
+    overflow: visible;
 }
 .depoimento-autor {
     display: flex;
@@ -894,7 +931,7 @@
 }
 .depoimento-imagens {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
     width: 100%;
     height: 180px;
@@ -903,6 +940,7 @@
 }
 
 .depoimento-imagem {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -910,6 +948,27 @@
 
 .depoimento-imagens:not(:has(img + img)) {
     grid-template-columns: 1fr;
+}
+
+.card-depoimento:hover .depoimento-imagens {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: auto;
+    overflow: visible;
+}
+
+.card-depoimento:hover .depoimento-imagem {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.card-depoimento:hover .depoimento-imagens:not(:has(img + img)) {
+    grid-template-columns: 1fr;
+}
+
+.card-depoimento:hover .depoimento-imagens:not(:has(img + img)) .depoimento-imagem {
+    max-height: 500px;
 }
 .avatar-inicial {
     width: 42px;

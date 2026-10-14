@@ -53,6 +53,8 @@ function inicializarCarrossel() {
 function inicializarCarrosselDepoimentos() {
     const track = document.querySelector('.carrossel-depoimentos');
     const setas = document.querySelectorAll('.depoimento-seta');
+    const viewport = document.querySelector('.carrossel-viewport-depoimentos');
+    const cards = document.querySelectorAll('.carrossel-depoimentos .card-depoimento');
 
     if (!track || setas.length === 0) return;
 
@@ -65,6 +67,52 @@ function inicializarCarrosselDepoimentos() {
             track.scrollLeft += seta.classList.contains('seta-esquerda') ? -largura : largura;
         });
     });
+
+    if (viewport) {
+        cards.forEach(card => {
+            const imagens = card.querySelectorAll('.depoimento-imagem');
+            const permiteExpandirHorizontalmente = imagens.length === 2;
+
+            card.addEventListener('mouseenter', () => {
+                if (!permiteExpandirHorizontalmente) return;
+
+                const larguraOriginal = card.getBoundingClientRect().width;
+                const larguraViewport = viewport.clientWidth;
+                const larguraExpandida = Math.min(
+                    620,
+                    larguraViewport,
+                    Math.max(340, window.innerWidth - 120)
+                );
+                const deslocamentoCentralizado = (larguraOriginal - larguraExpandida) / 2;
+                const limitesViewport = viewport.getBoundingClientRect();
+                const posicaoEsquerdaExpandida = card.getBoundingClientRect().left + deslocamentoCentralizado;
+                const deslocamentoCorretivo = Math.max(
+                    limitesViewport.left - posicaoEsquerdaExpandida,
+                    Math.min(0, limitesViewport.right - posicaoEsquerdaExpandida - larguraExpandida)
+                );
+
+                card.style.setProperty('--largura-expandida', `${larguraExpandida}px`);
+                card.style.setProperty(
+                    '--deslocamento-horizontal',
+                    `${deslocamentoCentralizado + deslocamentoCorretivo}px`
+                );
+                card.classList.add('expandido-horizontal');
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('expandido-horizontal');
+                card.style.removeProperty('--largura-expandida');
+                card.style.removeProperty('--deslocamento-horizontal');
+            });
+
+            card.addEventListener('mouseenter', () => {
+                viewport.style.height = viewport.offsetHeight + 'px';
+            });
+            card.addEventListener('mouseleave', () => {
+                viewport.style.height = '';
+            });
+        });
+    }
 }
 
 /**
