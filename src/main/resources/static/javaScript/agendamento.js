@@ -2,21 +2,28 @@
 function abrirModalAgendamento(idServico) {
     console.log("Carregando tabela via Spring para o Serviço:", idServico);
 
-    // Armazena o ID do serviço atual no próprio modal para sabermos qual atualizar depois
     document.getElementById("modal-agendamento").dataset.idServicoAtual = idServico;
     document.getElementById("modal-agendamento").style.display = "flex";
 
-    // Busca o fragmento HTML renderizado pelo servidor
+    // 👇 NOVO: mostra "Carregando..." enquanto a requisição acontece
+    document.getElementById("tabela-sessoes-body").innerHTML =
+        '<tr><td colspan="4" style="text-align:center;padding:24px;color:#999;">' +
+        '<i class="fa-solid fa-spinner fa-spin"></i> Carregando horários...</td></tr>';
+
     fetch(`/api/agendamento/modal-tabela?servicoId=${idServico}`)
         .then(response => {
             if (!response.ok) throw new Error("Erro na requisição da tabela");
-            return response.text(); // Lemos como TEXT (HTML bruto vindo do Thymeleaf)
+            return response.text();
         })
         .then(htmlDoFragmento => {
-            // Substitui o corpo da tabela diretamente com o HTML processado pelo Java
             document.getElementById("tabela-sessoes-body").innerHTML = htmlDoFragmento;
         })
-        .catch(error => console.error("Erro ao carregar fragmento:", error));
+        .catch(error => {
+            console.error("Erro ao carregar fragmento:", error);
+            document.getElementById("tabela-sessoes-body").innerHTML =
+                '<tr><td colspan="4" style="text-align:center;padding:24px;color:#ef4444;">' +
+                'Erro ao carregar horários. Tente novamente.</td></tr>';
+        });
 }
 
 function fecharModal() {

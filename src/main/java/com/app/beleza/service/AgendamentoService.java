@@ -28,6 +28,7 @@ public class AgendamentoService {
     @Autowired private InstrutorRepository instrutorRepository;
 
     /** Lista a disponibilidade e calcula se o usuário logado já agendou. */
+    @Transactional(readOnly = true)
     public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idDisponibilidade, Usuario usuarioLogado) {
         List<SessaoAtendimentoDTO> lista = new ArrayList<>();
 
@@ -40,8 +41,12 @@ public class AgendamentoService {
 
             SessaoAtendimentoDTO dto = new SessaoAtendimentoDTO(
                     d.getId().longValue(),
-                    d.getDataDisponibilidade() != null ? d.getDataDisponibilidade().toString() : "",
-                    d.getHoraInicio() != null ? d.getHoraInicio().toString() : "",
+                    d.getDataDisponibilidade() != null
+                            ? d.getDataDisponibilidade().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                            : "",
+                    d.getHoraInicio() != null
+                            ? d.getHoraInicio().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                            : "",
                     d.getTotalVagas() != null ? d.getTotalVagas() : 0,
                     jaAgendou
             );
