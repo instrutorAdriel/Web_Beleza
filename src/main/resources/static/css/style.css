@@ -629,7 +629,64 @@
 .carrossel-track::-webkit-scrollbar-track { background: var(--fundo-card); border-radius: 10px; }
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
-/* Setas genéricas */
+.card-servico {
+    min-width: 320px;
+    max-width: 320px;
+    height: 380px;
+    background: var(--fundo-card);
+    border-radius: 12px;
+    border: 1px solid var(--borda-suave);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transicao);
+}
+.card-servico:hover {
+    transform: translateY(-6px);
+    border-color: var(--senac-laranja);
+    box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
+}
+.card-tag-unidade {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--senac-laranja);
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+.card-titulo-servico {
+    font-size: 19px;
+    color: var(--texto-escuro);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.card-descricao {
+    font-size: 14px;
+    color: var(--texto-mutado);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.btn-card {
+    background-color: var(--senac-laranja);
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    display: block;
+    transition: var(--transicao);
+    margin-top: auto;
+}
+.btn-card:hover {
+    background-color: var(--senac-laranja-hover);
+}
+
 .seta-carrossel {
     background-color: white;
     border: 1px solid var(--borda-suave);
@@ -646,7 +703,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     z-index: 10;
     text-decoration: none;
-    cursor: pointer;
     transition: var(--transicao);
 }
 
@@ -656,13 +712,36 @@
     border-color: var(--senac-laranja);
 }
 
-.seta-esquerda { left: -20px; }
-.seta-direita { right: -20px; }
+.seta-esquerda {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-/* Setas específicas dos serviços: alinhadas pelo centro do card (520/2 = 260) */
-.carrossel-wrapper-servicos .seta-carrossel {
-    top: 260px;
-    transform: translateY(-50%);
+.seta-direita {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 /* ==========================================================================
    PLATAFORMA DE CURSOS
@@ -703,6 +782,7 @@
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
+    overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
@@ -742,6 +822,9 @@
     width: 100%;
     background-size: cover;
     background-position: center;
+    /* Adiciona estas linhas para arredondar os cantos superiores */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .img-placeholder-curso img {
@@ -751,6 +834,9 @@
     position: absolute;
     top: 0;
     left: 0;
+    /* Garante que a imagem em si também respeite o arredondamento */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .img-placeholder-curso i {
