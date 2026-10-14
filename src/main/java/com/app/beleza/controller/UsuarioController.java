@@ -10,6 +10,7 @@ import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
 import com.app.beleza.utils.Validador;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +41,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
