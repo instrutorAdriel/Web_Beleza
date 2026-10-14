@@ -49,6 +49,9 @@ public class UsuarioController {
     @Autowired
     private DepoimentoRepository depoimentoRepository;
 
+    @Autowired
+    private com.app.beleza.service.AgendamentoService agendamentoService;
+
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
     public String exibirLogin(Model model) {
@@ -208,6 +211,10 @@ public class UsuarioController {
             model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
         }
 
+        if ("agendamento".equals(aba)) {
+            model.addAttribute("listaAgendamentos", agendamentoService.listarMeusAgendamentos(usuario));
+        }
+
         return "perfil";
     }
 
@@ -347,7 +354,7 @@ public class UsuarioController {
             novoDepoimento.setModelo(modeloOpt.get());
 
             // DEFINE O VALOR PADRÃO DA AVALIAÇÃO PARA EVITAR O ERRO DE NOT-NULL
-            novoDepoimento.setAvaliacao(5);
+            //novoDepoimento.setAvaliacao(5);
 
             agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
 

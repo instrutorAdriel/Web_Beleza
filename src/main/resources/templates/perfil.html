@@ -100,50 +100,42 @@
                 <h2>Agendamentos</h2>
             </div>
 
-            <div class="lista-agendamentos">
+            <p th:if="${listaAgendamentos == null or #lists.isEmpty(listaAgendamentos)}">
+                Você ainda não tem agendamentos.
+            </p>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-corte.jpg');"></div>
+            <div class="lista-agendamentos" th:unless="${listaAgendamentos == null or #lists.isEmpty(listaAgendamentos)}">
+                <div class="card-agendamento" th:each="ag : ${listaAgendamentos}">
+                    <div class="card-agendamento-imagem"
+                         th:style="'background-image: url(' + ${ag.disponibilidade.produtoUnidade.produto.imagemAnexo} + ');'"></div>
                     <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-concluido">Concluído</div>
-                        <h3 class="card-agendamento-titulo">Corte de Cabelo</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 45 min</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 12/08/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 14:30</span>
+                        <div class="card-agendamento-status"
+                             th:classappend="${ag.situacao.name() == 'REALIZADO'} ? 'status-concluido' :
+                 (${ag.situacao.name() == 'CANCELADO' || ag.situacao.name() == 'NAO_COMPARECEU'} ? 'status-cancelado' :
+                 (${ag.situacao.name() == 'PENDENTE'} ? 'status-pendente' : 'status-confirmado'))"
+
+                             th:text="${ag.situacao.name() == 'REALIZADO'} ? 'Realizado' :
+         (${ag.situacao.name() == 'CANCELADO'} ? 'Cancelado' :
+         (${ag.situacao.name() == 'NAO_COMPARECEU'} ? 'Não compareceu' :
+         (${ag.situacao.name() == 'PENDENTE'} ? 'Pendente' : 'Confirmado')))">
+                            Status
                         </div>
+                        <h3 class="card-agendamento-titulo"
+                            th:text="${ag.disponibilidade.produtoUnidade.produto.nomeProduto}">Serviço</h3>
+                        <div class="card-agendamento-info">
+                            <span th:text="${ag.disponibilidade.produtoUnidade.unidade.nomeUnidade}">Unidade</span>
+                            <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy')}">Data</span>
+                            <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'HH:mm')}">Hora</span>
+                        </div>
+
+                        <form th:if="${ag.situacao.name() != 'CANCELADO'}"
+                              th:action="@{/api/agendamento/{id}/cancelar(id=${ag.disponibilidade.id})}"
+                              method="POST"
+                              onsubmit="return confirm('Cancelar este agendamento?');">
+                            <button type="submit" class="btn">Cancelar</button>
+                        </form>
                     </div>
                 </div>
-
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-manicure.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-confirmado">Confirmado</div>
-                        <h3 class="card-agendamento-titulo">Manicure e Pedicure</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Ceilândia — Setor P Norte</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 03/10/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 09:00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-coloracao.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-cancelado">Cancelado</div>
-                        <h3 class="card-agendamento-titulo">Coloração Capilar</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h30</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 20/07/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 16:00</span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 

@@ -27,4 +27,22 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "WHERE a.usuario.id = :usuarioId AND a.situacao = :situacao")
     List<Agendamento> findAgendamentosRealizadosPorUsuario(@Param("usuarioId") Integer usuarioId,
                                                            @Param("situacao") SituacaoAgendamento situacao);
+
+
+    boolean existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
+            Integer usuarioId, Integer disponibilidadeId, SituacaoAgendamento situacao);
+
+    Optional<Agendamento> findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
+            Integer usuarioId, Integer disponibilidadeId, SituacaoAgendamento situacao);
+
+    @Query("SELECT a FROM Agendamento a " +
+            "LEFT JOIN FETCH a.disponibilidade d " +
+            "LEFT JOIN FETCH d.produtoUnidade pu " +
+            "LEFT JOIN FETCH pu.produto " +
+            "LEFT JOIN FETCH pu.unidade " +
+            "LEFT JOIN FETCH a.instrutor i " +
+            "LEFT JOIN FETCH i.usuario " +
+            "WHERE a.usuario.id = :usuarioId " +
+            "ORDER BY a.dataHoraAgendamento DESC")
+    List<Agendamento> listarTodosPorUsuarioComJoins(@Param("usuarioId") Integer usuarioId);
 }

@@ -1,41 +1,42 @@
 package com.app.beleza.controller;
 
+import com.app.beleza.model.Usuario;
+import com.app.beleza.model.dto.SessaoAtendimentoDTO;
+import com.app.beleza.service.AgendamentoService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller // Usamos @Controller para renderizar fragmentos HTML
+import java.util.List;
+
+@Controller
 @RequestMapping("/api/agendamento")
 public class AgendamentoController {
-    /*
+
     @Autowired
-    private SessaoAtendimentoService service;
+    private AgendamentoService agendamentoService;
 
-    // 1. Retorna o pedaço de HTML da tabela com os botões calculados pelo Java
     @GetMapping("/modal-tabela")
-    public String carregarTabelaModal(@RequestParam Long servicoId, Model model, HttpSession session) {
-        // Pega quem está navegando na sessão atual
+    public String carregarTabelaModal(@RequestParam Integer servicoId, Model model, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-
-        // Passa o usuário logado para a service calcular se aquela vaga é 'deste' usuário
-        List<SessaoAtendimentoDTO> sessoes = service.listarPorServico(servicoId, usuarioLogado);
-
+        List<SessaoAtendimentoDTO> sessoes = agendamentoService.listarPorDisponibilidade(servicoId, usuarioLogado);
         model.addAttribute("sessoes", sessoes);
         return "home :: tabela-modal-fragment";
     }
 
     @PostMapping("/{id}/agendar")
     @ResponseBody
-    public ResponseEntity<String> agendar(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<String> agendar(@PathVariable Integer id, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-
         if (usuarioLogado == null) {
-            return ResponseEntity.status(401).body("Você precisa estar logado para realizar um agendamento.");
+            return ResponseEntity.status(401).body("Você precisa estar logado para agendar.");
         }
-
         try {
-            // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE
-            service.agendarSessao(id, usuarioLogado);
-            return ResponseEntity.ok("Agendamento Realizado com Sucesso!");
+            agendamentoService.agendar(id, usuarioLogado);
+            return ResponseEntity.ok("Agendamento realizado com sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -43,20 +44,16 @@ public class AgendamentoController {
 
     @PostMapping("/{id}/cancelar")
     @ResponseBody
-    public ResponseEntity<String> cancelar(@PathVariable Long id, HttpSession session) {
+    public ResponseEntity<String> cancelar(@PathVariable Integer id, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
-
         if (usuarioLogado == null) {
             return ResponseEntity.status(401).body("Você precisa estar logado para cancelar.");
         }
-
         try {
-            // PASSAMOS O USUÁRIO LOGADO PARA A SERVICE SE CERTIFICAR DE QUE É ELE MESMO CANCELANDO
-            service.cancelarSessao(id, usuarioLogado);
+            agendamentoService.cancelarPorDisponibilidade(id, usuarioLogado);
             return ResponseEntity.ok("Agendamento cancelado com sucesso!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-     */
 }

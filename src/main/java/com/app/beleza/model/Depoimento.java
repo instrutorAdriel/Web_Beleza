@@ -14,8 +14,8 @@ public class Depoimento {
     @Column(name="depoimento", nullable = false, length = 255)
     private String depoimento;
 
-    @Column(name="avaliacao", nullable = false)
-    private Integer avaliacao;
+    //@Column(name="avaliacao", nullable = false)
+    //private Integer avaliacao;
 
     @Column(name="imagem_anexo_1", nullable = false, length = 255)
     private String imagemAnexo1;
@@ -40,7 +40,7 @@ public class Depoimento {
 
     public Depoimento(String depoimento, Integer avaliacao, String imagemAnexo1, String imagemAnexo2, Modelo modelo, Usuario usuario, Agendamento agendamento) {
         this.depoimento = depoimento;
-        this.avaliacao = avaliacao;
+        //this.avaliacao = avaliacao;
         this.imagemAnexo1 = imagemAnexo1;
         this.imagemAnexo2 = imagemAnexo2;
         this.modelo = modelo;
@@ -62,13 +62,13 @@ public class Depoimento {
         this.depoimento = depoimento;
     }
 
-    public Integer getAvaliacao() {
-        return avaliacao;
-    }
+    //public Integer getAvaliacao() {
+       // return avaliacao;
+    //}
 
-    public void setAvaliacao(Integer avaliacao) {
-        this.avaliacao = avaliacao;
-    }
+    //public void setAvaliacao(Integer avaliacao) {
+       // this.avaliacao = avaliacao;
+    //}
 
     public String getImagemAnexo1() {
         return imagemAnexo1;
