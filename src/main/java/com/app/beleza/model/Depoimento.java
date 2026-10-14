@@ -20,11 +20,11 @@ public class Depoimento {
     @Column(name="imagem_anexo_2", nullable = false, length = 255)
     private String imagemAnexo2;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="id_modelo", nullable = false)
     private Modelo modelo;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="id_usuario", nullable = false)
     private Usuario usuario;
 
