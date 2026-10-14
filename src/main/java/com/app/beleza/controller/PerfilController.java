@@ -12,6 +12,7 @@ import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.service.AgendamentoService;
+import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,9 @@ public class PerfilController {
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping
     public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
@@ -178,7 +183,8 @@ public class PerfilController {
     @PostMapping("/enviar-depoimento")
     public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
                                       @RequestParam(value = "depoimento", required = false) String depoimento,
-                                      @RequestParam(value = "imagem", required = false) MultipartFile imagem,
+                                      @RequestParam(value = "imagem1", required = false) MultipartFile imagem1,
+                                      @RequestParam(value = "imagem2", required = false) MultipartFile imagem2,
                                       @RequestParam(value = "acao", defaultValue = "salvar") String acao,
                                       HttpSession session,
                                       Model model,
@@ -193,26 +199,44 @@ public class PerfilController {
         List<Agendamento> agendamentosRealizados = agendamentoRepository
                 .findAgendamentosRealizadosPorUsuarioESituacao(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
-        // AÇÃO DE PRÉ-VISUALIZAÇÃO (Carrega a imagem e devolve a página)
-        if ("preview".equals(acao)) {
-            if (imagem != null && !imagem.isEmpty()) {
-                try {
-                    String base64Image = Base64.getEncoder().encodeToString(imagem.getBytes());
-                    model.addAttribute("imagemPreviewBase64", base64Image);
-                } catch (Exception e) {
-                    model.addAttribute("mensagemError", "Erro ao processar imagem para visualização.");
-                }
+        try {
+            if (imagem1 != null && !imagem1.isEmpty()) {
+                byte[] bytes1 = imagem1.getBytes();
+                session.setAttribute("tempImg1Bytes", bytes1);
+                session.setAttribute("tempImg1Base64", Base64.getEncoder().encodeToString(bytes1));
+                session.setAttribute("tempImg1Tipo", imagem1.getContentType());
             }
+
+            if (imagem2 != null && !imagem2.isEmpty()) {
+                byte[] bytes2 = imagem2.getBytes();
+                session.setAttribute("tempImg2Bytes", bytes2);
+                session.setAttribute("tempImg2Base64", Base64.getEncoder().encodeToString(bytes2));
+                session.setAttribute("tempImg2Tipo", imagem2.getContentType());
+            }
+        } catch (Exception e) {
+            model.addAttribute("mensagemError", "Erro ao processar imagens para pré-visualização.");
+        }
+
+        String img1Base64 = (String) session.getAttribute("tempImg1Base64");
+        String img1Tipo = (String) session.getAttribute("tempImg1Tipo");
+        String img2Base64 = (String) session.getAttribute("tempImg2Base64");
+        String img2Tipo = (String) session.getAttribute("tempImg2Tipo");
+
+        model.addAttribute("imagem1PreviewBase64", img1Base64);
+        model.addAttribute("imagem1Tipo", img1Tipo);
+        model.addAttribute("imagem2PreviewBase64", img2Base64);
+        model.addAttribute("imagem2Tipo", img2Tipo);
+
+        if("preview".equals(acao)) {
             model.addAttribute("abaAtiva", "depoimento");
             model.addAttribute("agendamentoIdSelecionado", idAgendamento);
             model.addAttribute("comentarioTexto", depoimento);
             model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
             model.addAttribute("usuarioDTO", usuarioService.converterModelParaDTO(modeloOpt.get()));
-
             return "perfil";
         }
 
-        // AÇÃO DE SALVAR O DEPOIMENTO
+        // ─── 2. AÇÃO DE SALVAR O DEPOIMENTO ─────────────────────────────────────
         if (idAgendamento == null) {
             redirectAttributes.addFlashAttribute("mensagemError", "Por favor, selecione o agendamento correspondente.");
             return "redirect:/perfil?aba=depoimento";
@@ -223,27 +247,52 @@ public class PerfilController {
             return "redirect:/perfil?aba=depoimento";
         }
 
+        Optional<Agendamento> agendamentoOpt = agendamentoRepository.findById(idAgendamento);
+        if (agendamentoOpt.isEmpty() || agendamentoOpt.get().getSituacao() != SituacaoAgendamento.REALIZADO) {
+            redirectAttributes.addFlashAttribute("mensagemError", "O depoimento só pode ser registrado para procedimentos já REALIZADOS.");
+            return "redirect:/perfil?aba=depoimento";
+        }
+
+        if (depoimentoRepository.findByAgendamentoId(idAgendamento).isPresent()) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Você já enviou um depoimento para este agendamento.");
+            return "redirect:/perfil?aba=depoimento";
+        }
+
         try {
+            byte[] bytesImg1 = (imagem1 != null && !imagem1.isEmpty()) ? imagem1.getBytes() : (byte[]) session.getAttribute("tempImg1Bytes");
+            byte[] bytesImg2 = (imagem2 != null && !imagem2.isEmpty()) ? imagem2.getBytes() : (byte[]) session.getAttribute("tempImg2Bytes");
+
+            String urlImg1 = "";
+            String urlImg2 = "";
+
+            if (bytesImg1 != null && bytesImg1.length > 0) {
+                urlImg1 = cloudinaryService.upload(bytesImg1, "depoimentos");
+            }
+            if (bytesImg2 != null && bytesImg2.length > 0) {
+                urlImg2 = cloudinaryService.upload(bytesImg2, "depoimentos");
+            }
+
             Depoimento novoDepoimento = new Depoimento();
             novoDepoimento.setDepoimento(depoimento);
             novoDepoimento.setUsuario(usuario);
             novoDepoimento.setModelo(modeloOpt.get());
-
-            agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
-
-            if (imagem != null && !imagem.isEmpty()) {
-                String caminhoBase64 = Base64.getEncoder().encodeToString(imagem.getBytes());
-                novoDepoimento.setImagemAnexo1(caminhoBase64);
-                novoDepoimento.setImagemAnexo2("");
-            } else {
-                novoDepoimento.setImagemAnexo1("");
-                novoDepoimento.setImagemAnexo2("");
-            }
+            novoDepoimento.setAgendamento(agendamentoOpt.get());
+            novoDepoimento.setImagemAnexo1(urlImg1);
+            novoDepoimento.setImagemAnexo2(urlImg2);
 
             depoimentoRepository.save(novoDepoimento);
+
+            // Limpa os dados da sessão
+            session.removeAttribute("tempImg1Bytes");
+            session.removeAttribute("tempImg1Base64");
+            session.removeAttribute("tempImg1Tipo");
+            session.removeAttribute("tempImg2Bytes");
+            session.removeAttribute("tempImg2Base64");
+            session.removeAttribute("tempImg2Tipo");
+
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Depoimento enviado com sucesso!");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensagemError", "Erro ao salvar depoimento: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensagemError", "Erro ao salvar o depoimento: " + e.getMessage());
         }
 
         return "redirect:/perfil?aba=depoimento";

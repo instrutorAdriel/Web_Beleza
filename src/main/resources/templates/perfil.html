@@ -204,20 +204,27 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
+                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagens</label>
-
-                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
-                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
+                    <label for="imagem1">Primeira Imagem</label>
+                    <input type="file" id="imagem1" name="imagem1" accept="image/*"
                            onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
-                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
-                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
-                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
-                                 alt="Pré-visualização da imagem">
-                        </div>
+                    <div class="container-preview-imagem" th:if="${imagem1PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem1Tipo != null ? imagem1Tipo : 'image/jpeg'} + ';base64,' + ${imagem1PreviewBase64}"
+                             alt="Pré-visualização Imagem 1" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- CAMPO 2 DE IMAGEM -->
+                <div class="group-input">
+                    <label for="imagem2">Segunda Imagem</label>
+                    <input type="file" id="imagem2" name="imagem2" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <div class="container-preview-imagem" th:if="${imagem2PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem2Tipo != null ? imagem2Tipo : 'image/jpeg'} + ';base64,' + ${imagem2PreviewBase64}"
+                             alt="Pré-visualização Imagem 2" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
