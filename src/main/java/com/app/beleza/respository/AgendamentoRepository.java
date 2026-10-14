@@ -27,8 +27,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "LEFT JOIN FETCH d.produtoUnidade pu " +
             "LEFT JOIN FETCH pu.produto p " +
             "WHERE a.usuario.id = :usuarioId AND a.situacao = :situacao")
-    List<Agendamento> findAgendamentosRealizadosPorUsuario(@Param("usuarioId") Integer usuarioId,
-                                                           @Param("situacao") SituacaoAgendamento situacao);
+    List<Agendamento> findAgendamentosRealizadosPorUsuarioESituacao(@Param("usuarioId") Integer usuarioId,
+                                                                    @Param("situacao") SituacaoAgendamento situacao);
 
     @Query(value = "SELECT a FROM Agendamento a " +
             "JOIN FETCH a.disponibilidade d " +

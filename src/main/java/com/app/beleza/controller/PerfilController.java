@@ -86,7 +86,7 @@ public class PerfilController {
         /* ─── ABA: DEPOIMENTO ─── */
         if ("depoimento".equals(aba)) {
             List<Agendamento> agendamentosRealizados = agendamentoRepository
-                    .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
+                    .findAgendamentosRealizadosPorUsuarioESituacao(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
             model.addAttribute("listaAgendamentosRealizados", agendamentosRealizados);
         }
@@ -191,7 +191,7 @@ public class PerfilController {
         if (modeloOpt.isEmpty()) return "redirect:/";
 
         List<Agendamento> agendamentosRealizados = agendamentoRepository
-                .findAgendamentosRealizadosPorUsuario(usuario.getId(), SituacaoAgendamento.REALIZADO);
+                .findAgendamentosRealizadosPorUsuarioESituacao(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
         // AÇÃO DE PRÉ-VISUALIZAÇÃO (Carrega a imagem e devolve a página)
         if ("preview".equals(acao)) {
