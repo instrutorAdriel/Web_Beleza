@@ -2413,3 +2413,91 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
+
+/* ==========================================================================
+   FILTROS DE AGENDAMENTO (PERFIL)
+   ========================================================================== */
+.filtros-agendamento {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 1rem 0 1.5rem 0;
+}
+
+.filtro-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid var(--borda-suave);
+    background-color: var(--fundo-card);
+    color: var(--texto-escuro);
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    transition: var(--transicao);
+    white-space: nowrap;
+}
+
+.filtro-btn:hover {
+    background-color: rgba(247, 148, 30, 0.08);
+    border-color: var(--senac-laranja);
+    color: var(--senac-laranja-hover);
+}
+
+.filtro-btn.ativo {
+    background-color: var(--senac-laranja);
+    border-color: var(--senac-laranja);
+    color: #000000;
+}
+
+.filtro-btn.ativo:hover {
+    background-color: var(--senac-laranja-hover);
+    border-color: var(--senac-laranja-hover);
+    color: #000000;
+}
+
+.filtro-contador {
+    display: inline-block;
+    min-width: 22px;
+    padding: 1px 7px;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.08);
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.filtro-btn.ativo .filtro-contador {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Botão "Cancelar agendamento" dentro dos cards */
+.card-agendamento .btn {
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+/* Responsivo: em telas pequenas, os botões quebram em várias linhas */
+@media (max-width: 480px) {
+    .filtros-agendamento {
+        gap: 6px;
+    }
+    .filtro-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    .filtro-contador {
+        min-width: 20px;
+        padding: 1px 6px;
+        font-size: 10px;
+    }
+}

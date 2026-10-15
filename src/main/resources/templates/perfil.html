@@ -100,42 +100,72 @@
                 <h2>Agendamentos</h2>
             </div>
 
-            <p th:if="${listaAgendamentos == null or #lists.isEmpty(listaAgendamentos)}">
-                Você ainda não tem agendamentos.
-            </p>
+            <!-- FILTROS -->
+            <div class="filtros-agendamento" id="filtros-agendamento">
+                <button type="button" class="filtro-btn ativo" data-status="TODOS">
+                    Todos <span class="filtro-contador" data-contador="TODOS">0</span>
+                </button>
+                <button type="button" class="filtro-btn" data-status="CONFIRMADO">
+                    Confirmados <span class="filtro-contador" data-contador="CONFIRMADO">0</span>
+                </button>
+                <button type="button" class="filtro-btn" data-status="REALIZADO">
+                    Realizados <span class="filtro-contador" data-contador="REALIZADO">0</span>
+                </button>
+                <button type="button" class="filtro-btn" data-status="CANCELADO">
+                    Cancelados <span class="filtro-contador" data-contador="CANCELADO">0</span>
+                </button>
+                <button type="button" class="filtro-btn" data-status="NAO_COMPARECEU">
+                    Não compareceu <span class="filtro-contador" data-contador="NAO_COMPARECEU">0</span>
+                </button>
+            </div>
 
-            <div class="lista-agendamentos" th:unless="${listaAgendamentos == null or #lists.isEmpty(listaAgendamentos)}">
-                <div class="card-agendamento" th:each="ag : ${listaAgendamentos}">
+            <!-- LISTA -->
+            <div class="lista-agendamentos" id="lista-agendamentos">
+                <div class="card-agendamento"
+                     th:each="ag : ${listaAgendamentos}"
+                     th:data-status="${ag.situacao.name()}">
                     <div class="card-agendamento-imagem"
                          th:style="'background-image: url(' + ${ag.disponibilidade.produtoUnidade.produto.imagemAnexo} + ');'"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status"
-                             th:classappend="${ag.situacao.name() == 'REALIZADO'} ? 'status-concluido' :
-                 (${ag.situacao.name() == 'CANCELADO' || ag.situacao.name() == 'NAO_COMPARECEU'} ? 'status-cancelado' :
-                 (${ag.situacao.name() == 'PENDENTE'} ? 'status-pendente' : 'status-confirmado'))"
-
-                             th:text="${ag.situacao.name() == 'REALIZADO'} ? 'Realizado' :
-         (${ag.situacao.name() == 'CANCELADO'} ? 'Cancelado' :
-         (${ag.situacao.name() == 'NAO_COMPARECEU'} ? 'Não compareceu' :
-         (${ag.situacao.name() == 'PENDENTE'} ? 'Pendente' : 'Confirmado')))">
+                             th:classappend="${ag.situacao.name() == 'REALIZADO' ? 'status-concluido' :
+                      (ag.situacao.name() == 'CANCELADO' || ag.situacao.name() == 'NAO_COMPARECEU' ? 'status-cancelado' :
+                      (ag.situacao.name() == 'CONFIRMADO' ? 'status-confirmado' : 'status-concluido'))}"
+                             th:text="${ag.situacao.name() == 'REALIZADO' ? 'Realizado' :
+              (ag.situacao.name() == 'CANCELADO' ? 'Cancelado' :
+              (ag.situacao.name() == 'NAO_COMPARECEU' ? 'Não compareceu' :
+              (ag.situacao.name() == 'CONFIRMADO' ? 'Confirmado' : ag.situacao.name())))}">
                             Status
                         </div>
                         <h3 class="card-agendamento-titulo"
                             th:text="${ag.disponibilidade.produtoUnidade.produto.nomeProduto}">Serviço</h3>
                         <div class="card-agendamento-info">
-                            <span th:text="${ag.disponibilidade.produtoUnidade.unidade.nomeUnidade}">Unidade</span>
-                            <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy')}">Data</span>
-                            <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'HH:mm')}">Hora</span>
+                    <span><i class="fa-solid fa-location-dot"></i>
+                        <span th:text="${ag.disponibilidade.produtoUnidade.unidade.nomeUnidade}">Unidade</span>
+                    </span>
+                            <span><i class="fa-solid fa-calendar-days"></i>
+                        <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy')}">Data</span>
+                    </span>
+                            <span><i class="fa-regular fa-clock"></i>
+                        <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'HH:mm')}">Hora</span>
+                    </span>
                         </div>
 
-                        <form th:if="${ag.situacao.name() != 'CANCELADO'}"
+                        <form th:if="${ag.situacao.name() != 'CANCELADO' && ag.situacao.name() != 'NAO_COMPARECEU'}"
                               th:action="@{/api/agendamento/{id}/cancelar(id=${ag.disponibilidade.id})}"
                               method="POST"
-                              onsubmit="return confirm('Cancelar este agendamento?');">
-                            <button type="submit" class="btn">Cancelar</button>
+                              style="margin-top: 1rem;"
+                              onsubmit="return confirm('Cancelar este agendamento? A vaga será liberada.');">
+                            <button type="submit" class="btn">Cancelar agendamento</button>
                         </form>
                     </div>
                 </div>
+            </div>
+
+            <!-- FILTRO VAZIO -->
+            <div id="filtro-vazio" class="agendamentos-vazio" style="display: none;">
+                <i class="fa-regular fa-calendar-xmark"></i>
+                <p>Nenhum agendamento com esse status.</p>
             </div>
         </section>
 
@@ -196,5 +226,6 @@
 
     </div>
 </div>
+<script th:src="@{/javaScript/perfil.js}"></script>
 </body>
 </html>
