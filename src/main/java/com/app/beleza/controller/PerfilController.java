@@ -229,8 +229,6 @@ public class PerfilController {
             novoDepoimento.setUsuario(usuario);
             novoDepoimento.setModelo(modeloOpt.get());
 
-            // DEFINE O VALOR PADRÃO DA AVALIAÇÃO PARA EVITAR O ERRO DE NOT-NULL
-            novoDepoimento.setAvaliacao(5);
 
             agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
 

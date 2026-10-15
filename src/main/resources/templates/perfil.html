@@ -122,36 +122,31 @@
             <!-- LISTA -->
             <div class="lista-agendamentos" id="lista-agendamentos">
                 <div class="card-agendamento"
-                     th:each="ag : ${listaAgendamentos}"
-                     th:data-status="${ag.situacao.name()}">
+                     th:each="ag : ${paginaAgendamentos}"
+                     th:data-status="${ag.statusTexto()}">
                     <div class="card-agendamento-imagem"
-                         th:style="'background-image: url(' + ${ag.disponibilidade.produtoUnidade.produto.imagemAnexo} + ');'"></div>
+                         th:style="'background-image: url(' + ${ag.imagemAnexo} + ');'"></div>
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status"
-                             th:classappend="${ag.situacao.name() == 'REALIZADO' ? 'status-concluido' :
-                      (ag.situacao.name() == 'CANCELADO' || ag.situacao.name() == 'NAO_COMPARECEU' ? 'status-cancelado' :
-                      (ag.situacao.name() == 'CONFIRMADO' ? 'status-confirmado' : 'status-concluido'))}"
-                             th:text="${ag.situacao.name() == 'REALIZADO' ? 'Realizado' :
-              (ag.situacao.name() == 'CANCELADO' ? 'Cancelado' :
-              (ag.situacao.name() == 'NAO_COMPARECEU' ? 'Não compareceu' :
-              (ag.situacao.name() == 'CONFIRMADO' ? 'Confirmado' : ag.situacao.name())))}">
+                             th:classappend="${ag.statusClasseCss()}"
+                             th:text="${ag.statusTexto()}">
                             Status
                         </div>
                         <h3 class="card-agendamento-titulo"
-                            th:text="${ag.disponibilidade.produtoUnidade.produto.nomeProduto}">Serviço</h3>
+                            th:text="${ag.nomeServico}">Serviço</h3>
                         <div class="card-agendamento-info">
                     <span><i class="fa-solid fa-location-dot"></i>
-                        <span th:text="${ag.disponibilidade.produtoUnidade.unidade.nomeUnidade}">Unidade</span>
+                        <span th:text="${ag.nomeUnidade}">Unidade</span>
                     </span>
                             <span><i class="fa-solid fa-calendar-days"></i>
-                        <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy')}">Data</span>
+                        <span th:text="${#temporals.format(ag.dataAgendamento(), 'dd/MM/yyyy')}">Data</span>
                     </span>
                             <span><i class="fa-regular fa-clock"></i>
-                        <span th:text="${#temporals.format(ag.dataHoraAgendamento, 'HH:mm')}">Hora</span>
+                        <span th:text="${#temporals.format(ag.horaInicio(), 'HH:mm')}">Hora</span>
                     </span>
                         </div>
 
-                        <form th:if="${ag.situacao.name() != 'CANCELADO' && ag.situacao.name() != 'NAO_COMPARECEU'}"
+                        <form th:if="${ag.statusTexto() != 'CANCELADO' && ag.statusTexto() != 'NAO_COMPARECEU'}"
                               th:action="@{/api/agendamento/{id}/cancelar(id=${ag.disponibilidade.id})}"
                               method="POST"
                               style="margin-top: 1rem;"
@@ -210,7 +205,7 @@
                         <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
                         <option th:each="ag : ${listaAgendamentosRealizados}"
                                 th:value="${ag.id}"
-                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
+                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataAgendamento != null ? #temporals.format(ag.dataAgendamento) : '')}"
                                 th:selected="${ag.id == agendamentoIdSelecionado}">
                             Serviço Exemplo
                         </option>
