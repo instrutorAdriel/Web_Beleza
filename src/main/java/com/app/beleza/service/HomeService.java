@@ -2,10 +2,12 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Disponibilidade;
+import com.app.beleza.model.ProdutoUnidade;
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
+import com.app.beleza.respository.ProdutoUnidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ import java.util.Set;
 public class HomeService {
 
     @Autowired
-    private DisponibilidadeRepository disponibilidadeRepository;
+    private ProdutoUnidadeRepository produtoUnidadeRepository; // 1. Injeta o repositório de ProdutoUnidade
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
@@ -29,39 +31,27 @@ public class HomeService {
 
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
 
-        // Conjunto para controlar chaves únicas (NomeServico + Unidade)
-        Set<String> chavesVistas = new HashSet<>();
+        // 2. AQUI ENTRA A LÓGICA:
+        // Em vez de buscar da tabela 'disponibilidade', buscamos da tabela 'produto_unidade'
+        List<ProdutoUnidade> servicosUnidade = produtoUnidadeRepository.findAll();
 
-        List<Disponibilidade> servicos = disponibilidadeRepository.findAll();
-
-        for (Disponibilidade servico : servicos) {
-
-            String nomeServico = servico.getProdutoUnidade().getProduto().getNomeProduto();
-            String unidade = servico.getProdutoUnidade().getUnidade().getNomeUnidade();
-
-            String chaveUnica = (nomeServico + "-" + unidade).toLowerCase();
-
-            if (chavesVistas.contains(chaveUnica)) {
-                continue;
-            }
-
-            chavesVistas.add(chaveUnica);
+        for (ProdutoUnidade pu : servicosUnidade) {
 
             ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
 
-            dto.setServicoId(servico.getId());
-            dto.setNomeServico(nomeServico);
-            dto.setDescricao(servico.getProdutoUnidade().getProduto().getDescricao());
-            dto.setImagem(servico.getProdutoUnidade().getProduto().getImagemAnexo());
-            dto.setUnidade(unidade);
-            dto.setHora_inicio(servico.getHoraInicio().toString());
-            dto.setHora_fim(servico.getHoraFim().toString());
+            // Pega as informações do produto e da unidade diretamente
+            dto.setServicoId(pu.getProduto().getId());
+            dto.setNomeServico(pu.getProduto().getNomeProduto());
+            dto.setDescricao(pu.getProduto().getDescricao());
+            dto.setImagem(pu.getProduto().getImagemAnexo());
+            dto.setUnidade(pu.getUnidade().getNomeUnidade());
 
             lista.add(dto);
         }
 
-        return lista;
+        return lista; // Retorna para a tela (HomeController)
     }
+
 
     public List<DepoimentoDTO> listarDepoimentos() {
 
