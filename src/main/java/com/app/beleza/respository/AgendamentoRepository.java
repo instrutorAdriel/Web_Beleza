@@ -1,6 +1,7 @@
 package com.app.beleza.respository;
 
 import com.app.beleza.model.Agendamento;
+import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Instrutor;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.enums.SituacaoAgendamento;
@@ -21,7 +22,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
 
     Optional<List<Agendamento>> findAgendamentoByInstrutor(Instrutor instrutor);
 
-    // Consulta filtrando diretamente pelo usuario.id da tabela Agendamento
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
             "LEFT JOIN FETCH d.produtoUnidade pu " +
@@ -38,4 +38,25 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario",
             countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
     Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
+
+    @Query("SELECT a FROM Agendamento a " +
+            "JOIN FETCH a.usuario u " +
+            "JOIN FETCH a.modelo m " +
+            "WHERE a.id = :agendamentoId AND u.id = :usuarioId")
+    Optional<Agendamento> findByAgendamentoIdAndUsuario(@Param("agendamentoId") Integer agendamentoId,
+                                                       @Param("usuarioId") Integer usuarioId);
+
+    @Query("SELECT DISTINCT a FROM Agendamento a " +
+            "LEFT JOIN FETCH a.disponibilidade d " +
+            "LEFT JOIN FETCH d.produtoUnidade pu " +
+            "LEFT JOIN FETCH pu.produto p " +
+            "WHERE (a.usuario.id = :usuarioId OR a.modelo.usuario.id = :usuarioId) " +
+            " AND a.situacao = :situacao " +
+            " AND NOT EXISTS (" +
+            " SELECT dep FROM Depoimento dep WHERE dep.agendamento.id = a.id" +
+            ")")
+    List<Agendamento> findAgendamentosRealizadosSemDepoimento(
+            @Param("usuarioId") Integer usuarioId,
+            @Param("situacao") SituacaoAgendamento situacao
+    );
 }

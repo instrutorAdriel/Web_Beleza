@@ -194,7 +194,7 @@ public class PerfilController {
         if (modeloOpt.isEmpty()) return "redirect:/";
 
         List<Agendamento> agendamentosRealizados = agendamentoRepository
-                .findAgendamentosRealizadosPorUsuarioESituacao(usuario.getId(), SituacaoAgendamento.REALIZADO);
+                .findAgendamentosRealizadosSemDepoimento(usuario.getId(), SituacaoAgendamento.REALIZADO);
 
         try {
             if (imagem1 != null && !imagem1.isEmpty()) {
@@ -249,7 +249,7 @@ public class PerfilController {
             return "redirect:/perfil?aba=depoimento";
         }
 
-        if (depoimentoRepository.findByAgendamentoId(idAgendamento).isPresent()) {
+        if (agendamentoRepository.findByAgendamentoIdAndUsuario(idAgendamento, usuario.getId()).isPresent()) {
             redirectAttributes.addFlashAttribute("mensagemError", "Você já enviou um depoimento para este agendamento.");
             return "redirect:/perfil?aba=depoimento";
         }
