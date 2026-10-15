@@ -629,7 +629,64 @@
 .carrossel-track::-webkit-scrollbar-track { background: var(--fundo-card); border-radius: 10px; }
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
-/* Setas genéricas */
+.card-servico {
+    min-width: 320px;
+    max-width: 320px;
+    height: 380px;
+    background: var(--fundo-card);
+    border-radius: 12px;
+    border: 1px solid var(--borda-suave);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transicao);
+}
+.card-servico:hover {
+    transform: translateY(-6px);
+    border-color: var(--senac-laranja);
+    box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
+}
+.card-tag-unidade {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--senac-laranja);
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+.card-titulo-servico {
+    font-size: 19px;
+    color: var(--texto-escuro);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+.card-descricao {
+    font-size: 14px;
+    color: var(--texto-mutado);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.btn-card {
+    background-color: var(--senac-laranja);
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    display: block;
+    transition: var(--transicao);
+    margin-top: auto;
+}
+.btn-card:hover {
+    background-color: var(--senac-laranja-hover);
+}
+
 .seta-carrossel {
     background-color: white;
     border: 1px solid var(--borda-suave);
@@ -646,7 +703,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     z-index: 10;
     text-decoration: none;
-    cursor: pointer;
     transition: var(--transicao);
 }
 
@@ -656,13 +712,36 @@
     border-color: var(--senac-laranja);
 }
 
-.seta-esquerda { left: -20px; }
-.seta-direita { right: -20px; }
+.seta-esquerda {
+    position: absolute;
+    left: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-/* Setas específicas dos serviços: alinhadas pelo centro do card (520/2 = 260) */
-.carrossel-wrapper-servicos .seta-carrossel {
-    top: 260px;
-    transform: translateY(-50%);
+.seta-direita {
+    position: absolute;
+    right: -20px;
+    z-index: 10;
+    background: #ffffff;
+    color: #f29301;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 /* ==========================================================================
    PLATAFORMA DE CURSOS
@@ -703,6 +782,7 @@
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
+    overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
@@ -1736,6 +1816,64 @@ input::-ms-clear {
     font-family: Arial, sans-serif;
 }
 
+/* Status dos Agendamentos */
+.card-agendamento-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.status-confirmado {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-concluido {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.status-cancelado {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-pendente {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* Paginação */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-paginacao {
+    padding: 8px 16px;
+    background-color: #0056b3;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.btn-paginacao:hover {
+    background-color: #003d82;
+}
+
+.btn-paginacao.disabled {
+    pointer-events: none;
+    background-color: #cccccc;
+    color: #666666;
+}
+
 /* ==========================================================================
    MENU LATERAL DA PÁGINA PERFIL (ATUALIZADO)
    ========================================================================== */
@@ -1801,7 +1939,6 @@ input::-ms-clear {
     flex: 1;
     padding: 40px;
     background-color: #fff;
-    max-width: 800px;
 }
 
 .hidden {

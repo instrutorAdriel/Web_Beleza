@@ -143,6 +143,7 @@
     <div class="abas-categorias">
         <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
         <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
+        <a href="#" class="aba-filtro" data-unidade="sao-sebastiao">São Sebastião</a>
         <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
         <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
         <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
@@ -162,47 +163,40 @@
 
         <div class="carrossel-viewport carrossel-viewport-servicos">
             <div class="carrossel-track carrossel-track-servicos">
-            <div class="card-curso-completo"
-                 th:each="servico : ${servicos}"
-                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
+                <div class="card-curso-completo"
+                     th:each="servico : ${servicos}"
+                     th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
 
-                <div class="img-placeholder-curso">
-                    <img th:src="${servico.imagem}"
-                         th:alt="${servico.nomeServico}">
-                </div>
+                    <div class="img-placeholder-curso">
+                        <img th:src="${servico.imagem}"
+                             th:alt="${servico.nomeServico}">
+                    </div>
 
-                <div class="corpo-curso">
+                    <div class="corpo-curso">
 
-                    <span class="tipo-curso"
-                          th:text="${servico.unidade}">
-                    </span>
+            <span class="tipo-curso"
+                  th:text="${servico.unidade}">
+            </span>
 
-                    <h3 th:text="${servico.nomeServico}"></h3>
+                        <h3 th:text="${servico.nomeServico}"></h3>
 
-                    <p th:text="${servico.descricao}"></p>
+                        <p th:text="${servico.descricao}"></p>
 
-                    <div class="detalhes-rapidos-curso">
+                        <div class="detalhes-rapidos-curso">
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span th:text="${servico.unidade}"></span>
+                </span>
+                        </div>
 
-                        <span>
-                            <i class="fa-regular fa-clock"></i>
-                            <span th:text="${servico.hora_inicio}"></span>
-                        </span>
-
-                        <span>
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span th:text="${servico.unidade}"></span>
-                        </span>
+                        <!-- O clique aqui abre o modal e carrega os horários (08:00, 09:00, 14:20) dinamicamente -->
+                        <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
+                            Agendar
+                        </a>
 
                     </div>
 
-                    <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
-                        Agendar
-                    </a>
-
                 </div>
-
-            </div>
-
             </div>
         </div>
 

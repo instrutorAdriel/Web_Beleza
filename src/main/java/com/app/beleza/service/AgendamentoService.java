@@ -1,5 +1,12 @@
 package com.app.beleza.service;
 
+import com.app.beleza.model.dto.AgendamentoDTO;
+import com.app.beleza.respository.AgendamentoRepository;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import com.app.beleza.model.Agendamento;
 import com.app.beleza.model.Disponibilidade;
 import com.app.beleza.model.Instrutor;
@@ -75,7 +82,6 @@ public class AgendamentoService {
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
-
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
@@ -114,4 +120,26 @@ public class AgendamentoService {
     public List<Agendamento> listarMeusAgendamentos(Usuario usuario) {
         return agendamentoRepository.listarTodosPorUsuarioComJoins(usuario.getId());
     }
+
+        @Transactional(readOnly = true)
+        @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho")
+        public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho) {
+
+            // Regra de Proteção: Aplica um delay de 300ms para amortecer requisições em rajada/spam
+            aplicarDelayProtecao(300);
+
+            // Cria a paginação ordenada pelos agendamentos mais recentes primeiro
+            Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
+
+            return agendamentoRepository.findByModeloOrUsuarioPaginado(idModelo, idUsuario, pageable)
+                    .map(AgendamentoDTO::new);
+        }
+
+        private void aplicarDelayProtecao(long milissegundos) {
+            try {
+                Thread.sleep(milissegundos);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
 }
