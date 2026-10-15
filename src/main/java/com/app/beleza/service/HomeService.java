@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -27,17 +29,31 @@ public class HomeService {
 
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
 
+        // Conjunto para controlar chaves únicas (NomeServico + Unidade)
+        Set<String> chavesVistas = new HashSet<>();
+
         List<Disponibilidade> servicos = disponibilidadeRepository.findAll();
 
         for (Disponibilidade servico : servicos) {
 
+            String nomeServico = servico.getProdutoUnidade().getProduto().getNomeProduto();
+            String unidade = servico.getProdutoUnidade().getUnidade().getNomeUnidade();
+
+            String chaveUnica = (nomeServico + "-" + unidade).toLowerCase();
+
+            if (chavesVistas.contains(chaveUnica)) {
+                continue;
+            }
+
+            chavesVistas.add(chaveUnica);
+
             ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
 
             dto.setServicoId(servico.getId());
-            dto.setNomeServico(servico.getProdutoUnidade().getProduto().getNomeProduto());
+            dto.setNomeServico(nomeServico);
             dto.setDescricao(servico.getProdutoUnidade().getProduto().getDescricao());
             dto.setImagem(servico.getProdutoUnidade().getProduto().getImagemAnexo());
-            dto.setUnidade(servico.getProdutoUnidade().getUnidade().getNomeUnidade());
+            dto.setUnidade(unidade);
             dto.setHora_inicio(servico.getHoraInicio().toString());
             dto.setHora_fim(servico.getHoraFim().toString());
 
