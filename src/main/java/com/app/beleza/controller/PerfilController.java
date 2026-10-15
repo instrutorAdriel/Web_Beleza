@@ -80,7 +80,6 @@ public class PerfilController {
         model.addAttribute("usuarioDTO", usuarioAtualizado);
         model.addAttribute("abaAtiva", aba);
 
-        /* ─── ABA: AGENDAMENTO ─── */
         if ("agendamento".equals(aba)) {
             Page<AgendamentoDTO> paginaAgendamentos = agendamentoService
                     .listarAgendamentosPorUsuarioPaginado(resultado.get().getIdModelo(), usuario.getId(), pagina, tamanho);
@@ -88,7 +87,6 @@ public class PerfilController {
             model.addAttribute("paginaAgendamentos", paginaAgendamentos);
         }
 
-        /* ─── ABA: DEPOIMENTO ─── */
         if ("depoimento".equals(aba)) {
             List<Agendamento> agendamentosRealizados = agendamentoRepository
                     .findAgendamentosRealizadosPorUsuarioESituacao(usuario.getId(), SituacaoAgendamento.REALIZADO);
@@ -120,7 +118,6 @@ public class PerfilController {
         return "redirect:/perfil?aba=informacao";
     }
 
-    /* ─── ATUALIZAR SENHA ─────────────────────────────────────────────────── */
     @PostMapping("/atualizar-senha")
     public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
@@ -236,7 +233,6 @@ public class PerfilController {
             return "perfil";
         }
 
-        // ─── 2. AÇÃO DE SALVAR O DEPOIMENTO ─────────────────────────────────────
         if (idAgendamento == null) {
             redirectAttributes.addFlashAttribute("mensagemError", "Por favor, selecione o agendamento correspondente.");
             return "redirect:/perfil?aba=depoimento";
@@ -282,7 +278,6 @@ public class PerfilController {
 
             depoimentoRepository.save(novoDepoimento);
 
-            // Limpa os dados da sessão
             session.removeAttribute("tempImg1Bytes");
             session.removeAttribute("tempImg1Base64");
             session.removeAttribute("tempImg1Tipo");
