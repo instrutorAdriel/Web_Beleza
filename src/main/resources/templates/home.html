@@ -174,28 +174,22 @@
 
                     <div class="corpo-curso">
 
-                    <span class="tipo-curso"
-                          th:text="${servico.unidade}">
-                    </span>
+            <span class="tipo-curso"
+                  th:text="${servico.unidade}">
+            </span>
 
                         <h3 th:text="${servico.nomeServico}"></h3>
 
                         <p th:text="${servico.descricao}"></p>
 
                         <div class="detalhes-rapidos-curso">
-
-                        <span>
-                            <i class="fa-regular fa-clock"></i>
-                            <span th:text="${servico.hora_inicio}"></span>
-                        </span>
-
-                            <span>
-                            <i class="fa-solid fa-location-dot"></i>
-                            <span th:text="${servico.unidade}"></span>
-                        </span>
-
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span th:text="${servico.unidade}"></span>
+                </span>
                         </div>
 
+                        <!-- O clique aqui abre o modal e carrega os horários (08:00, 09:00, 14:20) dinamicamente -->
                         <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
                             Agendar
                         </a>
@@ -203,7 +197,6 @@
                     </div>
 
                 </div>
-
             </div>
         </div>
 
