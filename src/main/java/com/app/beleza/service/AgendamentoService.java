@@ -14,7 +14,6 @@ import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.SessaoAtendimentoDTO;
 import com.app.beleza.model.enums.SituacaoAgendamento;
-import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
 import com.app.beleza.respository.InstrutorRepository;
 import com.app.beleza.respository.ModeloRepository;
@@ -34,7 +33,6 @@ public class AgendamentoService {
     @Autowired private ModeloRepository modeloRepository;
     @Autowired private InstrutorRepository instrutorRepository;
 
-    /** Lista a disponibilidade e calcula se o usuário logado já agendou. */
     @Transactional(readOnly = true)
     public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idDisponibilidade, Usuario usuarioLogado) {
         List<SessaoAtendimentoDTO> lista = new ArrayList<>();
@@ -100,6 +98,7 @@ public class AgendamentoService {
         disponibilidadeRepository.save(disp);
     }
 
+    // CANCELAR POR DISPONIBILIDADE (Usado no modal da Home)
     @Transactional
     public void cancelarPorDisponibilidade(Integer idDisponibilidade, Usuario usuarioLogado) {
         if (usuarioLogado == null) throw new RuntimeException("Usuário não autenticado.");
@@ -117,29 +116,60 @@ public class AgendamentoService {
         disponibilidadeRepository.save(disp);
     }
 
+    // CANCELAR POR ID DO AGENDAMENTO (Usado na tela de Perfil Paginada)
+    @Transactional
+    public void cancelar(Integer idAgendamento, Usuario usuarioLogado) {
+        if (usuarioLogado == null) throw new RuntimeException("Usuário não autenticado.");
+
+        Agendamento ag = agendamentoRepository.findById(idAgendamento)
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado."));
+
+        if (ag.getUsuario() == null || !ag.getUsuario().getId().equals(usuarioLogado.getId())) {
+            throw new RuntimeException("Esse agendamento não é seu.");
+        }
+
+        if (ag.getSituacao() == SituacaoAgendamento.CANCELADO) {
+            throw new RuntimeException("Esse agendamento já está cancelado.");
+        }
+
+        ag.setSituacao(SituacaoAgendamento.CANCELADO);
+        agendamentoRepository.save(ag);
+
+        Disponibilidade disp = ag.getDisponibilidade();
+        disp.setTotalVagas(disp.getTotalVagas() + 1);
+        disponibilidadeRepository.save(disp);
+    }
+
     public List<Agendamento> listarMeusAgendamentos(Usuario usuario) {
         return agendamentoRepository.listarTodosPorUsuarioComJoins(usuario.getId());
     }
 
-        @Transactional(readOnly = true)
-        @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho")
-        public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho) {
+    @Transactional(readOnly = true)
+    @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho + '-' + #filtroStr")
+    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-            // Regra de Proteção: Aplica um delay de 300ms para amortecer requisições em rajada/spam
-            aplicarDelayProtecao(300);
+        aplicarDelayProtecao(300);
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
 
-            // Cria a paginação ordenada pelos agendamentos mais recentes primeiro
-            Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
-
-            return agendamentoRepository.findByModeloOrUsuarioPaginado(idModelo, idUsuario, pageable)
-                    .map(AgendamentoDTO::new);
-        }
-
-        private void aplicarDelayProtecao(long milissegundos) {
+        // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
+        SituacaoAgendamento filtroEnum = null;
+        if (filtroStr != null && !filtroStr.trim().isEmpty() && !filtroStr.equals("TODOS")) {
             try {
-                Thread.sleep(milissegundos);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                filtroEnum = SituacaoAgendamento.valueOf(filtroStr);
+            } catch (IllegalArgumentException e) {
+                // Se mandarem um filtro inválido na URL, ignora e traz todos
             }
         }
+
+        return agendamentoRepository.buscarPaginadoComFiltro(idModelo, filtroEnum, pageable)
+                .map(AgendamentoDTO::new);
+    }
+
+    private void aplicarDelayProtecao(long milissegundos) {
+        try {
+            Thread.sleep(milissegundos);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

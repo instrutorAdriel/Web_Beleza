@@ -56,4 +56,21 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario",
             countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
     Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
+
+    // Busca paginada trazendo todos ou filtrando por situação
+    @Query(value = "SELECT a FROM Agendamento a " +
+            "JOIN FETCH a.disponibilidade d " +
+            "JOIN FETCH d.produtoUnidade pu " +
+            "JOIN FETCH pu.produto p " +
+            "JOIN FETCH pu.unidade u " +
+            "WHERE a.modelo.idModelo = :idModelo " +
+            "AND (:filtro IS NULL OR a.situacao = :filtro)",
+            countQuery = "SELECT COUNT(a) FROM Agendamento a " +
+                    "WHERE a.modelo.idModelo = :idModelo " +
+                    "AND (:filtro IS NULL OR a.situacao = :filtro)")
+    Page<Agendamento> buscarPaginadoComFiltro(
+            @Param("idModelo") Integer idModelo,
+            @Param("filtro") SituacaoAgendamento filtro,
+            Pageable pageable);
+
 }

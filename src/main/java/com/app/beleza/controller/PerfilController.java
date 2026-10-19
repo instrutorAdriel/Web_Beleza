@@ -54,9 +54,14 @@ public class PerfilController {
     public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
                                @RequestParam(defaultValue = "0") int pagina,
                                @RequestParam(defaultValue = "5") int tamanho,
+                               @RequestParam(required = false, defaultValue = "TODOS") String filtro, // Parâmetro do filtro
                                @ModelAttribute("usuarioDTO") UsuarioDTO form,
                                Model model,
                                HttpSession session) {
+
+        if (pagina < 0) {
+            pagina = 0;
+        }
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 
         if (usuario == null) {
@@ -77,10 +82,12 @@ public class PerfilController {
 
         /* ─── ABA: AGENDAMENTO ─── */
         if ("agendamento".equals(aba)) {
+            // Passa o filtro para o service fazer a query correta no banco
             Page<AgendamentoDTO> paginaAgendamentos = agendamentoService
-                    .listarAgendamentosPorUsuarioPaginado(resultado.get().getIdModelo(), usuario.getId(), pagina, tamanho);
+                    .listarAgendamentosPorUsuarioPaginado(resultado.get().getIdModelo(), usuario.getId(), pagina, tamanho, filtro);
 
             model.addAttribute("paginaAgendamentos", paginaAgendamentos);
+            model.addAttribute("filtroAtivo", filtro); // Envia o filtro atual para o HTML
         }
 
         /* ─── ABA: DEPOIMENTO ─── */
@@ -95,7 +102,7 @@ public class PerfilController {
     }
 
     /* ─── ATUALIZAR INFORMAÇÕES DO PERFIL ─────────────────────────────────── */
-    @PostMapping("/perfil/atualizar-perfil")
+    @PostMapping("/atualizar-perfil")
     public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
@@ -116,7 +123,7 @@ public class PerfilController {
     }
 
     /* ─── ATUALIZAR SENHA ─────────────────────────────────────────────────── */
-    @PostMapping("/perfil/atualizar-senha")
+    @PostMapping("/atualizar-senha")
     public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
@@ -175,7 +182,8 @@ public class PerfilController {
         return "redirect:/perfil?aba=configuracao";
     }
 
-    @PostMapping("/perfil/enviar-depoimento")
+    // CORREÇÃO AQUI: Removido o "/perfil" duplicado do início
+    @PostMapping("/enviar-depoimento")
     public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
                                       @RequestParam(value = "depoimento", required = false) String depoimento,
                                       @RequestParam(value = "imagem", required = false) MultipartFile imagem,
@@ -228,7 +236,6 @@ public class PerfilController {
             novoDepoimento.setDepoimento(depoimento);
             novoDepoimento.setUsuario(usuario);
             novoDepoimento.setModelo(modeloOpt.get());
-
 
             agendamentoRepository.findById(idAgendamento).ifPresent(novoDepoimento::setAgendamento);
 

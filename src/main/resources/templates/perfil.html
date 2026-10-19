@@ -7,6 +7,11 @@
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
+<!-- TELA DE CARREGAMENTO -->
+<div id="loader-global" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; color: var(--senac-laranja);"></i>
+    <p style="margin-top: 15px; font-weight: bold; color: var(--texto-escuro);">Buscando agendamentos...</p>
+</div>
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
@@ -100,86 +105,110 @@
                 <h2>Meus Agendamentos</h2>
             </div>
 
-            <!-- FILTROS -->
+            <div class="group-info success" th:if="${mensagemSucesso}" style="margin-bottom: 1rem;">
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div class="group-info error" th:if="${mensagemError}" style="margin-bottom: 1rem;">
+                <span th:text="${mensagemError}"></span>
+            </div>
+
+            <!-- FILTROS (Agora são links do Thymeleaf) -->
             <div class="filtros-agendamento" id="filtros-agendamento">
-                <button type="button" class="filtro-btn ativo" data-status="TODOS">
-                    Todos <span class="filtro-contador" data-contador="TODOS">0</span>
-                </button>
-                <button type="button" class="filtro-btn" data-status="CONFIRMADO">
-                    Confirmados <span class="filtro-contador" data-contador="CONFIRMADO">0</span>
-                </button>
-                <button type="button" class="filtro-btn" data-status="REALIZADO">
-                    Realizados <span class="filtro-contador" data-contador="REALIZADO">0</span>
-                </button>
-                <button type="button" class="filtro-btn" data-status="CANCELADO">
-                    Cancelados <span class="filtro-contador" data-contador="CANCELADO">0</span>
-                </button>
-                <button type="button" class="filtro-btn" data-status="NAO_COMPARECEU">
-                    Não compareceu <span class="filtro-contador" data-contador="NAO_COMPARECEU">0</span>
-                </button>
+                <a th:href="@{/perfil(aba='agendamento', filtro='TODOS')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
+                    Todos
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='CONFIRMADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'CONFIRMADO'} ? 'ativo'">
+                    Confirmados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='REALIZADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'REALIZADO'} ? 'ativo'">
+                    Realizados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='CANCELADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'CANCELADO'} ? 'ativo'">
+                    Cancelados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='NAO_COMPARECEU')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'NAO_COMPARECEU'} ? 'ativo'">
+                    Não compareceu
+                </a>
             </div>
 
             <!-- LISTA -->
             <div class="lista-agendamentos" id="lista-agendamentos">
+                <!-- Se não tiver nada, mostra a mensagem -->
+                <div th:if="${paginaAgendamentos.isEmpty()}" class="agendamentos-vazio" style="grid-column: 1 / -1;">
+                    <i class="fa-regular fa-calendar-xmark"></i>
+                    <p>Nenhum agendamento com esse status.</p>
+                </div>
+
                 <div class="card-agendamento"
                      th:each="ag : ${paginaAgendamentos}"
                      th:data-status="${ag.statusTexto()}">
+
                     <div class="card-agendamento-imagem"
                          th:style="'background-image: url(' + ${ag.imagemAnexo} + ');'"></div>
+
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status"
                              th:classappend="${ag.statusClasseCss()}"
-                             th:text="${ag.statusTexto()}">
-                            Status
-                        </div>
-                        <h3 class="card-agendamento-titulo"
-                            th:text="${ag.nomeServico}">Serviço</h3>
+                             th:text="${ag.statusTexto()}">Status</div>
+
+                        <h3 class="card-agendamento-titulo" th:text="${ag.nomeServico}">Serviço</h3>
+
                         <div class="card-agendamento-info">
-                    <span><i class="fa-solid fa-location-dot"></i>
-                        <span th:text="${ag.nomeUnidade}">Unidade</span>
-                    </span>
-                            <span><i class="fa-solid fa-calendar-days"></i>
-                        <span th:text="${#temporals.format(ag.dataAgendamento(), 'dd/MM/yyyy')}">Data</span>
-                    </span>
-                            <span><i class="fa-regular fa-clock"></i>
-                        <span th:text="${#temporals.format(ag.horaInicio(), 'HH:mm')}">Hora</span>
-                    </span>
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${ag.nomeUnidade}">Unidade</span></span>
+                            <span><i class="fa-solid fa-calendar-days"></i> <span th:text="${#temporals.format(ag.dataAgendamento(), 'dd/MM/yyyy')}">Data</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${#temporals.format(ag.horaInicio(), 'HH:mm')}">Hora</span></span>
                         </div>
 
                         <form th:if="${ag.statusTexto() != 'CANCELADO' && ag.statusTexto() != 'NAO_COMPARECEU'}"
-                              th:action="@{/api/agendamento/{id}/cancelar(id=${ag.disponibilidade.id})}"
+                              th:action="@{/api/agendamento/cancelar/{id}(id=${ag.idAgendamento()})}"
                               method="POST"
                               style="margin-top: 1rem;"
                               onsubmit="return confirm('Cancelar este agendamento? A vaga será liberada.');">
+                            <input type="hidden" name="filtro" th:value="${filtroAtivo}">
+                            <input type="hidden" name="pagina" th:value="${paginaAgendamentos.number}">
                             <button type="submit" class="btn">Cancelar agendamento</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- FILTRO VAZIO -->
-            <div id="filtro-vazio" class="agendamentos-vazio" style="display: none;">
-                <i class="fa-regular fa-calendar-xmark"></i>
-                <p>Nenhum agendamento com esse status.</p>
-                    </div>
+            <!-- PAGINAÇÃO (Mantém o filtro ativo ao mudar de página) -->
+            <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 2rem;">
 
-
-
-            <!-- Controles de Paginação do Painel Lateral -->
-            <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}">
-                <a th:href="@{/perfil(pagina=${paginaAgendamentos.number - 1})}"
-                   th:classappend="${paginaAgendamentos.first} ? 'disabled' : ''"
-                   class="btn-paginacao-aba">
-                    <i class="fa-solid fa-chevron-left"></i>
+                <!-- BOTÃO ANTERIOR -->
+                <a th:if="${!paginaAgendamentos.first}"
+                   th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number - 1}, filtro=${filtroAtivo})}"
+                   class="btn-paginacao-aba"
+                   style="text-decoration: none; padding: 8px 15px; border-radius: 5px; background-color: var(--senac-laranja); color: white; font-weight: bold;">
+                    &laquo; Anterior
                 </a>
+                <button th:if="${paginaAgendamentos.first}" disabled
+                        class="btn-paginacao-aba"
+                        style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
+                    &laquo; Anterior
+                </button>
 
-                <span><strong th:text="${paginaAgendamentos.number + 1}">1</strong> / <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
+                <!-- INDICADOR DE PÁGINA -->
+                <span>Página <strong th:text="${paginaAgendamentos.number + 1}">1</strong> de <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
 
-                <a th:href="@{/perfil(pagina=${paginaAgendamentos.number + 1})}"
-                   th:classappend="${paginaAgendamentos.last} ? 'disabled' : ''"
-                   class="btn-paginacao-aba">
-                    <i class="fa-solid fa-chevron-right"></i>
+                <!-- BOTÃO PRÓXIMA -->
+                <a th:if="${!paginaAgendamentos.last}"
+                   th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number + 1}, filtro=${filtroAtivo})}"
+                   class="btn-paginacao-aba"
+                   style="text-decoration: none; padding: 8px 15px; border-radius: 5px; background-color: var(--senac-laranja); color: white; font-weight: bold;">
+                    Próxima &raquo;
                 </a>
+                <button th:if="${paginaAgendamentos.last}" disabled
+                        class="btn-paginacao-aba"
+                        style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
+                    Próxima &raquo;
+                </button>
+
             </div>
         </section>
 
@@ -205,7 +234,7 @@
                         <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
                         <option th:each="ag : ${listaAgendamentosRealizados}"
                                 th:value="${ag.id}"
-                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataAgendamento != null ? #temporals.format(ag.dataAgendamento) : '')}"
+                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
                                 th:selected="${ag.id == agendamentoIdSelecionado}">
                             Serviço Exemplo
                         </option>
@@ -226,11 +255,9 @@
                 <div class="group-input">
                     <label for="imagem">Adicionar Imagens</label>
 
-                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
                     <input type="file" id="imagem" name="imagens" accept="image/*" multiple
                            onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
                     <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
                         <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
                             <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
@@ -248,5 +275,46 @@
     </div>
 </div>
 <script th:src="@{/javaScript/perfil.js}"></script>
+<script>
+    // Função para exibir o loading
+    function mostrarLoading() {
+        document.getElementById('loader-global').style.display = 'flex';
+    }
+
+    // 1. Aplica o loading APENAS nos links de filtro e paginação de agendamento
+    document.addEventListener('DOMContentLoaded', function () {
+        // Pega todos os links que tenham 'filtro=' ou 'pagina=' no href (filtros e paginação)
+        const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
+
+        linksAgendamento.forEach(link => {
+            link.addEventListener('click', function () {
+                mostrarLoading();
+            });
+        });
+    });
+
+    // 2. Aplica o loading no botão de Cancelar Agendamento (que envia um formulário)
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            document.getElementById('loader-global').style.display = 'none';
+        }
+    });
+</script>
+<script>
+    // Remove as mensagens de sucesso ou erro após 4 segundos
+    document.addEventListener('DOMContentLoaded', function () {
+        const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
+        mensagens.forEach(function (msg) {
+            setTimeout(function () {
+                // Efeito de fade-out suave
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                // Remove do HTML depois que o fade acabar
+                setTimeout(() => msg.remove(), 500);
+            }, 4000); // 4000 milissegundos = 4 segundos
+        });
+    });
+</script>
+
 </body>
 </html>

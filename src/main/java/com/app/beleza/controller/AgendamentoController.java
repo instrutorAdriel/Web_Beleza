@@ -42,9 +42,10 @@ public class AgendamentoController {
         }
     }
 
+    // Rota antiga (usada no modal da Home, passa ID da Disponibilidade)
     @PostMapping("/{id}/cancelar")
     @ResponseBody
-    public ResponseEntity<String> cancelar(@PathVariable Integer id, HttpSession session) {
+    public ResponseEntity<String> cancelarPorDisponibilidade(@PathVariable Integer id, HttpSession session) {
         Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
         if (usuarioLogado == null) {
             return ResponseEntity.status(401).body("Você precisa estar logado para cancelar.");
@@ -55,5 +56,28 @@ public class AgendamentoController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // Rota nova (usada no Perfil, passa ID do Agendamento)
+    // Rota usada no Perfil (Redireciona de volta para a tela)
+    @PostMapping("/cancelar/{id}")
+    public String cancelarPorIdAgendamento(@PathVariable Integer id,
+                                           @RequestParam(value = "filtro", required = false, defaultValue = "TODOS") String filtro,
+                                           @RequestParam(value = "pagina", required = false, defaultValue = "0") int pagina,
+                                           HttpSession session,
+                                           org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuarioLogado == null) {
+            return "redirect:/login";
+        }
+        try {
+            agendamentoService.cancelar(id, usuarioLogado);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Agendamento cancelado com sucesso!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("mensagemError", e.getMessage());
+        }
+
+        // Manda de volta para a MESMA aba, MESMO filtro e MESMA página
+        return "redirect:/perfil?aba=agendamento&filtro=" + filtro + "&pagina=" + pagina;
     }
 }
