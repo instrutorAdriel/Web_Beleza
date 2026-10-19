@@ -155,57 +155,58 @@
         Não há serviços disponíveis para unidade selecionada.
     </div>
 
-    <div class="carrossel-wrapper">
-
-        <button type="button" class="seta-carrossel seta-esquerda">
+    <div class="carrossel-wrapper carrossel-wrapper-servicos">
+        <button type="button" class="seta-carrossel seta-esquerda seta-servico">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <div class="carrossel-track">
-            <div class="card-curso-completo"
-                 th:each="servico : ${servicos}"
-                 th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
+        <div class="carrossel-viewport carrossel-viewport-servicos">
+            <div class="carrossel-track carrossel-track-servicos">
+                <div class="card-curso-completo"
+                     th:each="servico : ${servicos}"
+                     th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
 
-                <div class="img-placeholder-curso">
-                    <img th:src="${servico.imagem}"
-                         th:alt="${servico.nomeServico}">
-                </div>
+                    <div class="img-placeholder-curso">
+                        <img th:src="${servico.imagem}"
+                             th:alt="${servico.nomeServico}">
+                    </div>
 
-                <div class="corpo-curso">
+                    <div class="corpo-curso">
 
                     <span class="tipo-curso"
                           th:text="${servico.unidade}">
                     </span>
 
-                    <h3 th:text="${servico.nomeServico}"></h3>
+                        <h3 th:text="${servico.nomeServico}"></h3>
 
-                    <p th:text="${servico.descricao}"></p>
+                        <p th:text="${servico.descricao}"></p>
 
-                    <div class="detalhes-rapidos-curso">
+                        <div class="detalhes-rapidos-curso">
 
                         <span>
                             <i class="fa-regular fa-clock"></i>
                             <span th:text="${servico.hora_inicio}"></span>
                         </span>
 
-                        <span>
+                            <span>
                             <i class="fa-solid fa-location-dot"></i>
                             <span th:text="${servico.unidade}"></span>
                         </span>
 
-                    </div>
+                        </div>
 
-                    <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
-                        Agendar
-                    </a>
+                        <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
+                            Agendar
+                        </a>
+
+                    </div>
 
                 </div>
 
             </div>
-
         </div>
 
-        <button type="button" class="seta-carrossel seta-direita">
+        <button type="button" class="seta-carrossel seta-direita seta-servico">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
