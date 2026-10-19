@@ -119,12 +119,13 @@ public class UsuarioController {
 
     @PostMapping("/recuperar-senha")
     public String processarEmail(@ModelAttribute UsuarioDTO form, Model model) {
-        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
-
-        if (form.getEmail().isBlank()) {
+        if (form.getEmail() == null || form.getEmail().isBlank()) {
             model.addAttribute("erro", "E-mail em branco");
             return "recuperar-senha";
-        } else if (!Validador.isEmailValido(form.getEmail())) {
+        }
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
+
+        if (!Validador.isEmailValido(form.getEmail())) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         } else if (res.isEmpty()) {
