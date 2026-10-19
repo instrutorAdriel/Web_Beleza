@@ -11,13 +11,4 @@ import java.util.List;
 @Repository
 public interface DepoimentoRepository extends JpaRepository<Depoimento, Integer> {
 
-    // Procura todos os depoimentos de um utilizador
-    List<Depoimento> findByUsuarioId(Integer usuarioId);
-    // Retorna apenas 1 registro por Serviço/Produto e Unidade (evitando múltiplos cards para horários diferentes)
-    @Query("SELECT d FROM Disponibilidade d " +
-            "WHERE d.id IN (" +
-            "    SELECT MIN(sub.id) FROM Disponibilidade sub " +
-            "    GROUP BY sub.produtoUnidade.produto.id, sub.produtoUnidade.unidade.id" +
-            ")")
-    List<Disponibilidade> findServicosUnicos();
 }
