@@ -895,6 +895,27 @@
     flex-grow: 1;
     transition: all 0.3s ease;
 }
+/* Container do texto */
+.texto-card-servico {
+    padding: 12px 0;
+    margin-bottom: 8px;
+}
+
+/* Parágrafo com a descrição (Thymeleaf: servico.descricao) */
+.texto-card-servico p {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #4b5563; /* Tom cinza elegante para boa leitura */
+    margin: 0;
+
+    
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* Mostrar texto completo no hover */
 .card-curso-completo:hover .corpo-curso p {
