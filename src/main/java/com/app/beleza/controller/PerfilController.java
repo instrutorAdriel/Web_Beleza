@@ -249,7 +249,7 @@ public class PerfilController {
             return "redirect:/perfil?aba=depoimento";
         }
 
-        if (agendamentoRepository.findByAgendamentoIdAndUsuario(idAgendamento, usuario.getId()).isPresent()) {
+        if (!agendamentoRepository.findAgendamentosRealizadosSemDepoimento(idAgendamento, SituacaoAgendamento.REALIZADO).isEmpty()) {
             redirectAttributes.addFlashAttribute("mensagemError", "Você já enviou um depoimento para este agendamento.");
             return "redirect:/perfil?aba=depoimento";
         }
