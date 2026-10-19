@@ -23,7 +23,7 @@ public class HomeService {
     @Autowired
     private DepoimentoRepository depoimentoRepository;
 
-    @Cacheable("homeService")
+    @Cacheable("homeServicos")
     public List<ServicoDisponibilidadeDTO> listarServicos() {
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
         Optional<List<Disponibilidade>> optional = disponibilidadeRepository.findServicosUnicosComRelacionamentos();
