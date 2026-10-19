@@ -14,11 +14,6 @@ import java.util.Optional;
 public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade, Integer> {
     Optional<Disponibilidade> findById(Integer id);
 
-    Optional<List<Disponibilidade>> findByDataDisponibilidade(LocalDate dataDisponibilidade);
-
-    // Procura disponibilidades com vagas ativas para uma data
-    List<Disponibilidade> findByDataDisponibilidadeAndTotalVagasGreaterThan(LocalDate data, Integer vagas);
-
     @Query("SELECT d FROM Disponibilidade d " +
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
