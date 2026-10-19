@@ -8,20 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
-<script>
-    document.addEventListener("click", function (event) {
-        const botao = event.target.closest(".ssp-toggle-password");
-        if (!botao) return;
-
-        const input = botao.parentElement.querySelector("input");
-        const icone = botao.querySelector("i");
-        const mostrando = input.type === "password";
-
-        input.type = mostrando ? "text" : "password";
-        icone.classList.toggle("fa-eye-slah", mostrando);
-        icone.classList.toggle("fa-eye", !mostrando);
-    });
-</script>
 <body class="body-perfil">
 <div class="painel-controle">
     <div class="container-painel">
@@ -97,7 +83,7 @@
                     <div class="ssp-password-wrapper">
                         <input th:field="*{senha}" type="password" id="senha-atual">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
-                            <i class="fa-solid fa-eye"></i>
+                            <i class="fa-solid fa-eye-slash"></i>
                         </button>
                     </div>
                 </div>
@@ -107,7 +93,7 @@
                     <div class="ssp-password-wrapper">
                         <input th:field="*{novaSenha}" type="password" id="senha-nova">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
-                            <i class="fa-solid fa-eye"></i>
+                            <i class="fa-solid fa-eye-slash"></i>
                         </button>
                     </div>
                 </div>
@@ -117,7 +103,7 @@
                     <div class="ssp-password-wrapper">
                         <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar senha">
-                            <i class="fa-solid fa-eye"></i>
+                            <i class="fa-solid fa-eye-slash"></i>
                         </button>
                     </div>
                 </div>
@@ -263,5 +249,23 @@
 
     </div>
 </div>
+
+<script>
+    // Alterna a visibilidade da senha e o ícone de acordo com o NOVO estado
+    document.addEventListener("click", function (event) {
+        const botao = event.target.closest(".ssp-toggle-password");
+        if (!botao) return;
+
+        const input = botao.parentElement.querySelector("input");
+        const icone = botao.querySelector("i");
+        const mostrando = input.type === "password"; // vai passar a mostrar a senha
+
+        input.type = mostrando ? "text" : "password";
+        icone.classList.toggle("fa-eye", mostrando);        // visível → olho aberto
+        icone.classList.toggle("fa-eye-slash", !mostrando); // oculta → olho cortado
+
+        botao.setAttribute("aria-label", mostrando ? "Ocultar senha" : "Mostrar senha");
+    });
+</script>
 </body>
 </html>
