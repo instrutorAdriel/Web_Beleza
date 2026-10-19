@@ -17,10 +17,10 @@ public class Depoimento {
     @Column(name="avaliacao", nullable = false)
     private Integer avaliacao;
 
-    @Column(name="imagem_anexo_1", nullable = false, length = 255)
+    @Column(name="imagem_anexo_1", length = 255)
     private String imagemAnexo1;
 
-    @Column(name="imagem_anexo_2", nullable = false, length = 255)
+    @Column(name="imagem_anexo_2",  length = 255)
     private String imagemAnexo2;
 
     @OneToOne

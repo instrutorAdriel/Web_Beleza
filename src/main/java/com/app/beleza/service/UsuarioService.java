@@ -10,15 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class UsuarioService {
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -51,7 +49,9 @@ public class UsuarioService {
         dadosUsuario.setNomeUsuario(form.getNomeCompleto());
         dadosUsuario.setEmail(form.getEmail()); // E-mail normal
         dadosUsuario.setSenha(senhaCriptografada);
-        novoUsuario.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
+
+        // Atribuição direta do LocalDate vindo da DTO
+        novoUsuario.setDataNascimento(form.getDataNascimento());
         novoUsuario.setTelefone(form.getTelefone());
         novoUsuario.setUsuario(dadosUsuario);
 
@@ -114,7 +114,7 @@ public class UsuarioService {
         }
 
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
-        if (res.isEmpty()) return "Esse conta não existe.";
+        if (res.isEmpty()) return "Essa conta não existe.";
 
         if (!encoder.matches(form.getSenha(), res.get().getSenha())) {
             return "A senha atual não está correta.";
@@ -130,10 +130,9 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
-        // Validação de Emojis ao atualizar o perfil
-
-        if (!Validador.isDataNascimentoValido(form.getDataNascimento())) {
-            return "Data de nascimento inválido!";
+        // Validação da data de nascimento se preenchida
+        if (form.getDataNascimento() == null) {
+            return "Data de nascimento inválida!";
         }
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
@@ -144,8 +143,14 @@ public class UsuarioService {
 
         Optional<Modelo> modeloBusca = modeloRepository.findByUsuario(usuarioBusca.get());
 
+        if (modeloBusca.isEmpty()) {
+            return "Perfil de usuário não encontrado.";
+        }
+
         Modelo modelo = modeloBusca.get();
-        modelo.setDataNascimento(LocalDate.parse(form.getDataNascimento()));
+
+        // Atribuição direta do LocalDate vindo da DTO
+        modelo.setDataNascimento(form.getDataNascimento());
         modelo.setTelefone(form.getTelefone());
 
         return null;
@@ -154,7 +159,9 @@ public class UsuarioService {
     public UsuarioDTO converterModelParaDTO(Modelo usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setNomeCompleto(usuario.getUsuario().getNomeUsuario());
-        usuarioDTO.setDataNascimento(usuario.getDataNascimento().toString());
+
+        // Atribuição direta do LocalDate para a DTO
+        usuarioDTO.setDataNascimento(usuario.getDataNascimento());
         usuarioDTO.setEmail(usuario.getUsuario().getEmail());
         usuarioDTO.setTelefone(usuario.getTelefone());
 
