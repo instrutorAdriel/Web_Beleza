@@ -11,16 +11,12 @@ import java.util.Optional;
 
 @Repository
 public interface DepoimentoRepository extends JpaRepository<Depoimento, Integer> {
-    // Procura um depoimento associado a um agendamento específico
-    Optional<Depoimento> findByAgendamentoId(Integer agendamentoId);
-
-    // Procura todos os depoimentos de um utilizador
-    List<Depoimento> findByUsuarioId(Integer usuarioId);
-    // Retorna apenas 1 registro por Serviço/Produto e Unidade (evitando múltiplos cards para horários diferentes)
-    @Query("SELECT d FROM Disponibilidade d " +
-            "WHERE d.id IN (" +
-            "    SELECT MIN(sub.id) FROM Disponibilidade sub " +
-            "    GROUP BY sub.produtoUnidade.produto.id, sub.produtoUnidade.unidade.id" +
-            ")")
-    List<Disponibilidade> findServicosUnicos();
+    @Query("SELECT d FROM Depoimento d " +
+            "JOIN FETCH d.usuario u " +
+            "JOIN FETCH d.agendamento a " +
+            "JOIN FETCH a.disponibilidade disp " +
+            "JOIN FETCH disp.produtoUnidade pu " +
+            "JOIN FETCH pu.produto p " +
+            "JOIN FETCH pu.unidade unid")
+    Optional<List<Depoimento>> findAllComRelacionamento();
 }

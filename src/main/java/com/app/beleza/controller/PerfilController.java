@@ -95,7 +95,7 @@ public class PerfilController {
     }
 
     /* ─── ATUALIZAR INFORMAÇÕES DO PERFIL ─────────────────────────────────── */
-    @PostMapping("/perfil/atualizar-perfil")
+    @PostMapping("/atualizar-perfil")
     public String atualizarPerfil(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
@@ -116,7 +116,7 @@ public class PerfilController {
     }
 
     /* ─── ATUALIZAR SENHA ─────────────────────────────────────────────────── */
-    @PostMapping("/perfil/atualizar-senha")
+    @PostMapping("/atualizar-senha")
     public String atualizarSenha(@ModelAttribute UsuarioDTO form, HttpSession session, RedirectAttributes redirectAttributes) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
@@ -175,7 +175,7 @@ public class PerfilController {
         return "redirect:/perfil?aba=configuracao";
     }
 
-    @PostMapping("/perfil/enviar-depoimento")
+    @PostMapping("/enviar-depoimento")
     public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
                                       @RequestParam(value = "depoimento", required = false) String depoimento,
                                       @RequestParam(value = "imagem", required = false) MultipartFile imagem,
