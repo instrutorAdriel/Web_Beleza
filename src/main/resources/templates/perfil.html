@@ -3,7 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        #perfil-configuracao .ssp-password-wrapper {
+            position: relative !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper input {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding-right: 46px !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+            position: absolute !important;
+            top: 50% !important;
+            right: 12px !important;
+            transform: translateY(-50%) !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            color: #6b7280 !important;
+            font-size: 1.1rem !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+            color: #1f2937 !important;
+        }
+    </style>
+    <script th:src="@{/javaScript/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -80,14 +113,29 @@
                     <label for="senha-atual">Senha Atual</label>
                     <input th:field="*{senha}" type="password" id="senha-atual">
                 </div>
+
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
+                            <i class="fa-solid fa-eye" id="eyeIconNova"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
+                            <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
