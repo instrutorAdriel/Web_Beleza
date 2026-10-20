@@ -589,11 +589,11 @@
     z-index: 1;
 }
 
-/* Viewport específico dos serviços (altura fixa para o card expandir) */
+/* Viewport específico dos serviços */
 .carrossel-viewport-servicos {
     position: relative;
     width: 100%;
-    height: 550px;
+    min-height: 550px;
     overflow: visible;
 }
 
@@ -629,10 +629,11 @@
 .carrossel-track::-webkit-scrollbar-track { background: var(--fundo-card); border-radius: 10px; }
 .carrossel-track::-webkit-scrollbar-thumb { background: var(--borda-suave); border-radius: 10px; }
 
+/* Card de Serviço: Altura cravada em 380px para evitar diminuir/pular */
 .card-servico {
     min-width: 320px;
     max-width: 320px;
-    height: 380px;
+    height: 380px; /* Trava o tamanho exato no estado normal */
     background: var(--fundo-card);
     border-radius: 12px;
     border: 1px solid var(--borda-suave);
@@ -640,13 +641,17 @@
     padding: 28px;
     display: flex;
     flex-direction: column;
-    transition: var(--transicao);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
+
+/* Hover padrão: Apenas levanta 6px mantendo exatamente a mesma altura */
 .card-servico:hover {
-    transform: translateY(-6px);
-    border-color: var(--senac-laranja);
+        border-color: var(--senac-laranja);
     box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
 }
+
 .card-tag-unidade {
     font-size: 11px;
     text-transform: uppercase;
@@ -743,6 +748,7 @@
     align-items: center;
     justify-content: center;
 }
+
 /* ==========================================================================
    PLATAFORMA DE CURSOS
    ========================================================================== */
@@ -822,7 +828,6 @@
     width: 100%;
     background-size: cover;
     background-position: center;
-    /* Adiciona estas linhas para arredondar os cantos superiores */
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
@@ -834,7 +839,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    /* Garante que a imagem em si também respeite o arredondamento */
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
 }
@@ -895,29 +899,45 @@
     flex-grow: 1;
     transition: all 0.3s ease;
 }
+
+/* ==========================================================================
+   CONFIGURAÇÃO DE EXPANSÃO DOS CARDS DE SERVIÇO
+   ========================================================================== */
+
 /* Container do texto */
 .texto-card-servico {
     padding: 12px 0;
     margin-bottom: 8px;
 }
 
-/* Parágrafo com a descrição (Thymeleaf: servico.descricao) */
+/* Parágrafo com a descrição no estado normal (máximo 3 linhas) */
 .texto-card-servico p {
     font-family: 'Public Sans', sans-serif;
     font-size: 0.95rem;
     line-height: 1.5;
-    color: #4b5563; /* Tom cinza elegante para boa leitura */
+    color: #4b5563;
     margin: 0;
-
-    
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    transition: all 0.3s ease;
 }
 
-/* Mostrar texto completo no hover */
+/* Regra ativada APENAS via JS quando o texto for estritamente maior que 3 linhas */
+.card-servico.expandido {
+    height: auto; /* Libera a altura para revelar o texto excedente */
+    z-index: 50;
+}
+
+.card-servico.expandido .texto-card-servico p {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+}
+
+/* Cursos completos: mostrar texto completo no hover */
 .card-curso-completo:hover .corpo-curso p {
     -webkit-line-clamp: unset;
     display: block;
@@ -1211,13 +1231,10 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0;
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     justify-items: center;
     align-items: start;
-
     text-align: center;
     box-sizing: border-box;
 }
@@ -1228,7 +1245,6 @@
     max-width: 350px;
     margin: 0 auto;
     padding: 0;
-
     text-align: center;
     box-sizing: border-box;
 }
@@ -1236,15 +1252,11 @@
 /* TÍTULOS */
 .footer-bloco h4 {
     display: inline-block;
-
     margin: 0 0 20px 0;
     padding-bottom: 6px;
-
     font-size: 18px;
     font-weight: 700;
-
     color: var(--texto-claro);
-
     border-bottom: 2px solid var(--senac-laranja);
 }
 
@@ -1252,9 +1264,7 @@
 .footer-bloco p {
     width: 300px;
     max-width: 100%;
-
     margin: 0 auto;
-
     text-align: center;
     line-height: 1.5;
 }
@@ -1264,16 +1274,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     gap: 25px;
-
     margin-top: 10px;
 }
 
 .redes-sociais a {
     color: white;
     font-size: 22px;
-
     transition: var(--transicao);
 }
 
@@ -1285,17 +1292,12 @@
 /* PARTE INFERIOR */
 .footer-bottom {
     width: 100%;
-
     margin-top: 50px;
     padding: 24px 20px 0;
-
     text-align: center;
-
     border-top: 1px solid #1e293b;
-
     font-size: 13px;
     color: #64748b;
-
     box-sizing: border-box;
 }
 
@@ -1303,7 +1305,6 @@
     margin: 0;
     text-align: center;
 }
-
 
 /* =========================================================
    RESPONSIVIDADE
@@ -1329,6 +1330,7 @@
         max-width: 350px;
     }
 }
+
 /* ==========================================================================
    RESPONSIVIDADE ACURADA (MOBILE & TABLET)
    ========================================================================== */
