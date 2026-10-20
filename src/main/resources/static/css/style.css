@@ -2550,3 +2550,114 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
+
+.perfil-data-nascimento {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
+.perfil-data-nascimento > input[type="text"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.perfil-calendario-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: var(--fundo-card);
+    color: var(--texto-escuro);
+    cursor: pointer;
+    padding: 0 0.65rem;
+}
+
+.perfil-calendario-btn:hover,
+.perfil-calendario-btn:focus-visible {
+    border-color: var(--senac-laranja);
+    color: var(--senac-laranja);
+}
+
+.perfil-calendario-popup {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 280px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: var(--fundo-card);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+}
+
+.perfil-calendario-popup[hidden] {
+    display: none;
+}
+
+.perfil-calendario-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+}
+
+.perfil-calendario-cabecalho button,
+.perfil-calendario-dia {
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--texto-escuro);
+    cursor: pointer;
+}
+
+.perfil-calendario-cabecalho button {
+    width: 32px;
+    height: 32px;
+    font-size: 1.5rem;
+}
+
+.perfil-calendario-cabecalho button:hover,
+.perfil-calendario-dia:not(:disabled):hover {
+    background: rgba(247, 148, 30, 0.15);
+}
+
+.perfil-calendario-grade {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    text-align: center;
+}
+
+.perfil-calendario-dia-semana,
+.perfil-calendario-vazio,
+.perfil-calendario-dia {
+    display: grid;
+    min-height: 32px;
+    place-items: center;
+    font-size: 0.85rem;
+}
+
+.perfil-calendario-dia-semana {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.perfil-calendario-dia.selecionado {
+    background: var(--senac-laranja);
+    color: #fff;
+}
+
+.perfil-calendario-dia.hoje:not(.selecionado) {
+    outline: 1px solid var(--senac-laranja);
+}
+
+.perfil-calendario-dia:disabled {
+    color: #cbd5e1;
+    cursor: not-allowed;
+}

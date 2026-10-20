@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/javaScript/perfil.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -42,11 +44,25 @@
                     </div>
                     <div class="group-input">
                         <label for="dataNascimento">Data de Nascimento</label>
-                        <input type="date"
-                               id="dataNascimento"
-                               th:field="*{dataNascimento}"
-                               th:max="${T(java.time.LocalDate).now()}"
-                               min="1900-01-01">
+                        <div class="perfil-data-nascimento">
+                            <input type="text"
+                                   id="dataNascimento"
+                                   th:field="*{dataNascimento}"
+                                   placeholder="dd/mm/aaaa"
+                                   inputmode="numeric"
+                                   autocomplete="bday"
+                                   maxlength="10"
+                                   aria-describedby="dataNascimentoAjuda">
+                            <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-btn" aria-label="Escolher data no calendário" title="Escolher data no calendário" aria-expanded="false" aria-controls="calendarioNascimento">
+                                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="3.5" y="5" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                                    <path d="M7.5 3.5V7M16.5 3.5V7M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                    <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                            <div id="calendarioNascimento" class="perfil-calendario-popup" hidden></div>
+                        </div>
+                        <small id="dataNascimentoAjuda">Digite no formato dd/mm/aaaa ou escolha uma data no calendário.</small>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
