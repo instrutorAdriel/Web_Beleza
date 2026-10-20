@@ -16,7 +16,7 @@ public class Produto {
     @Column(name="descricao", nullable = false, length = 255)
     private String descricao;
 
-    @Column(name="imagemAnexo", nullable = false, length = 255)
+    @Column(name="imagemAnexo", length = 255)
     private String imagemAnexo;
 
     public Produto() {}

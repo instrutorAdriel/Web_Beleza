@@ -145,53 +145,71 @@
         <!-- ABA: AGENDAMENTOS -->
         <section id="perfil-agendamento" class="secao-painel" th:if="${abaAtiva == 'agendamento'}">
             <div class="secao-header">
-                <h2>Agendamentos</h2>
+                <h2>Meus Agendamentos</h2>
             </div>
 
-            <div class="lista-agendamentos">
+            <!-- Mensagem se não houver registros -->
+            <div th:if="${paginaAgendamentos.empty}" class="sem-agendamentos">
+                <p>Nenhum agendamento encontrado.</p>
+            </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-corte.jpg');"></div>
+            <!-- Lista de Cards -->
+            <div class="lista-agendamentos" th:if="${!paginaAgendamentos.empty}">
+
+                <div class="card-agendamento" th:each="agendamento : ${paginaAgendamentos.content}">
+
+                    <div class="card-agendamento-imagem"
+                         th:style="'background-image: url(\'' + ${agendamento.imagemAnexo} + '\');'">
+                    </div>
+
                     <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-concluido">Concluído</div>
-                        <h3 class="card-agendamento-titulo">Corte de Cabelo</h3>
+                        <!-- Status com classe CSS dinâmica -->
+                        <div th:class="'card-agendamento-status ' + ${agendamento.statusClasseCss}"
+                             th:text="${agendamento.statusTexto}">
+                            Concluído
+                        </div>
+
+                        <h3 class="card-agendamento-titulo" th:text="${agendamento.nomeServico}">Corte de Cabelo</h3>
+
                         <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 45 min</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 12/08/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 14:30</span>
+                <span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span th:text="${agendamento.nomeUnidade}">Unidade SENAC</span>
+                </span>
+                            <span>
+                    <i class="fa-regular fa-clock"></i>
+                    Duração: <span th:text="${agendamento.duracaoMinutos}">45 min</span>
+                </span>
+                            <span>
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span th:text="${#temporals.format(agendamento.dataAgendamento, 'dd/MM/yyyy')}">12/08/2026</span>
+                </span>
+                            <span>
+                    <i class="fa-regular fa-clock"></i>
+                    <span th:text="${#temporals.format(agendamento.horaInicio, 'HH:mm')}">14:30</span>
+                </span>
                         </div>
                     </div>
+
                 </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-manicure.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-confirmado">Confirmado</div>
-                        <h3 class="card-agendamento-titulo">Manicure e Pedicure</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Ceilândia — Setor P Norte</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 03/10/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 09:00</span>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-coloracao.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-cancelado">Cancelado</div>
-                        <h3 class="card-agendamento-titulo">Coloração Capilar</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h30</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 20/07/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 16:00</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Controles de Paginação do Painel Lateral -->
+            <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}">
+                <a th:href="@{/perfil(pagina=${paginaAgendamentos.number - 1})}"
+                   th:classappend="${paginaAgendamentos.first} ? 'disabled' : ''"
+                   class="btn-paginacao-aba">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
 
+                <span><strong th:text="${paginaAgendamentos.number + 1}">1</strong> / <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
+
+                <a th:href="@{/perfil(pagina=${paginaAgendamentos.number + 1})}"
+                   th:classappend="${paginaAgendamentos.last} ? 'disabled' : ''"
+                   class="btn-paginacao-aba">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
             </div>
         </section>
 
@@ -236,11 +254,18 @@
 
                 <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagem</label>
-                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+                    <label for="imagem">Adicionar Imagens</label>
 
-                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
+                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
+                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
+                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
+                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
+                                 alt="Pré-visualização da imagem">
+                        </div>
                     </div>
                 </div>
 

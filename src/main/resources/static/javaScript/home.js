@@ -3,7 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarHeroBanner(); // Inicializa o Hero Banner junto com os outros módulos
+    inicializarHeroBanner(); // Inicializa o Hero Banner
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
@@ -13,24 +13,61 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
+ * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (EXPANSÃO INTELIGENTE E TRAVA DE TAMANHO)
  */
 function inicializarCarrossel() {
-    const track = document.querySelector('.carrossel-track');
-    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
-    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
+    const track = document.querySelector('.carrossel-track-servicos');
+    const setaEsquerda = document.querySelector('.seta-servico.seta-esquerda');
+    const setaDireita = document.querySelector('.seta-servico.seta-direita');
+    const viewport = document.querySelector('.carrossel-viewport-servicos');
+    const cards = document.querySelectorAll('.card-servico');
 
-    if (!track || !setaEsquerda || !setaDireita) return;
+    // Controle de rolagem via setas
+    if (track && setaEsquerda && setaDireita) {
+        setaEsquerda.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: -344, behavior: 'smooth' });
+        });
 
-    setaEsquerda.addEventListener('click', (e) => {
-        e.preventDefault();
-        track.scrollBy({ left: -344, behavior: 'smooth' });
-    });
+        setaDireita.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: 344, behavior: 'smooth' });
+        });
+    }
 
-    setaDireita.addEventListener('click', (e) => {
-        e.preventDefault();
-        track.scrollBy({ left: 344, behavior: 'smooth' });
-    });
+    if (cards.length > 0) {
+        cards.forEach(card => {
+            const descricao = card.querySelector('.texto-card-servico p') || card.querySelector('.card-descricao');
+
+            card.addEventListener('mouseenter', () => {
+                if (!descricao) return;
+
+                // Detecta se o texto ultrapassa as 3 linhas visíveis
+                const textoEstaCortado = descricao.scrollHeight > descricao.clientHeight;
+
+                if (textoEstaCortado) {
+                    // MÉTODO 1: Se tiver mais de 3 linhas, expande o card
+                    card.classList.add('expandido');
+                    if (viewport) {
+                        viewport.style.height = viewport.offsetHeight + 'px';
+                    }
+                } else {
+                    // MÉTODO 2: Se for <= 3 linhas, trava na altura exata que ele já tem
+                    // Isso impede QUALQUER alteração, diminuição ou pulo visual
+                    card.style.height = card.offsetHeight + '380px';
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Remove a expansão ou a trava de altura fixa ao tirar o mouse
+                card.classList.remove('expandido');
+                card.style.height = '';
+                if (viewport) {
+                    viewport.style.height = '';
+                }
+            });
+        });
+    }
 }
 
 /**
@@ -58,8 +95,8 @@ function inicializarCarrosselDepoimentos() {
  */
 function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsServicos = document.querySelectorAll('.card-curso-completo');
-    const track = document.querySelector('.carrossel-track');
+    const cardsServicos = document.querySelectorAll('.card-servico, .card-curso-completo');
+    const track = document.querySelector('.carrossel-track-servicos, .carrossel-track');
     const mensagemVazia = document.querySelector('#mensagem-vazia');
 
     if (!abas || cardsServicos.length === 0) return;
