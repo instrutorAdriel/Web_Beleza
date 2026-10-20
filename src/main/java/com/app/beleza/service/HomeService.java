@@ -9,55 +9,60 @@ import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
 import com.app.beleza.respository.ProdutoUnidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
 public class HomeService {
-
     @Autowired
-    private ProdutoUnidadeRepository produtoUnidadeRepository; // 1. Injeta o repositório de ProdutoUnidade
+    private DisponibilidadeRepository disponibilidadeRepository;
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
 
-    public List<ServicoDisponibilidadeDTO> listarServicos() {
+    @Autowired
+    private ProdutoUnidadeRepository produtoUnidadeRepository;
 
+    @Cacheable("homeProcedimentos")
+    public List<ServicoDisponibilidadeDTO> listarProcedimentosPorUnidade() {
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
+        //Optional<List<Disponibilidade>> optional = disponibilidadeRepository.findServicosUnicosComRelacionamentos();
+        Optional<List<ProdutoUnidade>> optional = produtoUnidadeRepository.findProdutoUnidadeComRelacionamentos();
+        List<ProdutoUnidade> procedimentos = new ArrayList<>();
 
-        // 2. AQUI ENTRA A LÓGICA:
-        // Em vez de buscar da tabela 'disponibilidade', buscamos da tabela 'produto_unidade'
-        List<ProdutoUnidade> servicosUnidade = produtoUnidadeRepository.findAll();
+        if (optional.isPresent()) {
+            procedimentos = optional.get();
+        }
 
-        for (ProdutoUnidade pu : servicosUnidade) {
-
+        for (ProdutoUnidade procedimento : procedimentos) {
             ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
-
-            // Pega as informações do produto e da unidade diretamente
-            dto.setServicoId(pu.getProduto().getId());
-            dto.setNomeServico(pu.getProduto().getNomeProduto());
-            dto.setDescricao(pu.getProduto().getDescricao());
-            dto.setImagem(pu.getProduto().getImagemAnexo());
-            dto.setUnidade(pu.getUnidade().getNomeUnidade());
-
+            dto.setServicoId(procedimento.getId());
+            dto.setNomeServico(procedimento.getProduto().getNomeProduto());
+            dto.setDescricao(procedimento.getProduto().getDescricao());
+            dto.setImagem(procedimento.getProduto().getImagemAnexo());
+            dto.setUnidade(procedimento.getUnidade().getNomeUnidade());
+            //dto.setHora_fim(procedimento.getHoraFim().toString());
+            //dto.setHora_inicio(procedimento.getHoraInicio().toString());
             lista.add(dto);
         }
 
-        return lista; // Retorna para a tela (HomeController)
+        return lista;
     }
 
-
+    @Cacheable("homeDepoimentos")
     public List<DepoimentoDTO> listarDepoimentos() {
-
         List<DepoimentoDTO> lista = new ArrayList<>();
+        Optional<List<Depoimento>> optional = depoimentoRepository.findAllComRelacionamento();
+        List<Depoimento> depoimentos = new ArrayList<>();
 
-        List<Depoimento> depoimentos = depoimentoRepository.findAll();
+        if (optional.isPresent()) {
+            depoimentos = optional.get();
+        }
 
         for (Depoimento depoimento : depoimentos) {
             DepoimentoDTO dto = new DepoimentoDTO();
@@ -69,6 +74,7 @@ public class HomeService {
             dto.setImagem2(depoimento.getImagemAnexo2());
             lista.add(dto);
         }
+
         return lista;
     }
 }

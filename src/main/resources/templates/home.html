@@ -164,33 +164,33 @@
         <div class="carrossel-viewport carrossel-viewport-servicos">
             <div class="carrossel-track carrossel-track-servicos">
                 <div class="card-curso-completo"
-                     th:each="servico : ${servicos}"
-                     th:data-unidade="${#strings.toLowerCase(#strings.replace(servico.unidade,' ','-'))}">
+                     th:each="procedimento : ${procedimentos}"
+                     th:data-unidade="${#strings.toLowerCase(#strings.replace(procedimento.unidade,' ','-'))}">
 
                     <div class="img-placeholder-curso">
-                        <img th:src="${servico.imagem}"
-                             th:alt="${servico.nomeServico}">
+                        <img th:src="${procedimento.imagem}"
+                             th:alt="${procedimento.nomeServico}">
                     </div>
 
                     <div class="corpo-curso">
 
             <span class="tipo-curso"
-                  th:text="${servico.unidade}">
+                  th:text="${procedimento.unidade}">
             </span>
 
-                        <h3 th:text="${servico.nomeServico}"></h3>
+                        <h3 th:text="${procedimento.nomeServico}"></h3>
 
-                        <div class="texto-card-servico"> <p th:text="${servico.descricao}"> </p></div>
+                        <div class="texto-card-servico"><p th:text="${procedimento.descricao}"></p></div>
 
                         <div class="detalhes-rapidos-curso">
                 <span>
                     <i class="fa-solid fa-location-dot"></i>
-                    <span th:text="${servico.unidade}"></span>
+                    <span th:text="${procedimento.unidade}"></span>
                 </span>
                         </div>
 
                         <!-- O clique aqui abre o modal e carrega os horários (08:00, 09:00, 14:20) dinamicamente -->
-                        <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${servico.servicoId})|">
+                        <a href="#modal-agendamento" class="btn-detalhes" th:onclick="|abrirModalAgendamento(${procedimento.servicoId})|">
                             Agendar
                         </a>
 
