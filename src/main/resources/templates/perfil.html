@@ -164,13 +164,11 @@
                             <span><i class="fa-regular fa-clock"></i> <span th:text="${#temporals.format(ag.horaInicio(), 'HH:mm')}">Hora</span></span>
                         </div>
 
-                        <form th:if="${ag.statusTexto() != 'CANCELADO' && ag.statusTexto() != 'NAO_COMPARECEU'}"
+                        <form th:if="${ag.statusTexto() != 'CANCELADO' && ag.statusTexto() != 'NAO_COMPARECEU' && ag.statusTexto() != 'REALIZADO'}"
                               th:action="@{/api/agendamento/cancelar/{id}(id=${ag.idAgendamento()})}"
                               method="POST"
                               style="margin-top: 1rem;"
                               onsubmit="return confirm('Cancelar este agendamento? A vaga será liberada.');">
-                            <input type="hidden" name="filtro" th:value="${filtroAtivo}">
-                            <input type="hidden" name="pagina" th:value="${paginaAgendamentos.number}">
                             <button type="submit" class="btn">Cancelar agendamento</button>
                         </form>
                     </div>

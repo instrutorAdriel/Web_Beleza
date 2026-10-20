@@ -21,6 +21,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
 
     Optional<List<Agendamento>> findAgendamentoByInstrutor(Instrutor instrutor);
 
+    List<Agendamento> findByUsuarioIdAndSituacao(Integer usuarioId, SituacaoAgendamento situacao);
+
     // Consulta filtrando diretamente pelo usuario.id da tabela Agendamento
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
