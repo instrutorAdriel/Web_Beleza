@@ -1,4 +1,4 @@
-package com.app.beleza.utils;
+package com.app.beleza.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
