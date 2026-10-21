@@ -40,11 +40,26 @@
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
+<div class="mobile-header">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu do Perfil</span>
+    </button>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
-        <div class="sidebar">
-            <h3 class="bar-item">Painel</h3>
+        <div class="sidebar" id="sidebarMenu">
+            <div class="sidebar-header">
+                <h3 class="bar-item">Painel</h3>
+                <button type="button" class="btn-close-sidebar" id="btnCloseSidebar" aria-label="Fechar Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
@@ -277,5 +292,6 @@
 
     </div>
 </div>
+<script th:src="@{/js/sidebar.js}"></script>
 </body>
 </html>
