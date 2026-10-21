@@ -43,15 +43,6 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private ModeloRepository modeloRepository;
-
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private DepoimentoRepository depoimentoRepository;
-
-    @Autowired
     private CloudinaryService cloudinaryService;
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */

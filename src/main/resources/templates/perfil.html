@@ -5,16 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/javaScript/perfil.js}" defer></script>
-    <script th:src="@{/javaScript/toggle-senha.js}" defer></script>
+    <style>
+        #perfil-configuracao .ssp-password-wrapper {
+            position: relative !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper input {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding-right: 46px !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+            position: absolute !important;
+            top: 50% !important;
+            right: 12px !important;
+            transform: translateY(-50%) !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            color: #6b7280 !important;
+            font-size: 1.1rem !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+            color: #1f2937 !important;
+        }
+    </style>
+    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
+<div class="mobile-header">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu do Perfil</span>
+    </button>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
-        <div class="sidebar">
-            <h3 class="bar-item">Painel</h3>
+        <div class="sidebar" id="sidebarMenu">
+            <div class="sidebar-header">
+                <h3 class="bar-item">Painel</h3>
+                <button type="button" class="btn-close-sidebar" id="btnCloseSidebar" aria-label="Fechar Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
@@ -46,20 +92,9 @@
                     <div class="group-input">
                         <label for="dataNascimento">Data de Nascimento</label>
                         <div class="perfil-data-nascimento">
-                            <input type="text"
-                                   id="dataNascimento"
-                                   th:field="*{dataNascimento}"
-                                   placeholder="dd/mm/aaaa"
-                                   inputmode="numeric"
-                                   autocomplete="bday"
-                                   maxlength="10"
-                                   aria-describedby="dataNascimentoAjuda">
+                            <input type="text" id="dataNascimento" th:field="*{dataNascimento}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="bday" maxlength="10" aria-describedby="dataNascimentoAjuda">
                             <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-btn" aria-label="Escolher data no calendário" title="Escolher data no calendário" aria-expanded="false" aria-controls="calendarioNascimento">
-                                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="3.5" y="5" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
-                                    <path d="M7.5 3.5V7M16.5 3.5V7M3.5 9.5H20.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                                    <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-                                </svg>
+                                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
                             </button>
                             <div id="calendarioNascimento" class="perfil-calendario-popup" hidden></div>
                         </div>
@@ -101,14 +136,29 @@
                     <label for="senha-atual">Senha Atual</label>
                     <input th:field="*{senha}" type="password" id="senha-atual">
                 </div>
+
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
+                            <i class="fa-solid fa-eye" id="eyeIconNova"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
+                            <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
@@ -225,20 +275,27 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
+                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagens</label>
-
-                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
-                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
+                    <label for="imagem1">Primeira Imagem</label>
+                    <input type="file" id="imagem1" name="imagem1" accept="image/*"
                            onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
-                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
-                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
-                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
-                                 alt="Pré-visualização da imagem">
-                        </div>
+                    <div class="container-preview-imagem" th:if="${imagem1PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem1Tipo != null ? imagem1Tipo : 'image/jpeg'} + ';base64,' + ${imagem1PreviewBase64}"
+                             alt="Pré-visualização Imagem 1" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- CAMPO 2 DE IMAGEM -->
+                <div class="group-input">
+                    <label for="imagem2">Segunda Imagem</label>
+                    <input type="file" id="imagem2" name="imagem2" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <div class="container-preview-imagem" th:if="${imagem2PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem2Tipo != null ? imagem2Tipo : 'image/jpeg'} + ';base64,' + ${imagem2PreviewBase64}"
+                             alt="Pré-visualização Imagem 2" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
@@ -250,5 +307,6 @@
 
     </div>
 </div>
+<script th:src="@{/js/sidebar.js}"></script>
 </body>
 </html>
