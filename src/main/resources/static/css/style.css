@@ -1665,7 +1665,7 @@ input::-ms-clear {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    color: #9CA3AF;
+    color: #636870;
     margin-bottom: 0.3rem;
     transition: color 0.2s ease;
 }
@@ -2228,10 +2228,10 @@ input::-ms-clear {
     }
     .ssp-form-card {
         padding: 2rem 1.5rem;
-        box-shadow: none;
-        background-color: transparent;
-        border: none;
-        backdrop-filter: none;
+        box-shadow: var(--wp--preset--shadow--natural);
+        background-color: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(14px);
     }
     .ssp-divider span {
         background-color: transparent;
@@ -2242,7 +2242,7 @@ input::-ms-clear {
     .ssp-login-button-back,
     .ssp-forgot-password,
     .ssp-register-footer {
-        color: #FFFFFF;
+        color: #000000;
     }
     .ssp-register-footer a {
         color: var(--e-global-color-secondary);
@@ -2373,7 +2373,7 @@ input::-ms-clear {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    color: #9CA3AF;
+    color: #636870;
     margin-bottom: 0.3rem;
     transition: color 0.2s ease;
 }
