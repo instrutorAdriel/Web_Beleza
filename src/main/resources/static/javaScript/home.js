@@ -20,51 +20,27 @@ function inicializarCarrossel() {
     const setaEsquerda = document.querySelector('.seta-servico.seta-esquerda');
     const setaDireita = document.querySelector('.seta-servico.seta-direita');
     const viewport = document.querySelector('.carrossel-viewport-servicos');
-    const cards = document.querySelectorAll('.card-servico');
+    const cards = document.querySelectorAll('.carrossel-track-servicos .card-curso-completo');
 
-    // Controle de rolagem via setas
-    if (track && setaEsquerda && setaDireita) {
-        setaEsquerda.addEventListener('click', (e) => {
-            e.preventDefault();
-            track.scrollBy({ left: -344, behavior: 'smooth' });
-        });
+    if (!track || !setaEsquerda || !setaDireita) return;
 
-        setaDireita.addEventListener('click', (e) => {
-            e.preventDefault();
-            track.scrollBy({ left: 344, behavior: 'smooth' });
-        });
-    }
+    setaEsquerda.addEventListener('click', (e) => {
+        e.preventDefault();
+        track.scrollBy({ left: -344, behavior: 'smooth' });
+    });
 
-    if (cards.length > 0) {
+    setaDireita.addEventListener('click', (e) => {
+        e.preventDefault();
+        track.scrollBy({ left: 344, behavior: 'smooth' });
+    });
+
+    if (viewport && cards.length > 0) {
         cards.forEach(card => {
-            const descricao = card.querySelector('.texto-card-servico p') || card.querySelector('.card-descricao');
-
             card.addEventListener('mouseenter', () => {
-                if (!descricao) return;
-
-                // Detecta se o texto ultrapassa as 3 linhas visíveis
-                const textoEstaCortado = descricao.scrollHeight > descricao.clientHeight;
-
-                if (textoEstaCortado) {
-                    // MÉTODO 1: Se tiver mais de 3 linhas, expande o card
-                    card.classList.add('expandido');
-                    if (viewport) {
-                        viewport.style.height = viewport.offsetHeight + 'px';
-                    }
-                } else {
-                    // MÉTODO 2: Se for <= 3 linhas, trava na altura exata que ele já tem
-                    // Isso impede QUALQUER alteração, diminuição ou pulo visual
-                    card.style.height = card.offsetHeight + '380px';
-                }
+                viewport.style.height = viewport.offsetHeight + 'px';
             });
-
             card.addEventListener('mouseleave', () => {
-                // Remove a expansão ou a trava de altura fixa ao tirar o mouse
-                card.classList.remove('expandido');
-                card.style.height = '';
-                if (viewport) {
-                    viewport.style.height = '';
-                }
+                viewport.style.height = '';
             });
         });
     }

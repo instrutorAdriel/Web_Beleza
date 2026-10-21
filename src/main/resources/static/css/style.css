@@ -593,7 +593,7 @@
 .carrossel-viewport-servicos {
     position: relative;
     width: 100%;
-    min-height: 550px;
+    height: 550px;
     overflow: visible;
 }
 
@@ -792,7 +792,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     display: flex;
     flex-direction: column;
-    min-height: 580px;
+    min-height: 520px;
     height: auto;
     transition: transform 0.3s ease,
     box-shadow 0.3s ease,
