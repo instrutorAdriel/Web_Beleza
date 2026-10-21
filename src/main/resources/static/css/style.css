@@ -2575,6 +2575,41 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
+    /* ==========================================================================
+       OLHO DE MOSTRAR/OCULTAR SENHA - ABA CONFIGURAÇÃO DO PERFIL
+       ========================================================================== */
+    #perfil-configuracao .group-input .ssp-password-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    #perfil-configuracao .group-input .ssp-password-wrapper input {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding-right: 46px;
+    }
+
+    #perfil-configuracao .group-input .ssp-password-wrapper .ssp-toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #perfil-configuracao .group-input .ssp-password-wrapper .ssp-toggle-password:hover {
+        color: #1f2937;
+    }
 
 /* ==========================================================================
    FILTROS DE AGENDAMENTO (PERFIL)
