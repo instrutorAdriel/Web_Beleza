@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modo === "anos") {
             calendario.innerHTML = `
                 <div class="perfil-calendario-cabecalho perfil-calendario-cabecalho-anos">
-                    <strong>Escolha o ano</strong>
+                    <strong>ESCOLHA O ANO</strong>
                     <button type="button" data-voltar-meses>Voltar</button>
                 </div>
                 <div class="perfil-calendario-anos">
