@@ -2645,6 +2645,51 @@ input::-ms-clear {
     font-size: 1.5rem;
 }
 
+.perfil-calendario-cabecalho strong {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.perfil-calendario-cabecalho .perfil-calendario-ano-atual {
+    width: auto;
+    height: auto;
+    padding: 3px 4px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font: inherit;
+    font-weight: 700;
+}
+
+.perfil-calendario-cabecalho .perfil-calendario-ano-atual:hover,
+.perfil-calendario-ano:hover {
+    border-color: var(--senac-laranja);
+    background: rgba(247, 148, 30, 0.15);
+}
+
+.perfil-calendario-anos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    max-height: 230px;
+    overflow-y: auto;
+}
+
+.perfil-calendario-ano {
+    min-height: 34px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--texto-escuro);
+    cursor: pointer;
+}
+
+.perfil-calendario-ano.selecionado {
+    background: var(--senac-laranja);
+    color: #fff;
+    font-weight: 700;
+}
+
 .perfil-calendario-cabecalho button:hover,
 .perfil-calendario-dia:not(:disabled):hover {
     background: rgba(247, 148, 30, 0.15);
