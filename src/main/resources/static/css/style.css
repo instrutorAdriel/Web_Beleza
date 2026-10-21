@@ -2730,6 +2730,65 @@ input::-ms-clear {
     cursor: not-allowed;
 }
 
+.perfil-calendario-cabecalho-anos {
+    gap: 8px;
+}
+
+.perfil-calendario-cabecalho-anos > strong {
+    min-width: 0;
+    flex: 1;
+}
+
+.perfil-calendario-cabecalho-anos > button {
+    flex: 0 0 auto;
+    width: auto;
+    height: auto;
+    padding: 6px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: var(--fundo-card);
+    color: var(--texto-escuro);
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.perfil-calendario-cabecalho-anos > button:hover,
+.perfil-calendario-cabecalho-anos > button:focus-visible {
+    border-color: var(--senac-laranja);
+    background: rgba(247, 148, 30, 0.12);
+}
+
+.perfil-calendario-anos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    max-height: 230px;
+    overflow-y: auto;
+}
+
+.perfil-calendario-ano {
+    min-width: 0;
+    min-height: 34px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--texto-escuro);
+    cursor: pointer;
+}
+
+.perfil-calendario-ano:hover {
+    border-color: var(--senac-laranja);
+    background: rgba(247, 148, 30, 0.15);
+}
+
+.perfil-calendario-ano.selecionado {
+    background: var(--senac-laranja);
+    color: #fff;
+    font-weight: 700;
+}
+
 /* Alinhamento do botão de mostrar/ocultar senha no perfil. */
 #perfil-configuracao .group-input .ssp-password-wrapper {
     position: relative;
