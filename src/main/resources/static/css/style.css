@@ -28,6 +28,7 @@
 
 .html-home {
     scroll-behavior: smooth;
+    overflow-x: clip;
 }
 
 .home-body {
@@ -1342,11 +1343,23 @@
 @media (max-width: 768px) {
     .tabela { overflow-x: scroll; }
     .header-container { flex-direction: column; gap: 70px; text-align: center; justify-content: center; height: 180px; }
-    .nav-menu { flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center; width: 350px }
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        align-items: center;
+        width: min(350px, calc(100vw - 32px));
+    }
     .header-busca { width: 100%; max-width: 300px; }
     .header-busca input { width: 100%; }
 
-    .hero-banner { min-height: auto; padding: 80px 20px; }
+    .hero-banner {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 2 / 1;
+        padding: 0;
+    }
+    .slide { background-size: contain; }
     .hero-conteudo h1 { font-size: 32px; }
     .hero-conteudo p { font-size: 16px; }
     .hero-botoes { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
