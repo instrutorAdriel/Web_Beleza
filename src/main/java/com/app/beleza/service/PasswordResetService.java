@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.mail.MailException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class PasswordResetService {
+    private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
     @Autowired
     private PasswordResetRepository passwordResetRepository;
 
@@ -27,16 +31,21 @@ public class PasswordResetService {
 
         PasswordReset novoToken = new PasswordReset(tokenUUID, usuario);
 
-        if (!usuarioRepository.existsByEmail(usuario.getEmail())){
+        if (!usuarioRepository.existsByEmail(paraEmail)){
             return "Falha em encontrar o e-mail";
         }
 
         passwordResetRepository.save(novoToken);
 
-        // Criar o código de enviar o email com o token
-        emailService.enviarEmailDeRecuperacao(usuario.getEmail(), tokenUUID);
-
-        IO.println("localhost:8080/alterar-senha/" + tokenUUID);
+        try {
+            emailService.enviarEmailDeRecuperacao(paraEmail, tokenUUID);
+        } catch (MailException ex) {
+            logger.error("Falha ao enviar e-mail de recuperação de senha para {}", paraEmail, ex);
+            System.err.println("[EMAIL-RECUPERACAO] " + ex.getClass().getName() + ": " + ex.getMessage());
+            ex.printStackTrace(System.err);
+            passwordResetRepository.delete(novoToken);
+            return "Falha ao enviar o e-mail de recuperação";
+        }
 
         return null;
     }

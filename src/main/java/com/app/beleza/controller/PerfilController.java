@@ -184,7 +184,6 @@ public class PerfilController {
         return "redirect:/perfil?aba=configuracao";
     }
 
-    // CORREÇÃO AQUI: Removido o "/perfil" duplicado do início
     @PostMapping("/enviar-depoimento")
     public String processarDepoimento(@RequestParam(value = "idAgendamento", required = false) Integer idAgendamento,
                                       @RequestParam(value = "depoimento", required = false) String depoimento,

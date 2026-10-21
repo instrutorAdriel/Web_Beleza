@@ -2,72 +2,67 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Disponibilidade;
+import com.app.beleza.model.ProdutoUnidade;
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
+import com.app.beleza.respository.ProdutoUnidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
 public class HomeService {
-
     @Autowired
     private DisponibilidadeRepository disponibilidadeRepository;
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
 
-    public List<ServicoDisponibilidadeDTO> listarServicos() {
+    @Autowired
+    private ProdutoUnidadeRepository produtoUnidadeRepository;
 
+    @Cacheable("homeProcedimentos")
+    public List<ServicoDisponibilidadeDTO> listarProcedimentosPorUnidade() {
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
+        //Optional<List<Disponibilidade>> optional = disponibilidadeRepository.findServicosUnicosComRelacionamentos();
+        Optional<List<ProdutoUnidade>> optional = produtoUnidadeRepository.findProdutoUnidadeComRelacionamentos();
+        List<ProdutoUnidade> procedimentos = new ArrayList<>();
 
-        // Conjunto para controlar chaves únicas (NomeServico + Unidade)
-        Set<String> chavesVistas = new HashSet<>();
+        if (optional.isPresent()) {
+            procedimentos = optional.get();
+        }
 
-        List<Disponibilidade> servicos = disponibilidadeRepository.findAll();
-
-        for (Disponibilidade servico : servicos) {
-
-            String nomeServico = servico.getProdutoUnidade().getProduto().getNomeProduto();
-            String unidade = servico.getProdutoUnidade().getUnidade().getNomeUnidade();
-
-            String chaveUnica = (nomeServico + "-" + unidade).toLowerCase();
-
-            if (chavesVistas.contains(chaveUnica)) {
-                continue;
-            }
-
-            chavesVistas.add(chaveUnica);
-
+        for (ProdutoUnidade procedimento : procedimentos) {
             ServicoDisponibilidadeDTO dto = new ServicoDisponibilidadeDTO();
-
-            dto.setServicoId(servico.getId());
-            dto.setNomeServico(nomeServico);
-            dto.setDescricao(servico.getProdutoUnidade().getProduto().getDescricao());
-            dto.setImagem(servico.getProdutoUnidade().getProduto().getImagemAnexo());
-            dto.setUnidade(unidade);
-            dto.setHora_inicio(servico.getHoraInicio().toString());
-            dto.setHora_fim(servico.getHoraFim().toString());
-
+            dto.setServicoId(procedimento.getId());
+            dto.setNomeServico(procedimento.getProduto().getNomeProduto());
+            dto.setDescricao(procedimento.getProduto().getDescricao());
+            dto.setImagem(procedimento.getProduto().getImagemAnexo());
+            dto.setUnidade(procedimento.getUnidade().getNomeUnidade());
+            //dto.setHora_fim(procedimento.getHoraFim().toString());
+            //dto.setHora_inicio(procedimento.getHoraInicio().toString());
             lista.add(dto);
         }
 
         return lista;
     }
 
+    @Cacheable("homeDepoimentos")
     public List<DepoimentoDTO> listarDepoimentos() {
-
         List<DepoimentoDTO> lista = new ArrayList<>();
+        Optional<List<Depoimento>> optional = depoimentoRepository.findAllComRelacionamento();
+        List<Depoimento> depoimentos = new ArrayList<>();
 
-        List<Depoimento> depoimentos = depoimentoRepository.findAll();
+        if (optional.isPresent()) {
+            depoimentos = optional.get();
+        }
 
         for (Depoimento depoimento : depoimentos) {
             DepoimentoDTO dto = new DepoimentoDTO();
@@ -79,6 +74,7 @@ public class HomeService {
             dto.setImagem2(depoimento.getImagemAnexo2());
             lista.add(dto);
         }
+
         return lista;
     }
 }
