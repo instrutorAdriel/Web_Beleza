@@ -20,10 +20,12 @@ import com.app.beleza.respository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AgendamentoService {
@@ -64,34 +66,38 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idDisponibilidade, Usuario usuarioLogado) {
+    public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idProdutoUnidade, Usuario usuarioLogado) {
         List<SessaoAtendimentoDTO> lista = new ArrayList<>();
 
-        disponibilidadeRepository.findById(idDisponibilidade).ifPresent(d -> {
+        List<Disponibilidade> disponibilidades =
+                disponibilidadeRepository.listarPorProdutoUnidade(idProdutoUnidade);
+
+        for (Disponibilidade d : disponibilidades) {
             boolean jaAgendou = false;
             if (usuarioLogado != null) {
                 jaAgendou = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
-                        usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO);
+                        usuarioLogado.getId(), d.getId(), SituacaoAgendamento.CANCELADO);
             }
 
             SessaoAtendimentoDTO dto = new SessaoAtendimentoDTO(
                     d.getId().longValue(),
                     d.getDataDisponibilidade() != null
-                            ? d.getDataDisponibilidade().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                            ? d.getDataDisponibilidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                             : "",
                     d.getHoraInicio() != null
-                            ? d.getHoraInicio().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                            ? d.getHoraInicio().format(DateTimeFormatter.ofPattern("HH:mm"))
                             : "",
                     d.getTotalVagas() != null ? d.getTotalVagas() : 0,
                     jaAgendou
             );
             lista.add(dto);
-        });
+        }
 
         return lista;
     }
 
     @Transactional
+    @CacheEvict(value = "agendamentosUsuario", allEntries = true)
     public void agendar(Integer idDisponibilidade, Usuario usuarioLogado) {
         if (usuarioLogado == null) throw new RuntimeException("Usuário não autenticado.");
 
@@ -130,6 +136,7 @@ public class AgendamentoService {
 
     // CANCELAR POR DISPONIBILIDADE (Usado no modal da Home)
     @Transactional
+    @CacheEvict(value = "agendamentosUsuario", allEntries = true)
     public void cancelarPorDisponibilidade(Integer idDisponibilidade, Usuario usuarioLogado) {
         if (usuarioLogado == null) throw new RuntimeException("Usuário não autenticado.");
 
@@ -148,6 +155,7 @@ public class AgendamentoService {
 
     // CANCELAR POR ID DO AGENDAMENTO (Usado na tela de Perfil Paginada)
     @Transactional
+    @CacheEvict(value = "agendamentosUsuario", allEntries = true)
     public void cancelar(Integer idAgendamento, Usuario usuarioLogado) {
         if (usuarioLogado == null) throw new RuntimeException("Usuário não autenticado.");
 

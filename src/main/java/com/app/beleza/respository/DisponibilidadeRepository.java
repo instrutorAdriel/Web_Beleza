@@ -36,4 +36,13 @@ public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT d FROM Disponibilidade d WHERE d.id = :id")
     Optional<Disponibilidade> findByIdComLock(@Param("id") Integer id);
+
+    @Query("SELECT d FROM Disponibilidade d " +
+            "JOIN FETCH d.produtoUnidade pu " +
+            "JOIN FETCH pu.produto p " +
+            "JOIN FETCH pu.unidade u " +
+            "WHERE pu.id = :idProdutoUnidade " +
+            "ORDER BY d.dataDisponibilidade ASC, d.horaInicio ASC")
+    List<Disponibilidade> listarPorProdutoUnidade(@Param("idProdutoUnidade") Integer idProdutoUnidade);
+
 }
