@@ -2982,3 +2982,10 @@ input::-ms-clear {
         grid-template-columns: 1fr;
     }
 }
+
+#perfil-configuracao .group-input .ssp-password-wrapper input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 46px;
+}

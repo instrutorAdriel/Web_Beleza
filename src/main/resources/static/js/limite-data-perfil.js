@@ -2,58 +2,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const campoData = document.getElementById("dataNascimento");
     if (!campoData || campoData.type !== "date") return;
 
-    const anoAtual = new Date().getFullYear();
-    const dataMinima = campoData.min ? new Date(`${campoData.min}T00:00:00`) : new Date(1900, 0, 1);
-    const dataMaxima = campoData.max ? new Date(`${campoData.max}T00:00:00`) : new Date();
-    dataMaxima.setHours(0, 0, 0, 0);
+    const ajustarLimites = () => {
+        const partes = campoData.value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!partes) return;
 
-    const formatarData = (data) => {
-        const ano = String(data.getFullYear()).padStart(4, "0");
-        const mes = String(data.getMonth() + 1).padStart(2, "0");
-        const dia = String(data.getDate()).padStart(2, "0");
-        return `${ano}-${mes}-${dia}`;
+        let ano = Number(partes[1]);
+        const mes = Number(partes[2]);
+        let dia = Number(partes[3]);
+        const anoMinimo = Number(campoData.min.slice(0, 4));
+        const anoMaximo = Number(campoData.max.slice(0, 4));
+
+        // Corrige somente o ano, preservando mês e dia sempre que existirem.
+        ano = Math.max(anoMinimo, Math.min(anoMaximo, ano));
+        const ultimoDiaDoMes = new Date(ano, mes, 0).getDate();
+        dia = Math.min(dia, ultimoDiaDoMes);
+
+        let ajustada = `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+        // No ano atual, uma data futura fica limitada ao dia máximo de hoje.
+        if (ajustada > campoData.max) ajustada = campoData.max;
+        if (ajustada < campoData.min) ajustada = campoData.min;
+        campoData.value = ajustada;
     };
 
-    const limitarData = () => {
-        const valor = campoData.value;
-        if (!valor) return;
-
-        let data = new Date(`${valor}T00:00:00`);
-        if (Number.isNaN(data.getTime())) return;
-
-        if (data < dataMinima) {
-            const anoMinimo = dataMinima.getFullYear();
-            const ultimoDiaDoMes = new Date(anoMinimo, data.getMonth() + 1, 0).getDate();
-            const dia = Math.min(data.getDate(), ultimoDiaDoMes);
-            data = new Date(anoMinimo, data.getMonth(), dia);
-            campoData.value = formatarData(data);
-        } else if (data > dataMaxima) {
-            data = new Date(dataMaxima);
-            campoData.value = formatarData(data);
-        }
-
-        if (data.getFullYear() < dataMinima.getFullYear()) {
-            campoData.value = formatarData(dataMinima);
-        } else if (data.getFullYear() > anoAtual) {
-            campoData.value = formatarData(dataMaxima);
-        }
-
-        campoData.setCustomValidity("");
-    };
-
-    let timerDigitacao;
-    campoData.addEventListener("input", () => {
-        campoData.setCustomValidity("");
-        clearTimeout(timerDigitacao);
-        timerDigitacao = setTimeout(limitarData, 700);
-    });
-    campoData.addEventListener("blur", () => {
-        clearTimeout(timerDigitacao);
-        limitarData();
-    });
-
-    // Corrige também um valor antigo fora do intervalo assim que o perfil é aberto.
-    if (campoData.value) {
-        limitarData();
-    }
+    // Espera o usuário terminar de editar todos os segmentos do input date.
+    campoData.addEventListener("blur", ajustarLimites);
+    ajustarLimites();
 });

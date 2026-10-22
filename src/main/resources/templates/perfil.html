@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/limite-data-perfil.js}" defer></script>
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
@@ -60,8 +59,12 @@
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
                     </div>
                     <div class="group-input">
-                        <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <input type="date" id="dataNascimento" th:field="*{dataNascimento}"
+                               min="1900-01-01"
+                               th:max="${T(java.time.LocalDate).now(T(java.time.ZoneId).of('America/Sao_Paulo'))}"
+                               autocomplete="bday" required>
+                        <small>Selecione uma data entre 01/01/1900 e hoje.</small>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -97,15 +100,30 @@
 
                 <div class="group-input">
                     <label for="senha-atual">Senha Atual</label>
-                    <input th:field="*{senha}" type="password" id="senha-atual">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{senha}" type="password" id="senha-atual" autocomplete="current-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha" onclick="togglePasswordVisibility('senha-atual', 'eyeIconAtual')">
+                            <i class="fa-solid fa-eye" id="eyeIconAtual"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha" onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
+                            <i class="fa-solid fa-eye" id="eyeIconNova"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha" onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
+                            <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>

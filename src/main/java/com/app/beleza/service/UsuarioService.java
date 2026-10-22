@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,18 @@ public class UsuarioService {
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    private String validarDataNascimento(LocalDate dataNascimento) {
+        LocalDate hoje = LocalDate.now(ZoneId.of("America/Sao_Paulo"));
+        if (dataNascimento == null || dataNascimento.isBefore(LocalDate.of(1900, 1, 1)) || dataNascimento.isAfter(hoje)) {
+            return "Data de nascimento inválida. Informe uma data entre 01/01/1900 e hoje.";
+        }
+        return null;
+    }
+
     public String cadastrar(UsuarioDTO form) {
+        String erroDataNascimento = validarDataNascimento(form.getDataNascimento());
+        if (erroDataNascimento != null) return erroDataNascimento;
+
         // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
                 Validador.contemEmoji(form.getEmail()) ||
@@ -132,9 +144,8 @@ public class UsuarioService {
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
         LocalDate dataNascimento = form.getDataNascimento();
-        if (dataNascimento == null || dataNascimento.isBefore(LocalDate.of(1900, 1, 1)) || dataNascimento.isAfter(LocalDate.now())) {
-            return "Data de nascimento inválida. Informe uma data entre 01/01/1900 e hoje.";
-        }
+        String erroDataNascimento = validarDataNascimento(dataNascimento);
+        if (erroDataNascimento != null) return erroDataNascimento;
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
 
