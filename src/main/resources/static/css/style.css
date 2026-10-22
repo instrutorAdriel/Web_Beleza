@@ -1665,7 +1665,7 @@ input::-ms-clear {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    color: #9CA3AF;
+    color: #636870;
     margin-bottom: 0.3rem;
     transition: color 0.2s ease;
 }
@@ -1897,6 +1897,11 @@ input::-ms-clear {
     color: #666666;
 }
 
+.mobile-header,
+.sidebar-overlay {
+    display: none;
+}
+
 /* ==========================================================================
    MENU LATERAL DA PÁGINA PERFIL (ATUALIZADO)
    ========================================================================== */
@@ -1931,6 +1936,32 @@ input::-ms-clear {
     border-bottom: 2px solid var(--borda-suave);
     padding-bottom: 12px;
     margin-bottom: 8px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--borda-suave);
+    margin-bottom: 8px;
+}
+
+.sidebar-header h3.bar-item {
+    font-size: 18px;
+    color: var(--senac-laranja);
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.btn-close-sidebar {
+    display: none;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .button {
@@ -1970,20 +2001,25 @@ input::-ms-clear {
 
 .btn {
     border: none;
-    display: inline-block;
-    padding: 8px 16px;
-    vertical-align: middle;
-    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
-    white-space: nowrap;
-    background: var(--senac-laranja);
-    color: var(--texto-claro);
+    background: linear-gradient(135deg, var(--senac-laranja) 0%, var(--senac-laranja-hover) 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(247, 148, 30, 0.25);
+    transition: all 0.25s ease;
 }
 
 .btn:hover {
-    box-shadow: none;
-    background-color: var(--senac-laranja-hover);
+    box-shadow: 0 6px 18px rgba(247, 148, 30, 0.35);
+    background: var(--senac-laranja-hover);
 }
 
 .form-grid {
@@ -2192,10 +2228,10 @@ input::-ms-clear {
     }
     .ssp-form-card {
         padding: 2rem 1.5rem;
-        box-shadow: none;
-        background-color: transparent;
-        border: none;
-        backdrop-filter: none;
+        box-shadow: var(--wp--preset--shadow--natural);
+        background-color: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(14px);
     }
     .ssp-divider span {
         background-color: transparent;
@@ -2206,7 +2242,7 @@ input::-ms-clear {
     .ssp-login-button-back,
     .ssp-forgot-password,
     .ssp-register-footer {
-        color: #FFFFFF;
+        color: #000000;
     }
     .ssp-register-footer a {
         color: var(--e-global-color-secondary);
@@ -2337,7 +2373,7 @@ input::-ms-clear {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    color: #9CA3AF;
+    color: #636870;
     margin-bottom: 0.3rem;
     transition: color 0.2s ease;
 }
@@ -2573,6 +2609,7 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
+
 
 .perfil-data-nascimento {
     position: relative;
@@ -2821,4 +2858,127 @@ input::-ms-clear {
 
 #perfil-configuracao .group-input .ssp-password-wrapper .ssp-toggle-password:hover {
     color: #1f2937;
+}
+
+@media (max-width: 768px) {
+    /* Esconde barra de rolagem ao abrir o menu */
+    body.overflow-hidden {
+        overflow: hidden;
+    }
+
+    /* Barra Superior Mobile */
+    .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        background-color: var(--fundo-footer);
+        border-bottom: 3px solid var(--senac-laranja);
+        position: sticky;
+        top: 0;
+        z-index: 90;
+    }
+
+    .btn-toggle-sidebar {
+        background: transparent;
+        border: 1px solid var(--senac-laranja);
+        color: var(--senac-laranja);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    /* Overlay de Fundo */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 98;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Transformação da Sidebar em Drawer Off-Canvas */
+    .painel-controle {
+        flex-direction: column;
+    }
+
+    .container-painel {
+        min-height: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 280px;
+        height: 100vh;
+        z-index: 99;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--borda-suave);
+        margin-bottom: 12px;
+    }
+
+    .btn-close-sidebar {
+        display: block;
+    }
+
+    /* Centralização e Ajuste do Conteúdo Principal */
+    .conteudo-principal {
+        padding: 20px 16px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .secao-painel {
+        padding: 20px 16px;
+    }
+
+    /* Form-Grid passa de 2 colunas para 1 coluna centralizada */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .group-button {
+        justify-content: center;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    /* Ajuste para Cards de Agendamento */
+    .lista-agendamentos {
+        grid-template-columns: 1fr;
+    }
 }

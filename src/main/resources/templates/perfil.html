@@ -5,16 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script th:src="@{/javaScript/perfil.js}" defer></script>
-    <script th:src="@{/javaScript/toggle-senha.js}" defer></script>
+    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
+<div class="mobile-header">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu do Perfil</span>
+    </button>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
-        <div class="sidebar">
-            <h3 class="bar-item">Painel</h3>
+        <div class="sidebar" id="sidebarMenu">
+            <div class="sidebar-header">
+                <h3 class="bar-item">Painel</h3>
+                <button type="button" class="btn-close-sidebar" id="btnCloseSidebar" aria-label="Fechar Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
@@ -225,20 +240,27 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
+                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagens</label>
-
-                    <!-- INPUT COM MULTIPLE E NAME="IMAGENS" -->
-                    <input type="file" id="imagem" name="imagens" accept="image/*" multiple
+                    <label for="imagem1">Primeira Imagem</label>
+                    <input type="file" id="imagem1" name="imagem1" accept="image/*"
                            onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- RENDERIZAÇÃO DA LISTA DE IMAGENS EM PREVIEW -->
-                    <div class="container-preview-lista" th:if="${listaPreviewBase64 != null and !#lists.isEmpty(listaPreviewBase64)}">
-                        <div class="container-preview-imagem" th:each="imgBase64, iter : ${listaPreviewBase64}">
-                            <img th:src="'data:' + ${listaPreviewTipos[iter.index]} + ';base64,' + ${imgBase64}"
-                                 alt="Pré-visualização da imagem">
-                        </div>
+                    <div class="container-preview-imagem" th:if="${imagem1PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem1Tipo != null ? imagem1Tipo : 'image/jpeg'} + ';base64,' + ${imagem1PreviewBase64}"
+                             alt="Pré-visualização Imagem 1" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- CAMPO 2 DE IMAGEM -->
+                <div class="group-input">
+                    <label for="imagem2">Segunda Imagem</label>
+                    <input type="file" id="imagem2" name="imagem2" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <div class="container-preview-imagem" th:if="${imagem2PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem2Tipo != null ? imagem2Tipo : 'image/jpeg'} + ';base64,' + ${imagem2PreviewBase64}"
+                             alt="Pré-visualização Imagem 2" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
@@ -250,5 +272,6 @@
 
     </div>
 </div>
+<script th:src="@{/js/sidebar.js}"></script>
 </body>
 </html>

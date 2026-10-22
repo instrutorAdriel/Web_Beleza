@@ -14,20 +14,17 @@ public class Depoimento {
     @Column(name="depoimento", nullable = false, length = 255)
     private String depoimento;
 
-    @Column(name="avaliacao", nullable = false)
-    private Integer avaliacao;
-
-    @Column(name="imagem_anexo_1", length = 255)
+    @Column(name="imagem_anexo_1", nullable = false, length = 255)
     private String imagemAnexo1;
 
-    @Column(name="imagem_anexo_2",  length = 255)
+    @Column(name="imagem_anexo_2", nullable = false, length = 255)
     private String imagemAnexo2;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="id_modelo", nullable = false)
     private Modelo modelo;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="id_usuario", nullable = false)
     private Usuario usuario;
 
@@ -38,9 +35,8 @@ public class Depoimento {
     public Depoimento() {
     }
 
-    public Depoimento(String depoimento, Integer avaliacao, String imagemAnexo1, String imagemAnexo2, Modelo modelo, Usuario usuario, Agendamento agendamento) {
+    public Depoimento(String depoimento, String imagemAnexo1, String imagemAnexo2, Modelo modelo, Usuario usuario, Agendamento agendamento) {
         this.depoimento = depoimento;
-        this.avaliacao = avaliacao;
         this.imagemAnexo1 = imagemAnexo1;
         this.imagemAnexo2 = imagemAnexo2;
         this.modelo = modelo;
@@ -60,14 +56,6 @@ public class Depoimento {
 
     public void setDepoimento(String depoimento) {
         this.depoimento = depoimento;
-    }
-
-    public Integer getAvaliacao() {
-        return avaliacao;
-    }
-
-    public void setAvaliacao(Integer avaliacao) {
-        this.avaliacao = avaliacao;
     }
 
     public String getImagemAnexo1() {
