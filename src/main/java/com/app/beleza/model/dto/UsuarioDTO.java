@@ -7,7 +7,7 @@ public class UsuarioDTO {
 
     private String nomeCompleto;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataNascimento;
 
     private String telefone;
