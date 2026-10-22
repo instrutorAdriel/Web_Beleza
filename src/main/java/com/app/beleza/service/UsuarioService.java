@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -130,9 +131,9 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
-        // Validação da data de nascimento se preenchida
-        if (form.getDataNascimento() == null) {
-            return "Data de nascimento inválida!";
+        LocalDate dataNascimento = form.getDataNascimento();
+        if (dataNascimento == null || dataNascimento.isBefore(LocalDate.of(1900, 1, 1)) || dataNascimento.isAfter(LocalDate.now())) {
+            return "Data de nascimento inválida. Informe uma data entre 01/01/1900 e hoje.";
         }
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
@@ -150,7 +151,7 @@ public class UsuarioService {
         Modelo modelo = modeloBusca.get();
 
         // Atribuição direta do LocalDate vindo da DTO
-        modelo.setDataNascimento(form.getDataNascimento());
+        modelo.setDataNascimento(dataNascimento);
         modelo.setTelefone(form.getTelefone());
 
         return null;

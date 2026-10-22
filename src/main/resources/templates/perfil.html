@@ -36,7 +36,7 @@
             color: #1f2937 !important;
         }
     </style>
-    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/limite-data-perfil.js}" defer></script>
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
@@ -91,14 +91,9 @@
                     </div>
                     <div class="group-input">
                         <label for="dataNascimento">Data de Nascimento</label>
-                        <div class="perfil-data-nascimento">
-                            <input type="text" id="dataNascimento" th:field="*{dataNascimento}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="bday" maxlength="10" aria-describedby="dataNascimentoAjuda">
-                            <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-btn" aria-label="Escolher data no calendário" title="Escolher data no calendário" aria-expanded="false" aria-controls="calendarioNascimento">
-                                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
-                            </button>
-                            <div id="calendarioNascimento" class="perfil-calendario-popup" hidden></div>
-                        </div>
-                        <small id="dataNascimentoAjuda">Digite no formato dd/mm/aaaa ou escolha uma data no calendário.</small>
+                        <input type="date" id="dataNascimento" th:field="*{dataNascimento}"
+                               min="1900-01-01" th:max="${T(java.time.LocalDate).now()}"
+                               autocomplete="bday" required>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
