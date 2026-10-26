@@ -55,9 +55,19 @@
             cursor: pointer;
         }
 
+        #perfil-informacao .perfil-calendario-abrir i {
+            font-size: 1.25rem;
+        }
+
+        #perfil-informacao .perfil-nascimento {
+            position: relative;
+        }
+
         #perfil-informacao .perfil-calendario {
             position: absolute;
             z-index: 20;
+            left: 50%;
+            transform: translateX(-50%);
             margin-top: 6px;
             padding: 12px;
             background: #fff;
@@ -133,7 +143,7 @@
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
                     </div>
-                    <div class="group-input">
+                    <div class="group-input perfil-nascimento">
                         <label for="data_nascimento">Data de Nascimento</label>
                         <div class="perfil-nascimento-controles">
                             <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa" inputmode="numeric" aria-haspopup="dialog" aria-describedby="ajudaDataNascimento">

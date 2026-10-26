@@ -6,11 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const minimo = new Date(1900, 0, 1);
     const anoMaximo = 2026;
-    const hoje = new Date();
-    const maximo = hoje < new Date(anoMaximo, 11, 31)
-        ? new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
-        : new Date(anoMaximo, 11, 31);
-    const mesMaximo = maximo.getMonth() + 1;
+    const maximo = new Date(anoMaximo, 11, 31);
+    const mesMaximo = 12;
     let anoVisual = anoMaximo;
     let mesVisual = mesMaximo - 1;
 
@@ -89,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         calendario.innerHTML = `
             <div class="perfil-calendario-seletores">
                 <label>Mês<select data-mes aria-label="Mês">${Array.from({ length: 12 }, (_, mes) =>
-                    `<option value="${mes}" ${mes === mesVisual ? "selected" : ""} ${anoVisual === anoMaximo && mes > mesMaximo - 1 ? "disabled" : ""}>${new Intl.DateTimeFormat("pt-BR", { month: "long" }).format(new Date(2020, mes, 1))}</option>`).join("")}</select></label>
+                    `<option value="${mes}" ${mes === mesVisual ? "selected" : ""}>${new Intl.DateTimeFormat("pt-BR", { month: "long" }).format(new Date(2020, mes, 1))}</option>`).join("")}</select></label>
                 <label>Ano<select data-ano aria-label="Ano">${anos}</select></label>
                 <span aria-live="polite">${nomeMes} de ${anoVisual}</span>
             </div>
@@ -111,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     calendario.addEventListener("change", event => {
         if (event.target.matches("[data-ano]")) anoVisual = Number(event.target.value);
         if (event.target.matches("[data-mes]")) mesVisual = Number(event.target.value);
-        if (anoVisual === anoMaximo && mesVisual > mesMaximo - 1) mesVisual = mesMaximo - 1;
         renderizar();
     });
 
