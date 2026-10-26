@@ -35,6 +35,46 @@
         #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
             color: #1f2937 !important;
         }
+
+        #perfil-informacao .perfil-nascimento-controles {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        #perfil-informacao .perfil-calendario-abrir {
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            background: #fff;
+            padding: 10px 12px;
+            cursor: pointer;
+        }
+
+        #perfil-informacao .perfil-calendario {
+            position: absolute;
+            z-index: 20;
+            margin-top: 6px;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+        }
+
+        #perfil-informacao .perfil-calendario[hidden] { display: none; }
+        #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+        #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
+        #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+        #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+        #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
+        #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+        #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+        #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
     </style>
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
@@ -95,7 +135,11 @@
                     </div>
                     <div class="group-input">
                         <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa">
+                        <div class="perfil-nascimento-controles">
+                            <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa" readonly aria-haspopup="dialog">
+                            <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
+                        </div>
+                        <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -346,6 +390,7 @@
 </div>
 <script th:src="@{/js/sidebar.js}"></script>
 <script th:src="@{/javaScript/perfil.js}"></script>
+<script th:src="@{/js/perfil-calendario.js}" defer></script>
 <script>
     // Função para exibir o loading
     function mostrarLoading() {
