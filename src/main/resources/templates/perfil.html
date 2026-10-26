@@ -136,9 +136,10 @@
                     <div class="group-input">
                         <label for="data_nascimento">Data de Nascimento</label>
                         <div class="perfil-nascimento-controles">
-                            <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa" readonly aria-haspopup="dialog">
+                            <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa" inputmode="numeric" aria-haspopup="dialog" aria-describedby="ajudaDataNascimento">
                             <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
                         </div>
+                        <small id="ajudaDataNascimento">Digite a data ou selecione no calendário.</small>
                         <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
                     </div>
                     <div class="group-input">

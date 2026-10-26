@@ -5,11 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!campo || !botao || !calendario) return;
 
     const minimo = new Date(1900, 0, 1);
+    const anoMaximo = 2026;
     const hoje = new Date();
-    const anoMaximo = hoje.getFullYear();
-    const mesMaximo = hoje.getMonth() + 1;
-    const diaMaximo = hoje.getDate();
-    const maximo = new Date(anoMaximo, mesMaximo - 1, diaMaximo);
+    const maximo = hoje < new Date(anoMaximo, 11, 31)
+        ? new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate())
+        : new Date(anoMaximo, 11, 31);
+    const mesMaximo = maximo.getMonth() + 1;
     let anoVisual = anoMaximo;
     let mesVisual = mesMaximo - 1;
 
@@ -20,6 +21,48 @@ document.addEventListener("DOMContentLoaded", () => {
         return data.getFullYear() === Number(match[3]) && data.getMonth() === Number(match[2]) - 1 && data.getDate() === Number(match[1])
             ? data : null;
     };
+
+    campo.addEventListener("input", () => {
+        const digitos = campo.value.replace(/\D/g, "").slice(0, 8);
+        if (!digitos) {
+            campo.value = "";
+            return;
+        }
+
+        let diaTexto = digitos.slice(0, 2);
+        let mesTexto = digitos.slice(2, 4);
+        let anoTexto = digitos.slice(4, 8);
+        let dia = diaTexto ? Number(diaTexto) : 0;
+        let mes = mesTexto ? Number(mesTexto) : 0;
+        let ano = anoTexto ? Number(anoTexto) : 0;
+
+        if (diaTexto.length === 2) dia = Math.max(1, Math.min(dia, 31));
+        if (mesTexto.length === 2) mes = Math.max(1, Math.min(mes, 12));
+        if (anoTexto.length === 4) ano = Math.max(1900, Math.min(ano, anoMaximo));
+
+        if (diaTexto.length === 2 && mesTexto.length === 2) {
+            const anoParaCalendario = anoTexto.length === 4 ? ano : 2000;
+            dia = Math.min(dia, new Date(anoParaCalendario, mes, 0).getDate());
+            if (anoTexto.length === 4) {
+                const data = new Date(ano, mes - 1, dia);
+                if (data > maximo) {
+                    ano = maximo.getFullYear();
+                    mes = maximo.getMonth() + 1;
+                    dia = maximo.getDate();
+                    anoTexto = String(ano);
+                    mesTexto = String(mes).padStart(2, "0");
+                    diaTexto = String(dia).padStart(2, "0");
+                }
+            }
+        }
+
+        if (diaTexto.length === 2) diaTexto = String(dia).padStart(2, "0");
+        if (mesTexto.length === 2) mesTexto = String(mes).padStart(2, "0");
+        if (anoTexto.length === 4) anoTexto = String(ano).padStart(4, "0");
+        campo.value = diaTexto;
+        if (digitos.length > 2) campo.value += `/${mesTexto}`;
+        if (digitos.length > 4) campo.value += `/${anoTexto}`;
+    });
     const fechar = () => {
         calendario.hidden = true;
         botao.setAttribute("aria-expanded", "false");
