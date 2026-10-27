@@ -254,11 +254,22 @@
 
         <div class="carrossel-track carrossel-depoimentos">
 
-            <div class="card-depoimento" th:each="depoimento : ${depoimentos}">
+            <div class="card-depoimento"
+                 th:each="depoimento : ${depoimentos}"
+                 style="cursor: pointer;"
+                 th:data-nome="${depoimento.nome}"
+                 th:data-texto="${depoimento.texto}"
+                 th:data-img1="${depoimento.imagem1}"
+                 th:data-img2="${depoimento.imagem2}"
+                 th:data-servico="${depoimento.servico + ' — ' + depoimento.unidade}"
+                 th:data-avatar="${depoimento.inicialAvatar}"
+                 onclick="abrirModalDepoimento(this)">
 
                 <p class="depoimento-texto"
                    th:text="'&quot;' + ${depoimento.texto} + '&quot;'">
                 </p>
+
+                <!-- O resto do seu card fica igual -->
 
                 <!-- IMAGENS -->
                 <div class="depoimento-imagens"
@@ -377,6 +388,35 @@
     </div>
 </div>
 
+<!-- MODAL DE DEPOIMENTO EXPANDIDO -->
+<div id="modal-depoimento" class="modal-plataforma">
+    <div class="modal-painel" style="max-width: 900px; padding: 30px;">
+        <a href="#" class="btn-fechar-modal" onclick="fecharModalDepoimento(event)">&times; Fechar</a>
+
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+            <!-- Lado Esquerdo: Imagens Grandes -->
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px;">
+                <img id="modal-dep-img1" src="" alt="Antes" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
+                <img id="modal-dep-img2" src="" alt="Depois" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
+            </div>
+
+            <!-- Lado Direito: Texto e Autor -->
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center;">
+                <p id="modal-dep-texto" style="font-size: 1.2rem; font-style: italic; color: #334155; line-height: 1.6; margin-bottom: 30px;"></p>
+
+                <div style="display: flex; align-items: center; gap: 15px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                    <div id="modal-dep-avatar" class="avatar-inicial" style="width: 50px; height: 50px; font-size: 1.3rem;"></div>
+                    <div>
+                        <strong id="modal-dep-nome" style="display: block; font-size: 1.1rem; color: #1e293b;"></strong>
+                        <span id="modal-dep-servico" style="font-size: 0.9rem; color: #64748b;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="site-footer">
     <div class="footer-container">
 
@@ -424,8 +464,56 @@
         urlParams.set('pagina', 0);
 
         window.location.href = window.location.pathname + '?' + urlParams.toString() + '#depoimentos';
+    } // <-- A CHAVE QUE FALTAVA ESTÁ AQUI
+
+    let posicaoScrollAtual = 0;
+
+    function abrirModalDepoimento(card) {
+        // Salva a posição da tela ANTES de abrir o modal
+        posicaoScrollAtual = window.scrollY;
+
+        const nome = card.getAttribute('data-nome');
+        const texto = card.getAttribute('data-texto');
+        const img1 = card.getAttribute('data-img1');
+        const img2 = card.getAttribute('data-img2');
+        const servico = card.getAttribute('data-servico');
+        const avatar = card.getAttribute('data-avatar');
+
+        document.getElementById('modal-dep-nome').innerText = nome;
+        document.getElementById('modal-dep-texto').innerText = '"' + texto + '"';
+        document.getElementById('modal-dep-servico').innerText = servico;
+        document.getElementById('modal-dep-avatar').innerText = avatar;
+
+        const imgElement1 = document.getElementById('modal-dep-img1');
+        const imgElement2 = document.getElementById('modal-dep-img2');
+
+        if (img1 && img1 !== 'null' && img1 !== '') {
+            imgElement1.src = img1;
+            imgElement1.style.display = 'block';
+        } else {
+            imgElement1.style.display = 'none';
+        }
+
+        if (img2 && img2 !== 'null' && img2 !== '') {
+            imgElement2.src = img2;
+            imgElement2.style.display = 'block';
+        } else {
+            imgElement2.style.display = 'none';
+        }
+
+        window.location.hash = '#modal-depoimento';
     }
 
+    function fecharModalDepoimento(event) {
+        if (event) event.preventDefault();
+        window.location.hash = ''; // Fecha o modal
+
+        // Devolve o usuário para a posição exata onde ele estava
+        window.scrollTo({
+            top: posicaoScrollAtual,
+            behavior: 'instant' // 'instant' evita que a tela faça uma animação estranha de rolagem
+        });
+    }
 </script>
 </body>
 </html>
