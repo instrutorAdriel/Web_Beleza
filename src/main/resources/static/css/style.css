@@ -2860,4 +2860,36 @@ input::-ms-clear {
         padding: 1px 6px;
         font-size: 10px;
     }
+
+
+
+}
+
+/* ESTILO DOS FILTROS */
+#filtro-unidade, #filtro-servico {
+    padding: 10px 15px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 8px;
+    background-color: var(--fundo-input);
+    color: var(--texto-escuro);
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#filtro-unidade:focus, #filtro-servico:focus {
+    border-color: var(--senac-laranja);
+    box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+/* GARANTE QUE O CARROSSEL DE DEPOIMENTOS NÃO QUEBRE PARA A LINHA DE BAIXO */
+.carrossel-depoimentos {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important; /* Permite rolar ou usar as setas */
+}
+
+#depoimentos {
+    scroll-margin-top: 100px; /* Ajuste esse valor para a altura do seu header */
 }
