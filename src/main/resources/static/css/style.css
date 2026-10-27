@@ -1081,6 +1081,9 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     color: var(--texto-escuro);
     animation: modalEntrada 0.4s ease;
+
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes modalEntrada {
@@ -2892,4 +2895,27 @@ input::-ms-clear {
 
 #depoimentos {
     scroll-margin-top: 100px; /* Ajuste esse valor para a altura do seu header */
+}
+
+/* Ajustes para telas de celular (Mobile) */
+@media (max-width: 768px) {
+    /* 1. Barra de filtros: empilha um embaixo do outro */
+    .barra-filtros-depoimentos {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* 2. Faz os selects ocuparem a largura toda no celular */
+    #filtro-unidade, #filtro-servico {
+        width: 100%;
+    }
+
+    /* 3. Ajusta o modal no celular (caso a imagem fique muito grande) */
+    #modal-depoimento .modal-painel {
+        padding: 20px;
+    }
+
+    #modal-dep-img1, #modal-dep-img2 {
+        max-height: 250px; /* Diminui a altura das fotos no celular */
+    }
 }
