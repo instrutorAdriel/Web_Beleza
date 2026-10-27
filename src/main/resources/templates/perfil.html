@@ -37,22 +37,64 @@
         }
 
         #perfil-informacao .perfil-nascimento-controles {
+            position: relative;
             display: flex;
-            gap: 8px;
             align-items: center;
+            width: 100%;
+            min-height: 46px;
+            box-sizing: border-box;
+            padding: 0 48px 0 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: var(--fundo-input);
         }
 
-        #perfil-informacao .perfil-nascimento-controles input {
-            flex: 1;
+        #perfil-informacao .perfil-nascimento-controles .data-parte {
+            width: 2.2ch;
             min-width: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles .data-ano {
+            width: 4.4ch;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+            border-color: #dc2626;
+        }
+
+        #perfil-informacao .data-separador {
+            padding: 0 3px;
+            color: #64748b;
+        }
+
+        #perfil-informacao .campo-data-submetido {
+            display: none;
         }
 
         #perfil-informacao .perfil-calendario-abrir {
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: #fff;
-            padding: 10px 12px;
+            position: absolute;
+            top: 50%;
+            right: 6px;
+            transform: translateY(-50%);
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
             cursor: pointer;
+            color: #334155;
+        }
+
+        #perfil-informacao .perfil-calendario-abrir:hover {
+            background: #f1f5f9;
         }
 
         #perfil-informacao .perfil-calendario-abrir i {
@@ -149,9 +191,14 @@
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
                     </div>
                     <div class="group-input perfil-nascimento">
-                        <label for="data_nascimento">Data de Nascimento</label>
+                        <label for="data_nascimento_dia">Data de Nascimento</label>
                         <div class="perfil-nascimento-controles">
-                            <input type="text" id="data_nascimento" th:field="*{dataNascimento}" maxlength="10" placeholder="dd/mm/aaaa" inputmode="numeric" aria-haspopup="dialog" aria-describedby="ajudaDataNascimento">
+                            <input class="campo-data-submetido" type="hidden" id="data_nascimento" th:field="*{dataNascimento}">
+                            <input class="data-parte" type="text" id="data_nascimento_dia" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Dia" aria-describedby="ajudaDataNascimento">
+                            <span class="data-separador" aria-hidden="true">/</span>
+                            <input class="data-parte" type="text" id="data_nascimento_mes" maxlength="2" inputmode="numeric" placeholder="MM" aria-label="Mês">
+                            <span class="data-separador" aria-hidden="true">/</span>
+                            <input class="data-parte data-ano" type="text" id="data_nascimento_ano" maxlength="4" inputmode="numeric" placeholder="AAAA" aria-label="Ano" aria-haspopup="dialog">
                             <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
                         </div>
                         <small id="ajudaDataNascimento">Digite a data ou selecione no calendário.</small>
@@ -405,7 +452,7 @@
 </div>
 <script th:src="@{/js/sidebar.js}"></script>
 <script th:src="@{/javaScript/perfil.js}"></script>
-<script th:src="@{/js/perfil-calendario.js}" defer></script>
+<script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
 <script>
     // Função para exibir o loading
     function mostrarLoading() {

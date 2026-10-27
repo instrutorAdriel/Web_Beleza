@@ -1,15 +1,98 @@
 document.addEventListener("DOMContentLoaded", () => {
     const campo = document.getElementById("data_nascimento");
+    const diaCampo = document.getElementById("data_nascimento_dia");
+    const mesCampo = document.getElementById("data_nascimento_mes");
+    const anoCampo = document.getElementById("data_nascimento_ano");
     const botao = document.getElementById("abrirCalendarioNascimento");
     const calendario = document.getElementById("calendarioNascimento");
-    if (!campo || !botao || !calendario) return;
+    if (!campo || !diaCampo || !mesCampo || !anoCampo || !botao || !calendario) return;
 
     const minimo = new Date(1900, 0, 1);
-    const anoMaximo = 2026;
-    const maximo = new Date(anoMaximo, 11, 31);
-    const mesMaximo = 12;
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const anoMaximo = hoje.getFullYear();
+    const maximo = hoje;
+    const mesMaximo = hoje.getMonth() + 1;
     let anoVisual = anoMaximo;
     let mesVisual = mesMaximo - 1;
+
+    const atualizarCampoSubmetido = () => {
+        const diaTexto = diaCampo.value;
+        const mesTexto = mesCampo.value;
+        const anoTexto = anoCampo.value;
+        const vazio = !diaTexto && !mesTexto && !anoTexto;
+        let data = null;
+
+        if (diaTexto.length === 2 && mesTexto.length === 2 && anoTexto.length === 4) {
+            const dia = Number(diaTexto);
+            const mes = Number(mesTexto);
+            const ano = Number(anoTexto);
+            const candidata = new Date(ano, mes - 1, dia);
+            if (candidata.getFullYear() === ano && candidata.getMonth() === mes - 1 &&
+                candidata.getDate() === dia && candidata >= minimo && candidata <= maximo) {
+                data = candidata;
+            }
+        }
+
+        campo.value = data ? `${diaTexto}/${mesTexto}/${anoTexto}` : "";
+        diaCampo.setCustomValidity(vazio || data
+            ? "" : "Informe uma data válida entre 01/01/1900 e hoje.");
+        diaCampo.setAttribute("aria-invalid", String(!vazio && !data));
+    };
+
+    const preencherPartes = data => {
+        diaCampo.value = String(data.getDate()).padStart(2, "0");
+        mesCampo.value = String(data.getMonth() + 1).padStart(2, "0");
+        anoCampo.value = String(data.getFullYear());
+        atualizarCampoSubmetido();
+    };
+
+    const corrigirDataCompleta = () => {
+        if (diaCampo.value.length !== 2 || mesCampo.value.length !== 2 || anoCampo.value.length !== 4) return;
+        let dia = Math.max(1, Math.min(Number(diaCampo.value), 31));
+        let mes = Math.max(1, Math.min(Number(mesCampo.value), 12));
+        let ano = Math.max(minimo.getFullYear(), Math.min(Number(anoCampo.value), anoMaximo));
+        dia = Math.min(dia, new Date(ano, mes, 0).getDate());
+        let corrigida = new Date(ano, mes - 1, dia);
+        if (corrigida > maximo) corrigida = new Date(maximo);
+        preencherPartes(corrigida);
+    };
+
+    const valorInicial = campo.value;
+    const dataInicial = valorInicial.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+        || valorInicial.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (dataInicial) {
+        if (valorInicial.includes("-")) {
+            anoCampo.value = dataInicial[1];
+            mesCampo.value = dataInicial[2];
+            diaCampo.value = dataInicial[3];
+        } else {
+            diaCampo.value = dataInicial[1];
+            mesCampo.value = dataInicial[2];
+            anoCampo.value = dataInicial[3];
+        }
+        atualizarCampoSubmetido();
+    }
+
+    [diaCampo, mesCampo, anoCampo].forEach((parte, indice) => {
+        parte.addEventListener("input", () => {
+            parte.value = parte.value.replace(/\D/g, "").slice(0, Number(parte.maxLength));
+            if (parte.value.length === Number(parte.maxLength)) {
+                if (parte === diaCampo) parte.value = String(Math.max(1, Math.min(Number(parte.value), 31))).padStart(2, "0");
+                if (parte === mesCampo) parte.value = String(Math.max(1, Math.min(Number(parte.value), 12))).padStart(2, "0");
+                if (parte === anoCampo) parte.value = String(Math.max(minimo.getFullYear(), Math.min(Number(parte.value), anoMaximo)));
+                if (indice < 2) [mesCampo, anoCampo][indice].focus();
+                else corrigirDataCompleta();
+            }
+            atualizarCampoSubmetido();
+        });
+    });
+
+    const controlesData = diaCampo.closest(".perfil-nascimento-controles");
+    controlesData.addEventListener("focusout", event => {
+        if ([diaCampo, mesCampo, anoCampo].includes(event.relatedTarget)) return;
+        corrigirDataCompleta();
+    });
 
     const dataDoCampo = () => {
         const match = campo.value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
@@ -19,47 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ? data : null;
     };
 
-    campo.addEventListener("input", () => {
-        const digitos = campo.value.replace(/\D/g, "").slice(0, 8);
-        if (!digitos) {
-            campo.value = "";
-            return;
-        }
-
-        let diaTexto = digitos.slice(0, 2);
-        let mesTexto = digitos.slice(2, 4);
-        let anoTexto = digitos.slice(4, 8);
-        let dia = diaTexto ? Number(diaTexto) : 0;
-        let mes = mesTexto ? Number(mesTexto) : 0;
-        let ano = anoTexto ? Number(anoTexto) : 0;
-
-        if (diaTexto.length === 2) dia = Math.max(1, Math.min(dia, 31));
-        if (mesTexto.length === 2) mes = Math.max(1, Math.min(mes, 12));
-        if (anoTexto.length === 4) ano = Math.max(1900, Math.min(ano, anoMaximo));
-
-        if (diaTexto.length === 2 && mesTexto.length === 2) {
-            const anoParaCalendario = anoTexto.length === 4 ? ano : 2000;
-            dia = Math.min(dia, new Date(anoParaCalendario, mes, 0).getDate());
-            if (anoTexto.length === 4) {
-                const data = new Date(ano, mes - 1, dia);
-                if (data > maximo) {
-                    ano = maximo.getFullYear();
-                    mes = maximo.getMonth() + 1;
-                    dia = maximo.getDate();
-                    anoTexto = String(ano);
-                    mesTexto = String(mes).padStart(2, "0");
-                    diaTexto = String(dia).padStart(2, "0");
-                }
-            }
-        }
-
-        if (diaTexto.length === 2) diaTexto = String(dia).padStart(2, "0");
-        if (mesTexto.length === 2) mesTexto = String(mes).padStart(2, "0");
-        if (anoTexto.length === 4) anoTexto = String(ano).padStart(4, "0");
-        campo.value = diaTexto;
-        if (digitos.length > 2) campo.value += `/${mesTexto}`;
-        if (digitos.length > 4) campo.value += `/${anoTexto}`;
-    });
     const fechar = () => {
         calendario.hidden = true;
         botao.setAttribute("aria-expanded", "false");
@@ -97,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     botao.addEventListener("click", () => {
+        atualizarCampoSubmetido();
         const selecionada = dataDoCampo();
         anoVisual = selecionada ? selecionada.getFullYear() : anoMaximo;
         mesVisual = selecionada ? selecionada.getMonth() : mesMaximo - 1;
@@ -115,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const alvo = event.target.closest("[data-dia]");
         if (!alvo || alvo.disabled) return;
         const data = new Date(anoVisual, mesVisual, Number(alvo.dataset.dia));
-        campo.value = `${String(data.getDate()).padStart(2, "0")}/${String(data.getMonth() + 1).padStart(2, "0")}/${data.getFullYear()}`;
+        preencherPartes(data);
         campo.dispatchEvent(new Event("change", { bubbles: true }));
         fechar();
     });
