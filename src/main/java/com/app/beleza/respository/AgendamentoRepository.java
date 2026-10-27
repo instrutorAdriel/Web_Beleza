@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,21 +33,29 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
     List<Agendamento> findAgendamentosRealizadosPorUsuarioESituacao(@Param("usuarioId") Integer usuarioId,
                                                                     @Param("situacao") SituacaoAgendamento situacao);
 
+    // Agenda do perfil: traz somente agendamentos com data de hoje em diante
     @Query(value = "SELECT a FROM Agendamento a " +
             "JOIN FETCH a.disponibilidade d " +
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
             "JOIN FETCH pu.unidade u " +
-            "WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario",
-            countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
-    Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
+            "WHERE (a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario) " +
+            "AND d.dataDisponibilidade >= :dataInicio",
+            countQuery = "SELECT COUNT(a) FROM Agendamento a " +
+                    "JOIN a.disponibilidade d " +
+                    "WHERE (a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario) " +
+                    "AND d.dataDisponibilidade >= :dataInicio")
+    Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo,
+                                                    @Param("idUsuario") Integer idUsuario,
+                                                    @Param("dataInicio") LocalDate dataInicio,
+                                                    Pageable pageable);
 
     @Query("SELECT a FROM Agendamento a " +
             "JOIN FETCH a.usuario u " +
             "JOIN FETCH a.modelo m " +
             "WHERE a.id = :agendamentoId AND u.id = :usuarioId")
     Optional<Agendamento> findByAgendamentoIdAndUsuario(@Param("agendamentoId") Integer agendamentoId,
-                                                       @Param("usuarioId") Integer usuarioId);
+                                                        @Param("usuarioId") Integer usuarioId);
 
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
