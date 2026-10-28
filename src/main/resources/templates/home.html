@@ -214,6 +214,38 @@
         Veja o que nossos clientes dizem sobre os serviços do salão.
     </p>
 
+    <!-- BARRA DE FILTROS -->
+    <div class="barra-filtros-depoimentos" style="display: flex; gap: 15px; margin-bottom: 20px;">
+
+        <!-- Filtro de Unidade -->
+        <select id="filtro-unidade" class="select-filtro" onchange="aplicarFiltros()">
+            <option value="TODAS">Todas as unidades</option>
+            <option th:each="unidadeNome : ${listaUnidadesFiltro}"
+                    th:value="${unidadeNome}"
+                    th:text="${unidadeNome}"
+                    th:selected="${filtroUnidadeAtual == unidadeNome}">
+            </option>
+        </select>
+
+        <!-- Filtro de Serviço -->
+        <select id="filtro-servico" class="select-filtro" onchange="aplicarFiltros()">
+            <option value="TODOS">Todos os serviços</option>
+            <option th:each="servicoNome : ${listaServicosFiltro}"
+                    th:value="${servicoNome}"
+                    th:text="${servicoNome}"
+                    th:selected="${filtroServicoAtual == servicoNome}">
+            </option>
+        </select>
+    </div>
+
+    <!-- MENSAGEM DE DEPOIMENTOS VAZIOS -->
+    <div th:if="${#lists.isEmpty(depoimentos)}" style="text-align: center; padding: 40px 20px; background-color: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1; margin-bottom: 20px;">
+        <i class="fa-regular fa-comment-dots" style="font-size: 3rem; color: #94a3b8; margin-bottom: 15px;"></i>
+        <h3 style="color: #334155; margin-bottom: 8px; font-size: 1.2rem;">Nenhum depoimento encontrado</h3>
+        <p style="color: #64748b; margin: 0;">Ainda não temos avaliações para esta combinação de unidade e serviço. Que tal ser a primeira pessoa a avaliar?</p>
+    </div>
+
+    
     <div class="carrossel-wrapper">
 
         <a href="#" class="seta-carrossel seta-esquerda depoimento-seta">
@@ -222,11 +254,22 @@
 
         <div class="carrossel-track carrossel-depoimentos">
 
-            <div class="card-depoimento" th:each="depoimento : ${depoimentos}">
+            <div class="card-depoimento"
+                 th:each="depoimento : ${depoimentos}"
+                 style="cursor: pointer;"
+                 th:data-nome="${depoimento.nome}"
+                 th:data-texto="${depoimento.texto}"
+                 th:data-img1="${depoimento.imagem1}"
+                 th:data-img2="${depoimento.imagem2}"
+                 th:data-servico="${depoimento.servico + ' — ' + depoimento.unidade}"
+                 th:data-avatar="${depoimento.inicialAvatar}"
+                 onclick="abrirModalDepoimento(this)">
 
                 <p class="depoimento-texto"
                    th:text="'&quot;' + ${depoimento.texto} + '&quot;'">
                 </p>
+
+                <!-- O resto do seu card fica igual -->
 
                 <!-- IMAGENS -->
                 <div class="depoimento-imagens"
@@ -255,6 +298,9 @@
 
                     <div>
                         <strong th:text="${depoimento.nome}"></strong>
+                        <!-- Data formatada: dia/mês/ano -->
+                        <small style="color: #888; font-size: 0.85em;" th:text="'· ' + ${#temporals.format(depoimento.dataAgendamento, 'dd/MM/yyyy')}"></small>
+                        <br>
                         <span th:text="${depoimento.servico} + ' — ' + ${depoimento.unidade}"></span>
                     </div>
 
@@ -268,6 +314,7 @@
         </a>
 
     </div>
+
 </section>
 
 <div id="modal-agendamento" class="modal-plataforma">
@@ -341,6 +388,35 @@
     </div>
 </div>
 
+<!-- MODAL DE DEPOIMENTO EXPANDIDO -->
+<div id="modal-depoimento" class="modal-plataforma">
+    <div class="modal-painel" style="max-width: 900px; padding: 30px; max-height: 90vh; overflow-y: auto;">
+        <a href="#" class="btn-fechar-modal" onclick="fecharModalDepoimento(event)">&times; Fechar</a>
+
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+            <!-- Lado Esquerdo: Imagens Grandes -->
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px;">
+                <img id="modal-dep-img1" src="" alt="Antes" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
+                <img id="modal-dep-img2" src="" alt="Depois" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
+            </div>
+
+            <!-- Lado Direito: Texto e Autor -->
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center;">
+                <p id="modal-dep-texto" style="font-size: 1.2rem; font-style: italic; color: #334155; line-height: 1.6; margin-bottom: 30px;"></p>
+
+                <div style="display: flex; align-items: center; gap: 15px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                    <div id="modal-dep-avatar" class="avatar-inicial" style="width: 50px; height: 50px; font-size: 1.3rem;"></div>
+                    <div>
+                        <strong id="modal-dep-nome" style="display: block; font-size: 1.1rem; color: #1e293b;"></strong>
+                        <span id="modal-dep-servico" style="font-size: 0.9rem; color: #64748b;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="site-footer">
     <div class="footer-container">
 
@@ -377,5 +453,67 @@
 </footer>
 
 <script th:src="@{/js/agendamento.js}"></script>
+<script>
+    function aplicarFiltros() {
+        const unidade = document.getElementById('filtro-unidade').value;
+        const servico = document.getElementById('filtro-servico').value;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('unidade', unidade);
+        urlParams.set('servico', servico);
+        urlParams.set('pagina', 0);
+
+        window.location.href = window.location.pathname + '?' + urlParams.toString() + '#depoimentos';
+    } // <-- A CHAVE QUE FALTAVA ESTÁ AQUI
+
+    let posicaoScrollAtual = 0;
+
+    function abrirModalDepoimento(card) {
+        // Salva a posição da tela ANTES de abrir o modal
+        posicaoScrollAtual = window.scrollY;
+
+        const nome = card.getAttribute('data-nome');
+        const texto = card.getAttribute('data-texto');
+        const img1 = card.getAttribute('data-img1');
+        const img2 = card.getAttribute('data-img2');
+        const servico = card.getAttribute('data-servico');
+        const avatar = card.getAttribute('data-avatar');
+
+        document.getElementById('modal-dep-nome').innerText = nome;
+        document.getElementById('modal-dep-texto').innerText = '"' + texto + '"';
+        document.getElementById('modal-dep-servico').innerText = servico;
+        document.getElementById('modal-dep-avatar').innerText = avatar;
+
+        const imgElement1 = document.getElementById('modal-dep-img1');
+        const imgElement2 = document.getElementById('modal-dep-img2');
+
+        if (img1 && img1 !== 'null' && img1 !== '') {
+            imgElement1.src = img1;
+            imgElement1.style.display = 'block';
+        } else {
+            imgElement1.style.display = 'none';
+        }
+
+        if (img2 && img2 !== 'null' && img2 !== '') {
+            imgElement2.src = img2;
+            imgElement2.style.display = 'block';
+        } else {
+            imgElement2.style.display = 'none';
+        }
+
+        window.location.hash = '#modal-depoimento';
+    }
+
+    function fecharModalDepoimento(event) {
+        if (event) event.preventDefault();
+        window.location.hash = ''; // Fecha o modal
+
+        // Devolve o usuário para a posição exata onde ele estava
+        window.scrollTo({
+            top: posicaoScrollAtual,
+            behavior: 'instant' // 'instant' evita que a tela faça uma animação estranha de rolagem
+        });
+    }
+</script>
 </body>
 </html>
