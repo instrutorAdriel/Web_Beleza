@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,4 +100,19 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             @Param("usuarioId") Integer usuarioId,
             @Param("situacao") SituacaoAgendamento situacao
     );
+
+    @Query("SELECT DISTINCT a FROM Agendamento a " +
+            "JOIN FETCH a.usuario u " +
+            "JOIN FETCH a.disponibilidade d " +
+            "JOIN FETCH d.produtoUnidade pu " +
+            "JOIN FETCH pu.produto p " +
+            "JOIN FETCH pu.unidade uni " +
+            "WHERE a.situacao = :situacao " +
+            "AND a.lembreteEnviado = false " +
+            "AND a.dataHoraAgendamento BETWEEN :inicioJanela AND :fimJanela")
+    Optional<List<Agendamento>> findAgendamentoParaLembrete(
+            @Param("situacao") SituacaoAgendamento situacao,
+            @Param("inicioJanela") LocalDateTime inicioJanela,
+            @Param("fimJanela") LocalDateTime fimJanela
+            );
 }
