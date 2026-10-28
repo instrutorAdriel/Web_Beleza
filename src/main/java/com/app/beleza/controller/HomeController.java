@@ -14,13 +14,12 @@ public class HomeController {
     @Autowired
     private HomeService homeService;
 
-    // Esta continua sendo a página inicial do seu sistema (http://localhost:8080/)
     @GetMapping("/")
     public String exibirHome(HttpSession session,Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeUsuario() : null);
-        model.addAttribute("servicos", homeService.listarServicos());
+        model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
         model.addAttribute("depoimentos", homeService.listarDepoimentos());
 
         return "home";
