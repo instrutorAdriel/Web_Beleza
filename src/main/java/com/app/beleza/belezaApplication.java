@@ -7,8 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableCaching
-@EnableScheduling
-public class belezaApplication {
+public class  belezaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(belezaApplication.class, args);
 	}
