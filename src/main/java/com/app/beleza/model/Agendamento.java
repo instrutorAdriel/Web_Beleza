@@ -23,6 +23,9 @@ public class Agendamento {
     @Column(name="observacao", nullable = false, length = 255)
     private String observacao;
 
+    @Column(name="lembrete_enviado", nullable = false)
+    private boolean lembrete_enviado = false;
+
     @ManyToOne
     @JoinColumn(name="id_disponibilidade")
     private Disponibilidade disponibilidade;
@@ -78,6 +81,14 @@ public class Agendamento {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public boolean isLembrete_enviado() {
+        return lembrete_enviado;
+    }
+
+    public void setLembrete_enviado(boolean lembrete_enviado) {
+        this.lembrete_enviado = lembrete_enviado;
     }
 
     public Disponibilidade getDisponibilidade() {
