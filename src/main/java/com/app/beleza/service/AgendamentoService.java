@@ -124,7 +124,8 @@ public class AgendamentoService {
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
-        ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
+        // Todo agendamento nasce PENDENTE. Só passa a CONFIRMADO depois que o instrutor da unidade confirmar a presença.
+        ag.setSituacao(SituacaoAgendamento.PENDENTE);
         ag.setObservacao("");
         ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
 

@@ -287,6 +287,10 @@
                    class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
                     Todos
                 </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='PENDENTE')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'PENDENTE'} ? 'ativo'">
+                    Pendentes
+                </a>
                 <a th:href="@{/perfil(aba='agendamento', filtro='CONFIRMADO')}"
                    class="filtro-btn" th:classappend="${filtroAtivo == 'CONFIRMADO'} ? 'ativo'">
                     Confirmados

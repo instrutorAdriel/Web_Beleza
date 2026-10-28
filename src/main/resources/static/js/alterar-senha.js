@@ -103,11 +103,13 @@ document.addEventListener("DOMContentLoaded", function () {
     function togglePasswordVisibility(inputElement, iconElement) {
 
         if (inputElement.type === "password") {
+            // Senha visível -> olho riscado (clicar oculta)
             inputElement.type = "text";
-            iconElement.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            inputElement.type = "password";
             iconElement.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            // Senha oculta -> olho aberto (clicar mostra)
+            inputElement.type = "password";
+            iconElement.classList.replace("fa-eye-slash", "fa-eye");
         }
     }
 
