@@ -3,16 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        #perfil-configuracao .ssp-password-wrapper {
+            position: relative !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper input {
+            display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            padding-right: 46px !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+            position: absolute !important;
+            top: 50% !important;
+            right: 12px !important;
+            transform: translateY(-50%) !important;
+            background: none !important;
+            border: none !important;
+            padding: 4px !important;
+            cursor: pointer !important;
+            color: #6b7280 !important;
+            font-size: 1.1rem !important;
+        }
+
+        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+            color: #1f2937 !important;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 46px;
+            box-sizing: border-box;
+            padding: 0 48px 0 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: var(--fundo-input);
+        }
+
+        #perfil-informacao .perfil-nascimento-controles .data-parte {
+            width: 2.2ch;
+            min-width: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles .data-ano {
+            width: 4.4ch;
+        }
+
+        #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+            border-color: #dc2626;
+        }
+
+        #perfil-informacao .data-separador {
+            padding: 0 3px;
+            color: #64748b;
+        }
+
+        #perfil-informacao .campo-data-submetido {
+            display: none;
+        }
+
+        #perfil-informacao .perfil-calendario-abrir {
+            position: absolute;
+            top: 50%;
+            right: 6px;
+            transform: translateY(-50%);
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            cursor: pointer;
+            color: #334155;
+        }
+
+        #perfil-informacao .perfil-calendario-abrir:hover {
+            background: #f1f5f9;
+        }
+
+        #perfil-informacao .perfil-calendario-abrir i {
+            font-size: 1.5rem;
+        }
+
+        #perfil-informacao .perfil-nascimento {
+            position: relative;
+        }
+
+        #perfil-informacao .perfil-calendario {
+            position: absolute;
+            z-index: 20;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 6px;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+        }
+
+        #perfil-informacao .perfil-calendario[hidden] { display: none; }
+        #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+        #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
+        #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+        #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+        #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
+        #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+        #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+        #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
+
+        #perfil-informacao .group-button {
+            grid-column: 1 / -1;
+            justify-content: center;
+        }
+    </style>
+    <script th:src="@{/js/toggle-senha.js}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
+<div class="mobile-header">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+        <i class="fa-solid fa-bars"></i>
+        <span>Menu do Perfil</span>
+    </button>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- TELA DE CARREGAMENTO -->
+<div id="loader-global" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; color: var(--senac-laranja);"></i>
+    <p style="margin-top: 15px; font-weight: bold; color: var(--texto-escuro);">Buscando agendamentos...</p>
+</div>
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
-        <div class="sidebar">
-            <h3 class="bar-item">Painel</h3>
-            <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informação do Perfil</a>
+        <div class="sidebar" id="sidebarMenu">
+            <div class="sidebar-header">
+                <h3 class="bar-item">Painel</h3>
+                <button type="button" class="btn-close-sidebar" id="btnCloseSidebar" aria-label="Fechar Menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informações do Perfil</a>
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
             <a th:href="@{/perfil(aba='depoimento')}" class="bar-item button" th:classappend="${abaAtiva == 'depoimento'} ? 'active'">Depoimentos</a>
@@ -25,7 +175,7 @@
         <!-- ABA: INFORMAÇÃO DO PERFIL -->
         <section id="perfil-informacao" class="secao-painel" th:if="${abaAtiva == 'informacao'}">
             <div class="secao-header">
-                <h2>Informação do Perfil</h2>
+                <h2>Informações do Perfil</h2>
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-perfil}" th:object="${usuarioDTO}" method="POST">
@@ -40,9 +190,19 @@
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
                     </div>
-                    <div class="group-input">
-                        <label for="data_nascimento">Data de Nascimento</label>
-                        <input type="text" id="data_nascimento" name="data_nascimento" th:field="*{dataNascimento}" maxlength="10">
+                    <div class="group-input perfil-nascimento">
+                        <label for="data_nascimento_dia">Data de Nascimento</label>
+                        <div class="perfil-nascimento-controles">
+                            <input class="campo-data-submetido" type="hidden" id="data_nascimento" th:field="*{dataNascimento}">
+                            <input class="data-parte" type="text" id="data_nascimento_dia" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Dia" aria-describedby="ajudaDataNascimento">
+                            <span class="data-separador" aria-hidden="true">/</span>
+                            <input class="data-parte" type="text" id="data_nascimento_mes" maxlength="2" inputmode="numeric" placeholder="MM" aria-label="Mês">
+                            <span class="data-separador" aria-hidden="true">/</span>
+                            <input class="data-parte data-ano" type="text" id="data_nascimento_ano" maxlength="4" inputmode="numeric" placeholder="AAAA" aria-label="Ano" aria-haspopup="dialog">
+                            <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
+                        </div>
+                        <small id="ajudaDataNascimento">Digite a data ou selecione no calendário.</small>
+                        <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
                     </div>
                     <div class="group-input">
                         <label for="telefone">Telefone</label>
@@ -52,7 +212,6 @@
                         <label for="email">E-mail</label>
                         <input type="text" id="email" name="email" th:field="*{email}" readonly>
                     </div>
-                    <div class="group-input"></div>
                     <div class="group-button">
                         <button type="submit" class="btn">Salvar</button>
                     </div>
@@ -80,14 +239,29 @@
                     <label for="senha-atual">Senha Atual</label>
                     <input th:field="*{senha}" type="password" id="senha-atual">
                 </div>
+
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
-                    <input th:field="*{novaSenha}" type="password" id="senha-nova">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
+                            <i class="fa-solid fa-eye" id="eyeIconNova"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
-                    <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
+                            <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="group-button">
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
@@ -97,52 +271,110 @@
         <!-- ABA: AGENDAMENTOS -->
         <section id="perfil-agendamento" class="secao-painel" th:if="${abaAtiva == 'agendamento'}">
             <div class="secao-header">
-                <h2>Agendamentos</h2>
+                <h2>Meus Agendamentos</h2>
             </div>
 
-            <div class="lista-agendamentos">
+            <div class="group-info success" th:if="${mensagemSucesso}" style="margin-bottom: 1rem;">
+                <span th:text="${mensagemSucesso}"></span>
+            </div>
+            <div class="group-info error" th:if="${mensagemError}" style="margin-bottom: 1rem;">
+                <span th:text="${mensagemError}"></span>
+            </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-corte.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-concluido">Concluído</div>
-                        <h3 class="card-agendamento-titulo">Corte de Cabelo</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 45 min</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 12/08/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 14:30</span>
-                        </div>
-                    </div>
+            <!-- FILTROS (Agora são links do Thymeleaf) -->
+            <div class="filtros-agendamento" id="filtros-agendamento">
+                <a th:href="@{/perfil(aba='agendamento', filtro='TODOS')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
+                    Todos
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='CONFIRMADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'CONFIRMADO'} ? 'ativo'">
+                    Confirmados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='REALIZADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'REALIZADO'} ? 'ativo'">
+                    Realizados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='CANCELADO')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'CANCELADO'} ? 'ativo'">
+                    Cancelados
+                </a>
+                <a th:href="@{/perfil(aba='agendamento', filtro='NAO_COMPARECEU')}"
+                   class="filtro-btn" th:classappend="${filtroAtivo == 'NAO_COMPARECEU'} ? 'ativo'">
+                    Não compareceu
+                </a>
+            </div>
+
+            <!-- LISTA -->
+            <div class="lista-agendamentos" id="lista-agendamentos">
+                <!-- Se não tiver nada, mostra a mensagem -->
+                <div th:if="${paginaAgendamentos.isEmpty()}" class="agendamentos-vazio" style="grid-column: 1 / -1;">
+                    <i class="fa-regular fa-calendar-xmark"></i>
+                    <p>Nenhum agendamento com esse status.</p>
                 </div>
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-manicure.jpg');"></div>
-                    <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-confirmado">Confirmado</div>
-                        <h3 class="card-agendamento-titulo">Manicure e Pedicure</h3>
-                        <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Ceilândia — Setor P Norte</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 03/10/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 09:00</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="card-agendamento"
+                     th:each="ag : ${paginaAgendamentos}"
+                     th:data-status="${ag.statusTexto()}">
 
-                <div class="card-agendamento">
-                    <div class="card-agendamento-imagem" style="background-image: url('/img/servico-coloracao.jpg');"></div>
+                    <div class="card-agendamento-imagem"
+                         th:style="'background-image: url(' + ${ag.imagemAnexo} + ');'"></div>
+
                     <div class="card-agendamento-corpo">
-                        <div class="card-agendamento-status status-cancelado">Cancelado</div>
-                        <h3 class="card-agendamento-titulo">Coloração Capilar</h3>
+                        <div class="card-agendamento-status"
+                             th:classappend="${ag.statusClasseCss()}"
+                             th:text="${ag.statusTexto()}">Status</div>
+
+                        <h3 class="card-agendamento-titulo" th:text="${ag.nomeServico}">Serviço</h3>
+
                         <div class="card-agendamento-info">
-                            <span><i class="fa-solid fa-location-dot"></i> Unidade SENAC Taguatinga — Centro</span>
-                            <span><i class="fa-regular fa-clock"></i> Duração: 1h30</span>
-                            <span><i class="fa-solid fa-calendar-days"></i> 20/07/2026</span>
-                            <span><i class="fa-regular fa-clock"></i> 16:00</span>
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${ag.nomeUnidade}">Unidade</span></span>
+                            <span><i class="fa-solid fa-calendar-days"></i> <span th:text="${#temporals.format(ag.dataAgendamento(), 'dd/MM/yyyy')}">Data</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${#temporals.format(ag.horaInicio(), 'HH:mm')}">Hora</span></span>
                         </div>
+
+                        <form th:if="${ag.statusTexto() != 'CANCELADO' && ag.statusTexto() != 'NAO_COMPARECEU' && ag.statusTexto() != 'REALIZADO'}"
+                              th:action="@{/api/agendamento/cancelar/{id}(id=${ag.idAgendamento()})}"
+                              method="POST"
+                              style="margin-top: 1rem;"
+                              onsubmit="return confirm('Cancelar este agendamento? A vaga será liberada.');">
+                            <button type="submit" class="btn">Cancelar agendamento</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+
+            <!-- PAGINAÇÃO (Mantém o filtro ativo ao mudar de página) -->
+            <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 2rem;">
+
+                <!-- BOTÃO ANTERIOR -->
+                <a th:if="${!paginaAgendamentos.first}"
+                   th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number - 1}, filtro=${filtroAtivo})}"
+                   class="btn-paginacao-aba"
+                   style="text-decoration: none; padding: 8px 15px; border-radius: 5px; background-color: var(--senac-laranja); color: white; font-weight: bold;">
+                    &laquo; Anterior
+                </a>
+                <button th:if="${paginaAgendamentos.first}" disabled
+                        class="btn-paginacao-aba"
+                        style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
+                    &laquo; Anterior
+                </button>
+
+                <!-- INDICADOR DE PÁGINA -->
+                <span>Página <strong th:text="${paginaAgendamentos.number + 1}">1</strong> de <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
+
+                <!-- BOTÃO PRÓXIMA -->
+                <a th:if="${!paginaAgendamentos.last}"
+                   th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number + 1}, filtro=${filtroAtivo})}"
+                   class="btn-paginacao-aba"
+                   style="text-decoration: none; padding: 8px 15px; border-radius: 5px; background-color: var(--senac-laranja); color: white; font-weight: bold;">
+                    Próxima &raquo;
+                </a>
+                <button th:if="${paginaAgendamentos.last}" disabled
+                        class="btn-paginacao-aba"
+                        style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
+                    Próxima &raquo;
+                </button>
 
             </div>
         </section>
@@ -169,7 +401,7 @@
                         <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
                         <option th:each="ag : ${listaAgendamentosRealizados}"
                                 th:value="${ag.id}"
-                                th:text="${ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id} + ' - ' + ${ag.dataHoraAgendamento}"
+                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
                                 th:selected="${ag.id == agendamentoIdSelecionado}">
                             Serviço Exemplo
                         </option>
@@ -186,15 +418,27 @@
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- ANEXAR IMAGEM E PRÉ-VISUALIZAÇÃO VIA BACKEND -->
+                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
-                    <label for="imagem">Adicionar Imagem</label>
-                    <!-- Dispara o submit para a Controller gerar o preview -->
-                    <input type="file" id="imagem" name="imagem" accept="image/*" onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+                    <label for="imagem1">Primeira Imagem</label>
+                    <input type="file" id="imagem1" name="imagem1" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
 
-                    <!-- Renderizado apenas após a Controller processar a acao=preview -->
-                    <div class="container-preview-imagem" th:if="${imagemPreviewBase64 != null}" style="margin-top: 10px;">
-                        <img th:src="'data:image/jpeg;base64,' + ${imagemPreviewBase64}" alt="Pré-visualização da imagem" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    <div class="container-preview-imagem" th:if="${imagem1PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem1Tipo != null ? imagem1Tipo : 'image/jpeg'} + ';base64,' + ${imagem1PreviewBase64}"
+                             alt="Pré-visualização Imagem 1" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- CAMPO 2 DE IMAGEM -->
+                <div class="group-input">
+                    <label for="imagem2">Segunda Imagem</label>
+                    <input type="file" id="imagem2" name="imagem2" accept="image/*"
+                           onchange="this.form.action='/perfil/enviar-depoimento?acao=preview'; this.form.submit();">
+
+                    <div class="container-preview-imagem" th:if="${imagem2PreviewBase64 != null}" style="margin-top: 10px;">
+                        <img th:src="'data:' + ${imagem2Tipo != null ? imagem2Tipo : 'image/jpeg'} + ';base64,' + ${imagem2PreviewBase64}"
+                             alt="Pré-visualização Imagem 2" style="max-width: 150px; max-height: 150px; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
 
@@ -206,5 +450,49 @@
 
     </div>
 </div>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/javaScript/perfil.js}"></script>
+<script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
+<script>
+    // Função para exibir o loading
+    function mostrarLoading() {
+        document.getElementById('loader-global').style.display = 'flex';
+    }
+
+    // 1. Aplica o loading APENAS nos links de filtro e paginação de agendamento
+    document.addEventListener('DOMContentLoaded', function () {
+        // Pega todos os links que tenham 'filtro=' ou 'pagina=' no href (filtros e paginação)
+        const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
+
+        linksAgendamento.forEach(link => {
+            link.addEventListener('click', function () {
+                mostrarLoading();
+            });
+        });
+    });
+
+    // 2. Aplica o loading no botão de Cancelar Agendamento (que envia um formulário)
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            document.getElementById('loader-global').style.display = 'none';
+        }
+    });
+</script>
+<script>
+    // Remove as mensagens de sucesso ou erro após 4 segundos
+    document.addEventListener('DOMContentLoaded', function () {
+        const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
+        mensagens.forEach(function (msg) {
+            setTimeout(function () {
+                // Efeito de fade-out suave
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                // Remove do HTML depois que o fade acabar
+                setTimeout(() => msg.remove(), 500);
+            }, 4000); // 4000 milissegundos = 4 segundos
+        });
+    });
+</script>
+
 </body>
 </html>

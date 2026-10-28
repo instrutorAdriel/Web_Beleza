@@ -3,7 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarHeroBanner(); // Inicializa o Hero Banner junto com os outros módulos
+    inicializarHeroBanner(); // Inicializa o Hero Banner
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (SETAS ESQUERDA E DIREITA)
+ * MODULE: CONTROLE DO CARROSSEL DE ATENDIMENTOS (EXPANSÃO INTELIGENTE E TRAVA DE TAMANHO)
  */
 function inicializarCarrossel() {
-    const track = document.querySelector('.carrossel-track');
-    const setaEsquerda = document.querySelector('.seta-esquerda:not(.depoimento-seta)');
-    const setaDireita = document.querySelector('.seta-direita:not(.depoimento-seta)');
+    const track = document.querySelector('.carrossel-track-servicos');
+    const setaEsquerda = document.querySelector('.seta-servico.seta-esquerda');
+    const setaDireita = document.querySelector('.seta-servico.seta-direita');
+    const viewport = document.querySelector('.carrossel-viewport-servicos');
+    const cards = document.querySelectorAll('.carrossel-track-servicos .card-curso-completo');
 
     if (!track || !setaEsquerda || !setaDireita) return;
 
@@ -31,6 +33,17 @@ function inicializarCarrossel() {
         e.preventDefault();
         track.scrollBy({ left: 344, behavior: 'smooth' });
     });
+
+    if (viewport && cards.length > 0) {
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                viewport.style.height = viewport.offsetHeight + 'px';
+            });
+            card.addEventListener('mouseleave', () => {
+                viewport.style.height = '';
+            });
+        });
+    }
 }
 
 /**
@@ -54,12 +67,13 @@ function inicializarCarrosselDepoimentos() {
 }
 
 /**
- * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE
+ * MODULE: FILTRAGEM DINÂMICA DE SERVIÇOS POR UNIDADE (COM MENSAGEM DE VAZIO)
  */
 function inicializarFiltroBairros() {
     const abas = document.querySelectorAll('.aba-filtro');
-    const cardsServicos = document.querySelectorAll('.card-curso-completo');
-    const track = document.querySelector('.carrossel-track');
+    const cardsServicos = document.querySelectorAll('.card-servico, .card-curso-completo');
+    const track = document.querySelector('.carrossel-track-servicos, .carrossel-track');
+    const mensagemVazia = document.querySelector('#mensagem-vazia');
 
     if (!abas || cardsServicos.length === 0) return;
 
@@ -80,16 +94,27 @@ function inicializarFiltroBairros() {
             aba.classList.add('ativa');
 
             const unidadeSelecionada = normalizarTexto(aba.getAttribute('data-unidade'));
+            let contadorVisiveis = 0;
 
             cardsServicos.forEach(card => {
                 const unidadeCard = normalizarTexto(card.getAttribute('data-unidade'));
 
                 if (unidadeSelecionada === 'todos' || unidadeCard === unidadeSelecionada) {
                     card.style.setProperty('display', 'flex', 'important');
+                    contadorVisiveis++;
                 } else {
                     card.style.setProperty('display', 'none', 'important');
                 }
             });
+
+            // Se nenhum card estiver visível, mostra a mensagem e esconde o carrossel
+            if (contadorVisiveis === 0) {
+                if (mensagemVazia) mensagemVazia.style.display = 'block';
+                if (track) track.style.display = 'none';
+            } else {
+                if (mensagemVazia) mensagemVazia.style.display = 'none';
+                if (track) track.style.display = 'flex';
+            }
 
             if (track) {
                 track.scrollLeft = 0;
