@@ -100,26 +100,28 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-    function togglePasswordVisibility(inputElement, iconElement) {
+    function togglePasswordVisibility(inputElement, iconElement, buttonElement) {
 
-        if (inputElement.type === "password") {
-            inputElement.type = "text";
-            iconElement.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            inputElement.type = "password";
-            iconElement.classList.replace("fa-eye", "fa-eye-slash");
-        }
+        const mostrando = inputElement.type === "password";
+
+        inputElement.type = mostrando ? "text" : "password";
+
+        // Senha visível -> olho riscado | Senha oculta -> olho aberto
+        iconElement.classList.toggle("fa-eye-slash", mostrando);
+        iconElement.classList.toggle("fa-eye", !mostrando);
+
+        buttonElement.setAttribute("aria-label", mostrando ? "Ocultar senha" : "Mostrar senha");
     }
 
     senhaInput.addEventListener("input", verificarSenhas);
     confirmaSenhaInput.addEventListener("input", verificarSenhas);
 
     btnToggle1.addEventListener("click", function () {
-        togglePasswordVisibility(senhaInput, eyeIcon1);
+        togglePasswordVisibility(senhaInput, eyeIcon1, btnToggle1);
     });
 
     btnToggle2.addEventListener("click", function () {
-        togglePasswordVisibility(confirmaSenhaInput, eyeIcon2);
+        togglePasswordVisibility(confirmaSenhaInput, eyeIcon2, btnToggle2);
     });
 
     form.addEventListener("submit", function (event) {
