@@ -30,7 +30,7 @@
         </a>
 
         <div th:if="${usuario != null}" class="usuario-logado">
-            <a th:href="@{/perfil}" th:text="${usuarioNome}">>Usuário</a>
+            <a th:href="@{/perfil}" th:text="${usuarioNome}">Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
         </div>
     </div>

@@ -3,6 +3,7 @@ package com.app.beleza.service;
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Disponibilidade;
 import com.app.beleza.model.ProdutoUnidade;
+import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
@@ -27,6 +28,21 @@ public class HomeService {
 
     @Autowired
     private ProdutoUnidadeRepository produtoUnidadeRepository;
+
+    // Retorna apenas o primeiro e o segundo nome do usuário (ou null se não houver usuário)
+    public String obterNomeExibicao(Usuario usuario) {
+        if (usuario == null || usuario.getNomeUsuario() == null || usuario.getNomeUsuario().isBlank()) {
+            return null;
+        }
+
+        String[] partes = usuario.getNomeUsuario().trim().split("\\s+");
+
+        if (partes.length == 1) {
+            return partes[0];
+        }
+
+        return partes[0] + " " + partes[1];
+    }
 
     @Cacheable("homeProcedimentos")
     public List<ServicoDisponibilidadeDTO> listarProcedimentosPorUnidade() {

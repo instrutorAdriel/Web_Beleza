@@ -18,7 +18,7 @@ public class HomeController {
     public String exibirHome(HttpSession session,Model model) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeUsuario() : null);
+        model.addAttribute("usuarioNome", homeService.obterNomeExibicao(usuario));
         model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
         model.addAttribute("depoimentos", homeService.listarDepoimentos());
 
