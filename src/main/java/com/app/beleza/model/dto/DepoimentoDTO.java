@@ -1,5 +1,7 @@
 package com.app.beleza.model.dto;
 
+import java.time.LocalDateTime;
+
 public class DepoimentoDTO {
 
     // Colunas diretas do banco de dados (Tabela Depoimento)
@@ -11,6 +13,12 @@ public class DepoimentoDTO {
     private Integer idModelo;
     private Integer idUsuario;
     private Integer idAgendamento;
+
+
+    private LocalDateTime dataAgendamento;
+    public LocalDateTime getDataAgendamento() { return dataAgendamento; }
+    public void setDataAgendamento(LocalDateTime dataAgendamento) { this.dataAgendamento = dataAgendamento; }
+
 
     // Campos auxiliares requeridos pela HomeService e Cards do HTML
     private String nome;      // Mapeado a partir de depoimento.getUsuario().getNomeUsuario()

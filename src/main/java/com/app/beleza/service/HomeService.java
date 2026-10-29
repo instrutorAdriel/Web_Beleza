@@ -14,6 +14,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.*;
 
@@ -70,27 +74,33 @@ public class HomeService {
         return lista;
     }
 
-    @Cacheable("homeDepoimentos")
-    public List<DepoimentoDTO> listarDepoimentos() {
-        List<DepoimentoDTO> lista = new ArrayList<>();
-        Optional<List<Depoimento>> optional = depoimentoRepository.findAllComRelacionamento();
-        List<Depoimento> depoimentos = new ArrayList<>();
+    public Page<DepoimentoDTO> listarDepoimentosRecentes(String unidade, String servico) {
+        // Limite fixo de 15 itens (Página 0, tamanho 15)
+        Pageable pageable = PageRequest.of(0, 15);
 
-        if (optional.isPresent()) {
-            depoimentos = optional.get();
-        }
+        String filtroUnidade = (unidade == null || unidade.isEmpty() || unidade.equals("TODAS")) ? null : unidade;
+        String filtroServico = (servico == null || servico.isEmpty() || servico.equals("TODOS")) ? null : servico;
 
-        for (Depoimento depoimento : depoimentos) {
+        Page<Depoimento> paginaDepoimentos = depoimentoRepository.buscarDepoimentosFiltrados(filtroUnidade, filtroServico, pageable);
+
+        List<DepoimentoDTO> dtosDaPagina = new ArrayList<>();
+        for (Depoimento depoimento : paginaDepoimentos.getContent()) {
             DepoimentoDTO dto = new DepoimentoDTO();
             dto.setNome(depoimento.getUsuario().getNomeUsuario());
-            dto.setServico(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getProduto().getNomeProduto());
-            dto.setUnidade(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getUnidade().getNomeUnidade());
+
+            if (depoimento.getAgendamento() != null && depoimento.getAgendamento().getDisponibilidade() != null) {
+                dto.setServico(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getProduto().getNomeProduto());
+                dto.setUnidade(depoimento.getAgendamento().getDisponibilidade().getProdutoUnidade().getUnidade().getNomeUnidade());
+                dto.setDataAgendamento(depoimento.getAgendamento().getDataHoraAgendamento());
+            }
+
             dto.setTexto(depoimento.getDepoimento());
             dto.setImagem1(depoimento.getImagemAnexo1());
             dto.setImagem2(depoimento.getImagemAnexo2());
-            lista.add(dto);
+
+            dtosDaPagina.add(dto);
         }
 
-        return lista;
+        return new PageImpl<>(dtosDaPagina, pageable, paginaDepoimentos.getTotalElements());
     }
 }
