@@ -237,7 +237,13 @@
 
                 <div class="group-input">
                     <label for="senha-atual">Senha Atual</label>
-                    <input th:field="*{senha}" type="password" id="senha-atual">
+                    <div class="ssp-password-wrapper">
+                        <input th:field="*{senha}" type="password" id="senha-atual">
+                        <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
+                                onclick="togglePasswordVisibility('senha-atual', 'eyeIconAtual')">
+                            <i class="fa-solid fa-eye" id="eyeIconAtual"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="group-input">
