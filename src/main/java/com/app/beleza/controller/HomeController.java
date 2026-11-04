@@ -31,8 +31,7 @@ public class HomeController {
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", homeService.obterNomeExibicao(usuario));
         model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
-        model.addAttribute("depoimentos", homeService.listarDepoimentos());
-        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeUsuario() : null);
+
 
         // Pega a lista de procedimentos (usada na sessão de serviços e nos filtros)
         List<ServicoDisponibilidadeDTO> procedimentos = homeService.listarProcedimentosPorUnidade();
