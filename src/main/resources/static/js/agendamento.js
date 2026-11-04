@@ -51,7 +51,7 @@ function confirmarAgendamento(idSessao) {
         })
         .catch(error => {
             if (error.message !== "Usuário não autenticado") {
-                alert("Erro ao agendar: " + error.message);
+                alert(error.message);
             }
         });
 }
