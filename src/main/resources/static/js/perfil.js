@@ -47,4 +47,43 @@ document.addEventListener('DOMContentLoaded', function () {
             aplicarFiltro(botao.dataset.status);
         });
     });
+
+// Função para exibir o loading
+    function mostrarLoading() {
+        document.getElementById('loader-global').style.display = 'flex';
+    }
+
+    // 1. Aplica o loading APENAS nos links de filtro e paginação de agendamento
+    document.addEventListener('DOMContentLoaded', function () {
+        // Pega todos os links que tenham 'filtro=' ou 'pagina=' no href (filtros e paginação)
+        const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
+
+        linksAgendamento.forEach(link => {
+            link.addEventListener('click', function () {
+                mostrarLoading();
+            });
+        });
+    });
+
+    // 2. Aplica o loading no botão de Cancelar Agendamento (que envia um formulário)
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            document.getElementById('loader-global').style.display = 'none';
+        }
+    });
+
+    // Remove as mensagens de sucesso ou erro após 4 segundos
+    document.addEventListener('DOMContentLoaded', function () {
+        const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
+        mensagens.forEach(function (msg) {
+            setTimeout(function () {
+                // Efeito de fade-out suave
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                // Remove do HTML depois que o fade acabar
+                setTimeout(() => msg.remove(), 500);
+            }, 4000); // 4000 milissegundos = 4 segundos
+        });
+    });
+
 });
