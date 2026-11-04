@@ -69,4 +69,20 @@ public class Usuario {
     public void setSituacao(char situacao) {
         this.situacao = situacao;
     }
+
+    // Retorna apenas o primeiro e o segundo nome
+    @Transient
+    public String getPrimeiroESegundoNome() {
+        if (nomeUsuario == null || nomeUsuario.isBlank()) {
+            return "";
+        }
+
+        String[] partes = nomeUsuario.trim().split("\\s+");
+
+        if (partes.length == 1) {
+            return partes[0];
+        }
+
+        return partes[0] + " " + partes[1];
+    }
 }

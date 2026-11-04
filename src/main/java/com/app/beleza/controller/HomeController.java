@@ -29,7 +29,9 @@ public class HomeController {
 
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("usuarioNome", usuario != null ? usuario.getNomeUsuario() : null);
+        model.addAttribute("usuarioNome", homeService.obterNomeExibicao(usuario));
+        model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
+
 
         // Pega a lista de procedimentos (usada na sessão de serviços e nos filtros)
         List<ServicoDisponibilidadeDTO> procedimentos = homeService.listarProcedimentosPorUnidade();
