@@ -116,6 +116,15 @@ public class AgendamentoService {
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
+        boolean conflitoDeHorario = agendamentoRepository.existsConflitoDeHorario(
+                usuarioLogado.getId(),
+                SituacaoAgendamento.CANCELADO,
+                disp.getDataDisponibilidade(),
+                disp.getHoraInicio(),
+                disp.getHoraFim());
+        if (conflitoDeHorario) {
+            throw new RuntimeException("Você já possui um agendamento nesse horário. Escolha outro horário para evitar conflitos entre unidades.");
+        }
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
