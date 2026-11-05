@@ -1,0 +1,12 @@
+URL=jdbc:mysql://64.236.198.217:3306/beleza_db?createDatabaseIfNotExist=true&useSSL=true&allowPublicKeyRetrieval=true&serverTimezone=America/Sao_Paulo
+USUARIO=beleza_conn
+SENHA=senac123
+
+CLOUDINARY_CLOUD_NAME=pdwuxitw
+CLOUDINARY_API_KEY=816979258568887
+CLOUDINARY_API_SECRET=OgfcCjbuqFQCcTA9XnfxVaDY9Ks
+
+GMAIL_USER=agendamentosenac@gmail.com
+GMAIL_APP_PASSWORD=gmzevqltjwmygrcs
+
+ 
