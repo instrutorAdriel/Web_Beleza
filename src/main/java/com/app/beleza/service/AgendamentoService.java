@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +75,12 @@ public class AgendamentoService {
                 disponibilidadeRepository.listarPorProdutoUnidade(idProdutoUnidade);
 
         for (Disponibilidade d : disponibilidades) {
+
+            // NÃO mostrar horários que já passaram
+            if (horarioJaPassou(d)) {
+                continue;
+            }
+
             boolean jaAgendou = false;
             if (usuarioLogado != null) {
                 jaAgendou = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
@@ -96,6 +104,33 @@ public class AgendamentoService {
         return lista;
     }
 
+    /**
+     * Retorna true se a disponibilidade já passou.
+     * - Data anterior a hoje: já passou.
+     * - Data de hoje: já passou se a hora de início for anterior à hora atual.
+     * - Sem data: considera como passada (não exibe dado inconsistente).
+     */
+    private boolean horarioJaPassou(Disponibilidade d) {
+        LocalDate data = d.getDataDisponibilidade();
+        if (data == null) {
+            return true;
+        }
+
+        LocalDate hoje = LocalDate.now();
+
+        if (data.isBefore(hoje)) {
+            return true;
+        }
+
+        // Se quiser mostrar TODOS os horários de hoje (mesmo os que já passaram),
+        // apague o bloco abaixo e deixe só o "return false;"
+        if (data.isEqual(hoje) && d.getHoraInicio() != null) {
+            return d.getHoraInicio().isBefore(LocalTime.now());
+        }
+
+        return false;
+    }
+
     @Transactional
     @CacheEvict(value = "agendamentosUsuario", allEntries = true)
     public void agendar(Integer idDisponibilidade, Usuario usuarioLogado) {
@@ -107,6 +142,11 @@ public class AgendamentoService {
         Disponibilidade disp = disponibilidadeRepository.findByIdComLock(idDisponibilidade)
                 .orElseThrow(() -> new RuntimeException("Horário não encontrado."));
 
+        // Proteção no backend: não permite agendar horário que já passou
+        if (horarioJaPassou(disp)) {
+            throw new RuntimeException("Esse horário já passou e não está mais disponível para agendamento.");
+        }
+
         if (disp.getTotalVagas() == null || disp.getTotalVagas() <= 0) {
             throw new RuntimeException("Esse horário está esgotado.");
         }
@@ -116,15 +156,6 @@ public class AgendamentoService {
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
-        boolean conflitoDeHorario = agendamentoRepository.existsConflitoDeHorario(
-                usuarioLogado.getId(),
-                SituacaoAgendamento.CANCELADO,
-                disp.getDataDisponibilidade(),
-                disp.getHoraInicio(),
-                disp.getHoraFim());
-        if (conflitoDeHorario) {
-            throw new RuntimeException("Você já possui um agendamento nesse horário. Escolha outro horário para evitar conflitos entre unidades.");
-        }
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
@@ -133,8 +164,7 @@ public class AgendamentoService {
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
-        // Todo agendamento nasce PENDENTE. Só passa a CONFIRMADO depois que o instrutor da unidade confirmar a presença.
-        ag.setSituacao(SituacaoAgendamento.PENDENTE);
+        ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
         ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
 
