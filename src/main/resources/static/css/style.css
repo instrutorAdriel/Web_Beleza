@@ -2930,6 +2930,10 @@ input::-ms-clear {
     color: #2D3748;
 }
 
+.cadastro-container .perfil-calendario-abrir i {
+    transform: scale(0.65);
+}
+
 .perfil-nascimento-controles .data-ano {
     width: 4.4ch;
 }
