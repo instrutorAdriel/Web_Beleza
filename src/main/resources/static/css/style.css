@@ -648,7 +648,7 @@
 
 /* Hover padrão: Apenas levanta 6px mantendo exatamente a mesma altura */
 .card-servico:hover {
-        border-color: var(--senac-laranja);
+    border-color: var(--senac-laranja);
     box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
 }
 
@@ -2614,14 +2614,15 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
-    /* ==========================================================================
-       OLHO DE MOSTRAR/OCULTAR SENHA - ABA CONFIGURAÇÃO DO PERFIL
-       ========================================================================== */
-    #perfil-configuracao .group-input .ssp-password-wrapper {
-        position: relative;
-        display: block;
-        width: 100%;
-    }
+
+/* ==========================================================================
+   OLHO DE MOSTRAR/OCULTAR SENHA - ABA CONFIGURAÇÃO DO PERFIL
+   ========================================================================== */
+#perfil-configuracao .group-input .ssp-password-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+}
 
 #perfil-configuracao .group-input .ssp-password-wrapper input {
     display: block;
@@ -2773,10 +2774,6 @@ input::-ms-clear {
     }
 }
 
-    #perfil-configuracao .group-input .ssp-password-wrapper .ssp-toggle-password:hover {
-        color: #1f2937;
-    }
-
 /* ==========================================================================
    FILTROS DE AGENDAMENTO (PERFIL)
    ========================================================================== */
@@ -2863,9 +2860,6 @@ input::-ms-clear {
         padding: 1px 6px;
         font-size: 10px;
     }
-
-
-
 }
 
 /* ESTILO DOS FILTROS */
@@ -2890,32 +2884,160 @@ input::-ms-clear {
 /* GARANTE QUE O CARROSSEL DE DEPOIMENTOS NÃO QUEBRE PARA A LINHA DE BAIXO */
 .carrossel-depoimentos {
     flex-wrap: nowrap !important;
-    overflow-x: auto !important; /* Permite rolar ou usar as setas */
+    overflow-x: auto !important;
 }
 
 #depoimentos {
-    scroll-margin-top: 100px; /* Ajuste esse valor para a altura do seu header */
+    scroll-margin-top: 100px;
 }
 
 /* Ajustes para telas de celular (Mobile) */
 @media (max-width: 768px) {
-    /* 1. Barra de filtros: empilha um embaixo do outro */
     .barra-filtros-depoimentos {
         flex-direction: column;
         gap: 10px;
     }
 
-    /* 2. Faz os selects ocuparem a largura toda no celular */
     #filtro-unidade, #filtro-servico {
         width: 100%;
     }
 
-    /* 3. Ajusta o modal no celular (caso a imagem fique muito grande) */
     #modal-depoimento .modal-painel {
         padding: 20px;
     }
 
     #modal-dep-img1, #modal-dep-img2 {
-        max-height: 250px; /* Diminui a altura das fotos no celular */
+        max-height: 250px;
     }
+}
+
+/* ==========================================================================
+   ESTILOS ADICIONAIS EXTRAÍDOS DO HTML DE PERFIL
+   ========================================================================== */
+
+#perfil-configuracao .ssp-password-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+#perfil-configuracao .ssp-password-wrapper input {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 46px !important;
+}
+
+#perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+    position: absolute !important;
+    top: 50% !important;
+    right: 12px !important;
+    transform: translateY(-50%) !important;
+    background: none !important;
+    border: none !important;
+    padding: 4px !important;
+    cursor: pointer !important;
+    color: #6b7280 !important;
+    font-size: 1.1rem !important;
+}
+
+#perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+    color: #1f2937 !important;
+}
+
+#perfil-informacao .perfil-nascimento-controles {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 0 48px 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: var(--fundo-input);
+}
+
+#perfil-informacao .perfil-nascimento-controles .data-parte {
+    width: 2.2ch;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    text-align: center;
+    font: inherit;
+}
+
+#perfil-informacao .perfil-nascimento-controles .data-ano {
+    width: 4.4ch;
+}
+
+#perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+    border-color: #dc2626;
+}
+
+#perfil-informacao .data-separador {
+    padding: 0 3px;
+    color: #64748b;
+}
+
+#perfil-informacao .campo-data-submetido {
+    display: none;
+}
+
+#perfil-informacao .perfil-calendario-abrir {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    cursor: pointer;
+    color: #334155;
+}
+
+#perfil-informacao .perfil-calendario-abrir:hover {
+    background: #f1f5f9;
+}
+
+#perfil-informacao .perfil-calendario-abrir i {
+    font-size: 1.5rem;
+}
+
+#perfil-informacao .perfil-nascimento {
+    position: relative;
+}
+
+#perfil-informacao .perfil-calendario {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 6px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+
+#perfil-informacao .perfil-calendario[hidden] { display: none; }
+#perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+#perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
+#perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+#perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+#perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
+#perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+#perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+#perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
+
+#perfil-informacao .group-button {
+    grid-column: 1 / -1;
+    justify-content: center;
 }

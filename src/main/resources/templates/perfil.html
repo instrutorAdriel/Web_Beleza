@@ -5,135 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        #perfil-configuracao .ssp-password-wrapper {
-            position: relative !important;
-            display: block !important;
-            width: 100% !important;
-        }
-
-        #perfil-configuracao .ssp-password-wrapper input {
-            display: block !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-            padding-right: 46px !important;
-        }
-
-        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
-            position: absolute !important;
-            top: 50% !important;
-            right: 12px !important;
-            transform: translateY(-50%) !important;
-            background: none !important;
-            border: none !important;
-            padding: 4px !important;
-            cursor: pointer !important;
-            color: #6b7280 !important;
-            font-size: 1.1rem !important;
-        }
-
-        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
-            color: #1f2937 !important;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            min-height: 46px;
-            box-sizing: border-box;
-            padding: 0 48px 0 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            background: var(--fundo-input);
-        }
-
-        #perfil-informacao .perfil-nascimento-controles .data-parte {
-            width: 2.2ch;
-            min-width: 0;
-            padding: 0;
-            border: 0;
-            outline: 0;
-            background: transparent;
-            text-align: center;
-            font: inherit;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles .data-ano {
-            width: 4.4ch;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
-            border-color: #dc2626;
-        }
-
-        #perfil-informacao .data-separador {
-            padding: 0 3px;
-            color: #64748b;
-        }
-
-        #perfil-informacao .campo-data-submetido {
-            display: none;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir {
-            position: absolute;
-            top: 50%;
-            right: 6px;
-            transform: translateY(-50%);
-            display: grid;
-            place-items: center;
-            width: 38px;
-            height: 38px;
-            border: 0;
-            border-radius: 5px;
-            background: transparent;
-            cursor: pointer;
-            color: #334155;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir:hover {
-            background: #f1f5f9;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir i {
-            font-size: 1.5rem;
-        }
-
-        #perfil-informacao .perfil-nascimento {
-            position: relative;
-        }
-
-        #perfil-informacao .perfil-calendario {
-            position: absolute;
-            z-index: 20;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: 6px;
-            padding: 12px;
-            background: #fff;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
-        }
-
-        #perfil-informacao .perfil-calendario[hidden] { display: none; }
-        #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
-        #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
-        #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
-        #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
-        #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
-        #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
-        #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
-        #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
-
-        #perfil-informacao .group-button {
-            grid-column: 1 / -1;
-            justify-content: center;
-        }
-    </style>
     <script th:src="@{/js/toggle-senha.js}" defer></script>
+    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/sidebar.js}" defer></script>
+    <script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -151,6 +26,7 @@
     <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; color: var(--senac-laranja);"></i>
     <p style="margin-top: 15px; font-weight: bold; color: var(--texto-escuro);">Buscando agendamentos...</p>
 </div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
@@ -287,7 +163,6 @@
                 <span th:text="${mensagemError}"></span>
             </div>
 
-            <!-- FILTROS (Agora são links do Thymeleaf) -->
             <div class="filtros-agendamento" id="filtros-agendamento">
                 <a th:href="@{/perfil(aba='agendamento', filtro='TODOS')}"
                    class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
@@ -315,9 +190,7 @@
                 </a>
             </div>
 
-            <!-- LISTA -->
             <div class="lista-agendamentos" id="lista-agendamentos">
-                <!-- Se não tiver nada, mostra a mensagem -->
                 <div th:if="${paginaAgendamentos.isEmpty()}" class="agendamentos-vazio" style="grid-column: 1 / -1;">
                     <i class="fa-regular fa-calendar-xmark"></i>
                     <p>Nenhum agendamento com esse status.</p>
@@ -354,10 +227,7 @@
                 </div>
             </div>
 
-            <!-- PAGINAÇÃO (Mantém o filtro ativo ao mudar de página) -->
             <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 2rem;">
-
-                <!-- BOTÃO ANTERIOR -->
                 <a th:if="${!paginaAgendamentos.first}"
                    th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number - 1}, filtro=${filtroAtivo})}"
                    class="btn-paginacao-aba"
@@ -370,10 +240,8 @@
                     &laquo; Anterior
                 </button>
 
-                <!-- INDICADOR DE PÁGINA -->
                 <span>Página <strong th:text="${paginaAgendamentos.number + 1}">1</strong> de <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
 
-                <!-- BOTÃO PRÓXIMA -->
                 <a th:if="${!paginaAgendamentos.last}"
                    th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number + 1}, filtro=${filtroAtivo})}"
                    class="btn-paginacao-aba"
@@ -385,7 +253,6 @@
                         style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
                     Próxima &raquo;
                 </button>
-
             </div>
         </section>
 
@@ -403,7 +270,6 @@
                     <span th:text="${mensagemError}"></span>
                 </div>
 
-                <!-- SELEÇÃO DO AGENDAMENTO CONCLUÍDO -->
                 <div class="group-input">
                     <label for="idAgendamento">Selecione o Agendamento Concluído</label>
 
@@ -422,13 +288,11 @@
                     </select>
                 </div>
 
-                <!-- TEXTO DO DEPOIMENTO -->
                 <div class="group-input">
                     <label for="depoimento">Seu Depoimento</label>
                     <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
                 </div>
 
-                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
                     <label for="imagem1">Primeira Imagem</label>
                     <input type="file" id="imagem1" name="imagem1" accept="image/*"
@@ -440,7 +304,6 @@
                     </div>
                 </div>
 
-                <!-- CAMPO 2 DE IMAGEM -->
                 <div class="group-input">
                     <label for="imagem2">Segunda Imagem</label>
                     <input type="file" id="imagem2" name="imagem2" accept="image/*"
@@ -460,49 +323,5 @@
 
     </div>
 </div>
-<script th:src="@{/js/sidebar.js}"></script>
-<script th:src="@{/javaScript/perfil.js}"></script>
-<script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
-<script>
-    // Função para exibir o loading
-    function mostrarLoading() {
-        document.getElementById('loader-global').style.display = 'flex';
-    }
-
-    // 1. Aplica o loading APENAS nos links de filtro e paginação de agendamento
-    document.addEventListener('DOMContentLoaded', function () {
-        // Pega todos os links que tenham 'filtro=' ou 'pagina=' no href (filtros e paginação)
-        const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
-
-        linksAgendamento.forEach(link => {
-            link.addEventListener('click', function () {
-                mostrarLoading();
-            });
-        });
-    });
-
-    // 2. Aplica o loading no botão de Cancelar Agendamento (que envia um formulário)
-    window.addEventListener('pageshow', function (event) {
-        if (event.persisted) {
-            document.getElementById('loader-global').style.display = 'none';
-        }
-    });
-</script>
-<script>
-    // Remove as mensagens de sucesso ou erro após 4 segundos
-    document.addEventListener('DOMContentLoaded', function () {
-        const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
-        mensagens.forEach(function (msg) {
-            setTimeout(function () {
-                // Efeito de fade-out suave
-                msg.style.transition = "opacity 0.5s ease";
-                msg.style.opacity = "0";
-                // Remove do HTML depois que o fade acabar
-                setTimeout(() => msg.remove(), 500);
-            }, 4000); // 4000 milissegundos = 4 segundos
-        });
-    });
-</script>
-
 </body>
 </html>

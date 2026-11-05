@@ -1,4 +1,17 @@
+/**
+ * SENAC DF - Lógica e Interações da Página de Perfil
+ */
+
 document.addEventListener('DOMContentLoaded', function () {
+    inicializarFiltrosAgendamento();
+    inicializarNotificacoes();
+    inicializarCarregamentoAgendamento();
+});
+
+/**
+ * Filtros de status dos Agendamentos no Perfil
+ */
+function inicializarFiltrosAgendamento() {
     const secao = document.getElementById('perfil-agendamento');
     if (!secao) return;
 
@@ -6,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const cards = secao.querySelectorAll('#lista-agendamentos .card-agendamento');
     const msgVazio = document.getElementById('filtro-vazio');
 
-    // Contadores (só contam o que está na tela atual)
+    // Contadores locais para os agendamentos visíveis
     const contadores = {
         TODOS: 0,
         PENDENTE: 0,
@@ -39,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (mostrar) visiveis++;
         });
 
-        msgVazio.style.display = (visiveis === 0) ? 'block' : 'none';
+        if (msgVazio) {
+            msgVazio.style.display = (visiveis === 0) ? 'block' : 'none';
+        }
     }
 
     botoes.forEach(botao => {
@@ -47,4 +62,45 @@ document.addEventListener('DOMContentLoaded', function () {
             aplicarFiltro(botao.dataset.status);
         });
     });
-});
+}
+
+/**
+ * Exibe o spinner global de carregamento
+ */
+function mostrarLoading() {
+    const loader = document.getElementById('loader-global');
+    if (loader) loader.style.display = 'flex';
+}
+
+/**
+ * Eventos de carregamento para a aba de agendamentos
+ */
+function inicializarCarregamentoAgendamento() {
+    const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
+    linksAgendamento.forEach(link => {
+        link.addEventListener('click', function () {
+            mostrarLoading();
+        });
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            const loader = document.getElementById('loader-global');
+            if (loader) loader.style.display = 'none';
+        }
+    });
+}
+
+/**
+ * Efeito de fade-out nas mensagens de sucesso ou erro do perfil
+ */
+function inicializarNotificacoes() {
+    const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
+    mensagens.forEach(function (msg) {
+        setTimeout(function () {
+            msg.style.transition = "opacity 0.5s ease";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }, 4000);
+    });
+}

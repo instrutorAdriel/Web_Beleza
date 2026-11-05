@@ -2,8 +2,10 @@
  * SENAC DF - Inteligência Dinâmica do Portal (Serviços e Agendamentos por Unidade)
  */
 
+let posicaoScrollAtual = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarHeroBanner(); // Inicializa o Hero Banner
+    inicializarHeroBanner();
     inicializarCarrossel();
     inicializarFiltroBairros();
     inicializarFormularios();
@@ -107,7 +109,6 @@ function inicializarFiltroBairros() {
                 }
             });
 
-            // Se nenhum card estiver visível, mostra a mensagem e esconde o carrossel
             if (contadorVisiveis === 0) {
                 if (mensagemVazia) mensagemVazia.style.display = 'block';
                 if (track) track.style.display = 'none';
@@ -327,4 +328,72 @@ function inicializarHeroBanner() {
             reiniciarIntervalo();
         });
     }
+}
+
+/**
+ * MODULE: FILTROS DE DEPOIMENTOS
+ */
+function aplicarFiltros() {
+    const unidadeEl = document.getElementById('filtro-unidade');
+    const servicoEl = document.getElementById('filtro-servico');
+
+    if (!unidadeEl || !servicoEl) return;
+
+    const unidade = unidadeEl.value;
+    const servico = servicoEl.value;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('unidade', unidade);
+    urlParams.set('servico', servico);
+    urlParams.set('pagina', 0);
+
+    window.location.href = window.location.pathname + '?' + urlParams.toString() + '#depoimentos';
+}
+
+/**
+ * MODULE: MODAL DE DEPOIMENTO EXPANDIDO
+ */
+function abrirModalDepoimento(card) {
+    posicaoScrollAtual = window.scrollY;
+
+    const nome = card.getAttribute('data-nome');
+    const texto = card.getAttribute('data-texto');
+    const img1 = card.getAttribute('data-img1');
+    const img2 = card.getAttribute('data-img2');
+    const servico = card.getAttribute('data-servico');
+    const avatar = card.getAttribute('data-avatar');
+
+    document.getElementById('modal-dep-nome').innerText = nome;
+    document.getElementById('modal-dep-texto').innerText = '"' + texto + '"';
+    document.getElementById('modal-dep-servico').innerText = servico;
+    document.getElementById('modal-dep-avatar').innerText = avatar;
+
+    const imgElement1 = document.getElementById('modal-dep-img1');
+    const imgElement2 = document.getElementById('modal-dep-img2');
+
+    if (img1 && img1 !== 'null' && img1 !== '') {
+        imgElement1.src = img1;
+        imgElement1.style.display = 'block';
+    } else {
+        imgElement1.style.display = 'none';
+    }
+
+    if (img2 && img2 !== 'null' && img2 !== '') {
+        imgElement2.src = img2;
+        imgElement2.style.display = 'block';
+    } else {
+        imgElement2.style.display = 'none';
+    }
+
+    window.location.hash = '#modal-depoimento';
+}
+
+function fecharModalDepoimento(event) {
+    if (event) event.preventDefault();
+    window.location.hash = '';
+
+    window.scrollTo({
+        top: posicaoScrollAtual,
+        behavior: 'instant'
+    });
 }
