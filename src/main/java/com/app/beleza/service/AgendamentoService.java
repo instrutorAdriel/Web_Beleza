@@ -37,30 +37,16 @@ public class AgendamentoService {
 
 
     @Transactional
-    public void atualizarAgendamentosVencidos(Usuario usuarioLogado) {
+    @CacheEvict(value = "agendamentosUsuario", allEntries = true)
+    public void confirmarAgendamentosPendentes(Usuario usuarioLogado) {
         if (usuarioLogado == null) return;
 
-        // Puxa todos os agendamentos do usuário usando o método que JÁ EXISTE no seu Repository
         List<Agendamento> todosAgendamentos = agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
 
-        LocalDateTime agora = LocalDateTime.now();
-
         for (Agendamento ag : todosAgendamentos) {
-            // Só queremos atualizar os que estão CONFIRMADOS
-            if (ag.getSituacao() == SituacaoAgendamento.CONFIRMADO) {
-                Disponibilidade disp = ag.getDisponibilidade();
-
-                if (disp != null && disp.getDataDisponibilidade() != null && disp.getHoraFim() != null) {
-
-                    // Junta a data com a hora de fim (ex: 25/10/2026 às 18:00)
-                    LocalDateTime dataHoraFim = LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraFim());
-
-                    // Se a hora atual já passou da hora de fim do serviço, marca como REALIZADO
-                    if (agora.isAfter(dataHoraFim)) {
-                        ag.setSituacao(SituacaoAgendamento.REALIZADO);
-                        agendamentoRepository.save(ag);
-                    }
-                }
+            if (ag.getSituacao() == SituacaoAgendamento.PENDENTE) {
+                ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
+                agendamentoRepository.save(ag);
             }
         }
     }
@@ -124,8 +110,7 @@ public class AgendamentoService {
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
-        // Todo agendamento nasce PENDENTE. Só passa a CONFIRMADO depois que o instrutor da unidade confirmar a presença.
-        ag.setSituacao(SituacaoAgendamento.PENDENTE);
+        ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
         ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
 

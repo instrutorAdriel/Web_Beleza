@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Contadores (só contam o que está na tela atual)
     const contadores = {
         TODOS: 0,
-        PENDENTE: 0,
         CONFIRMADO: 0,
         REALIZADO: 0,
         CANCELADO: 0,
