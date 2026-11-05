@@ -47,10 +47,9 @@ public class UsuarioService {
         Usuario dadosUsuario = new Usuario();
         Modelo novoUsuario = new Modelo();
         dadosUsuario.setNomeUsuario(form.getNomeCompleto());
-        dadosUsuario.setEmail(form.getEmail()); // E-mail normal
+        dadosUsuario.setEmail(form.getEmail());
         dadosUsuario.setSenha(senhaCriptografada);
 
-        // Atribuição direta do LocalDate vindo da DTO
         novoUsuario.setDataNascimento(form.getDataNascimento());
         novoUsuario.setTelefone(form.getTelefone());
         novoUsuario.setUsuario(dadosUsuario);
@@ -75,7 +74,6 @@ public class UsuarioService {
 
         Usuario usuario = resultado.get();
 
-        // Compara se a senha digitada bate com a criptografada do banco
         if (!encoder.matches(senha, usuario.getSenha())) {
             System.out.println("[AVISO] O usuário '" + email + "' existe, mas a senha digitada está incorreta.");
             return null;
@@ -86,7 +84,6 @@ public class UsuarioService {
     }
 
     public String alterarSenha(UsuarioDTO form) {
-        // Validação de Emojis na nova senha
         if (Validador.contemEmoji(form.getSenha())) {
             return "A nova senha não pode conter emojis.";
         }
@@ -108,7 +105,6 @@ public class UsuarioService {
     }
 
     public String atualizarSenha(UsuarioDTO form) {
-        // Validação de Emojis na alteração de senha do perfil
         if (Validador.contemEmoji(form.getNovaSenha())) {
             return "A nova senha não pode conter emojis.";
         }
@@ -130,7 +126,10 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
-        // Validação da data de nascimento se preenchida
+        if (Validador.contemEmoji(form.getNomeCompleto())) {
+            return "O nome completo não pode conter emojis.";
+        }
+
         if (form.getDataNascimento() == null) {
             return "Data de nascimento inválida!";
         }
@@ -141,7 +140,9 @@ public class UsuarioService {
             return "E-mail não encontrado.";
         }
 
-        Optional<Modelo> modeloBusca = modeloRepository.findByUsuario(usuarioBusca.get());
+        Usuario usuario = usuarioBusca.get();
+
+        Optional<Modelo> modeloBusca = modeloRepository.findByUsuario(usuario);
 
         if (modeloBusca.isEmpty()) {
             return "Perfil de usuário não encontrado.";
@@ -149,18 +150,24 @@ public class UsuarioService {
 
         Modelo modelo = modeloBusca.get();
 
-        // Atribuição direta do LocalDate vindo da DTO
+        // 1. Atualiza o Nome Completo na entidade Usuario
+        if (form.getNomeCompleto() != null && !form.getNomeCompleto().trim().isEmpty()) {
+            usuario.setNomeUsuario(form.getNomeCompleto());
+            usuarioRepository.save(usuario);
+        }
+
+        // 2. Atualiza a Data de Nascimento e o Telefone na entidade Modelo
         modelo.setDataNascimento(form.getDataNascimento());
         modelo.setTelefone(form.getTelefone());
+        modeloRepository.save(modelo);
 
         return null;
     }
 
+    // MÉTODO QUE FALTAVA PARA REMOVER O ERRO EM VERMELHO
     public UsuarioDTO converterModelParaDTO(Modelo usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setNomeCompleto(usuario.getUsuario().getNomeUsuario());
-
-        // Atribuição direta do LocalDate para a DTO
         usuarioDTO.setDataNascimento(usuario.getDataNascimento());
         usuarioDTO.setEmail(usuario.getUsuario().getEmail());
         usuarioDTO.setTelefone(usuario.getTelefone());
