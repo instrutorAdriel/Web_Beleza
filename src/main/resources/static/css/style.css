@@ -2910,6 +2910,11 @@ input::-ms-clear {
     background: var(--fundo-input);
 }
 
+.cadastro-container .perfil-nascimento-controles {
+    background: rgba(250, 250, 250, 0.9);
+    border-color: #D2D6DC;
+}
+
 .perfil-nascimento-controles .data-parte {
     width: 2.2ch;
     min-width: 0;
@@ -2919,6 +2924,10 @@ input::-ms-clear {
     background: transparent;
     text-align: center;
     font: inherit;
+}
+
+.cadastro-container .perfil-nascimento-controles .data-parte {
+    color: #2D3748;
 }
 
 .perfil-nascimento-controles .data-ano {
@@ -2952,6 +2961,19 @@ input::-ms-clear {
     background: transparent;
     cursor: pointer;
     color: #334155;
+    font-size: 1.15rem;
+}
+
+body.body-perfil .perfil-calendario-abrir {
+    font-size: 1.1rem;
+}
+
+body.body-perfil .perfil-nascimento-controles {
+    height: 44px;
+}
+
+body.body-perfil .perfil-calendario-abrir i {
+    transform: scale(0.65);
 }
 
 .perfil-calendario-abrir:hover {
