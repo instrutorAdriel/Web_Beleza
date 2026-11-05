@@ -2,7 +2,6 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.dto.AgendamentoDTO;
 import com.app.beleza.respository.AgendamentoRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -193,10 +192,8 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho + '-' + #filtroStr")
     public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-        aplicarDelayProtecao(300);
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
 
         // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
