@@ -70,6 +70,7 @@
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid var(--senac-laranja);
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 }
 
 .header-container {
@@ -249,7 +250,7 @@
 .hero-banner {
     position: relative;
     width: 100%;
-    height: 550px;
+    height: 700px;
     border-bottom: 1px solid #1e293b;
     overflow: hidden;
     background-color: #020617;
@@ -276,11 +277,11 @@
 }
 
 #slide1 {
-    background-image: url('../img/img1.jpeg');
+    background-image: url('../img/img1.png');
 }
 
 #slide2 {
-    background-image: url('../img/img2.jpeg');
+    background-image: url('../img/img2.png');
 }
 
 #slide3 {
@@ -2918,4 +2919,124 @@ input::-ms-clear {
     #modal-dep-img1, #modal-dep-img2 {
         max-height: 250px; /* Diminui a altura das fotos no celular */
     }
+
+    /* =========================================================
+       CORREÇÃO DEFINITIVA DO BANNER RESPONSIVO
+       ========================================================= */
+
+    /* Tablet */
+    @media (max-width: 768px) {
+
+        .hero-banner {
+            width: 100%;
+            height: auto !important;
+            min-height: 0 !important;
+            aspect-ratio: 1024 / 375;
+            padding: 0 !important;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+
+            /* Mostra a imagem inteira */
+            background-size: contain !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+        }
+
+        /* Evita que o conteúdo altere a altura do banner */
+        .hero-conteudo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            max-width: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .hero-conteudo h1 {
+            font-size: clamp(18px, 4vw, 32px);
+        }
+
+        .hero-conteudo p {
+            font-size: clamp(12px, 2.5vw, 16px);
+            margin-bottom: 15px;
+        }
+
+        .hero-botoes {
+            pointer-events: auto;
+            gap: 10px;
+        }
+
+        .arrow {
+            width: 38px;
+            height: 38px;
+            font-size: 23px;
+        }
+
+        .prev {
+            left: 8px;
+        }
+
+        .next {
+            right: 8px;
+        }
+    }
+
+    /* Celulares menores */
+    @media (max-width: 480px) {
+
+        .hero-banner {
+            aspect-ratio: 1024 / 375;
+        }
+
+        .slide {
+            background-size: contain !important;
+            background-position: center center !important;
+        }
+
+        .arrow {
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+        }
+
+        .hero-conteudo {
+            padding: 8px;
+        }
+
+        .hero-conteudo h1 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .hero-conteudo p {
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .btn-principal,
+        .btn-secundario {
+            padding: 8px 14px;
+            font-size: 11px;
+        }
+    }
+
 }
