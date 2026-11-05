@@ -116,6 +116,15 @@ public class AgendamentoService {
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
+        boolean conflitoDeHorario = agendamentoRepository.existsConflitoDeHorario(
+                usuarioLogado.getId(),
+                SituacaoAgendamento.CANCELADO,
+                disp.getDataDisponibilidade(),
+                disp.getHoraInicio(),
+                disp.getHoraFim());
+        if (conflitoDeHorario) {
+            throw new RuntimeException("Você já possui um agendamento nesse horário. Escolha outro horário para evitar conflitos entre unidades.");
+        }
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
@@ -124,7 +133,8 @@ public class AgendamentoService {
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
-        ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
+        // Todo agendamento nasce PENDENTE. Só passa a CONFIRMADO depois que o instrutor da unidade confirmar a presença.
+        ag.setSituacao(SituacaoAgendamento.PENDENTE);
         ag.setObservacao("");
         ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
 
