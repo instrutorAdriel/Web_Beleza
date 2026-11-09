@@ -2012,15 +2012,15 @@ input::-ms-clear {
     justify-content: center;
     gap: 8px;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 0.95rem;
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
-    background: linear-gradient(135deg, var(--senac-laranja) 0%, var(--senac-laranja-hover) 100%);
+    background: var(--senac-laranja);
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(247, 148, 30, 0.25);
-    transition: all 0.25s ease;
+    transition: all 0.3s ease-in-out;
 }
 
 .btn:hover {
