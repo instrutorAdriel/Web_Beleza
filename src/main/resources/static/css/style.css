@@ -70,6 +70,7 @@
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid var(--senac-laranja);
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 }
 
 .header-container {
@@ -249,7 +250,7 @@
 .hero-banner {
     position: relative;
     width: 100%;
-    height: 550px;
+    height: 700px;
     border-bottom: 1px solid #1e293b;
     overflow: hidden;
     background-color: #020617;
@@ -276,11 +277,11 @@
 }
 
 #slide1 {
-    background-image: url('../img/img1.jpeg');
+    background-image: url('../img/img1.png');
 }
 
 #slide2 {
-    background-image: url('../img/img2.jpeg');
+    background-image: url('../img/img2.png');
 }
 
 #slide3 {
@@ -648,7 +649,7 @@
 
 /* Hover padrão: Apenas levanta 6px mantendo exatamente a mesma altura */
 .card-servico:hover {
-    border-color: var(--senac-laranja);
+        border-color: var(--senac-laranja);
     box-shadow: 0 12px 24px rgba(247, 148, 30, 0.12);
 }
 
@@ -2614,15 +2615,14 @@ input::-ms-clear {
     object-fit: cover;
     display: block;
 }
-
-/* ==========================================================================
-   OLHO DE MOSTRAR/OCULTAR SENHA - ABA CONFIGURAÇÃO DO PERFIL
-   ========================================================================== */
-#perfil-configuracao .group-input .ssp-password-wrapper {
-    position: relative;
-    display: block;
-    width: 100%;
-}
+    /* ==========================================================================
+       OLHO DE MOSTRAR/OCULTAR SENHA - ABA CONFIGURAÇÃO DO PERFIL
+       ========================================================================== */
+    #perfil-configuracao .group-input .ssp-password-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
 
 #perfil-configuracao .group-input .ssp-password-wrapper input {
     display: block;
@@ -2774,6 +2774,10 @@ input::-ms-clear {
     }
 }
 
+    #perfil-configuracao .group-input .ssp-password-wrapper .ssp-toggle-password:hover {
+        color: #1f2937;
+    }
+
 /* ==========================================================================
    FILTROS DE AGENDAMENTO (PERFIL)
    ========================================================================== */
@@ -2860,6 +2864,9 @@ input::-ms-clear {
         padding: 1px 6px;
         font-size: 10px;
     }
+
+
+
 }
 
 /* ESTILO DOS FILTROS */
@@ -2891,6 +2898,165 @@ input::-ms-clear {
     scroll-margin-top: 100px;
 }
 
+.perfil-nascimento-controles {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 54px;
+    box-sizing: border-box;
+    padding: 0 48px 0 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: var(--fundo-input);
+}
+
+.cadastro-container .perfil-nascimento-controles {
+    background: rgba(250, 250, 250, 0.9);
+    border-color: #D2D6DC;
+}
+
+.cadastro-container .perfil-nascimento-controles:focus-within {
+    border: 1px solid transparent;
+    background:
+        linear-gradient(rgba(250, 250, 250, 0.9), rgba(250, 250, 250, 0.9)) padding-box,
+        linear-gradient(135deg, #f7941e, #fbc02d) border-box;
+    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2);
+}
+
+.perfil-nascimento-controles .data-parte {
+    width: 2.2ch;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    text-align: center;
+    font: inherit;
+}
+
+.cadastro-container .perfil-nascimento-controles .data-parte {
+    color: #2D3748;
+    flex: 0 0 auto;
+    width: 3ch;
+    font-size: 0.9rem;
+}
+
+.cadastro-container .perfil-nascimento-controles .data-ano {
+    width: 5ch;
+}
+
+.cadastro-container .perfil-calendario-abrir i {
+    transform: scale(0.65);
+}
+
+.perfil-nascimento-controles .data-ano {
+    width: 4.4ch;
+}
+
+.perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+    border-color: #dc2626;
+}
+
+.data-separador {
+    padding: 0 3px;
+    color: #64748b;
+}
+
+.campo-data-submetido {
+    display: none;
+}
+
+.perfil-calendario-abrir {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    cursor: pointer;
+    color: #334155;
+    font-size: 1.15rem;
+}
+
+body.body-perfil .perfil-calendario-abrir {
+    font-size: 1.1rem;
+}
+
+body.body-perfil .perfil-nascimento-controles {
+    width: 100%;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+body.body-perfil #perfil-informacao #nome {
+    width: 100%;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+body.body-perfil .perfil-nascimento-controles:focus-within {
+    border: 2px solid #000;
+}
+
+body.body-perfil .perfil-nascimento-controles .data-parte {
+    flex: 0 0 auto;
+    width: 3ch;
+    font-size: 0.9rem;
+}
+
+body.body-perfil .perfil-nascimento-controles .data-ano {
+    width: 5ch;
+}
+
+body.body-perfil .perfil-nascimento-controles .data-separador {
+    font-size: 0.9rem;
+}
+
+body.body-perfil .perfil-calendario-abrir i {
+    transform: scale(0.65);
+}
+
+.perfil-calendario-abrir:hover {
+    background: #f1f5f9;
+}
+
+.perfil-calendario-abrir i {
+    font-size: 1.5rem;
+}
+
+.perfil-nascimento {
+    position: relative;
+}
+
+.perfil-calendario {
+    position: absolute;
+    z-index: 20;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 6px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+}
+
+.perfil-calendario[hidden] { display: none; }
+.perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+.perfil-calendario-seletores label { display: grid; gap: 3px; }
+.perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+.perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+.perfil-calendario-grade button:hover:not(:disabled),
+.perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+.perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+.perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
+
 /* Ajustes para telas de celular (Mobile) */
 @media (max-width: 768px) {
     .barra-filtros-depoimentos {
@@ -2909,6 +3075,126 @@ input::-ms-clear {
     #modal-dep-img1, #modal-dep-img2 {
         max-height: 250px;
     }
+
+    /* =========================================================
+       CORREÇÃO DEFINITIVA DO BANNER RESPONSIVO
+       ========================================================= */
+
+    /* Tablet */
+    @media (max-width: 768px) {
+
+        .hero-banner {
+            width: 100%;
+            height: auto !important;
+            min-height: 0 !important;
+            aspect-ratio: 1024 / 375;
+            padding: 0 !important;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+
+            /* Mostra a imagem inteira */
+            background-size: contain !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+        }
+
+        /* Evita que o conteúdo altere a altura do banner */
+        .hero-conteudo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            max-width: 100%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .hero-conteudo h1 {
+            font-size: clamp(18px, 4vw, 32px);
+        }
+
+        .hero-conteudo p {
+            font-size: clamp(12px, 2.5vw, 16px);
+            margin-bottom: 15px;
+        }
+
+        .hero-botoes {
+            pointer-events: auto;
+            gap: 10px;
+        }
+
+        .arrow {
+            width: 38px;
+            height: 38px;
+            font-size: 23px;
+        }
+
+        .prev {
+            left: 8px;
+        }
+
+        .next {
+            right: 8px;
+        }
+    }
+
+    /* Celulares menores */
+    @media (max-width: 480px) {
+
+        .hero-banner {
+            aspect-ratio: 1024 / 375;
+        }
+
+        .slide {
+            background-size: contain !important;
+            background-position: center center !important;
+        }
+
+        .arrow {
+            width: 32px;
+            height: 32px;
+            font-size: 20px;
+        }
+
+        .hero-conteudo {
+            padding: 8px;
+        }
+
+        .hero-conteudo h1 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .hero-conteudo p {
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .btn-principal,
+        .btn-secundario {
+            padding: 8px 14px;
+            font-size: 11px;
+        }
+    }
+
 }
 
 /* ==========================================================================

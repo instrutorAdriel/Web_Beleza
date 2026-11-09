@@ -73,7 +73,7 @@ public class PerfilController {
             return "redirect:/login";
         }
 
-        agendamentoService.atualizarAgendamentosVencidos(usuario);
+        agendamentoService.confirmarAgendamentosPendentes(usuario);
 
         Optional<Modelo> resultado = modeloRepository.findByUsuario(usuario);
 

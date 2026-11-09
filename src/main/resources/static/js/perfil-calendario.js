@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         diaCampo.setCustomValidity(vazio || data
             ? "" : "Informe uma data válida entre 01/01/1900 e hoje.");
         diaCampo.setAttribute("aria-invalid", String(!vazio && !data));
+        campo.dispatchEvent(new Event("input", { bubbles: true }));
+        campo.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
     const preencherPartes = data => {
@@ -159,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!alvo || alvo.disabled) return;
         const data = new Date(anoVisual, mesVisual, Number(alvo.dataset.dia));
         preencherPartes(data);
-        campo.dispatchEvent(new Event("change", { bubbles: true }));
         fechar();
     });
 
