@@ -201,10 +201,6 @@
                    class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
                     Todos
                 </a>
-                <a th:href="@{/perfil(aba='agendamento', filtro='PENDENTE')}"
-                   class="filtro-btn" th:classappend="${filtroAtivo == 'PENDENTE'} ? 'ativo'">
-                    Pendentes
-                </a>
                 <a th:href="@{/perfil(aba='agendamento', filtro='CONFIRMADO')}"
                    class="filtro-btn" th:classappend="${filtroAtivo == 'CONFIRMADO'} ? 'ativo'">
                     Confirmados
@@ -241,7 +237,7 @@
                     <div class="card-agendamento-corpo">
                         <div class="card-agendamento-status"
                              th:classappend="${ag.statusClasseCss()}"
-                             th:text="${ag.statusTexto()}">Status</div>
+                             th:text="${ag.statusTexto() == 'NAO_COMPARECEU' ? 'NÃO COMPARECEU' : ag.statusTexto()}">Status</div>
 
                         <h3 class="card-agendamento-titulo" th:text="${ag.nomeServico}">Serviço</h3>
 
