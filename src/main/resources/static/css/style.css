@@ -3057,6 +3057,34 @@ body.body-perfil .perfil-calendario-abrir i {
 .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
 .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
 
+.modal-depoimento-imagens {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-depoimento-imagens img {
+    width: calc(50% - 5px);
+    min-width: 0;
+    border-radius: 8px;
+    object-fit: cover;
+    max-height: 480px;
+}
+
+.modal-depoimento-imagens.imagem-unica img {
+    width: 100%;
+    max-height: 500px;
+}
+
+@media (max-width: 600px) {
+    .modal-depoimento-imagens {
+        flex-direction: column;
+    }
+
+    .modal-depoimento-imagens img {
+        width: 100%;
+    }
+}
+
 /* Ajustes para telas de celular (Mobile) */
 @media (max-width: 768px) {
     .barra-filtros-depoimentos {
