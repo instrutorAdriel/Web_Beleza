@@ -126,7 +126,7 @@
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
                             <i class="fa-solid fa-eye" id="eyeIconNova"></i>
@@ -137,7 +137,7 @@
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
                             <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
