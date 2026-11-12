@@ -199,28 +199,36 @@ function inicializarNavAtiva() {
 }
 
 /**
- * MODULE: CONFIRMAÇÃO DE LOGOUT
+ * MODULE: CONFIRMAÇÃO DE LOGOUT (VINCULADO AO BOTÃO SAIR)
  */
 function inicializarLogout() {
     const btnSair = document.querySelector('.btn-sair');
+    const containerUsuario = document.querySelector('.usuario-logado');
 
-    if (!btnSair) return;
+    if (!btnSair || !containerUsuario) return;
 
     btnSair.addEventListener('click', function (e) {
         e.preventDefault();
+
+        // Se já estiver aberto, fecha ao clicar novamente
+        const popoverExistente = containerUsuario.querySelector('.popover-logout');
+        if (popoverExistente) {
+            popoverExistente.remove();
+            return;
+        }
 
         const popover = document.createElement('div');
         popover.className = 'popover-logout';
         popover.innerHTML = `
             <p>Tem certeza que deseja sair?</p>
             <div class="popover-botoes">
-                <button class="popover-btn-sim">Sim, sair</button>
-                <button class="popover-btn-nao">Cancelar</button>
+                <button type="button" class="popover-btn-sim">Sim, sair</button>
+                <button type="button" class="popover-btn-nao">Cancelar</button>
             </div>
         `;
 
-        document.querySelector('.popover-logout')?.remove();
-        document.body.appendChild(popover);
+        // Anexa diretamente dentro de .usuario-logado para seguir o botão Sair
+        containerUsuario.appendChild(popover);
 
         popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
             window.location.href = '/logout';
@@ -231,8 +239,8 @@ function inicializarLogout() {
         });
 
         setTimeout(() => {
-            document.addEventListener('click', function fechar(e) {
-                if (!popover.contains(e.target) && e.target !== btnSair) {
+            document.addEventListener('click', function fechar(ev) {
+                if (!popover.contains(ev.target) && ev.target !== btnSair) {
                     popover.remove();
                     document.removeEventListener('click', fechar);
                 }

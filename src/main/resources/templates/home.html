@@ -33,6 +33,15 @@
         <div th:if="${usuario != null}" class="usuario-logado">
             <a th:href="@{/perfil}" th:text="${usuarioNome}">Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
+
+            <!-- Popover ancorado dentro do bloco do usuário -->
+            <div class="popover-logout" style="display: none;">
+                <p>Tem certeza que deseja sair?</p>
+                <div class="popover-botoes">
+                    <button type="button" class="popover-btn-sim">Sim, sair</button>
+                    <button type="button" class="popover-btn-nao">Cancelar</button>
+                </div>
+            </div>
         </div>
     </div>
 </header>

@@ -148,6 +148,7 @@
     transform: translateY(-2px);
 }
 .usuario-logado {
+    position: relative; /* Âncora para o popover seguir este bloco */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -186,7 +187,8 @@
 .popover-logout {
     position: absolute;
     top: 70px;
-    right: 420px;
+    right: 5px;
+    left: -37px;
     background: #ffffff;
     border: 1px solid var(--borda-suave);
     border-radius: 10px;
