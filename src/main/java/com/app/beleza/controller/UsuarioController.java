@@ -121,31 +121,41 @@ public class UsuarioController {
     }
 
     @PostMapping("/recuperar-senha")
-    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model) {
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model,
+                                 RedirectAttributes redirect) {   // NOVO: parâmetro para o redirect
+
+        // (igual a antes) e-mail vazio
         if (form.getEmail() == null || form.getEmail().isBlank()) {
             model.addAttribute("erro", "E-mail em branco");
             return "recuperar-senha";
         }
-        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
+        // (igual, só reorganizado) formato do e-mail inválido
         if (!Validador.isEmailValido(form.getEmail())) {
-            model.addAttribute("erro", "E-mail inválido");
-            return "recuperar-senha";
-        } else if (res.isEmpty()) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         }
 
-        Usuario usuario = res.get();
+        // (igual, só reorganizado) busca o usuário; se não existe, erro
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
+        if (res.isEmpty()) {
+            model.addAttribute("erro", "E-mail inválido");
+            return "recuperar-senha";
+        }
 
-        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null) {
-            model.addAttribute("succ", "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
-        } else {
+        // (igual a antes) tenta enviar. Se o service devolveu texto, deu erro.
+        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), res.get()) != null) {
             model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
             return "recuperar-senha";
         }
 
-        return "recuperar-senha";
+        // ALTERADO: antes fazia "return recuperar-senha" direto.
+        // Agora guarda a mensagem e REDIRECIONA para o GET.
+        // Assim o F5 recarrega só a página e NÃO reenvia o POST (era isso que
+        // gerava o código novo).
+        redirect.addFlashAttribute("succ",
+                "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
+        return "redirect:/recuperar-senha";
     }
 
     @GetMapping("/alterar-senha/{token}")
@@ -162,21 +172,29 @@ public class UsuarioController {
 
     @PostMapping("/alterar-senha/{token}")
     public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
+
+        // (igual a antes) token inválido ou expirado: manda para fora
         if (passwordResetService.verificarToken(token) != null) {
             return "redirect:/indefinido";
         }
 
+        // (igual a antes) descobre o e-mail pelo token e tenta trocar a senha
         form.setEmail(passwordResetService.retornarUsuario(token).getEmail());
         String res = usuarioService.alterarSenha(form);
 
+        // se deu erro na troca (ex.: senha fraca), volta para a página
         if (res != null) {
             model.addAttribute("erro", res);
             model.addAttribute("usuarioDTO", form);
+            model.addAttribute("token", token);   // NOVO: o HTML provavelmente precisa do token no formulário
             return "alterar-senha";
         }
 
-        model.addAttribute("succ", "Senha alterada com sucesso!");
+        // NOVO: senha trocada com sucesso, então apaga o token.
+        // O mesmo link não funciona mais.
+        passwordResetService.invalidarToken(token);
 
+        model.addAttribute("succ", "Senha alterada com sucesso!");
         return "alterar-senha";
     }
 }
