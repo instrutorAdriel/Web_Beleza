@@ -16,10 +16,6 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("kc-form-register") || document.querySelector("form");
-    // Desativa a validação nativa do navegador (type="email") para que a validação
-    // personalizada deste script seja sempre a utilizada no submit.
-    if (form) form.setAttribute("novalidate", "");
-
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
     // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
@@ -43,11 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
     // =======================================================
 
-    // Regex universal de Emoji (com flag "g", usada apenas em .replace)
+    // Regex universal de Emoji (com flag g, usada apenas para o replace)
     const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
 
-    // Versão SEM a flag "g", usada em .test().
-    // Regex com "g" guarda o lastIndex entre chamadas e pode retornar resultados errados.
+    // Mesma regex SEM a flag g, usada apenas para .test()
+    // (com g, o .test() guarda o lastIndex e pode alternar entre true/false)
     const regexEmojiTeste = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/;
 
     // Regex para identificar domínios Punycode (ex: xn--...)
@@ -60,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     todosOsCamposTexto.forEach(function (campo) {
 
         // Processa a digitação ao vivo
-        campo.addEventListener('input', function (e) {
+        campo.addEventListener("input", function (e) {
             const input = e.target;
             const valorOriginal = input.value;
             let valorLimpo = valorOriginal.replace(regexEmoji, "");
@@ -75,23 +71,76 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 input.value = valorLimpo;
 
-                // setSelectionRange não funciona em input type="email" em alguns navegadores
                 try {
                     const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
                     input.setSelectionRange(novaPosicao, novaPosicao);
                 } catch (err) {
-                    // ignora: o cursor apenas vai para o fim do campo
+                    // inputs type="email" não permitem controlar o cursor; ignora
                 }
             }
         });
 
         // Limpeza extra para e-mails quando o usuário sai do campo (Garante que o Punycode convertido pelo navegador suma)
         if (campo.type === "email" || campo.name === "email" || campo.id === "email") {
-            campo.addEventListener('change', function (e) {
+            campo.addEventListener("change", function (e) {
                 e.target.value = e.target.value.replace(regexPunycode, "").replace(regexEmoji, "");
             });
         }
     });
+
+    // =======================================================
+    // 0.1 BLOQUEIO DE CARACTERES PROIBIDOS NO E-MAIL (ao digitar)
+    // =======================================================
+    if (emailInput) {
+        emailInput.addEventListener("input", function (e) {
+            const input = e.target;
+            const valorOriginal = input.value;
+
+            // Espaços não são permitidos em lugar nenhum do e-mail
+            let valor = valorOriginal.replace(/\s/g, "");
+
+            // Separa no PRIMEIRO @; qualquer @ extra é removido (só pode existir um)
+            const posArroba = valor.indexOf("@");
+            let usuario = posArroba === -1 ? valor : valor.substring(0, posArroba);
+            let resto = posArroba === -1 ? "" : valor.substring(posArroba + 1).replace(/@/g, "");
+
+            // Domínio: só letras, números, ponto e hífen
+            resto = resto.replace(/[^A-Za-z0-9.\-]/g, "");
+
+            // Domínio não pode ter pontos seguidos nem começar com ponto
+            resto = resto.replace(/\.{2,}/g, ".").replace(/^\./, "");
+
+            // Remove ( ) [ ] { } , ; : \ " < > do nome de usuário
+            usuario = usuario.replace(/[()\[\]{},;:\\"<>]/g, "");
+
+            // Não permite pontos seguidos (.. vira .)
+            usuario = usuario.replace(/\.{2,}/g, ".");
+
+            // Não permite começar com ponto
+            usuario = usuario.replace(/^\./, "");
+
+            // Se o @ foi digitado logo depois de um ponto (joao.@), remove o ponto final
+            if (posArroba !== -1) {
+                usuario = usuario.replace(/\.$/, "");
+            }
+
+            const valorLimpo = posArroba === -1 ? usuario : usuario + "@" + resto;
+
+            if (valorLimpo !== valorOriginal) {
+                const posicaoAtual = input.selectionStart;
+                const diferenca = valorOriginal.length - valorLimpo.length;
+                input.value = valorLimpo;
+
+                // Mantém o cursor no lugar certo
+                try {
+                    const novaPosicao = Math.max(0, posicaoAtual - diferenca);
+                    input.setSelectionRange(novaPosicao, novaPosicao);
+                } catch (err) {
+                    // inputs type="email" não permitem controlar o cursor; ignora
+                }
+            }
+        });
+    }
 
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
@@ -159,15 +208,15 @@ document.addEventListener("DOMContentLoaded", function () {
         // Validação Global de Emojis no Submit (Garantia extra)
         todosOsCamposTexto.forEach(function (campo) {
             if (campo && regexEmojiTeste.test(campo.value)) {
-                erros.push(`O campo não pode conter emojis.`);
+                erros.push("O campo não pode conter emojis.");
                 marcarErro(campo);
             }
         });
 
         // Validação do E-mail
-        const emailValue = emailInput.value.trim();
-        if (!emailValido(emailValue)) {
-            erros.push("O e-mail inserido é inválido. Antes do @ não pode haver espaços, ( ) [ ] { } , ; : \\ \" < >, nem pontos no início, no fim ou seguidos.");
+        const errosEmail = validarEmail(emailInput.value.trim());
+        if (errosEmail.length > 0) {
+            erros.push(...errosEmail);
             marcarErro(emailInput);
         } else {
             limparErro(emailInput);
@@ -237,6 +286,51 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Valida o e-mail e retorna uma lista de mensagens de erro (vazia = válido)
+    function validarEmail(email) {
+        const erros = [];
+
+        // Só pode existir um único @
+        const quantidadeArroba = (email.match(/@/g) || []).length;
+        if (quantidadeArroba !== 1) {
+            erros.push("O e-mail deve conter exatamente um '@'.");
+            return erros; // sem um @ único não dá para separar usuário e domínio
+        }
+
+        const partes = email.split("@");
+        const usuario = partes[0];
+        const dominio = partes[1];
+
+        if (!usuario) {
+            erros.push("O e-mail precisa ter um nome de usuário antes do '@'.");
+        } else {
+            // Espaços em branco
+            if (/\s/.test(usuario)) {
+                erros.push("O nome de usuário do e-mail não pode conter espaços.");
+            }
+            // Pontuação e agrupamento: ( ) [ ] { } , ; : \ " < >
+            if (/[()\[\]{},;:\\"<>]/.test(usuario)) {
+                erros.push("O nome de usuário do e-mail não pode conter ( ) [ ] { } , ; : \\ \" < >.");
+            }
+            // Ponto no início ou no fim
+            if (usuario.startsWith(".") || usuario.endsWith(".")) {
+                erros.push("O nome de usuário do e-mail não pode começar nem terminar com ponto.");
+            }
+            // Pontos seguidos
+            if (usuario.includes("..")) {
+                erros.push("O nome de usuário do e-mail não pode ter dois ou mais pontos seguidos.");
+            }
+        }
+
+        // Domínio básico: precisa de ponto e não pode ter espaços
+        if (!dominio || !dominio.includes(".") || /\s/.test(dominio)
+            || dominio.startsWith(".") || dominio.endsWith(".")) {
+            erros.push("O domínio do e-mail é inválido (ex: dominio.com).");
+        }
+
+        return erros;
+    }
+
     // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
     function atualizarAlertaIdade() {
         const partes = dataNascimentoInput.value.split("/");
@@ -282,35 +376,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             alertaIdade.style.display = "none";
         }
-    }
-
-    // Valida o e-mail conforme as regras da tarefa (parte antes do @)
-    function emailValido(email) {
-        if (typeof email !== "string") return false;
-
-        // Só pode existir um único @
-        const partes = email.split("@");
-        if (partes.length !== 2) return false;
-
-        const usuario = partes[0];
-        const dominio = partes[1];
-        if (!usuario || !dominio) return false;
-
-        // Sem espaços em branco no usuário
-        if (/\s/.test(usuario)) return false;
-
-        // Sem pontuação/agrupamento proibidos: ( ) [ ] { } , ; : \ " < >
-        if (/[()\[\]{},;:\\"<>]/.test(usuario)) return false;
-
-        // Sem ponto no início/fim e sem pontos seguidos
-        if (usuario.startsWith(".") || usuario.endsWith(".")) return false;
-        if (usuario.includes("..")) return false;
-
-        // Domínio: mantém a exigência do "." que já existia
-        if (/\s/.test(dominio) || !dominio.includes(".")) return false;
-        if (dominio.startsWith(".") || dominio.endsWith(".") || dominio.includes("..")) return false;
-
-        return true;
     }
 
     // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
