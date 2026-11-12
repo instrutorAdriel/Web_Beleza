@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +31,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/perfil")
 public class PerfilController {
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -59,21 +59,21 @@ public class PerfilController {
     public String exibirPerfil(@RequestParam(required = false, defaultValue = "informacao") String aba,
                                @RequestParam(defaultValue = "0") int pagina,
                                @RequestParam(defaultValue = "5") int tamanho,
-                               @RequestParam(required = false, defaultValue = "TODOS") String filtro, // Parâmetro do filtro
-                               @ModelAttribute("usuarioDTO") UsuarioDTO form,
+                               @RequestParam(required = false, defaultValue = "TODOS") String filtro,
                                Model model,
                                HttpSession session) {
 
         if (pagina < 0) {
             pagina = 0;
         }
+
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 
         if (usuario == null) {
             return "redirect:/login";
         }
 
-        agendamentoService.atualizarAgendamentosVencidos(usuario);
+        agendamentoService.confirmarAgendamentosPendentes(usuario);
 
         Optional<Modelo> resultado = modeloRepository.findByUsuario(usuario);
 
@@ -81,19 +81,24 @@ public class PerfilController {
             return "redirect:/";
         }
 
+        // Procura os dados atualizados do banco de dados
         UsuarioDTO usuarioAtualizado = usuarioService.converterModelParaDTO(resultado.get());
 
         model.addAttribute("tituloPagina", "Bem-vindo " + usuarioAtualizado.getNomeCompleto());
-        model.addAttribute("usuarioDTO", usuarioAtualizado);
+
+        // Evita conflitos de variáveis e garante que a tela exiba os dados corretos
+        if (!model.containsAttribute("usuarioDTO")) {
+            model.addAttribute("usuarioDTO", usuarioAtualizado);
+        }
+
         model.addAttribute("abaAtiva", aba);
 
         if ("agendamento".equals(aba)) {
-            // Passa o filtro para o service fazer a query correta no banco
             Page<AgendamentoDTO> paginaAgendamentos = agendamentoService
                     .listarAgendamentosPorUsuarioPaginado(resultado.get().getIdModelo(), usuario.getId(), pagina, tamanho, filtro);
 
             model.addAttribute("paginaAgendamentos", paginaAgendamentos);
-            model.addAttribute("filtroAtivo", filtro); // Envia o filtro atual para o HTML
+            model.addAttribute("filtroAtivo", filtro);
         }
 
         if ("depoimento".equals(aba)) {
@@ -112,17 +117,22 @@ public class PerfilController {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         if (usuario == null) return "redirect:/login";
 
+        // Garante que o e-mail do utilizador na sessão é passado para a procura do Service
+        form.setEmail(usuario.getEmail());
+
         String res = usuarioService.salvarUsuarioInfo(form);
         if (res != null) {
             redirectAttributes.addFlashAttribute("mensagemError", res);
             return "redirect:/perfil?aba=informacao";
         }
 
+        // Atualiza os dados da sessão com a entidade persistida no banco
         Optional<Usuario> resultado = usuarioRepository.findById(usuario.getId());
-        session.setAttribute("usuarioLogado", resultado.get());
+        if (resultado.isPresent()) {
+            session.setAttribute("usuarioLogado", resultado.get());
+        }
 
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Informações atualizadas com sucesso!");
-        redirectAttributes.addFlashAttribute("usuarioDTO", form);
 
         return "redirect:/perfil?aba=informacao";
     }

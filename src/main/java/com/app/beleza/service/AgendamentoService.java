@@ -2,7 +2,6 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.dto.AgendamentoDTO;
 import com.app.beleza.respository.AgendamentoRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,30 +36,16 @@ public class AgendamentoService {
 
 
     @Transactional
-    public void atualizarAgendamentosVencidos(Usuario usuarioLogado) {
+    @CacheEvict(value = "agendamentosUsuario", allEntries = true)
+    public void confirmarAgendamentosPendentes(Usuario usuarioLogado) {
         if (usuarioLogado == null) return;
 
-        // Puxa todos os agendamentos do usuário usando o método que JÁ EXISTE no seu Repository
         List<Agendamento> todosAgendamentos = agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
 
-        LocalDateTime agora = LocalDateTime.now();
-
         for (Agendamento ag : todosAgendamentos) {
-            // Só queremos atualizar os que estão CONFIRMADOS
-            if (ag.getSituacao() == SituacaoAgendamento.CONFIRMADO) {
-                Disponibilidade disp = ag.getDisponibilidade();
-
-                if (disp != null && disp.getDataDisponibilidade() != null && disp.getHoraFim() != null) {
-
-                    // Junta a data com a hora de fim (ex: 25/10/2026 às 18:00)
-                    LocalDateTime dataHoraFim = LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraFim());
-
-                    // Se a hora atual já passou da hora de fim do serviço, marca como REALIZADO
-                    if (agora.isAfter(dataHoraFim)) {
-                        ag.setSituacao(SituacaoAgendamento.REALIZADO);
-                        agendamentoRepository.save(ag);
-                    }
-                }
+            if (ag.getSituacao() == SituacaoAgendamento.PENDENTE) {
+                ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
+                agendamentoRepository.save(ag);
             }
         }
     }
@@ -133,8 +118,7 @@ public class AgendamentoService {
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
-        // Todo agendamento nasce PENDENTE. Só passa a CONFIRMADO depois que o instrutor da unidade confirmar a presença.
-        ag.setSituacao(SituacaoAgendamento.PENDENTE);
+        ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
         ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
 
@@ -193,10 +177,8 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "agendamentosUsuario", key = "#idUsuario + '-' + #pagina + '-' + #tamanho + '-' + #filtroStr")
     public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-        aplicarDelayProtecao(300);
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
 
         // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
-    const dataNascimentoInput = document.getElementById("dataNascimento");
+    const dataNascimentoInput = document.getElementById("data_nascimento");
     const nomeCompletoInput = document.getElementById("nomeCompleto");
     const nomeCompletoErro = document.getElementById("nomeCompleto-erro");
     const alertaIdade = document.getElementById("alertaIdade");
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 3. TRATAMENTO PARA INPUT TYPE="DATE" (NÃO ALTERA O VALOR, SÓ DISPARA O ALERTA)
+    // 3. Atualiza o alerta de idade quando a data do componente personalizado muda
     if (dataNascimentoInput) {
         dataNascimentoInput.addEventListener("change", function () {
             atualizarAlertaIdade();
@@ -162,17 +162,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Validação da Idade Mínima (Mínimo 14 anos)
-        // input type="date" entrega o valor em ISO: yyyy-MM-dd
         if (dataNascimentoInput.value) {
-            const partes = dataNascimentoInput.value.split("-");
+            const partes = dataNascimentoInput.value.split("/");
 
-            if (partes.length !== 3 || partes[0].length !== 4) {
+            if (partes.length !== 3 || partes[2].length !== 4) {
                 erros.push("Data de nascimento inválida.");
                 marcarErro(dataNascimentoInput);
             } else {
-                const ano = parseInt(partes[0], 10);
+                const dia = parseInt(partes[0], 10);
                 const mes = parseInt(partes[1], 10) - 1;
-                const dia = parseInt(partes[2], 10);
+                const ano = parseInt(partes[2], 10);
                 const dataNascimento = new Date(ano, mes, dia);
                 const hoje = new Date();
 
@@ -227,19 +226,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
-    // input type="date" entrega o valor em ISO: yyyy-MM-dd
     function atualizarAlertaIdade() {
-        const partes = dataNascimentoInput.value.split("-");
+        const partes = dataNascimentoInput.value.split("/");
 
-        // Só calcula quando a data estiver completa (yyyy-MM-dd)
-        if (partes.length !== 3 || partes[0].length !== 4) {
+        // Só calcula quando a data estiver completa (dd/MM/yyyy)
+        if (partes.length !== 3 || partes[2].length !== 4) {
             alertaIdade.style.display = "none";
             return;
         }
 
-        const ano = parseInt(partes[0], 10);
+        const dia = parseInt(partes[0], 10);
         const mes = parseInt(partes[1], 10) - 1;
-        const dia = parseInt(partes[2], 10);
+        const ano = parseInt(partes[2], 10);
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 

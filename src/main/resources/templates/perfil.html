@@ -7,6 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <script th:src="@{/js/toggle-senha.js}" defer></script>
+    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/sidebar.js}" defer></script>
+    <script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -24,6 +27,7 @@
     <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; color: var(--senac-laranja);"></i>
     <p style="margin-top: 15px; font-weight: bold; color: var(--texto-escuro);">Buscando agendamentos...</p>
 </div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
@@ -61,7 +65,7 @@
                 <div class="form-grid">
                     <div class="group-input">
                         <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
+                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}">
                     </div>
                     <div class="group-input perfil-nascimento">
                         <label for="data_nascimento_dia">Data de Nascimento</label>
@@ -295,8 +299,6 @@
                     </select>
                 </div>
 
-                <!-- TEXTO DO DEPOIMENTO -->
-                <!-- TEXTO DO DEPOIMENTO -->
                 <div class="group-input">
                     <label for="campoTextoDepoimento">Seu Depoimento</label>
 
@@ -315,6 +317,7 @@
                         </small>
                     </div>
                 </div>
+
                 <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
                     <label for="imagem1">Primeira Imagem</label>
