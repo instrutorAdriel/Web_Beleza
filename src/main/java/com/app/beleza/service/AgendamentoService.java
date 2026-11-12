@@ -1,3 +1,4 @@
+
 package com.app.beleza.service;
 
 import com.app.beleza.model.dto.AgendamentoDTO;
@@ -29,10 +30,17 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class AgendamentoService {
 
-    @Autowired private AgendamentoRepository agendamentoRepository;
-    @Autowired private DisponibilidadeRepository disponibilidadeRepository;
-    @Autowired private ModeloRepository modeloRepository;
-    @Autowired private InstrutorRepository instrutorRepository;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private DisponibilidadeRepository disponibilidadeRepository;
+
+    @Autowired
+    private ModeloRepository modeloRepository;
+
+    @Autowired
+    private InstrutorRepository instrutorRepository;
 
 
     @Transactional
@@ -40,7 +48,8 @@ public class AgendamentoService {
     public void confirmarAgendamentosPendentes(Usuario usuarioLogado) {
         if (usuarioLogado == null) return;
 
-        List<Agendamento> todosAgendamentos = agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
+        List<Agendamento> todosAgendamentos =
+                agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
 
         for (Agendamento ag : todosAgendamentos) {
             if (ag.getSituacao() == SituacaoAgendamento.PENDENTE) {
@@ -59,6 +68,7 @@ public class AgendamentoService {
 
         for (Disponibilidade d : disponibilidades) {
             boolean jaAgendou = false;
+
             if (usuarioLogado != null) {
                 jaAgendou = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                         usuarioLogado.getId(), d.getId(), SituacaoAgendamento.CANCELADO);
@@ -75,6 +85,7 @@ public class AgendamentoService {
                     d.getTotalVagas() != null ? d.getTotalVagas() : 0,
                     jaAgendou
             );
+
             lista.add(dto);
         }
 
@@ -98,18 +109,22 @@ public class AgendamentoService {
 
         boolean jaTem = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                 usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO);
+
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
+
         boolean conflitoDeHorario = agendamentoRepository.existsConflitoDeHorario(
                 usuarioLogado.getId(),
                 SituacaoAgendamento.CANCELADO,
                 disp.getDataDisponibilidade(),
                 disp.getHoraInicio(),
                 disp.getHoraFim());
+
         if (conflitoDeHorario) {
             throw new RuntimeException("Você já possui um agendamento nesse horário. Escolha outro horário para evitar conflitos entre unidades.");
         }
+
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
@@ -120,7 +135,9 @@ public class AgendamentoService {
         ag.setDisponibilidade(disp);
         ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
-        ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
+        ag.setDataHoraAgendamento(LocalDateTime.of(
+                disp.getDataDisponibilidade(),
+                disp.getHoraInicio()));
 
         agendamentoRepository.save(ag);
 
@@ -138,6 +155,11 @@ public class AgendamentoService {
                 .findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                         usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado."));
+
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
 
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
@@ -164,6 +186,11 @@ public class AgendamentoService {
             throw new RuntimeException("Esse agendamento já está cancelado.");
         }
 
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
+
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
 
@@ -177,17 +204,19 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
+    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(
+            Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(
+                pagina, tamanho, Sort.by("id").descending());
 
-        // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
         SituacaoAgendamento filtroEnum = null;
+
         if (filtroStr != null && !filtroStr.trim().isEmpty() && !filtroStr.equals("TODOS")) {
             try {
                 filtroEnum = SituacaoAgendamento.valueOf(filtroStr);
             } catch (IllegalArgumentException e) {
-                // Se mandarem um filtro inválido na URL, ignora e traz todos
+                // Filtro inválido: traz todos os agendamentos.
             }
         }
 
