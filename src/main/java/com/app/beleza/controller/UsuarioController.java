@@ -150,7 +150,7 @@ public class UsuarioController {
         if (PasswordResetService.EMAIL_JA_ENVIADO.equals(resultado)) {
             redirect.addFlashAttribute("erro",
                     "O e-mail já foi enviado. Verifique sua caixa de entrada e o spam. " +
-                            "Não é necessário clicar novamente; você poderá pedir outro link em 30 minutos.");
+                            "Não é necessário clicar novamente; você poderá pedir outro link em 3q minutos.");
             return "redirect:/recuperar-senha";
         }
 
