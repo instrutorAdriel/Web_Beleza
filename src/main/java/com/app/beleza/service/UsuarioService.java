@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Service
 @Transactional
@@ -26,6 +28,9 @@ public class UsuarioService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
+        String erroIdade = validarIdadeMinima(form.getDataNascimento());
+        if (erroIdade != null) return erroIdade;
+
         if (form.getEmail() == null || !Validador.isEmailPessoalComDominioValido(form.getEmail())) {
             return "Informe um e-mail pessoal válido (Gmail, Hotmail, Outlook e outros provedores pessoais).";
         }
@@ -150,6 +155,9 @@ public class UsuarioService {
             return "Data de nascimento inválida!";
         }
 
+        String erroIdade = validarIdadeMinima(form.getDataNascimento());
+        if (erroIdade != null) return erroIdade;
+
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
 
         if (usuarioBusca.isEmpty()) {
@@ -177,6 +185,16 @@ public class UsuarioService {
         modelo.setTelefone(form.getTelefone());
         modeloRepository.save(modelo);
 
+        return null;
+    }
+
+    private String validarIdadeMinima(LocalDate dataNascimento) {
+        if (dataNascimento == null || dataNascimento.isAfter(LocalDate.now())) {
+            return "Informe uma data de nascimento válida.";
+        }
+        if (Period.between(dataNascimento, LocalDate.now()).getYears() < 12) {
+            return "Não é permitido criar ou atualizar a conta de menores de 12 anos, conforme as regras do salão.";
+        }
         return null;
     }
 

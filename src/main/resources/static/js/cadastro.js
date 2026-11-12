@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
             limparErro(emailInput);
         }
 
-        // Validação da Idade Mínima (Mínimo 14 anos)
+        // Validação da idade mínima permitida pelo salão (12 anos)
         if (dataNascimentoInput.value) {
             const partes = dataNascimentoInput.value.split("/");
 
@@ -209,8 +209,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         idade--;
                     }
 
-                    if (idade < 14) {
-                        erros.push("É necessário ter no mínimo 14 anos para se cadastrar.");
+                    if (idade < 12) {
+                        erros.push("Não é permitido criar uma conta para menores de 12 anos.");
                         marcarErro(dataNascimentoInput);
                     } else {
                         limparErro(dataNascimentoInput);
@@ -275,13 +275,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         alertaIdade.className = "ssp-alert"; // reseta as classes de cor antes de reaplicar
 
-        if (idade < 8) {
+        if (idade < 12) {
             alertaIdade.classList.add("ssp-alert-erro");
-            alertaIdade.textContent = "⚠️ Menores de 8 anos não podem se cadastrar para realizar procedimentos no salão.";
-            alertaIdade.style.display = "block";
-        } else if (idade < 12) {
-            alertaIdade.classList.add("ssp-alert-aviso");
-            alertaIdade.textContent = "⚠️ Para se inscrever é preciso ter prévia autorização dos responsáveis legais.";
+            alertaIdade.textContent = "⚠️ Não é permitido criar uma conta para menores de 12 anos.";
             alertaIdade.style.display = "block";
         } else if (idade < 18) {
             alertaIdade.classList.add("ssp-alert-info");

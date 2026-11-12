@@ -7,6 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const calendario = document.getElementById("calendarioNascimento");
     if (!campo || !diaCampo || !mesCampo || !anoCampo || !botao || !calendario) return;
 
+    const avisoIdadeMinima = document.createElement("small");
+    avisoIdadeMinima.className = "ssp-alert ssp-alert-erro";
+    avisoIdadeMinima.setAttribute("role", "alert");
+    avisoIdadeMinima.textContent = "Não é permitido criar ou atualizar a conta de menores de 12 anos, conforme as regras do salão.";
+    avisoIdadeMinima.hidden = true;
+    avisoIdadeMinima.style.display = "none";
+    campo.closest(".perfil-nascimento").appendChild(avisoIdadeMinima);
+
     const minimo = new Date(1900, 0, 1);
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -103,6 +111,35 @@ document.addEventListener("DOMContentLoaded", () => {
         return data.getFullYear() === Number(match[3]) && data.getMonth() === Number(match[2]) - 1 && data.getDate() === Number(match[1])
             ? data : null;
     };
+
+    const idadeAbaixoDoMinimo = () => {
+        const nascimento = dataDoCampo();
+        if (!nascimento) return false;
+        const hojeAtual = new Date();
+        let idade = hojeAtual.getFullYear() - nascimento.getFullYear();
+        if (hojeAtual.getMonth() < nascimento.getMonth() ||
+            (hojeAtual.getMonth() === nascimento.getMonth() && hojeAtual.getDate() < nascimento.getDate())) idade--;
+        return idade < 12;
+    };
+
+    const atualizarAvisoIdade = () => {
+        avisoIdadeMinima.hidden = !idadeAbaixoDoMinimo();
+        avisoIdadeMinima.style.display = avisoIdadeMinima.hidden ? "none" : "block";
+        diaCampo.setAttribute("aria-invalid", String(!avisoIdadeMinima.hidden));
+    };
+
+    campo.addEventListener("input", atualizarAvisoIdade);
+    campo.addEventListener("change", atualizarAvisoIdade);
+
+    campo.closest("form").addEventListener("submit", event => {
+        atualizarCampoSubmetido();
+        atualizarAvisoIdade();
+        if (idadeAbaixoDoMinimo()) {
+            event.preventDefault();
+            diaCampo.focus();
+            avisoIdadeMinima.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    });
 
     const fechar = () => {
         calendario.hidden = true;
