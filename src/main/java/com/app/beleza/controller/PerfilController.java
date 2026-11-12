@@ -161,6 +161,11 @@ public class PerfilController {
             return "redirect:/perfil?aba=configuracao";
         }
 
+        if (novaSenha.length() > 25 || confirmacaoSenha.length() > 25) {
+            redirectAttributes.addFlashAttribute("mensagemError", "A senha deve ter no máximo 25 caracteres.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
         Optional<Usuario> usuarioBanco = usuarioRepository.findById(usuario.getId());
 
         if (!encoder.matches(senhaAtual, usuarioBanco.get().getSenha())) {
