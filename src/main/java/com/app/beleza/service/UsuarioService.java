@@ -26,6 +26,10 @@ public class UsuarioService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
+        if (form.getEmail() == null || !Validador.isEmailPessoalComDominioValido(form.getEmail())) {
+            return "Informe um e-mail pessoal válido (Gmail, Hotmail, Outlook e outros provedores pessoais).";
+        }
+
         // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
                 Validador.contemEmoji(form.getEmail()) ||

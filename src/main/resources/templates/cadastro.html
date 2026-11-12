@@ -74,6 +74,11 @@
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
                 <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
+                <ul class="ssp-password-checklist" id="email-checklist" aria-live="polite">
+                    <li id="email-req-formato" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Formato de e-mail válido</li>
+                    <li id="email-req-pessoal" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Provedor pessoal aceito (Gmail, Hotmail, Outlook e outros)</li>
+                    <li id="email-req-dominio" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Domínio com serviço de e-mail ativo</li>
+                </ul>
             </div>
 
             <div class="ssp-form-group">
