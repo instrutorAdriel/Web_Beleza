@@ -92,6 +92,43 @@ document.addEventListener("DOMContentLoaded", function () {
     // 0.1 BLOQUEIO DE CARACTERES PROIBIDOS NO E-MAIL (ao digitar)
     // =======================================================
     if (emailInput) {
+        // Aviso de erro do e-mail: usa o elemento #email-erro se existir no HTML;
+        // senão, cria um copiando o visual do aviso do nome completo.
+        let emailErro = document.getElementById("email-erro");
+        if (!emailErro) {
+            if (nomeCompletoErro) {
+                emailErro = nomeCompletoErro.cloneNode(true);
+            } else {
+                emailErro = document.createElement("div");
+                emailErro.style.color = "#e53935";
+                emailErro.style.fontSize = "0.85rem";
+                emailErro.style.marginTop = "6px";
+                emailErro.appendChild(document.createTextNode(""));
+            }
+            emailErro.id = "email-erro";
+            emailErro.style.display = "none";
+            emailInput.insertAdjacentElement("afterend", emailErro);
+        }
+
+        // Troca apenas o texto do aviso (preserva o ícone do clone)
+        const mostrarErroEmail = function (mensagem) {
+            const walker = document.createTreeWalker(emailErro, NodeFilter.SHOW_TEXT);
+            let no;
+            while ((no = walker.nextNode())) {
+                if (no.nodeValue.trim() !== "" || !emailErro.textContent.trim()) {
+                    no.nodeValue = mensagem;
+                    break;
+                }
+            }
+            emailErro.style.display = nomeCompletoErro ? "flex" : "block";
+            emailInput.classList.add("input-error");
+        };
+
+        const esconderErroEmail = function () {
+            emailErro.style.display = "none";
+            emailInput.classList.remove("input-error");
+        };
+
         emailInput.addEventListener("input", function (e) {
             const input = e.target;
             const valorOriginal = input.value;
@@ -103,6 +140,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const posArroba = valor.indexOf("@");
             let usuario = posArroba === -1 ? valor : valor.substring(0, posArroba);
             let resto = posArroba === -1 ? "" : valor.substring(posArroba + 1).replace(/@/g, "");
+
+            // Marca se a pessoa tentou digitar algum caractere proibido (para mostrar o aviso)
+            const caractereProibido = /\s/.test(valorOriginal)
+                || (posArroba !== -1 && valor.substring(posArroba + 1).includes("@"))
+                || /[^A-Za-z0-9._\-]/.test(usuario)
+                || /[^A-Za-z0-9.\-]/.test(resto);
 
             // Domínio: só letras, números, ponto e hífen
             resto = resto.replace(/[^A-Za-z0-9.\-]/g, "");
@@ -140,6 +183,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 } catch (err) {
                     // inputs type="email" não permitem controlar o cursor; ignora
                 }
+
+                if (caractereProibido) {
+                    mostrarErroEmail("Não é permitido digitar caracteres especiais, acentos ou espaços no e-mail.");
+                } else {
+                    mostrarErroEmail("Não é permitido começar ou terminar o nome com ponto, nem usar pontos seguidos.");
+                }
+            } else {
+                // Nada foi removido — esconde o aviso
+                esconderErroEmail();
             }
         });
     }
