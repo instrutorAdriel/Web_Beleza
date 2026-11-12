@@ -37,17 +37,6 @@ public class AgendamentoService {
     @Autowired private ModeloRepository modeloRepository;
     @Autowired private InstrutorRepository instrutorRepository;
     @Autowired private Clock clock;
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private DisponibilidadeRepository disponibilidadeRepository;
-
-    @Autowired
-    private ModeloRepository modeloRepository;
-
-    @Autowired
-    private InstrutorRepository instrutorRepository;
 
 
     @Transactional
