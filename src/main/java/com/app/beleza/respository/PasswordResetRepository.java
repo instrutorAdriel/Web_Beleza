@@ -13,11 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface PasswordResetRepository extends JpaRepository<PasswordReset, Integer> {
+
     Boolean existsByToken(String token);
 
     Optional<PasswordReset> findByToken(String token);
 
-    // NOVO: tokens do usuário que ainda não expiraram (o mais recente primeiro)
+    // Tokens do usuário que ainda não expiraram (o mais recente primeiro)
     @Query("SELECT p FROM PasswordReset p " +
             "WHERE p.usuario = :usuario " +
             "AND p.data_expiracao > :agora " +

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;          // NOVO: usado pela lista de tokens válidos
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.mail.MailException;
@@ -17,7 +17,12 @@ import org.slf4j.LoggerFactory;
 
 @Service
 public class PasswordResetService {
+
     private static final Logger logger = LoggerFactory.getLogger(PasswordResetService.class);
+
+    // Valor especial devolvido quando já existe um código válido.
+    // A controller usa isso para mostrar o aviso ao usuário.
+    public static final String EMAIL_JA_ENVIADO = "EMAIL_JA_ENVIADO";
 
     @Autowired
     private PasswordResetRepository passwordResetRepository;
@@ -28,49 +33,38 @@ public class PasswordResetService {
     @Autowired
     private EmailService emailService;
 
-    // ALTERADO: antes sempre criava um token novo. Agora reaproveita o válido.
+    // Retorna: null = enviado com sucesso | EMAIL_JA_ENVIADO = já existe código válido | outro texto = erro
     public String enviarEmailRecuperarSenha(String paraEmail, Usuario usuario) {
 
-        // (igual a antes) se o e-mail não existe, para aqui.
-        // Agora essa checagem vem ANTES de criar qualquer coisa.
         if (!usuarioRepository.existsByEmail(paraEmail)) {
             return "Falha em encontrar o e-mail";
         }
 
-        // NOVO: procura tokens desse usuário que ainda não expiraram
+        // Procura tokens desse usuário que ainda não expiraram
         List<PasswordReset> validos =
                 passwordResetRepository.buscarTokensValidos(usuario, LocalDateTime.now());
 
-        // NOVO: true = já existe um código válido, não precisa criar outro
-        boolean reaproveitado = !validos.isEmpty();
+        // Já existe código válido: não cria outro e não reenvia, só avisa
+        if (!validos.isEmpty()) {
+            return EMAIL_JA_ENVIADO;
+        }
 
-        // NOVO: se já existe, usa o primeiro (o mais recente).
-        // Se não existe, cria um novo e salva no banco (como era antes).
-        PasswordReset reset = reaproveitado
-                ? validos.get(0)
-                : passwordResetRepository.save(new PasswordReset(UUID.randomUUID().toString(), usuario));
+        // Não existe código válido: cria e salva um novo
+        PasswordReset reset = passwordResetRepository.save(
+                new PasswordReset(UUID.randomUUID().toString(), usuario));
 
         try {
-            // ALTERADO: envia o token do "reset" (novo OU reaproveitado),
-            // em vez do UUID que era gerado sempre
             emailService.enviarEmailDeRecuperacao(paraEmail, reset.getToken());
         } catch (MailException ex) {
-            // ALTERADO: removi o System.err.println e o printStackTrace,
-            // o logger.error já registra o erro completo
             logger.error("Falha ao enviar e-mail de recuperação de senha para {}", paraEmail, ex);
-
-            // NOVO: só apaga o token se ele foi criado agora.
-            // Um token reaproveitado continua no banco, pois ainda é válido.
-            if (!reaproveitado) {
-                passwordResetRepository.delete(reset);
-            }
+            passwordResetRepository.delete(reset); // se o e-mail falhou, apaga o token
             return "Falha ao enviar o e-mail de recuperação";
         }
 
-        return null; // null = sucesso (igual a antes)
+        return null;
     }
 
-    // (sem mudanças) confere se o token existe e não expirou
+    // Confere se o token existe e não expirou
     public String verificarToken(String token_uuid) {
         Optional<PasswordReset> resetOpt = passwordResetRepository.findByToken(token_uuid);
 
@@ -87,13 +81,12 @@ public class PasswordResetService {
         return null;
     }
 
-    // (sem mudanças) devolve o usuário dono do token
+    // Devolve o usuário dono do token
     public Usuario retornarUsuario(String token_uuid) {
         return passwordResetRepository.findByToken(token_uuid).get().getUsuario();
     }
 
-    // NOVO: apaga o token depois que a senha foi trocada,
-    // para o mesmo link não ser usado duas vezes
+    // Apaga o token depois que a senha foi trocada (o link não pode ser usado duas vezes)
     public void invalidarToken(String token_uuid) {
         passwordResetRepository.findByToken(token_uuid)
                 .ifPresent(passwordResetRepository::delete);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
+  <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
   <title th:text="${tituloPagina}">Recuperar Senha</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -42,5 +42,35 @@
     </form>
   </div>
 </main>
+
+<!-- NOVO: desabilita o botão após o primeiro clique, evitando envio duplo -->
+<script>
+  const formRecuperacao = document.getElementById("kc-form-recovery");
+
+  formRecuperacao.addEventListener("submit", function () {
+    const btn = formRecuperacao.querySelector("button[type='submit']");
+    if (btn) {
+      // o disabled é aplicado depois do envio começar,
+      // senão o navegador pode cancelar o submit
+      setTimeout(function () {
+        btn.disabled = true;
+        btn.textContent = "Enviando...";
+      }, 0);
+    }
+  });
+
+  // NOVO: se o usuário voltar para a página pelo botão "voltar" do navegador,
+  // o botão não fica preso em "Enviando..."
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      const btn = formRecuperacao.querySelector("button[type='submit']");
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Continuar";
+      }
+    }
+  });
+</script>
+
 </body>
 </html>

@@ -113,6 +113,8 @@ public class UsuarioController {
     }
 
     /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
+
+    // (sem mudanças) só exibe a página
     @GetMapping("/recuperar-senha")
     public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model) {
         model.addAttribute("tituloPagina", "Alterar Senha");
@@ -120,44 +122,51 @@ public class UsuarioController {
         return "recuperar-senha";
     }
 
+    // ALTERADO: redirect após o POST + aviso de e-mail já enviado
     @PostMapping("/recuperar-senha")
     public String processarEmail(@ModelAttribute UsuarioDTO form, Model model,
-                                 RedirectAttributes redirect) {   // NOVO: parâmetro para o redirect
+                                 RedirectAttributes redirect) {
 
-        // (igual a antes) e-mail vazio
         if (form.getEmail() == null || form.getEmail().isBlank()) {
             model.addAttribute("erro", "E-mail em branco");
             return "recuperar-senha";
         }
 
-        // (igual, só reorganizado) formato do e-mail inválido
         if (!Validador.isEmailValido(form.getEmail())) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         }
 
-        // (igual, só reorganizado) busca o usuário; se não existe, erro
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
         if (res.isEmpty()) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         }
 
-        // (igual a antes) tenta enviar. Se o service devolveu texto, deu erro.
-        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), res.get()) != null) {
+        // Guarda o resultado para testar os 3 casos
+        String resultado = passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), res.get());
+
+        // Já existe um e-mail válido: avisa para não clicar de novo
+        if (PasswordResetService.EMAIL_JA_ENVIADO.equals(resultado)) {
+            redirect.addFlashAttribute("erro",
+                    "O e-mail já foi enviado. Verifique sua caixa de entrada e o spam. " +
+                            "Não é necessário clicar novamente; você poderá pedir outro link em 30 minutos.");
+            return "redirect:/recuperar-senha";
+        }
+
+        // Erro real (falha no e-mail, usuário não encontrado etc.)
+        if (resultado != null) {
             model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
             return "recuperar-senha";
         }
 
-        // ALTERADO: antes fazia "return recuperar-senha" direto.
-        // Agora guarda a mensagem e REDIRECIONA para o GET.
-        // Assim o F5 recarrega só a página e NÃO reenvia o POST (era isso que
-        // gerava o código novo).
+        // Sucesso: primeiro envio. O redirect evita reenvio do POST no F5
         redirect.addFlashAttribute("succ",
                 "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
         return "redirect:/recuperar-senha";
     }
 
+    // (sem mudanças)
     @GetMapping("/alterar-senha/{token}")
     public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
         if (passwordResetService.verificarToken(token) != null) {
@@ -170,28 +179,24 @@ public class UsuarioController {
         return "alterar-senha";
     }
 
+    // ALTERADO: devolve o token no erro e apaga o token após o sucesso
     @PostMapping("/alterar-senha/{token}")
     public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
-
-        // (igual a antes) token inválido ou expirado: manda para fora
         if (passwordResetService.verificarToken(token) != null) {
             return "redirect:/indefinido";
         }
 
-        // (igual a antes) descobre o e-mail pelo token e tenta trocar a senha
         form.setEmail(passwordResetService.retornarUsuario(token).getEmail());
         String res = usuarioService.alterarSenha(form);
 
-        // se deu erro na troca (ex.: senha fraca), volta para a página
         if (res != null) {
             model.addAttribute("erro", res);
             model.addAttribute("usuarioDTO", form);
-            model.addAttribute("token", token);   // NOVO: o HTML provavelmente precisa do token no formulário
+            model.addAttribute("token", token);
             return "alterar-senha";
         }
 
-        // NOVO: senha trocada com sucesso, então apaga o token.
-        // O mesmo link não funciona mais.
+        // O link não pode ser usado uma segunda vez
         passwordResetService.invalidarToken(token);
 
         model.addAttribute("succ", "Senha alterada com sucesso!");
