@@ -16,6 +16,10 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("kc-form-register") || document.querySelector("form");
+    // Desativa a validação nativa do navegador (type="email") para que a validação
+    // personalizada deste script seja sempre a utilizada no submit.
+    if (form) form.setAttribute("novalidate", "");
+
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
     // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
@@ -36,22 +40,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const reqEspecial = document.getElementById("req-especial");
 
     // =======================================================
-// 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
-// =======================================================
+    // 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
+    // =======================================================
 
-// Captura surroagtes high/low (faixa de emojis) + símbolos comuns + seletores de variação
-    // 1. Regex universal para emojis em JS tradicional
-    // 1. Regex universal de Emoji
+    // Regex universal de Emoji (com flag "g", usada apenas em .replace)
     const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
 
-// 2. Regex para identificar domínios Punycode (ex: xn--...)
+    // Versão SEM a flag "g", usada em .test().
+    // Regex com "g" guarda o lastIndex entre chamadas e pode retornar resultados errados.
+    const regexEmojiTeste = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/;
+
+    // Regex para identificar domínios Punycode (ex: xn--...)
     const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
 
     const todosOsCamposTexto = document.querySelectorAll(
         'input[type="text"], input[type="email"], input[type="password"], textarea'
     );
 
-    todosOsCamposTexto.forEach(function(campo) {
+    todosOsCamposTexto.forEach(function (campo) {
 
         // Processa a digitação ao vivo
         campo.addEventListener('input', function (e) {
@@ -69,8 +75,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 input.value = valorLimpo;
 
-                const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
-                input.setSelectionRange(novaPosicao, novaPosicao);
+                // setSelectionRange não funciona em input type="email" em alguns navegadores
+                try {
+                    const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
+                    input.setSelectionRange(novaPosicao, novaPosicao);
+                } catch (err) {
+                    // ignora: o cursor apenas vai para o fim do campo
+                }
             }
         });
 
@@ -81,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     });
+
     // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
     telefoneInput.addEventListener("input", function (e) {
         // Remove tudo que não for número
@@ -145,17 +157,17 @@ document.addEventListener("DOMContentLoaded", function () {
         let erros = [];
 
         // Validação Global de Emojis no Submit (Garantia extra)
-        todosOsCamposTexto.forEach(function(campo) {
-            if (campo && regexEmoji.test(campo.value)) {
+        todosOsCamposTexto.forEach(function (campo) {
+            if (campo && regexEmojiTeste.test(campo.value)) {
                 erros.push(`O campo não pode conter emojis.`);
                 marcarErro(campo);
             }
         });
 
         // Validação do E-mail
-        const emailValue = emailInput.value;
-        if (!emailValue.includes("@") || !emailValue.includes(".")) {
-            erros.push("O e-mail inserido é inválido. Certifique-se de que possui '@' e '.'.");
+        const emailValue = emailInput.value.trim();
+        if (!emailValido(emailValue)) {
+            erros.push("O e-mail inserido é inválido. Antes do @ não pode haver espaços, ( ) [ ] { } , ; : \\ \" < >, nem pontos no início, no fim ou seguidos.");
             marcarErro(emailInput);
         } else {
             limparErro(emailInput);
@@ -199,31 +211,31 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-            // Senha
-            if (senhaInput) {
-                if (!senhaEhForte(senhaInput.value)) {
-                    erros.push("A senha deve cumprir todos os requisitos do checklist.");
-                    marcarErro(senhaInput);
-                } else {
-                    limparErro(senhaInput);
-                }
+        // Senha
+        if (senhaInput) {
+            if (!senhaEhForte(senhaInput.value)) {
+                erros.push("A senha deve cumprir todos os requisitos do checklist.");
+                marcarErro(senhaInput);
+            } else {
+                limparErro(senhaInput);
             }
+        }
 
-            // Confirmação de Senha
-            if (senhaInput && confirmaSenhaInput) {
-                if (senhaInput.value !== confirmaSenhaInput.value) {
-                    erros.push("As senhas não coincidem.");
-                    marcarErro(confirmaSenhaInput);
-                } else {
-                    limparErro(confirmaSenhaInput);
-                }
+        // Confirmação de Senha
+        if (senhaInput && confirmaSenhaInput) {
+            if (senhaInput.value !== confirmaSenhaInput.value) {
+                erros.push("As senhas não coincidem.");
+                marcarErro(confirmaSenhaInput);
+            } else {
+                limparErro(confirmaSenhaInput);
             }
+        }
 
-            if (erros.length > 0) {
-                event.preventDefault();
-                alert(erros.join("\n"));
-            }
-        });
+        if (erros.length > 0) {
+            event.preventDefault();
+            alert(erros.join("\n"));
+        }
+    });
 
     // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
     function atualizarAlertaIdade() {
@@ -270,6 +282,35 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             alertaIdade.style.display = "none";
         }
+    }
+
+    // Valida o e-mail conforme as regras da tarefa (parte antes do @)
+    function emailValido(email) {
+        if (typeof email !== "string") return false;
+
+        // Só pode existir um único @
+        const partes = email.split("@");
+        if (partes.length !== 2) return false;
+
+        const usuario = partes[0];
+        const dominio = partes[1];
+        if (!usuario || !dominio) return false;
+
+        // Sem espaços em branco no usuário
+        if (/\s/.test(usuario)) return false;
+
+        // Sem pontuação/agrupamento proibidos: ( ) [ ] { } , ; : \ " < >
+        if (/[()\[\]{},;:\\"<>]/.test(usuario)) return false;
+
+        // Sem ponto no início/fim e sem pontos seguidos
+        if (usuario.startsWith(".") || usuario.endsWith(".")) return false;
+        if (usuario.includes("..")) return false;
+
+        // Domínio: mantém a exigência do "." que já existia
+        if (/\s/.test(dominio) || !dominio.includes(".")) return false;
+        if (dominio.startsWith(".") || dominio.endsWith(".") || dominio.includes("..")) return false;
+
+        return true;
     }
 
     // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
