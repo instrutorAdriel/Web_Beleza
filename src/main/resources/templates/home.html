@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <title>Senac - Página Inicial</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -34,6 +33,15 @@
         <div th:if="${usuario != null}" class="usuario-logado">
             <a th:href="@{/perfil}" th:text="${usuarioNome}">Usuário</a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
+
+            <!-- Popover ancorado dentro do bloco do usuário -->
+            <div class="popover-logout" style="display: none;">
+                <p>Tem certeza que deseja sair?</p>
+                <div class="popover-botoes">
+                    <button type="button" class="popover-btn-sim">Sim, sair</button>
+                    <button type="button" class="popover-btn-nao">Cancelar</button>
+                </div>
+            </div>
         </div>
     </div>
 </header>
@@ -392,15 +400,15 @@
 
 <!-- MODAL DE DEPOIMENTO EXPANDIDO -->
 <div id="modal-depoimento" class="modal-plataforma">
-    <div class="modal-painel" style="max-width: 1100px; padding: 30px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-painel" style="max-width: 900px; padding: 30px; max-height: 90vh; overflow-y: auto;">
         <a href="#" class="btn-fechar-modal" onclick="fecharModalDepoimento(event)">&times; Fechar</a>
 
         <div style="display: flex; gap: 30px; flex-wrap: wrap;">
 
             <!-- Lado Esquerdo: Imagens Grandes -->
-            <div class="modal-depoimento-imagens" style="flex: 1.3; min-width: 400px;">
-                <img id="modal-dep-img1" src="" alt="Antes">
-                <img id="modal-dep-img2" src="" alt="Depois">
+            <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px;">
+                <img id="modal-dep-img1" src="" alt="Antes" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
+                <img id="modal-dep-img2" src="" alt="Depois" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 400px;">
             </div>
 
             <!-- Lado Direito: Texto e Autor -->

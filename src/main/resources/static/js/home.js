@@ -199,45 +199,49 @@ function inicializarNavAtiva() {
 }
 
 /**
- * MODULE: CONFIRMAÇÃO DE LOGOUT
+ * MODULE: CONFIRMAÇÃO DE LOGOUT (ABERTURA IMEDIATA NO 1º CLIQUE)
  */
 function inicializarLogout() {
     const btnSair = document.querySelector('.btn-sair');
+    const containerUsuario = document.querySelector('.usuario-logado');
+    const popover = containerUsuario ? containerUsuario.querySelector('.popover-logout') : null;
 
-    if (!btnSair) return;
+    if (!btnSair || !containerUsuario || !popover) return;
 
+    const btnSim = popover.querySelector('.popover-btn-sim');
+    const btnNao = popover.querySelector('.popover-btn-nao');
+
+    // Abre ou fecha imediatamente no clique do botão Sair
     btnSair.addEventListener('click', function (e) {
         e.preventDefault();
+        e.stopPropagation();
 
-        const popover = document.createElement('div');
-        popover.className = 'popover-logout';
-        popover.innerHTML = `
-            <p>Tem certeza que deseja sair?</p>
-            <div class="popover-botoes">
-                <button class="popover-btn-sim">Sim, sair</button>
-                <button class="popover-btn-nao">Cancelar</button>
-            </div>
-        `;
+        const estaAberto = popover.style.display === 'block';
+        popover.style.display = estaAberto ? 'none' : 'block';
+    });
 
-        document.querySelector('.popover-logout')?.remove();
-        document.body.appendChild(popover);
+    // Impede que cliques dentro da caixinha fechem ela
+    popover.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
 
-        popover.querySelector('.popover-btn-sim').addEventListener('click', () => {
-            window.location.href = '/logout';
+    // Ação de confirmar saída
+    if (btnSim) {
+        btnSim.addEventListener('click', function () {
+            window.location.href = btnSair.getAttribute('href') || '/logout';
         });
+    }
 
-        popover.querySelector('.popover-btn-nao').addEventListener('click', () => {
-            popover.remove();
+    // Ação de cancelar
+    if (btnNao) {
+        btnNao.addEventListener('click', function () {
+            popover.style.display = 'none';
         });
+    }
 
-        setTimeout(() => {
-            document.addEventListener('click', function fechar(e) {
-                if (!popover.contains(e.target) && e.target !== btnSair) {
-                    popover.remove();
-                    document.removeEventListener('click', fechar);
-                }
-            });
-        }, 100);
+    // Fecha ao clicar em qualquer lugar fora
+    document.addEventListener('click', function () {
+        popover.style.display = 'none';
     });
 }
 
