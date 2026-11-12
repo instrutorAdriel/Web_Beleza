@@ -31,12 +31,6 @@ import java.util.Optional;
 @Controller
 public class UsuarioController {
 
-    @GetMapping("/validar-email-cadastro")
-    @ResponseBody
-    public boolean validarEmailCadastro(@RequestParam String email) {
-        return Validador.isEmailPessoalComDominioValido(email);
-    }
-
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -116,6 +110,12 @@ public class UsuarioController {
         }
 
         return "redirect:/login";
+    }
+
+    @GetMapping("/validar-email-cadastro")
+    @ResponseBody
+    public boolean validarEmailCadastro(@RequestParam String email) {
+        return Validador.isEmailPessoalComDominioValido(email);
     }
 
     /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
