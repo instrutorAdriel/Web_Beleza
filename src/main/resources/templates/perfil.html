@@ -6,6 +6,7 @@
     <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/sidebar.js}" defer></script>
@@ -165,6 +166,7 @@
                 <span th:text="${mensagemError}"></span>
             </div>
 
+            <!-- FILTROS (Agora são links do Thymeleaf) -->
             <div class="filtros-agendamento" id="filtros-agendamento">
                 <a th:href="@{/perfil(aba='agendamento', filtro='TODOS')}"
                    class="filtro-btn" th:classappend="${filtroAtivo == 'TODOS'} ? 'ativo'">
@@ -192,7 +194,9 @@
                 </a>
             </div>
 
+            <!-- LISTA -->
             <div class="lista-agendamentos" id="lista-agendamentos">
+                <!-- Se não tiver nada, mostra a mensagem -->
                 <div th:if="${paginaAgendamentos.isEmpty()}" class="agendamentos-vazio" style="grid-column: 1 / -1;">
                     <i class="fa-regular fa-calendar-xmark"></i>
                     <p>Nenhum agendamento com esse status.</p>
@@ -229,7 +233,10 @@
                 </div>
             </div>
 
+            <!-- PAGINAÇÃO (Mantém o filtro ativo ao mudar de página) -->
             <div class="paginacao-painel" th:if="${paginaAgendamentos.totalPages > 1}" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 2rem;">
+
+                <!-- BOTÃO ANTERIOR -->
                 <a th:if="${!paginaAgendamentos.first}"
                    th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number - 1}, filtro=${filtroAtivo})}"
                    class="btn-paginacao-aba"
@@ -242,8 +249,10 @@
                     &laquo; Anterior
                 </button>
 
+                <!-- INDICADOR DE PÁGINA -->
                 <span>Página <strong th:text="${paginaAgendamentos.number + 1}">1</strong> de <span th:text="${paginaAgendamentos.totalPages}">3</span></span>
 
+                <!-- BOTÃO PRÓXIMA -->
                 <a th:if="${!paginaAgendamentos.last}"
                    th:href="@{/perfil(aba='agendamento', pagina=${paginaAgendamentos.number + 1}, filtro=${filtroAtivo})}"
                    class="btn-paginacao-aba"
@@ -255,6 +264,7 @@
                         style="padding: 8px 15px; border-radius: 5px; border: none; background-color: #ccc; color: #666; font-weight: bold; cursor: not-allowed;">
                     Próxima &raquo;
                 </button>
+
             </div>
         </section>
 
@@ -272,6 +282,7 @@
                     <span th:text="${mensagemError}"></span>
                 </div>
 
+                <!-- SELEÇÃO DO AGENDAMENTO CONCLUÍDO -->
                 <div class="group-input">
                     <label for="idAgendamento">Selecione o Agendamento Concluído</label>
 
@@ -291,10 +302,25 @@
                 </div>
 
                 <div class="group-input">
-                    <label for="depoimento">Seu Depoimento</label>
-                    <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
+                    <label for="campoTextoDepoimento">Seu Depoimento</label>
+
+                    <div class="depoimento-wrapper">
+        <textarea
+                id="campoTextoDepoimento"
+                name="depoimento"
+                rows="4"
+                maxlength="255"
+                placeholder="Escreva aqui seu depoimento..."
+                th:text="${comentarioTexto}"
+                required></textarea>
+
+                        <small class="contador-depoimento" id="contadorCaracteresDepoimento">
+                            0/255
+                        </small>
+                    </div>
                 </div>
 
+                <!-- CAMPO 1 DE IMAGEM -->
                 <div class="group-input">
                     <label for="imagem1">Primeira Imagem</label>
                     <input type="file" id="imagem1" name="imagem1" accept="image/*"
@@ -306,6 +332,7 @@
                     </div>
                 </div>
 
+                <!-- CAMPO 2 DE IMAGEM -->
                 <div class="group-input">
                     <label for="imagem2">Segunda Imagem</label>
                     <input type="file" id="imagem2" name="imagem2" accept="image/*"
@@ -325,5 +352,99 @@
 
     </div>
 </div>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/javaScript/perfil.js}"></script>
+<script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
+<script>
+    // Função para exibir o loading
+    function mostrarLoading() {
+        document.getElementById('loader-global').style.display = 'flex';
+    }
+
+    // 1. Aplica o loading APENAS nos links de filtro e paginação de agendamento
+    document.addEventListener('DOMContentLoaded', function () {
+        // Pega todos os links que tenham 'filtro=' ou 'pagina=' no href (filtros e paginação)
+        const linksAgendamento = document.querySelectorAll('a[href*="filtro="], a[href*="pagina="]');
+
+        linksAgendamento.forEach(link => {
+            link.addEventListener('click', function () {
+                mostrarLoading();
+            });
+        });
+    });
+
+    // 2. Aplica o loading no botão de Cancelar Agendamento (que envia um formulário)
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            document.getElementById('loader-global').style.display = 'none';
+        }
+    });
+</script>
+<script>
+    // Remove as mensagens de sucesso ou erro após 4 segundos
+    document.addEventListener('DOMContentLoaded', function () {
+        const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
+        mensagens.forEach(function (msg) {
+            setTimeout(function () {
+                // Efeito de fade-out suave
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+                // Remove do HTML depois que o fade acabar
+                setTimeout(() => msg.remove(), 500);
+            }, 4000); // 4000 milissegundos = 4 segundos
+        });
+    });
+</script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const campoDepoimento = document.getElementById('campoTextoDepoimento');
+        const contadorDepoimento = document.getElementById('contadorCaracteresDepoimento');
+
+        const limite = 255;
+
+        if (campoDepoimento && contadorDepoimento) {
+
+            function atualizarContador() {
+                const quantidade = campoDepoimento.value.length;
+
+                contadorDepoimento.textContent = quantidade + '/' + limite;
+
+                if (quantidade >= limite) {
+                    contadorDepoimento.style.color = '#dc2626';
+                } else {
+                    contadorDepoimento.style.color = '#6b7280';
+                }
+            }
+
+            campoDepoimento.addEventListener('input', atualizarContador);
+
+            atualizarContador();
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const campo = document.getElementById('campoTextoDepoimento');
+        const contador = document.getElementById('contadorCaracteresDepoimento');
+
+        if (!campo || !contador) return;
+
+        function atualizarContador() {
+            const quantidade = campo.value.length;
+
+            contador.textContent = quantidade + '/255';
+
+            contador.style.color = quantidade >= 255
+                ? '#dc2626'
+                : '#6b7280';
+        }
+
+        campo.addEventListener('input', atualizarContador);
+
+        atualizarContador();
+    });
+</script>
+
 </body>
 </html>
