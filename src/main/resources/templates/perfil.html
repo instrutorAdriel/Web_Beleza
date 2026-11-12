@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
@@ -40,7 +41,7 @@
             </div>
 
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informações do Perfil</a>
-            <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
+            <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Atualizar Senha</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
             <a th:href="@{/perfil(aba='depoimento')}" class="bar-item button" th:classappend="${abaAtiva == 'depoimento'} ? 'active'">Depoimentos</a>
             <a th:href="@{/}" class="bar-item button">Voltar</a>
@@ -99,11 +100,12 @@
         <!-- ABA: CONFIGURAÇÃO DO PERFIL -->
         <section id="perfil-configuracao" class="secao-painel" th:if="${abaAtiva == 'configuracao'}">
             <div class="secao-header">
-                <h2>Configuração do Perfil</h2>
+
+
+                <h3>Atualizar Senha</h3>
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
-                <h3>Atualizar Senha</h3>
 
                 <div class="group-info success" th:if="${mensagemSucesso}">
                     <span th:text="${mensagemSucesso}"></span>
@@ -126,7 +128,7 @@
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
                             <i class="fa-solid fa-eye" id="eyeIconNova"></i>
@@ -137,7 +139,7 @@
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
                             <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
