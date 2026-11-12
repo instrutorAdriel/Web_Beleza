@@ -3057,13 +3057,43 @@ body.body-perfil .perfil-calendario-abrir i {
 .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
 .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
 
+.modal-depoimento-imagens {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-depoimento-imagens img {
+    width: calc(50% - 5px);
+    min-width: 0;
+    border-radius: 8px;
+    object-fit: cover;
+    max-height: 480px;
+}
+
+.modal-depoimento-imagens.imagem-unica img {
+    width: 100%;
+    max-height: 500px;
+}
+
+@media (max-width: 600px) {
+    .modal-depoimento-imagens {
+        flex-direction: column;
+    }
+
+    .modal-depoimento-imagens img {
+        width: 100%;
+    }
+}
+
 /* Ajustes para telas de celular (Mobile) */
 @media (max-width: 768px) {
+    /* 1. Barra de filtros: empilha um embaixo do outro */
     .barra-filtros-depoimentos {
         flex-direction: column;
         gap: 10px;
     }
 
+    /* 2. Faz os selects ocuparem a largura toda no celular */
     #filtro-unidade, #filtro-servico {
         width: 100%;
     }
@@ -3326,4 +3356,151 @@ body.body-perfil .perfil-calendario-abrir i {
 #perfil-informacao .group-button {
     grid-column: 1 / -1;
     justify-content: center;
+
+    /* tava no perfil e eu joguei p ca nao sei pq    */
+#perfil-configuracao .ssp-password-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+    #perfil-configuracao .ssp-password-wrapper input {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-right: 46px !important;
+    }
+
+    #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+        position: absolute !important;
+        top: 50% !important;
+        right: 12px !important;
+        transform: translateY(-50%) !important;
+        background: none !important;
+        border: none !important;
+        padding: 4px !important;
+        cursor: pointer !important;
+        color: #6b7280 !important;
+        font-size: 1.1rem !important;
+    }
+
+    #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+        color: #1f2937 !important;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 46px;
+        box-sizing: border-box;
+        padding: 0 48px 0 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: var(--fundo-input);
+    }
+
+    #perfil-informacao .perfil-nascimento-controles .data-parte {
+        width: 2.2ch;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        text-align: center;
+        font: inherit;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles .data-ano {
+        width: 4.4ch;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+        border-color: #dc2626;
+    }
+
+    #perfil-informacao .data-separador {
+        padding: 0 3px;
+        color: #64748b;
+    }
+
+    #perfil-informacao .campo-data-submetido {
+        display: none;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir {
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        transform: translateY(-50%);
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        cursor: pointer;
+        color: #334155;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir:hover {
+        background: #f1f5f9;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir i {
+        font-size: 1.5rem;
+    }
+
+    #perfil-informacao .perfil-nascimento {
+        position: relative;
+    }
+
+    #perfil-informacao .perfil-calendario {
+        position: absolute;
+        z-index: 20;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 6px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+    }
+
+    #perfil-informacao .perfil-calendario[hidden] { display: none; }
+    #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+    #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
+    #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+    #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+    #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
+    #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+    #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+    #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
+
+    #perfil-informacao .group-button {
+        grid-column: 1 / -1;
+        justify-content: center;
+    }
+    /* CONTADOR DE CARACTERES DO DEPOIMENTO */
+    #perfil-depoimento .depoimento-wrapper {
+        width: 100%;
+    }
+
+    #perfil-depoimento .depoimento-wrapper textarea {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #perfil-depoimento .contador-depoimento {
+        display: block;
+        text-align: left;
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
 }

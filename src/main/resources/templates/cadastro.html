@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <title th:text="${tituloPagina}">Criar Conta</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,7 +42,7 @@
                 <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
                 <small id="nomeCompleto-erro" class="ssp-aviso-erro ssp-display-none" style="display: none;">
                     <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>Não é permitido digitar números no nome.</span>
+                    <span>Não é permitido digitar números ou caracteres especiais no nome.</span>
                 </small>
             </div>
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
@@ -73,12 +74,17 @@
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
                 <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
+                <ul class="ssp-password-checklist" id="email-checklist" aria-live="polite">
+                    <li id="email-req-formato" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Formato de e-mail válido</li>
+                    <li id="email-req-pessoal" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Provedor pessoal aceito (Gmail, Hotmail, Outlook e outros)</li>
+                    <li id="email-req-dominio" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Domínio com serviço de e-mail ativo</li>
+                </ul>
             </div>
 
             <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" required autocomplete="new-password">
+                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
@@ -107,7 +113,7 @@
             <div class="ssp-form-group">
                 <label th:for="confirmacaoSenha">Confirmar Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" required autocomplete="new-password">
+                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eyeIcon2')">
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>

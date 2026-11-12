@@ -26,6 +26,14 @@ public class UsuarioService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
+        if (form.getEmail() == null || !Validador.isEmailPessoalComDominioValido(form.getEmail())) {
+            return "Informe um e-mail pessoal válido (Gmail, Hotmail, Outlook e outros provedores pessoais).";
+        }
+
+        if (form.getSenha() == null || form.getSenha().length() > 25) {
+            return "A senha deve ter no máximo 25 caracteres.";
+        }
+
         // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
                 Validador.contemEmoji(form.getEmail()) ||
@@ -84,6 +92,10 @@ public class UsuarioService {
     }
 
     public String alterarSenha(UsuarioDTO form) {
+        if (form.getSenha() == null || form.getSenha().length() > 25) {
+            return "A senha deve ter no máximo 25 caracteres.";
+        }
+
         if (Validador.contemEmoji(form.getSenha())) {
             return "A nova senha não pode conter emojis.";
         }
@@ -105,6 +117,10 @@ public class UsuarioService {
     }
 
     public String atualizarSenha(UsuarioDTO form) {
+        if (form.getNovaSenha() == null || form.getNovaSenha().length() > 25) {
+            return "A senha deve ter no máximo 25 caracteres.";
+        }
+
         if (Validador.contemEmoji(form.getNovaSenha())) {
             return "A nova senha não pode conter emojis.";
         }

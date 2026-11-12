@@ -21,7 +21,7 @@ function abrirModalAgendamento(idServico) {
         .catch(error => {
             console.error("Erro ao carregar fragmento:", error);
             document.getElementById("tabela-sessoes-body").innerHTML =
-                '<tr><td colspan="4" style="text-align:center;padding:24px;color:#ef4444;">' +
+                '<tr><td colspan="4" style="text-align:center;padding:24px;color:rgb(114 7 149 / 0.87);">' +
                 'Erro ao carregar horários. Tente novamente.</td></tr>';
         });
 }

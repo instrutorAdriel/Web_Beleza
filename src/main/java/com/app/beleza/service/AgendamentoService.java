@@ -1,4 +1,3 @@
-
 package com.app.beleza.service;
 
 import com.app.beleza.model.dto.AgendamentoDTO;
@@ -22,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +32,11 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class AgendamentoService {
 
+    @Autowired private AgendamentoRepository agendamentoRepository;
+    @Autowired private DisponibilidadeRepository disponibilidadeRepository;
+    @Autowired private ModeloRepository modeloRepository;
+    @Autowired private InstrutorRepository instrutorRepository;
+    @Autowired private Clock clock;
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
@@ -63,12 +70,15 @@ public class AgendamentoService {
     public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idProdutoUnidade, Usuario usuarioLogado) {
         List<SessaoAtendimentoDTO> lista = new ArrayList<>();
 
+        LocalDate hoje = LocalDate.now(clock);
+        LocalTime agora = LocalTime.now(clock);
+
         List<Disponibilidade> disponibilidades =
-                disponibilidadeRepository.listarPorProdutoUnidade(idProdutoUnidade);
+                disponibilidadeRepository.listarPorProdutoUnidadeAPartirDeAgora(
+                        idProdutoUnidade, hoje, agora);
 
         for (Disponibilidade d : disponibilidades) {
             boolean jaAgendou = false;
-
             if (usuarioLogado != null) {
                 jaAgendou = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                         usuarioLogado.getId(), d.getId(), SituacaoAgendamento.CANCELADO);
@@ -85,7 +95,6 @@ public class AgendamentoService {
                     d.getTotalVagas() != null ? d.getTotalVagas() : 0,
                     jaAgendou
             );
-
             lista.add(dto);
         }
 
@@ -109,22 +118,18 @@ public class AgendamentoService {
 
         boolean jaTem = agendamentoRepository.existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                 usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO);
-
         if (jaTem) {
             throw new RuntimeException("Você já agendou esse horário.");
         }
-
         boolean conflitoDeHorario = agendamentoRepository.existsConflitoDeHorario(
                 usuarioLogado.getId(),
                 SituacaoAgendamento.CANCELADO,
                 disp.getDataDisponibilidade(),
                 disp.getHoraInicio(),
                 disp.getHoraFim());
-
         if (conflitoDeHorario) {
             throw new RuntimeException("Você já possui um agendamento nesse horário. Escolha outro horário para evitar conflitos entre unidades.");
         }
-
         Instrutor instrutor = instrutorRepository.findFirstByOrderByIdInstrutorAsc()
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
@@ -210,8 +215,8 @@ public class AgendamentoService {
         Pageable pageable = PageRequest.of(
                 pagina, tamanho, Sort.by("id").descending());
 
+        // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
         SituacaoAgendamento filtroEnum = null;
-
         if (filtroStr != null && !filtroStr.trim().isEmpty() && !filtroStr.equals("TODOS")) {
             try {
                 filtroEnum = SituacaoAgendamento.valueOf(filtroStr);

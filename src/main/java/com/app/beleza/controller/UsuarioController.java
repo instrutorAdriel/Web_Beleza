@@ -31,6 +31,12 @@ import java.util.Optional;
 @Controller
 public class UsuarioController {
 
+    @GetMapping("/validar-email-cadastro")
+    @ResponseBody
+    public boolean validarEmailCadastro(@RequestParam String email) {
+        return Validador.isEmailPessoalComDominioValido(email);
+    }
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired

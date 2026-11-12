@@ -18,6 +18,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("kc-form-register") || document.querySelector("form");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
+    const emailReqFormato = document.getElementById("email-req-formato");
+    const emailReqPessoal = document.getElementById("email-req-pessoal");
+    const emailReqDominio = document.getElementById("email-req-dominio");
+    let emailDominioVerificado = false;
+    let emailVerificacaoTimer;
+    const dominiosPessoais = new Set([
+        "gmail.com", "googlemail.com", "hotmail.com", "hotmail.com.br", "outlook.com",
+        "outlook.com.br", "live.com", "live.com.br", "msn.com", "yahoo.com", "yahoo.com.br",
+        "icloud.com", "me.com", "mac.com", "aol.com", "proton.me", "protonmail.com",
+        "uol.com.br", "bol.com.br", "terra.com.br", "ig.com.br", "zoho.com", "gmx.com",
+        "gmx.net", "fastmail.com", "hey.com"
+    ]);
     // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
     // O th:field="*{senha}" NÃO sobrescreve um id já definido manualmente no input,
     // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
@@ -100,6 +112,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 2. CHECKLIST DA SENHA EM TEMPO REAL
+    if (emailInput) {
+        emailInput.addEventListener("input", atualizarChecklistEmail);
+        if (emailInput.value) atualizarChecklistEmail();
+    }
+
     if (senhaInput) {
         senhaInput.addEventListener("input", function (e) {
             atualizarChecklistSenha(e.target.value);
@@ -154,8 +171,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Validação do E-mail
         const emailValue = emailInput.value;
-        if (!emailValue.includes("@") || !emailValue.includes(".")) {
-            erros.push("O e-mail inserido é inválido. Certifique-se de que possui '@' e '.'.");
+        const partesEmail = emailValue.trim().toLowerCase().split("@");
+        const formatoEmailValido = partesEmail.length === 2 && /^[^\s@]+$/.test(partesEmail[0]) && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partesEmail[1]);
+        const dominioEmailPessoal = partesEmail.length === 2 && dominiosPessoais.has(partesEmail[1]);
+        if (!formatoEmailValido || !dominioEmailPessoal || !emailDominioVerificado) {
+            erros.push("Use um e-mail pessoal válido com domínio ativo (Gmail, Hotmail, Outlook e outros).");
             marcarErro(emailInput);
         } else {
             limparErro(emailInput);
@@ -276,6 +296,46 @@ document.addEventListener("DOMContentLoaded", function () {
     function senhaEhForte(senha) {
         if (!senha) return false;
         return senha.length >= 8 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /[0-9]/.test(senha) && /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha);
+    }
+
+    function atualizarChecklistEmail() {
+        const email = emailInput.value.trim().toLowerCase();
+        const partes = email.split("@");
+        const formatoValido = partes.length === 2 && /^[^\s@]+$/.test(partes[0]) && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partes[1]);
+        const provedorPessoal = formatoValido && dominiosPessoais.has(partes[1]);
+        atualizarItemChecklist(emailReqFormato, formatoValido);
+        atualizarItemChecklist(emailReqPessoal, provedorPessoal);
+        emailDominioVerificado = false;
+        atualizarItemChecklist(emailReqDominio, false);
+
+        clearTimeout(emailVerificacaoTimer);
+        if (!provedorPessoal) return;
+
+        emailReqDominio.querySelector(".req-icon").className = "fa-solid fa-spinner fa-spin req-icon";
+        emailReqDominio.lastChild.textContent = " Verificando domínio...";
+        emailVerificacaoTimer = setTimeout(async function () {
+            try {
+                const resposta = await fetch("/validar-email-cadastro?email=" + encodeURIComponent(email));
+                emailDominioVerificado = resposta.ok && await resposta.json();
+            } catch (erro) {
+                emailDominioVerificado = false;
+            }
+            atualizarItemChecklist(emailReqDominio, emailDominioVerificado);
+            emailReqDominio.lastChild.textContent = emailDominioVerificado
+                ? " Domínio com serviço de e-mail ativo"
+                : " Domínio sem serviço de e-mail ativo";
+        }, 500);
+    }
+
+    function atualizarItemChecklist(elemento, valido) {
+        if (!elemento) return;
+        const icone = elemento.querySelector(".req-icon");
+        elemento.classList.toggle("valid", valido);
+        if (icone) {
+            icone.classList.toggle("fa-circle-check", valido);
+            icone.classList.toggle("fa-circle-xmark", !valido);
+            icone.classList.remove("fa-spinner", "fa-spin");
+        }
     }
 
     // Atualiza visualmente o checklist (máscara) de requisitos da senha

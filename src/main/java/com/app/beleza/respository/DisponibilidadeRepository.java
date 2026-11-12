@@ -13,6 +13,8 @@ import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Repository
 public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade, Integer> {
@@ -44,5 +46,20 @@ public interface DisponibilidadeRepository extends JpaRepository<Disponibilidade
             "WHERE pu.id = :idProdutoUnidade " +
             "ORDER BY d.dataDisponibilidade ASC, d.horaInicio ASC")
     List<Disponibilidade> listarPorProdutoUnidade(@Param("idProdutoUnidade") Integer idProdutoUnidade);
+
+
+    @Query("""
+    SELECT d FROM Disponibilidade d
+    WHERE d.produtoUnidade.id = :produtoUnidadeId
+      AND (
+        d.dataDisponibilidade > :hoje
+        OR (d.dataDisponibilidade = :hoje AND d.horaInicio >= :agora)
+      )
+    ORDER BY d.dataDisponibilidade ASC, d.horaInicio ASC
+""")
+    List<Disponibilidade> listarPorProdutoUnidadeAPartirDeAgora(
+            @Param("produtoUnidadeId") Integer produtoUnidadeId,
+            @Param("hoje") LocalDate hoje,
+            @Param("agora") LocalTime agora);
 
 }
