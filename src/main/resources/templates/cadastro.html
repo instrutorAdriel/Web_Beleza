@@ -31,16 +31,23 @@
             </p>
         </header>
 
-        <div th:if="${erro}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
+        <div th:if="${erro != null and campoErro == null}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
             <span class="ssp-error-message ssp-message-display" th:text="${erro}">Erro encontrado</span>
         </div>
 
-        <form id="kc-form-register" th:action="@{/cadastro}" th:object="${usuarioDTO}" method="POST">
+        <form id="kc-form-register" th:action="@{/cadastro}" th:object="${usuarioDTO}" method="POST" novalidate>
 
             <div class="ssp-form-group">
                 <label th:for="nomeCompleto">Nome Completo</label>
-                <input type="text" th:field="*{nomeCompleto}" id="nomeCompleto" class="ssp-form-control" placeholder="Digite seu nome completo" required>
-                <small id="nomeCompleto-erro" class="ssp-aviso-erro ssp-display-none" style="display: none;">
+                <input type="text"
+                       th:field="*{nomeCompleto}"
+                       id="nomeCompleto"
+                       class="ssp-form-control"
+                       th:classappend="${campoErro == 'nomeCompleto'} ? 'input-error'"
+                       placeholder="Digite seu nome completo" required>
+                <small id="nomeCompleto-erro"
+                       class="ssp-aviso-erro ssp-display-none"
+                       th:class="${campoErro == 'nomeCompleto'} ? 'display: flex;' : 'display: none;'">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     <span>Não é permitido digitar números ou caracteres especiais no nome.</span>
                 </small>
@@ -48,7 +55,8 @@
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
                 <div class="ssp-form-group perfil-nascimento" style="flex: 1;">
                     <label for="data_nascimento_dia">Data de Nascimento</label>
-                    <div class="perfil-nascimento-controles">
+                    <div class="perfil-nascimento-controles"
+                    th:classappend="${campoErro == 'dataNascimento'} ? 'ínput-error'">
                         <input class="campo-data-submetido" type="hidden" id="data_nascimento" th:field="*{dataNascimento}">
                         <input class="data-parte" type="text" id="data_nascimento_dia" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Dia" required>
                         <span class="data-separador" aria-hidden="true">/</span>
@@ -57,68 +65,81 @@
                         <input class="data-parte data-ano" type="text" id="data_nascimento_ano" maxlength="4" inputmode="numeric" placeholder="AAAA" aria-label="Ano" aria-haspopup="dialog">
                         <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
                     </div>
-                    <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
+                    <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden>
+                        <small id="data_nascimento-erro" class="ssp-aviso-erro"
+                        th:style="${campoErro == 'dataNascimento'} ? 'display: flex;' : 'display: none;'">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span th:text="${campoErro == 'dataNascimento'} ? ${erro} : ''"></span>
+                        </small>
+                    </div>
                 </div>
 
                 <div class="ssp-form-group ssp-flex-1">
                     <label th:for="telefone">Telefone</label>
-                    <input type="tel" th:field="*{telefone}" id="telefone" class="ssp-form-control" placeholder="(00) 00000-0000" maxlength="15" required>
+                    <input type="tel"
+                           th:field="*{telefone}"
+                           id="telefone"
+                           class="ssp-form-control"
+                           th:classappend="${campoErro == 'telefone'} ? 'input-error'"
+                           placeholder="(00) 00000-0000"
+                           maxlength="15" required>
+                    <small id="telefone-erro" class="ssp-aviso-erro"
+                    th:style="${campoErro == 'telefone'} ? 'display: flex;' : 'display: none;'">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span th:text="${campoErro == 'telefone'} ? ${erro} : ''"></span>
+                    </small>
                 </div>
             </div>
 
-            <!-- ALERTA DE FAIXA ETÁRIA: aparece dinamicamente enquanto o usuário digita a data de nascimento -->
             <div id="alertaIdade" class="ssp-alert" style="display:none;"></div>
-
-
 
             <div class="ssp-form-group">
                 <label th:for="email">E-mail</label>
-                <input type="email" th:field="*{email}" id="email" class="ssp-form-control" placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
-                <ul class="ssp-password-checklist" id="email-checklist" aria-live="polite">
-                    <li id="email-req-formato" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Formato de e-mail válido</li>
-                    <li id="email-req-pessoal" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Provedor pessoal aceito (Gmail, Hotmail, Outlook e outros)</li>
-                    <li id="email-req-dominio" class="req-item"><i class="fa-solid fa-circle-xmark req-icon"></i> Domínio com serviço de e-mail ativo</li>
-                </ul>
+                <input type="email" th:field="*{email}" id="email" class="ssp-form-control"
+                       th:classappend="${campoErro == 'email'} ? 'input-error'"
+                       placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
+                <small id="email-erro" class="ssp-aviso-erro"
+                       th:style="${campoErro == 'email'} ? 'display: flex;' : 'display: none;'">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span th:text="${campoErro == 'email'} ? ${erro} : ''"></span>
+                </small>
             </div>
 
             <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" maxlength="25" required autocomplete="new-password">
+                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control"
+                           th:classappend="${campoErro == 'senha'} ? 'input-error'"
+                           placeholder="Mín. 8 caracteres (maiúscula, minúscula, número e símbolo)" minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
                 </div>
 
-                <ul class="ssp-password-checklist" id="password-checklist">
-                    <!-- ID REQ-TAMANHO ADICIONADO AQUI -->
-                    <li id="req-tamanho" class="req-item">
-                        <i class="fa-solid fa-circle-xmark req-icon"></i> Mínimo de 8 caracteres
-                    </li>
-                    <li id="req-maiuscula" class="req-item">
-                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra maiúscula
-                    </li>
-                    <li id="req-minuscula" class="req-item">
-                        <i class="fa-solid fa-circle-xmark req-icon"></i> Letra minúscula
-                    </li>
-                    <li id="req-numero" class="req-item">
-                        <i class="fa-solid fa-circle-xmark req-icon"></i> Número
-                    </li>
-                    <li id="req-especial" class="req-item">
-                        <i class="fa-solid fa-circle-xmark req-icon"></i> Caractere especial
-                    </li>
-                </ul>
+                <small id="password-erro" class="ssp-aviso-erro"
+                       th:style="${campoErro == 'senha'} ? 'display: flex;' : 'display: none;'">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span th:text="${campoErro == 'senha'} ? ${erro} : ''"></span>
+                </small>
             </div>
 
             <div class="ssp-form-group">
                 <label th:for="confirmacaoSenha">Confirmar Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" maxlength="25" required autocomplete="new-password">
+                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password"
+                           class="ssp-form-control"
+                           th:classappend="${campoErro == 'confirmacaoSenha'} ? 'input-error'"
+                           placeholder="Repita a senha criada"
+                           minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eyeIcon2')">
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>
                 </div>
-                <div id="password-error" class="ssp-error-message ssp-password-error-style">Senha não compatível</div>
+                <small id="confirm-password-erro" class="ssp-aviso-erro"
+                       th:style="${campoErro == 'confirmacaoSenha'} ? 'display: flex;' : 'display: none;'">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span th:text="${campoErro == 'confirmacaoSenha'} ? ${erro} : ''"></span>
+                </small>
             </div>
 
             <button type="submit" class="ssp-btn-submit ssp-mt-1">Finalizar Cadastro</button>
