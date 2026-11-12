@@ -7,6 +7,20 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarNotificacoes();
     inicializarCarregamentoAgendamento();
     inicializarMascaraTelefone();
+    interceptarCliquesParaEasterEgg();
+});
+
+function trocarPagina(url, html) {
+    history.pushState({ eeSwap: true }, '', url);
+    document.open();
+    document.write(html);
+    document.close();
+}
+window.trocarPagina = trocarPagina;
+
+// Botão "voltar" do navegador depois de uma troca
+window.addEventListener('popstate', function () {
+    location.reload();
 });
 
 /**
@@ -131,3 +145,39 @@ function inicializarMascaraTelefone() {
         this.value = aplicarMascaraTelefone(this.value);
     });
 }
+
+/**
+ * Interceptador de cliques para o Easter Egg
+ * Busca os agendamentos via AJAX para não recarregar a página e não matar o jogo.
+ */
+function interceptarCliquesParaEasterEgg() {
+    document.addEventListener('click', async function (e) {
+        if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+
+        const link = e.target.closest('.filtro-btn, .btn-paginacao-aba');
+        if (!link) return;
+        if (!document.getElementById('easter-egg-canvas')) return;
+
+        const url = link.getAttribute('href');
+        if (!url || url.startsWith('#')) return;
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        mostrarLoading();
+
+        try {
+            const resp = await fetch(url, { credentials: 'same-origin' });
+            const tipo = resp.headers.get('content-type') || '';
+            if (!resp.ok || !tipo.includes('text/html')) throw new Error('Resposta inválida');
+
+            const html = await resp.text();
+            document.dispatchEvent(new CustomEvent('carregamentoFinalizado', {
+                detail: { url: resp.url || url, html }
+            }));
+        } catch (erro) {
+            console.error('Erro ao carregar agendamentos:', erro);
+            window.location.href = url; // fallback: navegação normal
+        }
+    }, true);
+}
+
