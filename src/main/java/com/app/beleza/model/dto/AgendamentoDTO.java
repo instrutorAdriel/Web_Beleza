@@ -22,7 +22,7 @@ public record AgendamentoDTO(
         LocalTime horaInicio,
 
         String statusTexto,
-        String statusClasseCss // Retorna: status-confirmado, status-cancelado, status-concluido, status-pendente
+        String statusClasseCss
 ) {
     public AgendamentoDTO(Agendamento agendamento) {
         this(
@@ -55,8 +55,8 @@ public record AgendamentoDTO(
                 agendamento.getDisponibilidade() != null ? agendamento.getDisponibilidade().getDataDisponibilidade() : null,
                 agendamento.getDisponibilidade() != null ? agendamento.getDisponibilidade().getHoraInicio() : null,
 
-                // Texto do Status
-                agendamento.getSituacao() != null ? agendamento.getSituacao().name() : "Pendente",
+                // Registros legados pendentes são apresentados como confirmados.
+                mapearStatusTexto(agendamento.getSituacao()),
 
                 // Classe CSS dinamicamente mapeada
                 mapearClasseCss(agendamento.getSituacao())
@@ -79,13 +79,18 @@ public record AgendamentoDTO(
     }
 
     private static String mapearClasseCss(SituacaoAgendamento situacao) {
-        if (situacao == null) return "status-pendente";
+        if (situacao == null) return "status-confirmado";
 
         return switch (situacao) {
-            case CONFIRMADO -> "status-confirmado";
+            case CONFIRMADO, PENDENTE -> "status-confirmado";
             case REALIZADO -> "status-concluido";
             case CANCELADO, NAO_COMPARECEU -> "status-cancelado";
-            case PENDENTE -> "status-pendente";
         };
+    }
+
+    private static String mapearStatusTexto(SituacaoAgendamento situacao) {
+        return situacao == null || situacao == SituacaoAgendamento.PENDENTE
+                ? SituacaoAgendamento.CONFIRMADO.name()
+                : situacao.name();
     }
 }

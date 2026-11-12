@@ -3,137 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        #perfil-configuracao .ssp-password-wrapper {
-            position: relative !important;
-            display: block !important;
-            width: 100% !important;
-        }
 
-        #perfil-configuracao .ssp-password-wrapper input {
-            display: block !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-            padding-right: 46px !important;
-        }
-
-        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
-            position: absolute !important;
-            top: 50% !important;
-            right: 12px !important;
-            transform: translateY(-50%) !important;
-            background: none !important;
-            border: none !important;
-            padding: 4px !important;
-            cursor: pointer !important;
-            color: #6b7280 !important;
-            font-size: 1.1rem !important;
-        }
-
-        #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
-            color: #1f2937 !important;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            min-height: 46px;
-            box-sizing: border-box;
-            padding: 0 48px 0 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            background: var(--fundo-input);
-        }
-
-        #perfil-informacao .perfil-nascimento-controles .data-parte {
-            width: 2.2ch;
-            min-width: 0;
-            padding: 0;
-            border: 0;
-            outline: 0;
-            background: transparent;
-            text-align: center;
-            font: inherit;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles .data-ano {
-            width: 4.4ch;
-        }
-
-        #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
-            border-color: #dc2626;
-        }
-
-        #perfil-informacao .data-separador {
-            padding: 0 3px;
-            color: #64748b;
-        }
-
-        #perfil-informacao .campo-data-submetido {
-            display: none;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir {
-            position: absolute;
-            top: 50%;
-            right: 6px;
-            transform: translateY(-50%);
-            display: grid;
-            place-items: center;
-            width: 38px;
-            height: 38px;
-            border: 0;
-            border-radius: 5px;
-            background: transparent;
-            cursor: pointer;
-            color: #334155;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir:hover {
-            background: #f1f5f9;
-        }
-
-        #perfil-informacao .perfil-calendario-abrir i {
-            font-size: 1.5rem;
-        }
-
-        #perfil-informacao .perfil-nascimento {
-            position: relative;
-        }
-
-        #perfil-informacao .perfil-calendario {
-            position: absolute;
-            z-index: 20;
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: 6px;
-            padding: 12px;
-            background: #fff;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
-        }
-
-        #perfil-informacao .perfil-calendario[hidden] { display: none; }
-        #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
-        #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
-        #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
-        #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
-        #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
-        #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
-        #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
-        #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
-
-        #perfil-informacao .group-button {
-            grid-column: 1 / -1;
-            justify-content: center;
-        }
-    </style>
     <script th:src="@{/js/toggle-senha.js}" defer></script>
+    <script th:src="@{/js/perfil.js}" defer></script>
+    <script th:src="@{/js/sidebar.js}" defer></script>
+    <script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -151,6 +28,7 @@
     <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; color: var(--senac-laranja);"></i>
     <p style="margin-top: 15px; font-weight: bold; color: var(--texto-escuro);">Buscando agendamentos...</p>
 </div>
+
 <div class="painel-controle">
     <div class="container-painel">
         <!-- MENU LATERAL -->
@@ -163,7 +41,7 @@
             </div>
 
             <a th:href="@{/perfil(aba='informacao')}" class="bar-item button" th:classappend="${abaAtiva == 'informacao'} ? 'active'">Informações do Perfil</a>
-            <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Configuração do Perfil</a>
+            <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Atualizar Senha</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
             <a th:href="@{/perfil(aba='depoimento')}" class="bar-item button" th:classappend="${abaAtiva == 'depoimento'} ? 'active'">Depoimentos</a>
             <a th:href="@{/}" class="bar-item button">Voltar</a>
@@ -188,7 +66,7 @@
                 <div class="form-grid">
                     <div class="group-input">
                         <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}" readonly>
+                        <input type="text" id="nome" name="nome" th:field="*{nomeCompleto}">
                     </div>
                     <div class="group-input perfil-nascimento">
                         <label for="data_nascimento_dia">Data de Nascimento</label>
@@ -222,11 +100,12 @@
         <!-- ABA: CONFIGURAÇÃO DO PERFIL -->
         <section id="perfil-configuracao" class="secao-painel" th:if="${abaAtiva == 'configuracao'}">
             <div class="secao-header">
-                <h2>Configuração do Perfil</h2>
+
+
+                <h3>Atualizar Senha</h3>
             </div>
 
             <form class="form-perfil" th:action="@{/perfil/atualizar-senha}" th:object="${usuarioDTO}" method="POST">
-                <h3>Atualizar Senha</h3>
 
                 <div class="group-info success" th:if="${mensagemSucesso}">
                     <span th:text="${mensagemSucesso}"></span>
@@ -249,7 +128,7 @@
                 <div class="group-input">
                     <label for="senha-nova">Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{novaSenha}" type="password" id="senha-nova" autocomplete="new-password">
+                        <input th:field="*{novaSenha}" type="password" id="senha-nova" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-nova', 'eyeIconNova')">
                             <i class="fa-solid fa-eye" id="eyeIconNova"></i>
@@ -260,7 +139,7 @@
                 <div class="group-input">
                     <label for="senha-confirmar">Confirmar Nova Senha</label>
                     <div class="ssp-password-wrapper">
-                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" autocomplete="new-password">
+                        <input th:field="*{confirmacaoSenha}" type="password" id="senha-confirmar" maxlength="25" autocomplete="new-password">
                         <button type="button" class="ssp-toggle-password" aria-label="Mostrar ou ocultar senha"
                                 onclick="togglePasswordVisibility('senha-confirmar', 'eyeIconConfirmar')">
                             <i class="fa-solid fa-eye" id="eyeIconConfirmar"></i>
@@ -422,10 +301,23 @@
                     </select>
                 </div>
 
-                <!-- TEXTO DO DEPOIMENTO -->
                 <div class="group-input">
-                    <label for="depoimento">Seu Depoimento</label>
-                    <textarea id="depoimento" name="depoimento" rows="4" placeholder="Escreva aqui seu depoimento..." th:text="${comentarioTexto}" required></textarea>
+                    <label for="campoTextoDepoimento">Seu Depoimento</label>
+
+                    <div class="depoimento-wrapper">
+        <textarea
+                id="campoTextoDepoimento"
+                name="depoimento"
+                rows="4"
+                maxlength="255"
+                placeholder="Escreva aqui seu depoimento..."
+                th:text="${comentarioTexto}"
+                required></textarea>
+
+                        <small class="contador-depoimento" id="contadorCaracteresDepoimento">
+                            0/255
+                        </small>
+                    </div>
                 </div>
 
                 <!-- CAMPO 1 DE IMAGEM -->
@@ -501,6 +393,56 @@
                 setTimeout(() => msg.remove(), 500);
             }, 4000); // 4000 milissegundos = 4 segundos
         });
+    });
+</script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const campoDepoimento = document.getElementById('campoTextoDepoimento');
+        const contadorDepoimento = document.getElementById('contadorCaracteresDepoimento');
+
+        const limite = 255;
+
+        if (campoDepoimento && contadorDepoimento) {
+
+            function atualizarContador() {
+                const quantidade = campoDepoimento.value.length;
+
+                contadorDepoimento.textContent = quantidade + '/' + limite;
+
+                if (quantidade >= limite) {
+                    contadorDepoimento.style.color = '#dc2626';
+                } else {
+                    contadorDepoimento.style.color = '#6b7280';
+                }
+            }
+
+            campoDepoimento.addEventListener('input', atualizarContador);
+
+            atualizarContador();
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const campo = document.getElementById('campoTextoDepoimento');
+        const contador = document.getElementById('contadorCaracteresDepoimento');
+
+        if (!campo || !contador) return;
+
+        function atualizarContador() {
+            const quantidade = campo.value.length;
+
+            contador.textContent = quantidade + '/255';
+
+            contador.style.color = quantidade >= 255
+                ? '#dc2626'
+                : '#6b7280';
+        }
+
+        campo.addEventListener('input', atualizarContador);
+
+        atualizarContador();
     });
 </script>
 

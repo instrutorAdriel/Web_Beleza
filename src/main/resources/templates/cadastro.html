@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <title th:text="${tituloPagina}">Criar Conta</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -10,6 +11,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/cadastro.js}" defer></script>
+    <script th:src="@{/js/perfil-calendario.js(v=6)}" defer></script>
 
 </head>
 <body class="ssp-page">
@@ -44,16 +46,18 @@
                 </small>
             </div>
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
-                <div class="ssp-form-group" style="flex: 1;">
-                    <label th:for="dataNascimento">Data de Nascimento</label>
-                    <input type="date"
-                           id="dataNascimento"
-                           name="dataNascimento"
-                           class="ssp-form-control"
-                           th:field="*{dataNascimento}"
-                           th:max="${T(java.time.LocalDate).now()}"
-                           min="1900-01-01"
-                           required>
+                <div class="ssp-form-group perfil-nascimento" style="flex: 1;">
+                    <label for="data_nascimento_dia">Data de Nascimento</label>
+                    <div class="perfil-nascimento-controles">
+                        <input class="campo-data-submetido" type="hidden" id="data_nascimento" th:field="*{dataNascimento}">
+                        <input class="data-parte" type="text" id="data_nascimento_dia" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Dia" required>
+                        <span class="data-separador" aria-hidden="true">/</span>
+                        <input class="data-parte" type="text" id="data_nascimento_mes" maxlength="2" inputmode="numeric" placeholder="MM" aria-label="Mês">
+                        <span class="data-separador" aria-hidden="true">/</span>
+                        <input class="data-parte data-ano" type="text" id="data_nascimento_ano" maxlength="4" inputmode="numeric" placeholder="AAAA" aria-label="Ano" aria-haspopup="dialog">
+                        <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
+                    </div>
+                    <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
                 </div>
 
                 <div class="ssp-form-group ssp-flex-1">
@@ -75,7 +79,7 @@
             <div class="ssp-form-group">
                 <label th:for="senha">Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" required autocomplete="new-password">
+                    <input type="password" th:field="*{senha}" id="password" class="ssp-form-control" placeholder="Crie uma senha forte" minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('password', 'eyeIcon1')">
                         <i class="fa-solid fa-eye" id="eyeIcon1"></i>
                     </button>
@@ -104,7 +108,7 @@
             <div class="ssp-form-group">
                 <label th:for="confirmacaoSenha">Confirmar Senha</label>
                 <div class="ssp-password-wrapper">
-                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" required autocomplete="new-password">
+                    <input type="password" th:field="*{confirmacaoSenha}" id="confirm-password" class="ssp-form-control" placeholder="Repita a senha criada" minlength="8" maxlength="25" required autocomplete="new-password">
                     <button type="button" class="ssp-toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eyeIcon2')">
                         <i class="fa-solid fa-eye" id="eyeIcon2"></i>
                     </button>

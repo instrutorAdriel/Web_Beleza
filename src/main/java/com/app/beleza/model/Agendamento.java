@@ -1,6 +1,7 @@
 package com.app.beleza.model;
 
 import com.app.beleza.model.enums.SituacaoAgendamento;
+import com.app.beleza.model.enums.SituacaoAgendamentoConverter;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class Agendamento {
     @Column(name="data_hora_agendamento", nullable = false)
     private LocalDateTime dataHoraAgendamento;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = SituacaoAgendamentoConverter.class)
     @Column(name="situacao", nullable = false)
     private SituacaoAgendamento situacao;
 
