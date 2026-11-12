@@ -393,6 +393,11 @@ function abrirModalDepoimento(card) {
         imgElement2.style.display = 'none';
     }
 
+    imgElement1.parentElement.classList.toggle(
+        'imagem-unica',
+        [imgElement1, imgElement2].filter(img => img.style.display !== 'none').length === 1
+    );
+
     window.location.hash = '#modal-depoimento';
 }
 
