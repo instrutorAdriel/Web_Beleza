@@ -110,8 +110,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Domínio não pode ter pontos seguidos nem começar com ponto
             resto = resto.replace(/\.{2,}/g, ".").replace(/^\./, "");
 
-            // Remove ( ) [ ] { } , ; : \ " < > do nome de usuário
-            usuario = usuario.replace(/[()\[\]{},;:\\"<>]/g, "");
+            // Nome de usuário: só letras (sem acento), números, ponto, hífen e underline.
+            // Remove todos os símbolos, inclusive ( ) [ ] { } , ; : \ " < > e os mesmos
+            // símbolos que são bloqueados no nome completo (! # $ % & * + = ? etc.)
+            usuario = usuario.replace(/[^A-Za-z0-9._\-]/g, "");
 
             // Não permite pontos seguidos (.. vira .)
             usuario = usuario.replace(/\.{2,}/g, ".");
@@ -308,9 +310,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (/\s/.test(usuario)) {
                 erros.push("O nome de usuário do e-mail não pode conter espaços.");
             }
-            // Pontuação e agrupamento: ( ) [ ] { } , ; : \ " < >
-            if (/[()\[\]{},;:\\"<>]/.test(usuario)) {
-                erros.push("O nome de usuário do e-mail não pode conter ( ) [ ] { } , ; : \\ \" < >.");
+            // Só letras (sem acento), números, ponto, hífen e underline
+            if (/[^A-Za-z0-9._\-]/.test(usuario.replace(/\s/g, ""))) {
+                erros.push("O nome de usuário do e-mail só pode conter letras, números, ponto, hífen e underline.");
             }
             // Ponto no início ou no fim
             if (usuario.startsWith(".") || usuario.endsWith(".")) {
