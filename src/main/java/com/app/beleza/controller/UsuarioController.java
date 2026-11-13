@@ -10,6 +10,7 @@ import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.AgendamentoService;
 import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
@@ -52,7 +53,7 @@ public class UsuarioController {
     private DepoimentoRepository depoimentoRepository;
 
     @Autowired
-    private com.app.beleza.service.AgendamentoService agendamentoService;
+    private AgendamentoService agendamentoService;
 
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -104,6 +105,7 @@ public class UsuarioController {
 
         if (erro != null) {
             model.addAttribute("erro", erro);
+            model.addAttribute("campoErro", usuarioService.identificarCampoErro(erro));
             model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Criar Conta");
             return "cadastro";
