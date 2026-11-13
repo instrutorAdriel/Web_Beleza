@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
     <script th:src="@{/js/login.js}" defer></script>
 </head>
 <body class="ssp-page">
@@ -28,6 +29,11 @@
 
         <div th:if="${erro}" class="ssp-form-control input-error ssp-status-box ssp-error-box">
             <span class="ssp-error-message ssp-message-display ssp-error-text-red" th:text="${erro}">E-mail ou senha incorretos.</span>
+        </div>
+
+        <div th:if="${sucesso}" class="ssp-status-box ssp-success-box">
+            <i class="fa-solid fa-circle-check"></i>
+            <span th:text="${sucesso}">Conta criada com sucesso!</span>
         </div>
 
         <form th:action="@{/login}" th:object="${usuarioDTO}" method="POST">
