@@ -14,13 +14,10 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("kc-form-register") || document.querySelector("form");
+    const btnSubmit = document.getElementById("btnSubmitCadastro");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
-    const emailReqFormato = document.getElementById("email-req-formato");
-    const emailReqPessoal = document.getElementById("email-req-pessoal");
-    const emailReqDominio = document.getElementById("email-req-dominio");
-    let emailDominioVerificado = false;
-    let emailVerificacaoTimer;
+    const grupoDataNascimento = document.getElementById("grupo-data-nascimento");
     const dominiosPessoais = new Set([
         "gmail.com", "googlemail.com", "hotmail.com", "hotmail.com.br", "outlook.com",
         "outlook.com.br", "live.com", "live.com.br", "msn.com", "yahoo.com", "yahoo.com.br",
@@ -33,15 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("data_nascimento");
     const nomeCompletoInput = document.getElementById("nomeCompleto");
-    const nomeCompletoErro = document.getElementById("nomeCompleto-erro");
     const alertaIdade = document.getElementById("alertaIdade");
 
-    // Requisitos do checklist de senha
-    const reqTamanho = document.getElementById("req-tamanho");
-    const reqMaiuscula = document.getElementById("req-maiuscula");
-    const reqMinuscula = document.getElementById("req-minuscula");
-    const reqNumero = document.getElementById("req-numero");
-    const reqEspecial = document.getElementById("req-especial");
     const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
     const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
 
