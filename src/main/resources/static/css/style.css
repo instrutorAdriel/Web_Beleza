@@ -1541,7 +1541,7 @@ input::-ms-clear {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 3rem 2.5rem;
+    padding: 1.5rem 2.5rem;
     border-radius: 16px;
     box-shadow: var(--wp--preset--shadow--natural);
 }
@@ -1554,7 +1554,7 @@ input::-ms-clear {
    CABEÇALHO DO FORMULÁRIO
    ========================================================================== */
 .ssp-header-page-login {
-    margin-bottom: 2rem;
+    margin-bottom: 0.8rem;
 }
 
 .ssp-login-button-back {
@@ -2256,6 +2256,10 @@ input::-ms-clear {
     .ssp-btn-social {
         background-color: rgba(255, 255, 255, 0.9);
         color: #2D3748;
+    }
+
+    .ssp-form-control {
+        font-size: 0.9rem;
     }
 }
 
