@@ -70,7 +70,6 @@
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid var(--senac-laranja);
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 }
 
 .header-container {
@@ -1547,7 +1546,7 @@ input::-ms-clear {
 }
 
 .cadastro-container {
-    max-width: 650px;
+    max-width: 580px;
 }
 
 /* ==========================================================================
@@ -2250,11 +2249,28 @@ input[type="date"].ssp-form-control::-webkit-calendar-picker-indicator:hover {
         padding-top: 1rem;
     }
     .ssp-form-card {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.25rem;
         box-shadow: var(--wp--preset--shadow--natural);
         background-color: rgba(255, 255, 255, 0.65);
         border: 1px solid rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(14px);
+    }
+    .ssp-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .ssp-form-row .ssp-flex-1 {
+        width: 100%;
+    }
+    .ssp-form-control {
+        font-size: 0.9rem;
+        padding: 0.8rem 0.95rem;
+    }
+    .ssp-password-wrapper .ssp-form-control {
+        padding-right: 2.6rem;
+    }
+    .ssp-form-control::placeholder {
+        font-size: 0.82rem;
     }
     .ssp-divider span {
         background-color: transparent;
@@ -2273,10 +2289,6 @@ input[type="date"].ssp-form-control::-webkit-calendar-picker-indicator:hover {
     .ssp-btn-social {
         background-color: rgba(255, 255, 255, 0.9);
         color: #2D3748;
-    }
-
-    .ssp-form-control {
-        font-size: 0.9rem;
     }
 }
 
