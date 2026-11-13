@@ -96,7 +96,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro")
-    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+    public String processarCadastro(@ModelAttribute UsuarioDTO form,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
         if (session.getAttribute("usuarioLogado") != null) {
             return "redirect:/";
         }
@@ -111,6 +114,8 @@ public class UsuarioController {
             return "cadastro";
         }
 
+        redirectAttributes.addFlashAttribute("sucesso",
+                "Conta criada com sucesso! Faça login para continuar.");
         return "redirect:/login";
     }
 

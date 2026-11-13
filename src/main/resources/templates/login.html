@@ -30,6 +30,11 @@
             <span class="ssp-error-message ssp-message-display ssp-error-text-red" th:text="${erro}">E-mail ou senha incorretos.</span>
         </div>
 
+        <div th:if="${sucesso}" class="ssp-status-box ssp-success-box">
+            <i class="fa-solid fa-circle-check"></i>
+            <span th:text="${sucesso}">Conta criada com sucesso!</span>
+        </div>
+
         <form th:action="@{/login}" th:object="${usuarioDTO}" method="POST">
             <div class="ssp-form-group">
                 <label for="email">E-mail</label>
