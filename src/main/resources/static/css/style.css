@@ -2950,6 +2950,11 @@ input::-ms-clear {
     transform: scale(0.65);
 }
 
+.ssp-form-control.input-error,
+.perfil-nascimento-controles.input-error {
+    border-color: #dc3545;
+}
+
 .perfil-nascimento-controles .data-ano {
     width: 4.4ch;
 }
