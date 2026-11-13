@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const nomeCompletoInput = document.getElementById("nomeCompleto");
     const alertaIdade = document.getElementById("alertaIdade");
 
+    let emailDebounceTimer = null;
+
     const dominiosPessoais = new Set([
         "gmail.com", "googlemail.com", "hotmail.com", "hotmail.com.br", "outlook.com",
         "outlook.com.br", "live.com", "live.com.br", "msn.com", "yahoo.com", "yahoo.com.br",
@@ -91,17 +93,70 @@ document.addEventListener("DOMContentLoaded", function () {
         const hojeISO = new Date().toISOString().split("T")[0];
         dataNascimentoInput.setAttribute("max", hojeISO);
 
+        const validarDataDinamica = () => {
+            atualizarAlertaIdade();
+            if (!dataNascimentoInput.value) {
+                limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+                return false;
+            }
+
+            const nacimento = parseDataISO(dataNascimentoInput.value);
+            if (!nascimento) {
+                mostrarErroCampo(dataNascimentoInput,
+                    "data_nascimento-erro",
+                    "Informa uma data de nascimento válida.");
+                return false;
+            }
+
+            const idade = calcularIdade(nascimento);
+            if (nascimento.getFullYear() < 1900 || idade < 0) {
+                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "Data de nascimento inválida.");
+                return false;
+            }
+
+            if (idade < 14) {
+                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "É necessário ter no mínimo 14 anos para se cadastrar.");
+                return false;
+            }
+
+            limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+            return true;
+        }
+
         const aoMudarData = () => {
             atualizarAlertaIdade();
             limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
         };
 
-        dataNascimentoInput.addEventListener("change", aoMudarData);
-        dataNascimentoInput.addEventListener("input", aoMudarData);
+        dataNascimentoInput.addEventListener("change", validarDataDinamica);
+        dataNascimentoInput.addEventListener("blur", validarDataDinamica);
+        dataNascimentoInput.addEventListener("input", () => {
+            if (dataNascimentoInput.value.length === 10) {
+                validarDataDinamica();
+            } else {
+                limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+            }
+        });
     }
 
     if (emailInput) {
-        emailInput.addEventListener("input", () => limparErroCampo(emailInput, "email-erro"));
+        emailInput.addEventListener("input", () => {
+            limparErroCampo(emailInput, "email-erro");
+            clearTimeout(emailDebounceTimer);
+
+            if (emailInput.value.trim().length > 0) {
+                emailDebounceTimer = setTimeout(() => {
+                    validarEmailDinamico(false);
+                }, 600);
+            }
+        });
+
+        emailInput.addEventListener("blur", () => {
+            clearTimeout(emailDebounceTimer);
+            if (emailInput.value.trim().length > 0) {
+                validarEmailDinamico(true);
+            }
+        });
     }
     if (senhaInput) {
         senhaInput.addEventListener("input", () => limparErroCampo(senhaInput, "password-erro"));
@@ -161,39 +216,9 @@ document.addEventListener("DOMContentLoaded", function () {
             registrarErro(confirmaSenhaInput, "confirm-password-erro", "As senhas não coincidem.");
         }
 
-        const email = emailInput.value.trim().toLowerCase();
-        const partesEmail = email.split("@");
-        const formatoValido =
-            partesEmail.length === 2 &&
-            /^[^\s@]+$/.test(partesEmail[0]) &&
-            /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partesEmail[1]);
-        const provedorPessoal = formatoValido && dominiosPessoais.has(partesEmail[1]);
-
-        if (!formatoValido || !provedorPessoal) {
-            registrarErro(
-                emailInput,
-                "email-erro",
-                "Informe um e-mail pessoal válido (ex: Gmail, Hotmail, Outlook)."
-            );
-        } else {
-            if (btnSubmit) {
-                btnSubmit.disabled = true;
-                btnSubmit.textContent = "Verificando...";
-            }
-            try {
-                const resposta = await fetch("/validar-email-cadastro?email=" + encodeURIComponent(email));
-                const dominioAtivo = resposta.ok && (await resposta.json());
-                if (!dominioAtivo) {
-                    registrarErro(emailInput, "email-erro", "Este domínio de e-mail não está ativo ou não existe.");
-                }
-            } catch (e) {
-                // Em caso de falha de rede, deixa o backend validar no POST
-            } finally {
-                if (btnSubmit) {
-                    btnSubmit.disabled = false;
-                    btnSubmit.textContent = "Finalizar Cadastro";
-                }
-            }
+        const emailValido = await validarEmailDinamico(true, true);
+        if (!emailValido && !primeiroCampoInvalido) {
+            primeiroCampoInvalido = emailInput;
         }
 
         if (primeiroCampoInvalido) {
@@ -298,6 +323,54 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             alertaIdade.style.display = "none";
         }
+    }
+
+    async function validarEmailDinamico(verificarDominioServidor = true, bloquearBotao = false) {
+        const email = emailInput.value.trim().toLowerCase();
+        const partesEmail = email.split("@");
+        const formatoValido =
+            partesEmail.length === 2 &&
+            /^[^\s@]+$/.test(partesEmail[0]) &&
+            /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partesEmail[1]);
+        const provedorPessoal = formatoValido && dominiosPessoais.has(partesEmail[1]);
+
+        if (!formatoValido || !provedorPessoal) {
+            mostrarErroCampo(
+                emailInput,
+                "email-erro",
+                "Informe um e-mail pessoal válido (ex: Gmail, Hotmail, Outlook)."
+            );
+            return false;
+        }
+
+        if (!verificarDominioServidor) {
+            limparErroCampo(emailInput, "email-erro");
+            return true;
+        }
+
+        if (bloquearBotao && btnSubmit) {
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Verificando...";
+        }
+
+        try {
+            const resposta = await fetch("/validar-email-cadastro?email=" + encodeURIComponent(email));
+            const dominioAtivo = resposta.ok && (await resposta.json());
+            if (!dominioAtivo) {
+                mostrarErroCampo(emailInput, "email-erro", "Este domínio de e-mail não está ativo ou não existe.");
+                return false;
+            }
+        } catch (e) {
+            // Se falhar a requisição, o back-end valida no POST
+        } finally {
+            if (bloquearBotao && btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Finalizar Cadastro";
+            }
+        }
+
+        limparErroCampo(emailInput, "email-erro");
+        return true;
     }
 
     /*
