@@ -46,10 +46,10 @@
                        th:classappend="${campoErro == 'nomeCompleto'} ? 'input-error'"
                        placeholder="Digite seu nome completo" required>
                 <small id="nomeCompleto-erro"
-                       class="ssp-aviso-erro ssp-display-none"
-                       th:class="${campoErro == 'nomeCompleto'} ? 'display: flex;' : 'display: none;'">
+                       class="ssp-aviso-erro"
+                       th:style="${campoErro == 'nomeCompleto'} ? 'display: flex;' : 'display: none;'">
                     <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>Não é permitido digitar números ou caracteres especiais no nome.</span>
+                    <span th:text="${campoErro == 'nomeCompleto'} ? ${erro} : 'Informe seu nome completo (apenas letras).'"></span>
                 </small>
             </div>
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
