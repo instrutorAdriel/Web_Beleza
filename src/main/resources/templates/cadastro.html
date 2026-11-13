@@ -11,7 +11,6 @@
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/cadastro.js}" defer></script>
-    <script th:src="@{/js/perfil-calendario.js(v=6)}" defer></script>
 
 </head>
 <body class="ssp-page">
@@ -53,27 +52,21 @@
                 </small>
             </div>
             <div class="ssp-form-row" style="display: flex; gap: 1rem;">
-                <div class="ssp-form-group perfil-nascimento" style="flex: 1;">
-                    <label for="data_nascimento_dia">Data de Nascimento</label>
-                    <div class="perfil-nascimento-controles"
-                    th:classappend="${campoErro == 'dataNascimento'} ? 'ínput-error'">
-                        <input class="campo-data-submetido" type="hidden" id="data_nascimento" th:field="*{dataNascimento}">
-                        <input class="data-parte" type="text" id="data_nascimento_dia" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Dia" required>
-                        <span class="data-separador" aria-hidden="true">/</span>
-                        <input class="data-parte" type="text" id="data_nascimento_mes" maxlength="2" inputmode="numeric" placeholder="MM" aria-label="Mês">
-                        <span class="data-separador" aria-hidden="true">/</span>
-                        <input class="data-parte data-ano" type="text" id="data_nascimento_ano" maxlength="4" inputmode="numeric" placeholder="AAAA" aria-label="Ano" aria-haspopup="dialog">
-                        <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
-                    </div>
-                    <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden>
-                        <small id="data_nascimento-erro" class="ssp-aviso-erro"
-                        th:style="${campoErro == 'dataNascimento'} ? 'display: flex;' : 'display: none;'">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <span th:text="${campoErro == 'dataNascimento'} ? ${erro} : ''"></span>
-                        </small>
-                    </div>
+                <div class="ssp-form-group ssp-flex-1">
+                    <label th:for="dataNascimento">Data de Nascimento</label>
+                    <input type="date"
+                    th:field="*{dataNascimento}"
+                    id="data_nascimento"
+                    class="ssp-form-control"
+                    th:classappend="${campoErro == 'dataNascimento'} ? 'input-error'"
+                    min="1900-01-01"
+                    required>
+                    <small id="data_nascimento-erro" class="ssp-aviso-erro"
+                    th:style="${campoErro == 'dataNascimento'} ? 'display: flex;' : 'display: none;'">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span th:text="${campoErro == 'dataNascimento'} ? ${erro} : ''"></span>
+                    </small>
                 </div>
-
                 <div class="ssp-form-group ssp-flex-1">
                     <label th:for="telefone">Telefone</label>
                     <input type="tel"

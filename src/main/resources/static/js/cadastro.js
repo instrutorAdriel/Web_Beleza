@@ -17,7 +17,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnSubmit = document.getElementById("btnSubmitCadastro");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
-    const grupoDataNascimento = document.getElementById("grupo-data-nascimento");
+    const senhaInput = document.getElementById("password");
+    const confirmaSenhaInput = document.getElementById("confirm-password");
+    const dataNascimentoInput = document.getElementById("data_nascimento");
+    const nomeCompletoInput = document.getElementById("nomeCompleto");
+    const alertaIdade = document.getElementById("alertaIdade");
+
     const dominiosPessoais = new Set([
         "gmail.com", "googlemail.com", "hotmail.com", "hotmail.com.br", "outlook.com",
         "outlook.com.br", "live.com", "live.com.br", "msn.com", "yahoo.com", "yahoo.com.br",
@@ -25,12 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "uol.com.br", "bol.com.br", "terra.com.br", "ig.com.br", "zoho.com", "gmx.com",
         "gmx.net", "fastmail.com", "hey.com"
     ]);
-
-    const senhaInput = document.getElementById("password");
-    const confirmaSenhaInput = document.getElementById("confirm-password");
-    const dataNascimentoInput = document.getElementById("data_nascimento");
-    const nomeCompletoInput = document.getElementById("nomeCompleto");
-    const alertaIdade = document.getElementById("alertaIdade");
 
     const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
     const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
@@ -89,10 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (dataNascimentoInput) {
+        const hojeISO = new Date().toISOString().split("T")[0];
+        dataNascimentoInput.setAttribute("max", hojeISO);
+
         const aoMudarData = () => {
             atualizarAlertaIdade();
-            limparErroCampo(grupoDataNascimento, "data_nascimento-erro");
+            limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
         };
+
         dataNascimentoInput.addEventListener("change", aoMudarData);
         dataNascimentoInput.addEventListener("input", aoMudarData);
     }
@@ -117,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         limparErroCampo(nomeCompletoInput, "nomeCompleto-erro");
-        limparErroCampo(grupoDataNascimento, "data_nascimento-erro");
+        limparErroCampo(dataNascimentoInput, "data_nascimento-erro")
         limparErroCampo(telefoneInput, "telefone-erro");
         limparErroCampo(emailInput, "email-erro");
         limparErroCampo(senhaInput, "password-erro");
@@ -128,47 +131,15 @@ document.addEventListener("DOMContentLoaded", function () {
             registrarErro(nomeCompletoInput, "nomeCompleto-erro", "Digite seu nome e sobrenome.");
         }
 
-        if (!dataNascimentoInput.value) {
-            registrarErro(
-                grupoDataNascimento,
-                "data_nascimento-erro",
-                "Informe uma data de nascimento válida.",
-                document.getElementById("data_nascimento_dia")
-            );
+        const nascimento = parseDataISO(dataNascimentoInput.value);
+        if (!nascimento) {
+            registrarErro(dataNascimentoInput, "data_nascimento-erro", "Informe uma data de nascimento válida.");
         } else {
-            const partes = dataNascimentoInput.value.split("/");
-            const dia = parseInt(partes[0], 10);
-            const mes = parseInt(partes[1], 10) - 1;
-            const ano = parseInt(partes[2], 10);
-            const nascimento = new Date(ano, mes, dia);
-            const hoje = new Date();
-
-            if (
-                partes.length !== 3 ||
-                nascimento.getFullYear() !== ano ||
-                nascimento.getMonth() !== mes ||
-                nascimento.getDate() !== dia
-            ) {
-                registrarErro(
-                    grupoDataNascimento,
-                    "data_nascimento-erro",
-                    "Data de nascimento inválida.",
-                    document.getElementById("data_nascimento_dia")
-                );
-            } else {
-                let idade = hoje.getFullYear() - ano;
-                const diffMes = hoje.getMonth() - mes;
-                if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < dia)) {
-                    idade--;
-                }
-                if (idade < 14) {
-                    registrarErro(
-                        grupoDataNascimento,
-                        "data_nascimento-erro",
-                        "É necessário ter no mínimo 14 anos para se cadastrar.",
-                        document.getElementById("data_nascimento_dia")
-                    );
-                }
+            const idade = calcularIdade(nascimento);
+            if (nascimento.getFullYear() < 1900 || idade < 0) {
+                registrarErro(dataNascimentoInput, "data_nascimento-erro", "Data de nascimento inválida.");
+            } else if (idade < 14) {
+                registrarErro(dataNascimentoInput, "data_nascimento-erro", "É necessário ter no mínimo 14 anos para se cadastrar.");
             }
         }
 
@@ -265,6 +236,26 @@ document.addEventListener("DOMContentLoaded", function () {
             /[0-9]/.test(senha) &&
             /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha)
         );
+    }
+
+    function parseDataISO(valor) {
+        if (!valor || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return null;
+        const [ano, mes, dia] = valor.split("-").map(Number);
+        const data = new Date(ano, mes - 1, dia);
+        if (data.getFullYear() !== ano || data.getMonth() !== mes - 1 || data.getDate() !== dia) {
+            return null;
+        }
+        return data;
+    }
+
+    function calcularIdade(nascimento) {
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const diffMes = hoje.getMonth() - nascimento.getMonth();
+        if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        return idade;
     }
 
     function atualizarAlertaIdade() {
