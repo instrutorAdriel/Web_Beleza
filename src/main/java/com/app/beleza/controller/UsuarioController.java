@@ -10,6 +10,7 @@ import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.AgendamentoService;
 import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
@@ -30,12 +31,6 @@ import java.util.Optional;
 
 @Controller
 public class UsuarioController {
-
-    @GetMapping("/validar-email-cadastro")
-    @ResponseBody
-    public boolean validarEmailCadastro(@RequestParam String email) {
-        return Validador.isEmailPessoalComDominioValido(email);
-    }
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -58,7 +53,7 @@ public class UsuarioController {
     private DepoimentoRepository depoimentoRepository;
 
     @Autowired
-    private com.app.beleza.service.AgendamentoService agendamentoService;
+    private AgendamentoService agendamentoService;
 
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -101,7 +96,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro")
-    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+    public String processarCadastro(@ModelAttribute UsuarioDTO form,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
         if (session.getAttribute("usuarioLogado") != null) {
             return "redirect:/";
         }
@@ -110,12 +108,21 @@ public class UsuarioController {
 
         if (erro != null) {
             model.addAttribute("erro", erro);
+            model.addAttribute("campoErro", usuarioService.identificarCampoErro(erro));
             model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Criar Conta");
             return "cadastro";
         }
 
+        redirectAttributes.addFlashAttribute("sucesso",
+                "Conta criada com sucesso! Faça login para continuar.");
         return "redirect:/login";
+    }
+
+    @GetMapping("/validar-email-cadastro")
+    @ResponseBody
+    public boolean validarEmailCadastro(@RequestParam String email) {
+        return Validador.isEmailPessoalComDominioValido(email);
     }
 
     /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
