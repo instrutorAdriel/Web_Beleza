@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/sidebar.js}" defer></script>
@@ -353,7 +353,7 @@
     </div>
 </div>
 <script th:src="@{/js/sidebar.js}"></script>
-<script th:src="@{/javaScript/perfil.js}"></script>
+<script th:src="@{/js/perfil.js}"></script>
 <script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
 <script>
     // Função para exibir o loading
@@ -395,6 +395,7 @@
         });
     });
 </script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const campoDepoimento = document.getElementById('campoTextoDepoimento');
         const contadorDepoimento = document.getElementById('contadorCaracteresDepoimento');
@@ -421,7 +422,6 @@
         }
     });
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -445,6 +445,5 @@
         atualizarContador();
     });
 </script>
-
 </body>
 </html>

@@ -5,7 +5,7 @@ function abrirModalAgendamento(idServico) {
     document.getElementById("modal-agendamento").dataset.idServicoAtual = idServico;
     document.getElementById("modal-agendamento").style.display = "flex";
 
-    // 👇 NOVO: mostra "Carregando..." enquanto a requisição acontece
+    // NOVO: mostra "Carregando..." enquanto a requisição acontece
     document.getElementById("tabela-sessoes-body").innerHTML =
         '<tr><td colspan="4" style="text-align:center;padding:24px;color:#999;">' +
         '<i class="fa-solid fa-spinner fa-spin"></i> Carregando horários...</td></tr>';
@@ -21,7 +21,7 @@ function abrirModalAgendamento(idServico) {
         .catch(error => {
             console.error("Erro ao carregar fragmento:", error);
             document.getElementById("tabela-sessoes-body").innerHTML =
-                '<tr><td colspan="4" style="text-align:center;padding:24px;color:#ef4444;">' +
+                '<tr><td colspan="4" style="text-align:center;padding:24px;color:rgb(114 7 149 / 0.87);">' +
                 'Erro ao carregar horários. Tente novamente.</td></tr>';
         });
 }
