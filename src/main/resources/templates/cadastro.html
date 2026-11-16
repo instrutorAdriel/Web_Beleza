@@ -88,7 +88,7 @@
                 <label th:for="email">E-mail</label>
                 <input type="email" th:field="*{email}" id="email" class="ssp-form-control"
                        th:classappend="${campoErro == 'email'} ? 'input-error'"
-                       placeholder="Ex: seuemail@provedor.com" required autocomplete="email">
+                       placeholder="Ex: seuemail@provedor.com" maxlength="254" required autocomplete="email">
                 <small id="email-erro" class="ssp-aviso-erro"
                        th:style="${campoErro == 'email'} ? 'display: flex;' : 'display: none;'">
                     <i class="fa-solid fa-triangle-exclamation"></i>

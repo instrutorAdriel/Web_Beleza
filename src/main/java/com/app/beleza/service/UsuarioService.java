@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -99,7 +98,7 @@ public class UsuarioService {
             return null;
         }
 
-        Optional<Usuario> resultado = usuarioRepository.findByEmail(email);
+        Optional<Usuario> resultado = usuarioRepository.findByEmail(email.trim().toLowerCase());
 
         if (resultado.isEmpty()) {
             System.out.println("[AVISO] O e-mail '" + email + "' não foi encontrado na tabela 'usuarios'.");

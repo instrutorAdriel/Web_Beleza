@@ -327,11 +327,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function validarEmailDinamico(verificarDominioServidor = true, bloquearBotao = false) {
         const email = emailInput.value.trim().toLowerCase();
+        const regexRfc5322 = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\.[a-zA-Z0-9_!#$\%&'*+/=?`{\vert{}}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
         const partesEmail = email.split("@");
-        const formatoValido =
-            partesEmail.length === 2 &&
-            /^[^\s@]+$/.test(partesEmail[0]) &&
-            /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partesEmail[1]);
+        const tamanhoValido = email.length <= 254 && partesEmail.length === 2 && partesEmail[0].length <= 64;
+        const formatoValido = tamanhoValido && regexRfc5322.test(email);
         const provedorPessoal = formatoValido && dominiosPessoais.has(partesEmail[1]);
 
         if (!formatoValido || !provedorPessoal) {
