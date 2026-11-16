@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return false;
             }
 
-            const nacimento = parseDataISO(dataNascimentoInput.value);
+            const nascimento = parseDataISO(dataNascimentoInput.value);
             if (!nascimento) {
                 mostrarErroCampo(dataNascimentoInput,
                     "data_nascimento-erro",
