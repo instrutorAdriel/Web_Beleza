@@ -114,8 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 return false;
             }
 
-            if (idade < 14) {
-                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "É necessário ter no mínimo 14 anos para se cadastrar.");
+            if (idade < 12) {
+                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.");
                 return false;
             }
 
@@ -193,8 +193,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const idade = calcularIdade(nascimento);
             if (nascimento.getFullYear() < 1900 || idade < 0) {
                 registrarErro(dataNascimentoInput, "data_nascimento-erro", "Data de nascimento inválida.");
-            } else if (idade < 14) {
-                registrarErro(dataNascimentoInput, "data_nascimento-erro", "É necessário ter no mínimo 14 anos para se cadastrar.");
+            } else if (idade < 12) {
+                registrarErro(dataNascimentoInput, "data_nascimento-erro", "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.");
             }
         }
 
@@ -308,13 +308,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         alertaIdade.className = "ssp-alert";
-        if (idade < 8) {
+        if (idade < 12) {
             alertaIdade.classList.add("ssp-alert-erro");
-            alertaIdade.textContent = "⚠️ Menores de 8 anos não podem se cadastrar para realizar procedimentos no salão.";
-            alertaIdade.style.display = "block";
-        } else if (idade < 12) {
-            alertaIdade.classList.add("ssp-alert-aviso");
-            alertaIdade.textContent = "⚠️ Para se inscrever é preciso ter prévia autorização dos responsáveis legais.";
+            alertaIdade.textContent = "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
             alertaIdade.style.display = "block";
         } else if (idade < 18) {
             alertaIdade.classList.add("ssp-alert-info");
