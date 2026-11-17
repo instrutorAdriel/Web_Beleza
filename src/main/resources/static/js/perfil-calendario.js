@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const anoCampo = document.getElementById("data_nascimento_ano");
     const botao = document.getElementById("abrirCalendarioNascimento");
     const calendario = document.getElementById("calendarioNascimento");
+    const erroIdadeMinima = document.getElementById("erroIdadeMinima");
     if (!campo || !diaCampo || !mesCampo || !anoCampo || !botao || !calendario) return;
 
     const minimo = new Date(1900, 0, 1);
@@ -35,9 +36,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         campo.value = data ? `${diaTexto}/${mesTexto}/${anoTexto}` : "";
+        if (erroIdadeMinima) {
+            let idade = null;
+            if (data) {
+                idade = hoje.getFullYear() - data.getFullYear();
+                const aniversarioAindaNaoChegou = hoje.getMonth() < data.getMonth()
+                    || (hoje.getMonth() === data.getMonth() && hoje.getDate() < data.getDate());
+                if (aniversarioAindaNaoChegou) idade--;
+            }
+            const idadeInsuficiente = idade !== null && idade < 12;
+            erroIdadeMinima.style.display = idadeInsuficiente ? "block" : "none";
+            diaCampo.setAttribute("aria-invalid", String(idadeInsuficiente || (!vazio && !data)));
+        }
         diaCampo.setCustomValidity(vazio || data
             ? "" : "Informe uma data válida entre 01/01/1900 e hoje.");
-        diaCampo.setAttribute("aria-invalid", String(!vazio && !data));
         campo.dispatchEvent(new Event("input", { bubbles: true }));
         campo.dispatchEvent(new Event("change", { bubbles: true }));
     };
