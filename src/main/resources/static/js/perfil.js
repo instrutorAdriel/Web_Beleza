@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarNotificacoes();
     inicializarCarregamentoAgendamento();
     inicializarMascaraTelefone();
+    inicializarPreviewImagensDepoimento();
 });
 
 /**
@@ -129,5 +130,31 @@ function inicializarMascaraTelefone() {
 
     inputTelefone.addEventListener('input', function () {
         this.value = aplicarMascaraTelefone(this.value);
+    });
+}
+
+function inicializarPreviewImagensDepoimento() {
+    [
+        { inputId: 'imagem1', previewId: 'previewImagem1', descricao: 'Pré-visualização da primeira imagem' },
+        { inputId: 'imagem2', previewId: 'previewImagem2', descricao: 'Pré-visualização da segunda imagem' }
+    ].forEach(({ inputId, previewId, descricao }) => {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
+
+        input.addEventListener('change', function () {
+            preview.replaceChildren();
+            const arquivo = input.files && input.files[0];
+            if (!arquivo || !arquivo.type.startsWith('image/')) return;
+
+            const imagem = document.createElement('img');
+            imagem.src = URL.createObjectURL(arquivo);
+            imagem.alt = descricao;
+            imagem.style.maxWidth = '150px';
+            imagem.style.maxHeight = '150px';
+            imagem.style.borderRadius = '8px';
+            imagem.style.objectFit = 'cover';
+            preview.appendChild(imagem);
+        });
     });
 }

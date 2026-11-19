@@ -2,8 +2,9 @@ package com.app.beleza.controller;
 
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
-import com.app.beleza.service.HomeService;
 import com.app.beleza.model.Usuario;
+import com.app.beleza.service.AdminAuthorizationService;
+import com.app.beleza.service.HomeService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ public class HomeController {
     @Autowired
     private HomeService homeService;
 
+    @Autowired
+    private AdminAuthorizationService adminAuthorizationService;
+
     @GetMapping("/")
     public String exibirHome(
             @RequestParam(required = false, defaultValue = "TODAS") String unidade,
@@ -29,6 +33,7 @@ public class HomeController {
 
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
+        model.addAttribute("administrador", adminAuthorizationService.isAdministrador(usuario));
         model.addAttribute("usuarioNome", homeService.obterNomeExibicao(usuario));
         model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
 

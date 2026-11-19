@@ -1,6 +1,10 @@
 package com.app.beleza.model;
 
+import com.app.beleza.model.enums.StatusModeracaoDepoimento;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "depoimento")
@@ -19,6 +23,14 @@ public class Depoimento {
 
     @Column(name="imagem_anexo_2", nullable = false, length = 255)
     private String imagemAnexo2;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_moderacao", nullable = false, length = 20)
+    private StatusModeracaoDepoimento statusModeracao = StatusModeracaoDepoimento.PENDENTE;
+
+    @CreationTimestamp
+    @Column(name = "data_envio", nullable = false, updatable = false)
+    private LocalDateTime dataEnvio;
 
     @ManyToOne
     @JoinColumn(name="id_modelo", nullable = false)
@@ -72,6 +84,18 @@ public class Depoimento {
 
     public void setImagemAnexo2(String imagemAnexo2) {
         this.imagemAnexo2 = imagemAnexo2;
+    }
+
+    public StatusModeracaoDepoimento getStatusModeracao() {
+        return statusModeracao;
+    }
+
+    public void setStatusModeracao(StatusModeracaoDepoimento statusModeracao) {
+        this.statusModeracao = statusModeracao;
+    }
+
+    public LocalDateTime getDataEnvio() {
+        return dataEnvio;
     }
 
     public Modelo getModelo() {

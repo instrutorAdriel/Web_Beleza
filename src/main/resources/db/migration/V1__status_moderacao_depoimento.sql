@@ -1,0 +1,2 @@
+ALTER TABLE depoimento
+    ADD COLUMN status_moderacao VARCHAR(20) NOT NULL DEFAULT 'APROVADO';

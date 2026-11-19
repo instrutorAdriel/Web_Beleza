@@ -31,10 +31,15 @@ O sistema foi dividido em módulos para facilitar a manutenção e escalabilidad
 - Gerenciamento de serviços
 - Sistema de agendamento
 - Painel administrativo
+
+## Moderação de depoimentos
+
+Usuários autenticados com e-mail terminado exatamente em `@df.senac.br` podem acessar a rota `/admin`, usando o mesmo domínio institucional exigido pelo sistema desktop. E-mails de domínios parecidos não recebem acesso.
+
+Na primeira inicialização, o Flyway aplica automaticamente a migração de `src/main/resources/db/migration`, adicionando a coluna de moderação e mantendo os depoimentos existentes publicados. O usuário configurado em `USUARIO` precisa ter permissão `ALTER` no banco; novos depoimentos aguardam aprovação e podem ser aprovados ou rejeitados na área administrativa.
 ## Benefícios
 
 Com a implementação deste sistema, o Salão Escola SENAC passa a contar com uma solução digital que melhora a experiência dos usuários e torna a administração mais eficiente.
 
 ## Desenvolvido por
 Turma **2025.08.133** do curso Técnico em Desenvolvimento de Sistemas do SENAC CEP José Rufino e Carlos Aguiar 
-

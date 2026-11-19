@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderação de depoimentos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-body">
+<main class="admin-container">
+    <header class="admin-header">
+        <div>
+            <p class="admin-eyebrow">Painel administrativo</p>
+            <h1>Moderação de depoimentos</h1>
+            <p>Revise o texto e as imagens antes de publicar o conteúdo no site.</p>
+        </div>
+        <a class="admin-voltar" th:href="@{/}">Voltar para o site</a>
+    </header>
+
+    <div class="admin-mensagem admin-sucesso" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}"></div>
+    <div class="admin-mensagem admin-erro" th:if="${mensagemError}" th:text="${mensagemError}"></div>
+
+    <section>
+        <h2>Depoimentos aguardando análise</h2>
+        <p class="admin-vazio" th:if="${#lists.isEmpty(depoimentosPendentes)}">
+            Não há depoimentos pendentes de análise.
+        </p>
+
+        <article class="admin-depoimento" th:each="depoimento : ${depoimentosPendentes}">
+            <div class="admin-depoimento-cabecalho">
+                <div>
+                    <h3 th:text="${depoimento.usuario.nomeUsuario}">Cliente</h3>
+                    <p th:text="${depoimento.agendamento.disponibilidade.produtoUnidade.produto.nomeProduto
+                        + ' · ' + depoimento.agendamento.disponibilidade.produtoUnidade.unidade.nomeUnidade}">
+                        Serviço · Unidade
+                    </p>
+                    <p th:text="${'Enviado em ' + #temporals.format(depoimento.dataEnvio, 'dd/MM/yyyy ''às'' HH:mm')}">
+                        Data e hora do envio
+                    </p>
+                    <p th:text="${'Atendimento em ' + #temporals.format(depoimento.agendamento.dataHoraAgendamento, 'dd/MM/yyyy HH:mm')}">
+                        Data do atendimento
+                    </p>
+                </div>
+                <span class="admin-status">Pendente</span>
+            </div>
+
+            <blockquote th:text="${depoimento.depoimento}">Texto do depoimento</blockquote>
+
+            <div class="admin-imagens">
+                <a th:if="${!#strings.isEmpty(depoimento.imagemAnexo1)}"
+                   th:href="${depoimento.imagemAnexo1}" target="_blank" rel="noopener noreferrer">
+                    <img th:src="${depoimento.imagemAnexo1}" alt="Primeira imagem anexada">
+                    <span>Imagem 1 · abrir em tamanho original</span>
+                </a>
+                <a th:if="${!#strings.isEmpty(depoimento.imagemAnexo2)}"
+                   th:href="${depoimento.imagemAnexo2}" target="_blank" rel="noopener noreferrer">
+                    <img th:src="${depoimento.imagemAnexo2}" alt="Segunda imagem anexada">
+                    <span>Imagem 2 · abrir em tamanho original</span>
+                </a>
+                <p th:if="${#strings.isEmpty(depoimento.imagemAnexo1) and #strings.isEmpty(depoimento.imagemAnexo2)}">
+                    Nenhuma imagem anexada.
+                </p>
+            </div>
+
+            <div class="admin-acoes">
+                <form th:action="@{/admin/depoimentos/{id}/aprovar(id=${depoimento.id})}" method="post">
+                    <button class="admin-botao admin-aprovar" type="submit">Aprovar e publicar</button>
+                </form>
+                <form th:action="@{/admin/depoimentos/{id}/rejeitar(id=${depoimento.id})}" method="post">
+                    <button class="admin-botao admin-rejeitar" type="submit">Rejeitar</button>
+                </form>
+            </div>
+        </article>
+    </section>
+</main>
+</body>
+</html>

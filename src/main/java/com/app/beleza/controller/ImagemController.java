@@ -2,12 +2,18 @@ package com.app.beleza.controller;
 
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Produto;
+import com.app.beleza.model.Usuario;
+import com.app.beleza.model.enums.StatusModeracaoDepoimento;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ProdutoRepository;
+import com.app.beleza.service.AdminAuthorizationService;
 import com.app.beleza.service.CloudinaryService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +31,9 @@ public class ImagemController {
 
     @Autowired
     private DepoimentoRepository depoimentoRepository;
+
+    @Autowired
+    private AdminAuthorizationService adminAuthorizationService;
 
     // PRODUTO -> imagemAnexo
     @PostMapping(value = "/produtos/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -51,7 +60,16 @@ public class ImagemController {
     @PostMapping(value = "/depoimentos/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> imagemDepoimento(@PathVariable Integer id,
                                               @RequestParam("posicao") int posicao,
-                                              @RequestParam("file") MultipartFile file) {
+                                              @RequestParam("file") MultipartFile file,
+                                              HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuario == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Entre para continuar.");
+        }
+        if (!adminAuthorizationService.isAdministrador(usuario)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso restrito à administração.");
+        }
+
         if (posicao != 1 && posicao != 2) {
             return ResponseEntity.badRequest().body(Map.of("erro", "posicao deve ser 1 ou 2"));
         }
@@ -66,6 +84,7 @@ public class ImagemController {
             } else {
                 depoimento.setImagemAnexo2(url);
             }
+            depoimento.setStatusModeracao(StatusModeracaoDepoimento.PENDENTE);
             depoimentoRepository.save(depoimento);
             return ResponseEntity.ok(Map.of("url", url, "posicao", posicao));
         } catch (IllegalArgumentException e) {

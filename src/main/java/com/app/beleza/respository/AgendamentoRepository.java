@@ -116,6 +116,17 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             @Param("situacao") SituacaoAgendamento situacao
     );
 
+    @Query("SELECT a FROM Agendamento a " +
+            "WHERE a.id = :agendamentoId " +
+            "AND (a.usuario.id = :usuarioId OR a.modelo.usuario.id = :usuarioId) " +
+            "AND a.situacao = :situacao " +
+            "AND NOT EXISTS (SELECT dep FROM Depoimento dep WHERE dep.agendamento.id = a.id)")
+    Optional<Agendamento> findAgendamentoRealizadoSemDepoimentoPorUsuario(
+            @Param("agendamentoId") Integer agendamentoId,
+            @Param("usuarioId") Integer usuarioId,
+            @Param("situacao") SituacaoAgendamento situacao
+    );
+
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "JOIN FETCH a.usuario u " +
             "JOIN FETCH a.disponibilidade d " +

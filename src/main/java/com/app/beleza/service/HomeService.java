@@ -6,6 +6,7 @@ import com.app.beleza.model.ProdutoUnidade;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
+import com.app.beleza.model.enums.StatusModeracaoDepoimento;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
 import com.app.beleza.respository.ProdutoUnidadeRepository;
@@ -81,7 +82,8 @@ public class HomeService {
         String filtroUnidade = (unidade == null || unidade.isEmpty() || unidade.equals("TODAS")) ? null : unidade;
         String filtroServico = (servico == null || servico.isEmpty() || servico.equals("TODOS")) ? null : servico;
 
-        Page<Depoimento> paginaDepoimentos = depoimentoRepository.buscarDepoimentosFiltrados(filtroUnidade, filtroServico, pageable);
+        Page<Depoimento> paginaDepoimentos = depoimentoRepository.buscarDepoimentosFiltrados(
+                filtroUnidade, filtroServico, StatusModeracaoDepoimento.APROVADO, pageable);
 
         List<DepoimentoDTO> dtosDaPagina = new ArrayList<>();
         for (Depoimento depoimento : paginaDepoimentos.getContent()) {
