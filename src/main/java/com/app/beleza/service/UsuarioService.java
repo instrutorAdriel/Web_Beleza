@@ -44,8 +44,8 @@ public class UsuarioService {
         }
 
         int idade = Period.between(form.getDataNascimento(), LocalDate.now()).getYears();
-        if (idade < 14) {
-            return "É necessário ter no mínimo 14 anos para se cadastrar";
+        if (idade < 12) {
+            return "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
         }
 
         String digitosTelefone = form.getTelefone().replaceAll("\\D", "");
@@ -173,8 +173,13 @@ public class UsuarioService {
             return "O nome completo não pode conter emojis.";
         }
 
-        if (form.getDataNascimento() == null) {
-            return "Data de nascimento inválida!";
+        if (form.getDataNascimento() == null || form.getDataNascimento().isAfter(LocalDate.now())) {
+            return "Data de nascimento inv\u00e1lida!";
+        }
+
+        int idade = Period.between(form.getDataNascimento(), LocalDate.now()).getYears();
+        if (idade < 12) {
+            return "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
         }
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
