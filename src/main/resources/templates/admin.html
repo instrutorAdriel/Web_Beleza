@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <title>Moderação de depoimentos</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css(v='20261123-2')}">
 </head>
 <body class="admin-body">
+<div class="admin-topbar">
+    <div class="admin-topbar-conteudo">
+        <a class="admin-marca" th:href="@{/}" aria-label="Senac Beleza - página inicial">
+            <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
+            <span>Painel administrativo</span>
+        </a>
+        <a class="admin-link-site" th:href="@{/}">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            Voltar para o site
+        </a>
+    </div>
+</div>
+
 <main class="admin-container">
     <header class="admin-header">
         <div>
@@ -15,34 +31,59 @@
             <h1>Moderação de depoimentos</h1>
             <p>Revise o texto e as imagens antes de publicar o conteúdo no site.</p>
         </div>
-        <a class="admin-voltar" th:href="@{/}">Voltar para o site</a>
+        <div class="admin-resumo" th:attr="aria-label=${#lists.size(depoimentosPendentes) + ' depoimentos aguardando análise'}">
+            <i class="fa-regular fa-comments" aria-hidden="true"></i>
+            <span><strong th:text="${#lists.size(depoimentosPendentes)}">0</strong> aguardando análise</span>
+        </div>
     </header>
 
-    <div class="admin-mensagem admin-sucesso" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}"></div>
-    <div class="admin-mensagem admin-erro" th:if="${mensagemError}" th:text="${mensagemError}"></div>
+    <div class="admin-mensagem admin-sucesso" role="status" th:if="${mensagemSucesso}">
+        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        <span th:text="${mensagemSucesso}"></span>
+    </div>
+    <div class="admin-mensagem admin-erro" role="alert" th:if="${mensagemError}">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span th:text="${mensagemError}"></span>
+    </div>
 
-    <section>
-        <h2>Depoimentos aguardando análise</h2>
+    <section class="admin-secao" aria-labelledby="admin-titulo-lista">
+        <div class="admin-secao-cabecalho">
+            <div>
+                <h2 id="admin-titulo-lista">Depoimentos aguardando análise</h2>
+                <p>Confira os detalhes do atendimento e os anexos enviados pelo cliente.</p>
+            </div>
+        </div>
         <p class="admin-vazio" th:if="${#lists.isEmpty(depoimentosPendentes)}">
-            Não há depoimentos pendentes de análise.
+            <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+            <span>Não há depoimentos pendentes de análise.</span>
         </p>
 
         <article class="admin-depoimento" th:each="depoimento : ${depoimentosPendentes}">
             <div class="admin-depoimento-cabecalho">
                 <div>
+                    <p class="admin-cliente-legenda">Depoimento de</p>
                     <h3 th:text="${depoimento.usuario.nomeUsuario}">Cliente</h3>
-                    <p th:text="${depoimento.agendamento.disponibilidade.produtoUnidade.produto.nomeProduto
-                        + ' · ' + depoimento.agendamento.disponibilidade.produtoUnidade.unidade.nomeUnidade}">
-                        Serviço · Unidade
-                    </p>
-                    <p th:text="${'Enviado em ' + #temporals.format(depoimento.dataEnvio, 'dd/MM/yyyy ''às'' HH:mm')}">
-                        Data e hora do envio
-                    </p>
-                    <p th:text="${'Atendimento em ' + #temporals.format(depoimento.agendamento.dataHoraAgendamento, 'dd/MM/yyyy HH:mm')}">
-                        Data do atendimento
-                    </p>
                 </div>
-                <span class="admin-status">Pendente</span>
+                <span class="admin-status"><i class="fa-regular fa-clock" aria-hidden="true"></i> Pendente</span>
+            </div>
+
+            <div class="admin-metadados">
+                <p>
+                    <i class="fa-solid fa-scissors" aria-hidden="true"></i>
+                    <span th:text="${depoimento.agendamento.disponibilidade.produtoUnidade.produto.nomeProduto}">Serviço</span>
+                </p>
+                <p>
+                    <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                    <span th:text="${depoimento.agendamento.disponibilidade.produtoUnidade.unidade.nomeUnidade}">Unidade</span>
+                </p>
+                <p>
+                    <i class="fa-regular fa-paper-plane" aria-hidden="true"></i>
+                    <span th:text="${'Enviado em ' + #temporals.format(depoimento.dataEnvio, 'dd/MM/yyyy ''às'' HH:mm')}">Data e hora do envio</span>
+                </p>
+                <p>
+                    <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+                    <span th:text="${'Atendimento em ' + #temporals.format(depoimento.agendamento.dataHoraAgendamento, 'dd/MM/yyyy HH:mm')}">Data do atendimento</span>
+                </p>
             </div>
 
             <blockquote th:text="${depoimento.depoimento}">Texto do depoimento</blockquote>
@@ -51,24 +92,31 @@
                 <a th:if="${!#strings.isEmpty(depoimento.imagemAnexo1)}"
                    th:href="${depoimento.imagemAnexo1}" target="_blank" rel="noopener noreferrer">
                     <img th:src="${depoimento.imagemAnexo1}" alt="Primeira imagem anexada">
-                    <span>Imagem 1 · abrir em tamanho original</span>
+                    <span><i class="fa-regular fa-image" aria-hidden="true"></i> Imagem 1 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
                 </a>
                 <a th:if="${!#strings.isEmpty(depoimento.imagemAnexo2)}"
                    th:href="${depoimento.imagemAnexo2}" target="_blank" rel="noopener noreferrer">
                     <img th:src="${depoimento.imagemAnexo2}" alt="Segunda imagem anexada">
-                    <span>Imagem 2 · abrir em tamanho original</span>
+                    <span><i class="fa-regular fa-image" aria-hidden="true"></i> Imagem 2 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
                 </a>
                 <p th:if="${#strings.isEmpty(depoimento.imagemAnexo1) and #strings.isEmpty(depoimento.imagemAnexo2)}">
+                    <i class="fa-regular fa-image" aria-hidden="true"></i>
                     Nenhuma imagem anexada.
                 </p>
             </div>
 
             <div class="admin-acoes">
                 <form th:action="@{/admin/depoimentos/{id}/aprovar(id=${depoimento.id})}" method="post">
-                    <button class="admin-botao admin-aprovar" type="submit">Aprovar e publicar</button>
+                    <button class="admin-botao admin-aprovar" type="submit">
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        Aprovar e publicar
+                    </button>
                 </form>
                 <form th:action="@{/admin/depoimentos/{id}/rejeitar(id=${depoimento.id})}" method="post">
-                    <button class="admin-botao admin-rejeitar" type="submit">Rejeitar</button>
+                    <button class="admin-botao admin-rejeitar" type="submit">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        Rejeitar
+                    </button>
                 </form>
             </div>
         </article>

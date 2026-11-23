@@ -1317,6 +1317,24 @@
 ========================================================= */
 
 @media (max-width: 768px) {
+    #perfil-depoimento .depoimento-grid,
+    #perfil-depoimento .depoimento-imagens {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    #perfil-depoimento .container-preview-imagem {
+        height: 220px;
+    }
+
+    #perfil-depoimento .group-button {
+        justify-content: stretch;
+    }
+
+    #perfil-depoimento .group-button .btn {
+        width: 100%;
+    }
+
 
     .site-footer {
         padding: 50px 20px 20px;
@@ -2141,6 +2159,71 @@ input::-ms-clear {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Página de envio de depoimentos no painel do perfil */
+#perfil-depoimento .secao-header {
+    border-bottom: 1px solid var(--borda-suave);
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0 1rem;
+}
+
+#perfil-depoimento .depoimento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.75rem;
+}
+
+#perfil-depoimento .depoimento-campo-largura-total {
+    grid-column: 1 / -1;
+}
+
+#perfil-depoimento .depoimento-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+#perfil-depoimento .depoimento-wrapper textarea {
+    display: block;
+    min-height: 140px;
+    padding-bottom: 2.25rem;
+    box-sizing: border-box;
+}
+
+#perfil-depoimento .contador-depoimento {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    color: var(--texto-mutado);
+    font-size: 0.85rem;
+    background: var(--fundo-input);
+    padding-left: 4px;
+}
+
+#perfil-depoimento .depoimento-imagens {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+#perfil-depoimento .depoimento-imagens .group-input {
+    padding: 0;
+}
+
+#perfil-depoimento .container-preview-imagem {
+    width: 100%;
+    height: 180px;
+}
+
+#perfil-depoimento .container-preview-imagem:empty::before {
+    content: "\f03e";
+    font-family: "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--texto-mutado);
+}
+
+#perfil-depoimento .group-button {
+    justify-content: flex-end;
 }
 
 #depoimento-form textarea,

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarCarregamentoAgendamento();
     inicializarMascaraTelefone();
     inicializarPreviewImagensDepoimento();
+    inicializarContadorDepoimento();
 });
 
 /**
@@ -131,6 +132,21 @@ function inicializarMascaraTelefone() {
     inputTelefone.addEventListener('input', function () {
         this.value = aplicarMascaraTelefone(this.value);
     });
+}
+
+function inicializarContadorDepoimento() {
+    const campo = document.getElementById('campoTextoDepoimento');
+    const contador = document.getElementById('contadorCaracteresDepoimento');
+    if (!campo || !contador) return;
+
+    const atualizarContador = () => {
+        const quantidade = campo.value.length;
+        contador.textContent = `${quantidade}/255`;
+        contador.style.color = quantidade >= 255 ? '#dc2626' : 'var(--texto-mutado)';
+    };
+
+    campo.addEventListener('input', atualizarContador);
+    atualizarContador();
 }
 
 function inicializarPreviewImagensDepoimento() {

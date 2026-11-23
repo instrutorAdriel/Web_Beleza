@@ -274,7 +274,7 @@
                 <h2>Depoimentos</h2>
             </div>
 
-            <form class="form-perfil" th:action="@{/perfil/enviar-depoimento}" method="POST" enctype="multipart/form-data">
+            <form class="form-perfil form-depoimento" th:action="@{/perfil/enviar-depoimento}" method="POST" enctype="multipart/form-data">
                 <div class="group-info success" th:if="${mensagemSucesso}">
                     <span th:text="${mensagemSucesso}"></span>
                 </div>
@@ -282,73 +282,68 @@
                     <span th:text="${mensagemError}"></span>
                 </div>
 
-                <!-- SELEÇÃO DO AGENDAMENTO CONCLUÍDO -->
-                <div class="group-input">
-                    <label for="idAgendamento">Selecione o Agendamento Concluído</label>
+                <div class="form-grid depoimento-grid">
+                    <!-- SELEÇÃO DO AGENDAMENTO CONCLUÍDO -->
+                    <div class="group-input depoimento-campo-largura-total">
+                        <label for="idAgendamento">Selecione o agendamento concluído</label>
 
-                    <select id="idAgendamento" name="idAgendamento" required th:if="${listaAgendamentosRealizados != null and !#lists.isEmpty(listaAgendamentosRealizados)}">
-                        <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
-                        <option th:each="ag : ${listaAgendamentosRealizados}"
-                                th:value="${ag.id}"
-                                th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
-                                th:selected="${agendamentoIdSelecionado != null and ag.id == agendamentoIdSelecionado}">
-                            Serviço Exemplo
-                        </option>
-                    </select>
+                        <select id="idAgendamento" name="idAgendamento" required th:if="${listaAgendamentosRealizados != null and !#lists.isEmpty(listaAgendamentosRealizados)}">
+                            <option value="" disabled th:selected="${agendamentoIdSelecionado == null}">Selecione um agendamento...</option>
+                            <option th:each="ag : ${listaAgendamentosRealizados}"
+                                    th:value="${ag.id}"
+                                    th:text="${(ag.disponibilidade?.produtoUnidade?.produto?.nomeProduto != null ? ag.disponibilidade.produtoUnidade.produto.nomeProduto : 'Agendamento #' + ag.id) + ' - ' + (ag.dataHoraAgendamento != null ? #temporals.format(ag.dataHoraAgendamento, 'dd/MM/yyyy HH:mm') : '')}"
+                                    th:selected="${agendamentoIdSelecionado != null and ag.id == agendamentoIdSelecionado}">
+                                Serviço Exemplo
+                            </option>
+                        </select>
 
-                    <select id="idAgendamentoVazio" disabled th:if="${listaAgendamentosRealizados == null or #lists.isEmpty(listaAgendamentosRealizados)}">
-                        <option selected>Nenhum serviço concluído disponível para avaliação</option>
-                    </select>
-                </div>
-
-                <div class="group-input">
-                    <label for="campoTextoDepoimento">Seu Depoimento</label>
-
-                    <div class="depoimento-wrapper">
-        <textarea
-                id="campoTextoDepoimento"
-                name="depoimento"
-                rows="4"
-                maxlength="255"
-                placeholder="Escreva aqui seu depoimento..."
-                th:text="${comentarioTexto}"
-                required></textarea>
-
-                        <small class="contador-depoimento" id="contadorCaracteresDepoimento">
-                            0/255
-                        </small>
+                        <select id="idAgendamentoVazio" disabled aria-label="Agendamento concluído" th:if="${listaAgendamentosRealizados == null or #lists.isEmpty(listaAgendamentosRealizados)}">
+                            <option selected>Nenhum serviço concluído disponível para avaliação</option>
+                        </select>
                     </div>
-                </div>
 
-                <!-- CAMPO 1 DE IMAGEM -->
-                <div class="group-input">
-                    <label for="imagem1">Primeira Imagem</label>
-                    <input type="file" id="imagem1" name="imagem1" accept="image/*">
+                    <div class="group-input depoimento-campo-largura-total">
+                        <label for="campoTextoDepoimento">Seu depoimento</label>
 
-                    <div class="container-preview-imagem" id="previewImagem1" style="margin-top: 10px;">
+                        <div class="depoimento-wrapper">
+                            <textarea
+                                    id="campoTextoDepoimento"
+                                    name="depoimento"
+                                    rows="5"
+                                    maxlength="255"
+                                    placeholder="Conte como foi sua experiência..."
+                                    th:text="${comentarioTexto}"
+                                    required></textarea>
+
+                            <small class="contador-depoimento" id="contadorCaracteresDepoimento">
+                                0/255
+                            </small>
+                        </div>
                     </div>
-                </div>
 
-                <!-- CAMPO 2 DE IMAGEM -->
-                <div class="group-input">
-                    <label for="imagem2">Segunda Imagem</label>
-                    <input type="file" id="imagem2" name="imagem2" accept="image/*">
+                    <div class="depoimento-imagens depoimento-campo-largura-total">
+                        <div class="group-input">
+                            <label for="imagem1">Primeira imagem</label>
+                            <input type="file" id="imagem1" name="imagem1" accept="image/*">
+                            <div class="container-preview-imagem" id="previewImagem1" aria-label="Pré-visualização da primeira imagem"></div>
+                        </div>
 
-                    <div class="container-preview-imagem" id="previewImagem2" style="margin-top: 10px;">
+                        <div class="group-input">
+                            <label for="imagem2">Segunda imagem</label>
+                            <input type="file" id="imagem2" name="imagem2" accept="image/*">
+                            <div class="container-preview-imagem" id="previewImagem2" aria-label="Pré-visualização da segunda imagem"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="group-button">
-                    <button type="submit" name="acao" value="salvar" class="btn">Enviar Depoimento</button>
+                    <div class="group-button depoimento-campo-largura-total">
+                        <button type="submit" name="acao" value="salvar" class="btn">Enviar depoimento</button>
+                    </div>
                 </div>
             </form>
         </section>
 
     </div>
 </div>
-<script th:src="@{/js/sidebar.js}"></script>
-<script th:src="@{/javaScript/perfil.js}"></script>
-<script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
 <script>
     // Função para exibir o loading
     function mostrarLoading() {
@@ -387,56 +382,6 @@
                 setTimeout(() => msg.remove(), 500);
             }, 4000); // 4000 milissegundos = 4 segundos
         });
-    });
-</script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const campoDepoimento = document.getElementById('campoTextoDepoimento');
-        const contadorDepoimento = document.getElementById('contadorCaracteresDepoimento');
-
-        const limite = 255;
-
-        if (campoDepoimento && contadorDepoimento) {
-
-            function atualizarContador() {
-                const quantidade = campoDepoimento.value.length;
-
-                contadorDepoimento.textContent = quantidade + '/' + limite;
-
-                if (quantidade >= limite) {
-                    contadorDepoimento.style.color = '#dc2626';
-                } else {
-                    contadorDepoimento.style.color = '#6b7280';
-                }
-            }
-
-            campoDepoimento.addEventListener('input', atualizarContador);
-
-            atualizarContador();
-        }
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const campo = document.getElementById('campoTextoDepoimento');
-        const contador = document.getElementById('contadorCaracteresDepoimento');
-
-        if (!campo || !contador) return;
-
-        function atualizarContador() {
-            const quantidade = campo.value.length;
-
-            contador.textContent = quantidade + '/255';
-
-            contador.style.color = quantidade >= 255
-                ? '#dc2626'
-                : '#6b7280';
-        }
-
-        campo.addEventListener('input', atualizarContador);
-
-        atualizarContador();
     });
 </script>
 
