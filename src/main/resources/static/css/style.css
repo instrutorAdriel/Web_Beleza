@@ -70,7 +70,6 @@
     z-index: 100;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border-bottom: 4px solid var(--senac-laranja);
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 }
 
 .header-container {
@@ -148,6 +147,7 @@
     transform: translateY(-2px);
 }
 .usuario-logado {
+    position: relative; /* Âncora para o popover seguir este bloco */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -184,9 +184,10 @@
     color: #000000;
 }
 .popover-logout {
-    position: fixed;
+    position: absolute;
     top: 70px;
-    right: 20px;
+    right: 5px;
+    left: -37px;
     background: #ffffff;
     border: 1px solid var(--borda-suave);
     border-radius: 10px;
@@ -1541,20 +1542,20 @@ input::-ms-clear {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 3rem 2.5rem;
+    padding: 1.5rem 2.5rem;
     border-radius: 16px;
     box-shadow: var(--wp--preset--shadow--natural);
 }
 
 .cadastro-container {
-    max-width: 540px;
+    max-width: 580px;
 }
 
 /* ==========================================================================
    CABEÇALHO DO FORMULÁRIO
    ========================================================================== */
 .ssp-header-page-login {
-    margin-bottom: 2rem;
+    margin-bottom: 0.8rem;
 }
 
 .ssp-login-button-back {
@@ -1609,6 +1610,23 @@ input::-ms-clear {
     color: #2D3748;
     background-color: rgba(250, 250, 250, 0.9);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input[type="date"].ssp-form-control {
+    font-family: 'Poppins', sans-serif;
+    color: #2D3748;
+    background-color: rgba(250, 250, 250, 0.9);
+    min-height: 44px;
+}
+
+input[type="date"].ssp-form-control::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+}
+
+input[type="date"].ssp-form-control::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
 }
 
 .ssp-password-wrapper .ssp-form-control {
@@ -2233,11 +2251,28 @@ input::-ms-clear {
         padding-top: 1rem;
     }
     .ssp-form-card {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.25rem;
         box-shadow: var(--wp--preset--shadow--natural);
         background-color: rgba(255, 255, 255, 0.65);
         border: 1px solid rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(14px);
+    }
+    .ssp-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .ssp-form-row .ssp-flex-1 {
+        width: 100%;
+    }
+    .ssp-form-control {
+        font-size: 0.9rem;
+        padding: 0.8rem 0.95rem;
+    }
+    .ssp-password-wrapper .ssp-form-control {
+        padding-right: 2.6rem;
+    }
+    .ssp-form-control::placeholder {
+        font-size: 0.82rem;
     }
     .ssp-divider span {
         background-color: transparent;
@@ -2864,9 +2899,6 @@ input::-ms-clear {
         padding: 1px 6px;
         font-size: 10px;
     }
-
-
-
 }
 
 /* ESTILO DOS FILTROS */
@@ -2911,19 +2943,6 @@ input::-ms-clear {
     background: var(--fundo-input);
 }
 
-.cadastro-container .perfil-nascimento-controles {
-    background: rgba(250, 250, 250, 0.9);
-    border-color: #D2D6DC;
-}
-
-.cadastro-container .perfil-nascimento-controles:focus-within {
-    border: 1px solid transparent;
-    background:
-        linear-gradient(rgba(250, 250, 250, 0.9), rgba(250, 250, 250, 0.9)) padding-box,
-        linear-gradient(135deg, #f7941e, #fbc02d) border-box;
-    box-shadow: 0 0 0 4px rgba(242, 147, 1, 0.2);
-}
-
 .perfil-nascimento-controles .data-parte {
     width: 2.2ch;
     min-width: 0;
@@ -2935,19 +2954,9 @@ input::-ms-clear {
     font: inherit;
 }
 
-.cadastro-container .perfil-nascimento-controles .data-parte {
-    color: #2D3748;
-    flex: 0 0 auto;
-    width: 3ch;
-    font-size: 0.9rem;
-}
-
-.cadastro-container .perfil-nascimento-controles .data-ano {
-    width: 5ch;
-}
-
-.cadastro-container .perfil-calendario-abrir i {
-    transform: scale(0.65);
+.ssp-form-control.input-error,
+.perfil-nascimento-controles.input-error {
+    border-color: #dc3545;
 }
 
 .perfil-nascimento-controles .data-ano {
@@ -3057,41 +3066,15 @@ body.body-perfil .perfil-calendario-abrir i {
 .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
 .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
 
-.modal-depoimento-imagens {
-    display: flex;
-    gap: 10px;
-}
-
-.modal-depoimento-imagens img {
-    width: calc(50% - 5px);
-    min-width: 0;
-    border-radius: 8px;
-    object-fit: cover;
-    max-height: 480px;
-}
-
-.modal-depoimento-imagens.imagem-unica img {
-    width: 100%;
-    max-height: 500px;
-}
-
-@media (max-width: 600px) {
-    .modal-depoimento-imagens {
-        flex-direction: column;
-    }
-
-    .modal-depoimento-imagens img {
-        width: 100%;
-    }
-}
-
 /* Ajustes para telas de celular (Mobile) */
 @media (max-width: 768px) {
+    /* 1. Barra de filtros: empilha um embaixo do outro */
     .barra-filtros-depoimentos {
         flex-direction: column;
         gap: 10px;
     }
 
+    /* 2. Faz os selects ocuparem a largura toda no celular */
     #filtro-unidade, #filtro-servico {
         width: 100%;
     }
@@ -3354,4 +3337,151 @@ body.body-perfil .perfil-calendario-abrir i {
 #perfil-informacao .group-button {
     grid-column: 1 / -1;
     justify-content: center;
+
+    /* tava no perfil e eu joguei p ca nao sei pq    */
+#perfil-configuracao .ssp-password-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+    #perfil-configuracao .ssp-password-wrapper input {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding-right: 46px !important;
+    }
+
+    #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password {
+        position: absolute !important;
+        top: 50% !important;
+        right: 12px !important;
+        transform: translateY(-50%) !important;
+        background: none !important;
+        border: none !important;
+        padding: 4px !important;
+        cursor: pointer !important;
+        color: #6b7280 !important;
+        font-size: 1.1rem !important;
+    }
+
+    #perfil-configuracao .ssp-password-wrapper .ssp-toggle-password:hover {
+        color: #1f2937 !important;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 46px;
+        box-sizing: border-box;
+        padding: 0 48px 0 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        background: var(--fundo-input);
+    }
+
+    #perfil-informacao .perfil-nascimento-controles .data-parte {
+        width: 2.2ch;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        text-align: center;
+        font: inherit;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles .data-ano {
+        width: 4.4ch;
+    }
+
+    #perfil-informacao .perfil-nascimento-controles:has(.data-parte[aria-invalid="true"]) {
+        border-color: #dc2626;
+    }
+
+    #perfil-informacao .data-separador {
+        padding: 0 3px;
+        color: #64748b;
+    }
+
+    #perfil-informacao .campo-data-submetido {
+        display: none;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir {
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        transform: translateY(-50%);
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        cursor: pointer;
+        color: #334155;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir:hover {
+        background: #f1f5f9;
+    }
+
+    #perfil-informacao .perfil-calendario-abrir i {
+        font-size: 1.5rem;
+    }
+
+    #perfil-informacao .perfil-nascimento {
+        position: relative;
+    }
+
+    #perfil-informacao .perfil-calendario {
+        position: absolute;
+        z-index: 20;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 6px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .15);
+    }
+
+    #perfil-informacao .perfil-calendario[hidden] { display: none; }
+    #perfil-informacao .perfil-calendario-seletores { display: flex; gap: 8px; margin-bottom: 10px; }
+    #perfil-informacao .perfil-calendario-seletores label { display: grid; gap: 3px; }
+    #perfil-informacao .perfil-calendario-grade { display: grid; grid-template-columns: repeat(7, 2.25rem); gap: 3px; text-align: center; }
+    #perfil-informacao .perfil-calendario-grade button { padding: 7px 0; border: 0; border-radius: 4px; background: #f3f4f6; cursor: pointer; }
+    #perfil-informacao .perfil-calendario-grade button:hover:not(:disabled),
+    #perfil-informacao .perfil-calendario-grade button.selecionado { background: var(--senac-laranja); color: #fff; }
+    #perfil-informacao .perfil-calendario-grade button:disabled { opacity: .35; cursor: default; }
+    #perfil-informacao .perfil-calendario-dia-semana { font-size: .8rem; font-weight: bold; }
+
+    #perfil-informacao .group-button {
+        grid-column: 1 / -1;
+        justify-content: center;
+    }
+    /* CONTADOR DE CARACTERES DO DEPOIMENTO */
+    #perfil-depoimento .depoimento-wrapper {
+        width: 100%;
+    }
+
+    #perfil-depoimento .depoimento-wrapper textarea {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    #perfil-depoimento .contador-depoimento {
+        display: block;
+        text-align: left;
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
 }

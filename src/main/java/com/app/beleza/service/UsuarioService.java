@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @Service
@@ -26,36 +28,63 @@ public class UsuarioService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public String cadastrar(UsuarioDTO form) {
-        if (form.getSenha() == null || form.getSenha().length() > 25) {
-            return "A senha deve ter no máximo 25 caracteres.";
+        if (form.getNomeCompleto() == null ||
+                form.getNomeCompleto().trim().length() < 3 ||
+                !form.getNomeCompleto().trim().contains(" ")) {
+            return "Informe seu nome e sobrenome.";
         }
 
-        // Validação de Emojis nos campos do cadastro
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
-                Validador.contemEmoji(form.getEmail()) ||
-                Validador.contemEmoji(form.getSenha())) {
-            return "Os campos do formulário não podem conter emojis.";
+        !form.getNomeCompleto().matches("^[A-Za-zÀ-ÿ\\s]+$")) {
+            return "O nome completo deve conter apenas letras e espaços.";
+        }
+
+        if (form.getDataNascimento() == null || form.getDataNascimento().isAfter(LocalDate.now())) {
+            return "Informa uma data de nascimento válida.";
+        }
+
+        int idade = Period.between(form.getDataNascimento(), LocalDate.now()).getYears();
+        if (idade < 12) {
+            return "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
+        }
+
+        String digitosTelefone = form.getTelefone().replaceAll("\\D", "");
+        if (form.getTelefone() == null || digitosTelefone.length() < 10 || digitosTelefone.length() > 11) {
+            return "Informa um telefone válido com DDD.";
+        }
+
+        if (form.getEmail() == null || Validador.contemEmoji(form.getEmail()) ||
+        !Validador.isEmailPessoalComDominioValido(form.getEmail().trim())) {
+            return "Informe um e-mail válido.";
+        }
+
+        String emailNormalizado = form.getEmail().trim().toLowerCase();
+        if (usuarioRepository.existsByEmail(emailNormalizado)) {
+            return "Esse e-mail já esta cadastrado.";
+        }
+
+        if (form.getSenha() == null || form.getSenha().length() < 8 || form.getSenha().length() > 25) {
+            return "A senha deve ter entre 8 e 25 caracteres.";
+        }
+
+        if (Validador.contemEmoji(form.getSenha()) || !isSenhaForte(form.getSenha())) {
+            return "A senha deve contre letra maiúsucla, minúscula, número e caractere especial.";
         }
 
         if (!form.getSenha().equals(form.getConfirmacaoSenha())) {
             return "As senhas não conferem.";
         }
 
-        // Uso do e-mail normal sem alterações
-        if (usuarioRepository.existsByEmail(form.getEmail())) {
-            return "E-mail já cadastrado.";
-        }
-
         String senhaCriptografada = encoder.encode(form.getSenha());
 
         Usuario dadosUsuario = new Usuario();
-        Modelo novoUsuario = new Modelo();
-        dadosUsuario.setNomeUsuario(form.getNomeCompleto());
-        dadosUsuario.setEmail(form.getEmail());
+        dadosUsuario.setNomeUsuario(form.getNomeCompleto().trim());
+        dadosUsuario.setEmail(emailNormalizado);
         dadosUsuario.setSenha(senhaCriptografada);
 
+        Modelo novoUsuario = new Modelo();
         novoUsuario.setDataNascimento(form.getDataNascimento());
-        novoUsuario.setTelefone(form.getTelefone());
+        novoUsuario.setTelefone(form.getTelefone().trim());
         novoUsuario.setUsuario(dadosUsuario);
 
         usuarioRepository.save(dadosUsuario);
@@ -69,7 +98,7 @@ public class UsuarioService {
             return null;
         }
 
-        Optional<Usuario> resultado = usuarioRepository.findByEmail(email);
+        Optional<Usuario> resultado = usuarioRepository.findByEmail(email.trim().toLowerCase());
 
         if (resultado.isEmpty()) {
             System.out.println("[AVISO] O e-mail '" + email + "' não foi encontrado na tabela 'usuarios'.");
@@ -88,16 +117,16 @@ public class UsuarioService {
     }
 
     public String alterarSenha(UsuarioDTO form) {
-        if (form.getSenha() == null || form.getSenha().length() > 25) {
-            return "A senha deve ter no máximo 25 caracteres.";
+        if (form.getSenha() == null || form.getSenha().length() < 8 || form.getSenha().length() > 25) {
+            return "A senha deve ter entre 8 e 25 caracteres.";
         }
 
-        if (Validador.contemEmoji(form.getSenha())) {
-            return "A nova senha não pode conter emojis.";
+        if (Validador.contemEmoji(form.getSenha()) || !isSenhaForte(form.getSenha())) {
+            return "A nova senha deve conter letra maiúscula, minúscula, número e caractere especial.";
         }
 
         if (!form.getSenha().equals(form.getConfirmacaoSenha())) {
-            return "As senhas não conferem.";
+            return "A confirmação de senha não confere.";
         }
 
         Optional<Usuario> resultado = usuarioRepository.findByEmail(form.getEmail());
@@ -113,12 +142,14 @@ public class UsuarioService {
     }
 
     public String atualizarSenha(UsuarioDTO form) {
-        if (form.getNovaSenha() == null || form.getNovaSenha().length() > 25) {
-            return "A senha deve ter no máximo 25 caracteres.";
+        if (form.getNovaSenha() == null
+                || form.getNovaSenha().length() < 8
+                || form.getNovaSenha().length() > 25) {
+            return "A senha deve ter entre 8 e 25 caracteres.";
         }
 
-        if (Validador.contemEmoji(form.getNovaSenha())) {
-            return "A nova senha não pode conter emojis.";
+        if (Validador.contemEmoji(form.getNovaSenha()) || !isSenhaForte(form.getNovaSenha())) {
+            return "A nova senha deve conter letra maiúscula, minúscula, número e caractere especial.";
         }
 
         Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
@@ -129,7 +160,7 @@ public class UsuarioService {
         }
 
         if (!form.getNovaSenha().equals(form.getConfirmacaoSenha())) {
-            return "As senhas não conferem.";
+            return "A confirmação de senha não confere.";
         }
 
         res.get().setSenha(encoder.encode(form.getNovaSenha()));
@@ -142,8 +173,13 @@ public class UsuarioService {
             return "O nome completo não pode conter emojis.";
         }
 
-        if (form.getDataNascimento() == null) {
-            return "Data de nascimento inválida!";
+        if (form.getDataNascimento() == null || form.getDataNascimento().isAfter(LocalDate.now())) {
+            return "Data de nascimento inv\u00e1lida!";
+        }
+
+        int idade = Period.between(form.getDataNascimento(), LocalDate.now()).getYears();
+        if (idade < 12) {
+            return "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
         }
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
@@ -162,13 +198,11 @@ public class UsuarioService {
 
         Modelo modelo = modeloBusca.get();
 
-        // 1. Atualiza o Nome Completo na entidade Usuario
         if (form.getNomeCompleto() != null && !form.getNomeCompleto().trim().isEmpty()) {
-            usuario.setNomeUsuario(form.getNomeCompleto());
+            usuario.setNomeUsuario(form.getNomeCompleto().trim());
             usuarioRepository.save(usuario);
         }
 
-        // 2. Atualiza a Data de Nascimento e o Telefone na entidade Modelo
         modelo.setDataNascimento(form.getDataNascimento());
         modelo.setTelefone(form.getTelefone());
         modeloRepository.save(modelo);
@@ -185,5 +219,23 @@ public class UsuarioService {
         usuarioDTO.setTelefone(usuario.getTelefone());
 
         return usuarioDTO;
+    }
+
+    private boolean isSenhaForte(String senha) {
+        return senha.matches(".*[A-Z].*")
+                && senha.matches(".*[a-z].*")
+                && senha.matches(".*[0-9].*")
+                && senha.matches(".*[!@#$%^&*(),.?\":{}|<>_\\-+=\\[\\]\\\\/;'`~].*");
+    }
+
+    public String identificarCampoErro(String mensagemErro) {
+        String msg = mensagemErro.toLowerCase();
+        if (msg.contains("nome")) return "nomeCompleto";
+        if (msg.contains("nascimento") || msg.contains("idade") || msg.contains("anos")) return "dataNascimento";
+        if (msg.contains("telefone")) return "telefone";
+        if (msg.contains("e-mail") || msg.contains("email")) return "email";
+        if (msg.contains("coincidem") || msg.contains("confirma")) return "confirmacaoSenha";
+        if (msg.contains("senha")) return "senha";
+        return null;
     }
 }

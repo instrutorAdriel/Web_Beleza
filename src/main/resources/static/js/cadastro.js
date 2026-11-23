@@ -16,380 +16,277 @@ function togglePasswordVisibility(inputId, iconId) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("kc-form-register") || document.querySelector("form");
+    const btnSubmit = document.getElementById("btnSubmitCadastro");
     const telefoneInput = document.getElementById("telefone");
     const emailInput = document.getElementById("email");
-    // ATENÇÃO: os IDs reais no HTML são "password" e "confirm-password".
-    // O th:field="*{senha}" NÃO sobrescreve um id já definido manualmente no input,
-    // por isso buscar por "senha"/"confirmacaoSenha" retornava null e quebrava o script.
     const senhaInput = document.getElementById("password");
     const confirmaSenhaInput = document.getElementById("confirm-password");
     const dataNascimentoInput = document.getElementById("data_nascimento");
     const nomeCompletoInput = document.getElementById("nomeCompleto");
-    const nomeCompletoErro = document.getElementById("nomeCompleto-erro");
     const alertaIdade = document.getElementById("alertaIdade");
 
-    // Requisitos do checklist de senha
-    const reqTamanho = document.getElementById("req-tamanho");
-    const reqMaiuscula = document.getElementById("req-maiuscula");
-    const reqMinuscula = document.getElementById("req-minuscula");
-    const reqNumero = document.getElementById("req-numero");
-    const reqEspecial = document.getElementById("req-especial");
+    let emailDebounceTimer = null;
 
-    // =======================================================
-    // 0. BLOQUEIO GLOBAL DE EMOJIS (Compatível com qualquer JS)
-    // =======================================================
+    const dominiosPessoais = new Set([
+        "gmail.com", "googlemail.com", "hotmail.com", "hotmail.com.br", "outlook.com",
+        "outlook.com.br", "live.com", "live.com.br", "msn.com", "yahoo.com", "yahoo.com.br",
+        "icloud.com", "me.com", "mac.com", "aol.com", "proton.me", "protonmail.com",
+        "uol.com.br", "bol.com.br", "terra.com.br", "ig.com.br", "zoho.com", "gmx.com",
+        "gmx.net", "fastmail.com", "hey.com"
+    ]);
 
-    // Regex universal de Emoji (com flag g, usada apenas para o replace)
     const regexEmoji = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/g;
-
-    // Mesma regex SEM a flag g, usada apenas para .test()
-    // (com g, o .test() guarda o lastIndex e pode alternar entre true/false)
-    const regexEmojiTeste = /(?:[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27FF]|\uFE0F)/;
-
-    // Regex para identificar domínios Punycode (ex: xn--...)
     const regexPunycode = /xn--[a-zA-Z0-9]+/gi;
 
     const todosOsCamposTexto = document.querySelectorAll(
-        'input[type="text"], input[type="email"], input[type="password"], textarea'
+        'input[type="text"], input[type="email"], input[type="password"], input[type="tel"], textarea'
     );
 
-    todosOsCamposTexto.forEach(function (campo) {
-
-        // Processa a digitação ao vivo
+    todosOsCamposTexto.forEach(function(campo) {
         campo.addEventListener("input", function (e) {
             const input = e.target;
             const valorOriginal = input.value;
             let valorLimpo = valorOriginal.replace(regexEmoji, "");
 
-            if (input.type === "email" || input.name === "email" || input.id === "email") {
+            if (input.type === "email" || input.id === "email") {
                 valorLimpo = valorLimpo.replace(regexPunycode, "");
             }
 
             if (valorLimpo !== valorOriginal) {
-                const posicaoAtual = input.selectionStart;
-                const diferencaTamanho = valorOriginal.length - valorLimpo.length;
-
+                const pos = input.selectionStart;
+                const diff = valorOriginal.length - valorLimpo.length;
                 input.value = valorLimpo;
-
-                try {
-                    const novaPosicao = Math.max(0, posicaoAtual - diferencaTamanho);
-                    input.setSelectionRange(novaPosicao, novaPosicao);
-                } catch (err) {
-                    // inputs type="email" não permitem controlar o cursor; ignora
-                }
+                input.setSelectionRange(Math.max(0, pos - diff), Math.max(0, pos - diff));
             }
         });
-
-        // Limpeza extra para e-mails quando o usuário sai do campo (Garante que o Punycode convertido pelo navegador suma)
-        if (campo.type === "email" || campo.name === "email" || campo.id === "email") {
-            campo.addEventListener("change", function (e) {
-                e.target.value = e.target.value.replace(regexPunycode, "").replace(regexEmoji, "");
-            });
-        }
     });
 
-    // =======================================================
-    // 0.1 BLOQUEIO DE CARACTERES PROIBIDOS NO E-MAIL (ao digitar)
-    // =======================================================
-    if (emailInput) {
-        // Aviso de erro do e-mail: usa o elemento #email-erro se existir no HTML;
-        // senão, cria um copiando o visual do aviso do nome completo.
-        let emailErro = document.getElementById("email-erro");
-        if (!emailErro) {
-            if (nomeCompletoErro) {
-                emailErro = nomeCompletoErro.cloneNode(true);
+    if (nomeCompletoInput) {
+        nomeCompletoInput.addEventListener("input", function (e) {
+            const valorOriginal = e.target.value;
+            const valorLimpo = valorOriginal.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+            e.target.value = valorLimpo;
+
+            if (valorOriginal !== valorLimpo) {
+                mostrarErroCampo(nomeCompletoInput, "nomeCompleto-erro", "Não é permitido digitar números ou símbolos no nome.");
             } else {
-                emailErro = document.createElement("div");
-                emailErro.style.color = "#e53935";
-                emailErro.style.fontSize = "0.85rem";
-                emailErro.style.marginTop = "6px";
-                emailErro.appendChild(document.createTextNode(""));
-            }
-            emailErro.id = "email-erro";
-            emailErro.style.display = "none";
-            emailInput.insertAdjacentElement("afterend", emailErro);
-        }
-
-        // Troca apenas o texto do aviso (preserva o ícone do clone)
-        const mostrarErroEmail = function (mensagem) {
-            const walker = document.createTreeWalker(emailErro, NodeFilter.SHOW_TEXT);
-            let no;
-            while ((no = walker.nextNode())) {
-                if (no.nodeValue.trim() !== "" || !emailErro.textContent.trim()) {
-                    no.nodeValue = mensagem;
-                    break;
-                }
-            }
-            emailErro.style.display = nomeCompletoErro ? "flex" : "block";
-            emailInput.classList.add("input-error");
-        };
-
-        const esconderErroEmail = function () {
-            emailErro.style.display = "none";
-            emailInput.classList.remove("input-error");
-        };
-
-        emailInput.addEventListener("input", function (e) {
-            const input = e.target;
-            const valorOriginal = input.value;
-
-            // Espaços não são permitidos em lugar nenhum do e-mail
-            let valor = valorOriginal.replace(/\s/g, "");
-
-            // Separa no PRIMEIRO @; qualquer @ extra é removido (só pode existir um)
-            const posArroba = valor.indexOf("@");
-            let usuario = posArroba === -1 ? valor : valor.substring(0, posArroba);
-            let resto = posArroba === -1 ? "" : valor.substring(posArroba + 1).replace(/@/g, "");
-
-            // Marca se a pessoa tentou digitar algum caractere proibido (para mostrar o aviso)
-            const caractereProibido = /\s/.test(valorOriginal)
-                || (posArroba !== -1 && valor.substring(posArroba + 1).includes("@"))
-                || /[^A-Za-z0-9._\-]/.test(usuario)
-                || /[^A-Za-z0-9.\-]/.test(resto);
-
-            // Domínio: só letras, números, ponto e hífen
-            resto = resto.replace(/[^A-Za-z0-9.\-]/g, "");
-
-            // Domínio não pode ter pontos seguidos nem começar com ponto
-            resto = resto.replace(/\.{2,}/g, ".").replace(/^\./, "");
-
-            // Nome de usuário: só letras (sem acento), números, ponto, hífen e underline.
-            // Remove todos os símbolos, inclusive ( ) [ ] { } , ; : \ " < > e os mesmos
-            // símbolos que são bloqueados no nome completo (! # $ % & * + = ? etc.)
-            usuario = usuario.replace(/[^A-Za-z0-9._\-]/g, "");
-
-            // Não permite pontos seguidos (.. vira .)
-            usuario = usuario.replace(/\.{2,}/g, ".");
-
-            // Não permite começar com ponto
-            usuario = usuario.replace(/^\./, "");
-
-            // Se o @ foi digitado logo depois de um ponto (joao.@), remove o ponto final
-            if (posArroba !== -1) {
-                usuario = usuario.replace(/\.$/, "");
-            }
-
-            const valorLimpo = posArroba === -1 ? usuario : usuario + "@" + resto;
-
-            if (valorLimpo !== valorOriginal) {
-                const posicaoAtual = input.selectionStart;
-                const diferenca = valorOriginal.length - valorLimpo.length;
-                input.value = valorLimpo;
-
-                // Mantém o cursor no lugar certo
-                try {
-                    const novaPosicao = Math.max(0, posicaoAtual - diferenca);
-                    input.setSelectionRange(novaPosicao, novaPosicao);
-                } catch (err) {
-                    // inputs type="email" não permitem controlar o cursor; ignora
-                }
-
-                if (caractereProibido) {
-                    mostrarErroEmail("Não é permitido digitar caracteres especiais, acentos ou espaços no e-mail.");
-                } else {
-                    mostrarErroEmail("Não é permitido começar ou terminar o nome com ponto, nem usar pontos seguidos.");
-                }
-            } else {
-                // Nada foi removido — esconde o aviso
-                esconderErroEmail();
+                limparErroCampo(nomeCompletoInput, "nomeCompleto-erro");
             }
         });
     }
 
-    // 1. MÁSCARA E LIMITE DE 11 NÚMEROS PARA TELEFONE
-    telefoneInput.addEventListener("input", function (e) {
-        // Remove tudo que não for número
-        let num = e.target.value.replace(/\D/g, "");
-        if (num.length > 11) {
-            num = num.substring(0, 11);
-        }
-        if (num.length > 7) {
-            e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
-        } else if (num.length > 2) {
-            e.target.value = `(${num.substring(0, 2)}) ${num.substring(2)}`;
-        } else if (num.length > 0) {
-            e.target.value = `(${num}`;
-        } else {
-            e.target.value = "";
-        }
-    });
-
-    // 2. CHECKLIST DA SENHA EM TEMPO REAL
-    if (senhaInput) {
-        senhaInput.addEventListener("input", function (e) {
-            atualizarChecklistSenha(e.target.value);
-            if (senhaEhForte(e.target.value)) {
-                limparErro(senhaInput);
+    if (telefoneInput) {
+        telefoneInput.addEventListener("input", function (e) {
+            let num = e.target.value.replace(/\D/g, "").substring(0, 11);
+            if (num.length > 7) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2, 7)}-${num.substring(7)}`;
+            } else if (num.length > 2) {
+                e.target.value = `(${num.substring(0, 2)}) ${num.substring(2)}`;
+            } else if (num.length > 0) {
+                e.target.value = `(${num}`;
             } else {
-                senhaInput.classList.remove("input-error");
+                e.target.value = "";
             }
+            limparErroCampo(telefoneInput, "telefone-erro");
         });
     }
 
-    // 3. Atualiza o alerta de idade quando a data do componente personalizado muda
     if (dataNascimentoInput) {
-        dataNascimentoInput.addEventListener("change", function () {
+        const hojeISO = new Date().toISOString().split("T")[0];
+        dataNascimentoInput.setAttribute("max", hojeISO);
+
+        const validarDataDinamica = () => {
             atualizarAlertaIdade();
-        });
-        dataNascimentoInput.addEventListener("input", function () {
+            if (!dataNascimentoInput.value) {
+                limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+                return false;
+            }
+
+            const nascimento = parseDataISO(dataNascimentoInput.value);
+            if (!nascimento) {
+                mostrarErroCampo(dataNascimentoInput,
+                    "data_nascimento-erro",
+                    "Informa uma data de nascimento válida.");
+                return false;
+            }
+
+            const idade = calcularIdade(nascimento);
+            if (nascimento.getFullYear() < 1900 || idade < 0) {
+                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "Data de nascimento inválida.");
+                return false;
+            }
+
+            if (idade < 12) {
+                mostrarErroCampo(dataNascimentoInput, "data_nascimento-erro", "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.");
+                return false;
+            }
+
+            limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+            return true;
+        }
+
+        const aoMudarData = () => {
             atualizarAlertaIdade();
+            limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+        };
+
+        dataNascimentoInput.addEventListener("change", validarDataDinamica);
+        dataNascimentoInput.addEventListener("blur", validarDataDinamica);
+        dataNascimentoInput.addEventListener("input", () => {
+            if (dataNascimentoInput.value.length === 10) {
+                validarDataDinamica();
+            } else {
+                limparErroCampo(dataNascimentoInput, "data_nascimento-erro");
+            }
         });
     }
 
-    // 4. BLOQUEIA NÚMEROS E SÍMBOLOS NO NOME COMPLETO (permite letras, acentos e espaços)
-    // O aviso fica visível enquanto houver caractere inválido e some quando a pessoa apagar
-    nomeCompletoInput.addEventListener("input", function (e) {
-        const valorOriginal = e.target.value;
-        const valorLimpo = valorOriginal.replace(/[^A-Za-zÀ-ÿ\s]/g, "");
+    if (emailInput) {
+        emailInput.addEventListener("input", () => {
+            limparErroCampo(emailInput, "email-erro");
+            clearTimeout(emailDebounceTimer);
 
-        if (valorOriginal !== valorLimpo) {
-            // Havia número ou símbolo digitado — mostra o aviso
-            if (nomeCompletoErro) nomeCompletoErro.style.display = "flex";
-            nomeCompletoInput.classList.add("input-error");
-        } else {
-            // Não há mais número/símbolo — esconde o aviso
-            if (nomeCompletoErro) nomeCompletoErro.style.display = "none";
-            nomeCompletoInput.classList.remove("input-error");
-        }
-
-        e.target.value = valorLimpo;
-    });
-
-    // 5. VALIDAÇÃO ANTES DE ENVIAR O FORMULÁRIO
-    form.addEventListener("submit", function (event) {
-        let erros = [];
-
-        // Validação Global de Emojis no Submit (Garantia extra)
-        todosOsCamposTexto.forEach(function (campo) {
-            if (campo && regexEmojiTeste.test(campo.value)) {
-                erros.push("O campo não pode conter emojis.");
-                marcarErro(campo);
+            if (emailInput.value.trim().length > 0) {
+                emailDebounceTimer = setTimeout(() => {
+                    validarEmailDinamico(false);
+                }, 600);
             }
         });
 
-        // Validação do E-mail
-        const errosEmail = validarEmail(emailInput.value.trim());
-        if (errosEmail.length > 0) {
-            erros.push(...errosEmail);
-            marcarErro(emailInput);
-        } else {
-            limparErro(emailInput);
-        }
-
-        // Validação da Idade Mínima (Mínimo 14 anos)
-        if (dataNascimentoInput.value) {
-            const partes = dataNascimentoInput.value.split("/");
-
-            if (partes.length !== 3 || partes[2].length !== 4) {
-                erros.push("Data de nascimento inválida.");
-                marcarErro(dataNascimentoInput);
-            } else {
-                const dia = parseInt(partes[0], 10);
-                const mes = parseInt(partes[1], 10) - 1;
-                const ano = parseInt(partes[2], 10);
-                const dataNascimento = new Date(ano, mes, dia);
-                const hoje = new Date();
-
-                if (
-                    dataNascimento.getFullYear() !== ano ||
-                    dataNascimento.getMonth() !== mes ||
-                    dataNascimento.getDate() !== dia
-                ) {
-                    erros.push("Data de nascimento inválida. Verifique o dia e o mês informados.");
-                    marcarErro(dataNascimentoInput);
-                } else {
-                    let idade = hoje.getFullYear() - dataNascimento.getFullYear();
-                    const diffMes = hoje.getMonth() - dataNascimento.getMonth();
-                    if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < dataNascimento.getDate())) {
-                        idade--;
-                    }
-
-                    if (idade < 14) {
-                        erros.push("É necessário ter no mínimo 14 anos para se cadastrar.");
-                        marcarErro(dataNascimentoInput);
-                    } else {
-                        limparErro(dataNascimentoInput);
-                    }
-                }
+        emailInput.addEventListener("blur", () => {
+            clearTimeout(emailDebounceTimer);
+            if (emailInput.value.trim().length > 0) {
+                validarEmailDinamico(true);
             }
-        }
-
-        // Senha
-        if (senhaInput) {
-            if (!senhaEhForte(senhaInput.value)) {
-                erros.push("A senha deve cumprir todos os requisitos do checklist.");
-                marcarErro(senhaInput);
-            } else {
-                limparErro(senhaInput);
-            }
-        }
-
-        // Confirmação de Senha
-        if (senhaInput && confirmaSenhaInput) {
-            if (senhaInput.value !== confirmaSenhaInput.value) {
-                erros.push("As senhas não coincidem.");
-                marcarErro(confirmaSenhaInput);
-            } else {
-                limparErro(confirmaSenhaInput);
-            }
-        }
-
-        if (erros.length > 0) {
-            event.preventDefault();
-            alert(erros.join("\n"));
-        }
-    });
-
-    // Valida o e-mail e retorna uma lista de mensagens de erro (vazia = válido)
-    function validarEmail(email) {
-        const erros = [];
-
-        // Só pode existir um único @
-        const quantidadeArroba = (email.match(/@/g) || []).length;
-        if (quantidadeArroba !== 1) {
-            erros.push("O e-mail deve conter exatamente um '@'.");
-            return erros; // sem um @ único não dá para separar usuário e domínio
-        }
-
-        const partes = email.split("@");
-        const usuario = partes[0];
-        const dominio = partes[1];
-
-        if (!usuario) {
-            erros.push("O e-mail precisa ter um nome de usuário antes do '@'.");
-        } else {
-            // Espaços em branco
-            if (/\s/.test(usuario)) {
-                erros.push("O nome de usuário do e-mail não pode conter espaços.");
-            }
-            // Só letras (sem acento), números, ponto, hífen e underline
-            if (/[^A-Za-z0-9._\-]/.test(usuario.replace(/\s/g, ""))) {
-                erros.push("O nome de usuário do e-mail só pode conter letras, números, ponto, hífen e underline.");
-            }
-            // Ponto no início ou no fim
-            if (usuario.startsWith(".") || usuario.endsWith(".")) {
-                erros.push("O nome de usuário do e-mail não pode começar nem terminar com ponto.");
-            }
-            // Pontos seguidos
-            if (usuario.includes("..")) {
-                erros.push("O nome de usuário do e-mail não pode ter dois ou mais pontos seguidos.");
-            }
-        }
-
-        // Domínio básico: precisa de ponto e não pode ter espaços
-        if (!dominio || !dominio.includes(".") || /\s/.test(dominio)
-            || dominio.startsWith(".") || dominio.endsWith(".")) {
-            erros.push("O domínio do e-mail é inválido (ex: dominio.com).");
-        }
-
-        return erros;
+        });
+    }
+    if (senhaInput) {
+        senhaInput.addEventListener("input", () => limparErroCampo(senhaInput, "password-erro"));
+    }
+    if (confirmaSenhaInput) {
+        confirmaSenhaInput.addEventListener("input", () => limparErroCampo(confirmaSenhaInput, "confirm-password-erro"));
     }
 
-    // Calcula a idade e mostra o alerta correspondente conforme o usuário escolhe a data
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        let primeiroCampoInvalido = null;
+        const registrarErro = (elementoVisual, erroId, mensagem, elementoFoco = elementoVisual) => {
+            mostrarErroCampo(elementoVisual, erroId, mensagem);
+            if (!primeiroCampoInvalido) primeiroCampoInvalido = elementoFoco;
+        };
+
+        limparErroCampo(nomeCompletoInput, "nomeCompleto-erro");
+        limparErroCampo(dataNascimentoInput, "data_nascimento-erro")
+        limparErroCampo(telefoneInput, "telefone-erro");
+        limparErroCampo(emailInput, "email-erro");
+        limparErroCampo(senhaInput, "password-erro");
+        limparErroCampo(confirmaSenhaInput, "confirm-password-erro");
+
+        const nome = nomeCompletoInput.value.trim();
+        if (nome.length < 3 || !nome.includes(" ")) {
+            registrarErro(nomeCompletoInput, "nomeCompleto-erro", "Digite seu nome e sobrenome.");
+        }
+
+        const nascimento = parseDataISO(dataNascimentoInput.value);
+        if (!nascimento) {
+            registrarErro(dataNascimentoInput, "data_nascimento-erro", "Informe uma data de nascimento válida.");
+        } else {
+            const idade = calcularIdade(nascimento);
+            if (nascimento.getFullYear() < 1900 || idade < 0) {
+                registrarErro(dataNascimentoInput, "data_nascimento-erro", "Data de nascimento inválida.");
+            } else if (idade < 12) {
+                registrarErro(dataNascimentoInput, "data_nascimento-erro", "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.");
+            }
+        }
+
+        const digitosTelefone = telefoneInput.value.replace(/\D/g, "");
+        if (digitosTelefone.length < 10 || digitosTelefone.length > 11) {
+            registrarErro(telefoneInput, "telefone-erro", "Informe um telefone válido com DDD.");
+        }
+
+        const senha = senhaInput.value;
+        if (!senhaEhForte(senha)) {
+            registrarErro(
+                senhaInput,
+                "password-erro",
+                "A senha deve ter no mínimo 8 caracteres, com letra maiúscula, minúscula, número e caractere especial."
+            );
+        }
+
+        if (!confirmaSenhaInput.value || senha !== confirmaSenhaInput.value) {
+            registrarErro(confirmaSenhaInput, "confirm-password-erro", "As senhas não coincidem.");
+        }
+
+        const emailValido = await validarEmailDinamico(true, true);
+        if (!emailValido && !primeiroCampoInvalido) {
+            primeiroCampoInvalido = emailInput;
+        }
+
+        if (primeiroCampoInvalido) {
+            primeiroCampoInvalido.scrollIntoView({ behavior: "smooth", block: "center" });
+            primeiroCampoInvalido.focus();
+            return;
+        }
+
+        form.submit();
+    });
+
+    function mostrarErroCampo(elementoVisual, erroId, mensagem) {
+        if (elementoVisual) {
+            elementoVisual.classList.add("input-error");
+        }
+        const smallErro = document.getElementById(erroId);
+        if (smallErro) {
+            const span = smallErro.querySelector("span");
+            if (span) span.textContent = mensagem;
+            smallErro.style.display = "flex";
+        }
+    }
+
+    function limparErroCampo(elementoVisual, erroId) {
+        if (elementoVisual) {
+            elementoVisual.classList.remove("input-error");
+        }
+        const smallErro = document.getElementById(erroId);
+        if (smallErro) {
+            smallErro.style.display = "none";
+        }
+    }
+
+    function senhaEhForte(senha) {
+        if (!senha) return false;
+        return (
+            senha.length >= 8 &&
+            /[A-Z]/.test(senha) &&
+            /[a-z]/.test(senha) &&
+            /[0-9]/.test(senha) &&
+            /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha)
+        );
+    }
+
+    function parseDataISO(valor) {
+        if (!valor || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return null;
+        const [ano, mes, dia] = valor.split("-").map(Number);
+        const data = new Date(ano, mes - 1, dia);
+        if (data.getFullYear() !== ano || data.getMonth() !== mes - 1 || data.getDate() !== dia) {
+            return null;
+        }
+        return data;
+    }
+
+    function calcularIdade(nascimento) {
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const diffMes = hoje.getMonth() - nascimento.getMonth();
+        if (diffMes < 0 || (diffMes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        return idade;
+    }
+
     function atualizarAlertaIdade() {
         const partes = dataNascimentoInput.value.split("/");
-
-        // Só calcula quando a data estiver completa (dd/MM/yyyy)
         if (partes.length !== 3 || partes[2].length !== 4) {
             alertaIdade.style.display = "none";
             return;
@@ -401,7 +298,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const nascimento = new Date(ano, mes, dia);
         const hoje = new Date();
 
-        // Data inválida - não mostra alerta de idade
         if (nascimento.getFullYear() !== ano || nascimento.getMonth() !== mes || nascimento.getDate() !== dia) {
             alertaIdade.style.display = "none";
             return;
@@ -413,15 +309,10 @@ document.addEventListener("DOMContentLoaded", function () {
             idade--;
         }
 
-        alertaIdade.className = "ssp-alert"; // reseta as classes de cor antes de reaplicar
-
-        if (idade < 8) {
+        alertaIdade.className = "ssp-alert";
+        if (idade < 12) {
             alertaIdade.classList.add("ssp-alert-erro");
-            alertaIdade.textContent = "⚠️ Menores de 8 anos não podem se cadastrar para realizar procedimentos no salão.";
-            alertaIdade.style.display = "block";
-        } else if (idade < 12) {
-            alertaIdade.classList.add("ssp-alert-aviso");
-            alertaIdade.textContent = "⚠️ Para se inscrever é preciso ter prévia autorização dos responsáveis legais.";
+            alertaIdade.textContent = "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
             alertaIdade.style.display = "block";
         } else if (idade < 18) {
             alertaIdade.classList.add("ssp-alert-info");
@@ -432,10 +323,92 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Verifica se a senha possui maiúscula, minúscula, número e caractere especial
-    function senhaEhForte(senha) {
-        if (!senha) return false;
-        return senha.length >= 8 && /[A-Z]/.test(senha) && /[a-z]/.test(senha) && /[0-9]/.test(senha) && /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/;'`~]/.test(senha);
+    async function validarEmailDinamico(verificarDominioServidor = true, bloquearBotao = false) {
+        const email = emailInput.value.trim().toLowerCase();
+        const regexRfc5322 = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\.[a-zA-Z0-9_!#$\%&'*+/=?`{\vert{}}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
+        const partesEmail = email.split("@");
+        const tamanhoValido = email.length <= 254 && partesEmail.length === 2 && partesEmail[0].length <= 64;
+        const formatoValido = tamanhoValido && regexRfc5322.test(email);
+        const provedorPessoal = formatoValido && dominiosPessoais.has(partesEmail[1]);
+
+        if (!formatoValido || !provedorPessoal) {
+            mostrarErroCampo(
+                emailInput,
+                "email-erro",
+                "Informe um e-mail pessoal válido (ex: Gmail, Hotmail, Outlook)."
+            );
+            return false;
+        }
+
+        if (!verificarDominioServidor) {
+            limparErroCampo(emailInput, "email-erro");
+            return true;
+        }
+
+        if (bloquearBotao && btnSubmit) {
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Verificando...";
+        }
+
+        try {
+            const resposta = await fetch("/validar-email-cadastro?email=" + encodeURIComponent(email));
+            const dominioAtivo = resposta.ok && (await resposta.json());
+            if (!dominioAtivo) {
+                mostrarErroCampo(emailInput, "email-erro", "Este domínio de e-mail não está ativo ou não existe.");
+                return false;
+            }
+        } catch (e) {
+            // Se falhar a requisição, o back-end valida no POST
+        } finally {
+            if (bloquearBotao && btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Finalizar Cadastro";
+            }
+        }
+
+        limparErroCampo(emailInput, "email-erro");
+        return true;
+    }
+
+    /*
+    function atualizarChecklistEmail() {
+        const email = emailInput.value.trim().toLowerCase();
+        const partes = email.split("@");
+        const formatoValido = partes.length === 2 && /^[^\s@]+$/.test(partes[0]) && /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(partes[1]);
+        const provedorPessoal = formatoValido && dominiosPessoais.has(partes[1]);
+        atualizarItemChecklist(emailReqFormato, formatoValido);
+        atualizarItemChecklist(emailReqPessoal, provedorPessoal);
+        emailDominioVerificado = false;
+        atualizarItemChecklist(emailReqDominio, false);
+
+        clearTimeout(emailVerificacaoTimer);
+        if (!provedorPessoal) return;
+
+        emailReqDominio.querySelector(".req-icon").className = "fa-solid fa-spinner fa-spin req-icon";
+        emailReqDominio.lastChild.textContent = " Verificando domínio...";
+        emailVerificacaoTimer = setTimeout(async function () {
+            try {
+                const resposta = await fetch("/validar-email-cadastro?email=" + encodeURIComponent(email));
+                emailDominioVerificado = resposta.ok && await resposta.json();
+            } catch (erro) {
+                emailDominioVerificado = false;
+            }
+            atualizarItemChecklist(emailReqDominio, emailDominioVerificado);
+            emailReqDominio.lastChild.textContent = emailDominioVerificado
+                ? " Domínio com serviço de e-mail ativo"
+                : " Domínio sem serviço de e-mail ativo";
+        }, 500);
+    }
+
+    function atualizarItemChecklist(elemento, valido) {
+        if (!elemento) return;
+        const icone = elemento.querySelector(".req-icon");
+        elemento.classList.toggle("valid", valido);
+        if (icone) {
+            icone.classList.toggle("fa-circle-check", valido);
+            icone.classList.toggle("fa-circle-xmark", !valido);
+            icone.classList.remove("fa-spinner", "fa-spin");
+        }
     }
 
     // Atualiza visualmente o checklist (máscara) de requisitos da senha
@@ -466,13 +439,5 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
-    function marcarErro(input) {
-        if (input) input.classList.add("input-error");
-    }
-
-    function limparErro(input) {
-        if (input) input.classList.remove("input-error");
-    }
-
+*/
 });

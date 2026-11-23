@@ -10,6 +10,7 @@ import com.app.beleza.respository.AgendamentoRepository;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.service.AgendamentoService;
 import com.app.beleza.service.CloudinaryService;
 import com.app.beleza.service.PasswordResetService;
 import com.app.beleza.service.UsuarioService;
@@ -52,7 +53,7 @@ public class UsuarioController {
     private DepoimentoRepository depoimentoRepository;
 
     @Autowired
-    private com.app.beleza.service.AgendamentoService agendamentoService;
+    private AgendamentoService agendamentoService;
 
     @Autowired
     private CloudinaryService cloudinaryService;
@@ -95,7 +96,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro")
-    public String processarCadastro(@ModelAttribute UsuarioDTO form, Model model, HttpSession session) {
+    public String processarCadastro(@ModelAttribute UsuarioDTO form,
+                                    Model model,
+                                    HttpSession session,
+                                    RedirectAttributes redirectAttributes) {
         if (session.getAttribute("usuarioLogado") != null) {
             return "redirect:/";
         }
@@ -104,15 +108,26 @@ public class UsuarioController {
 
         if (erro != null) {
             model.addAttribute("erro", erro);
+            model.addAttribute("campoErro", usuarioService.identificarCampoErro(erro));
             model.addAttribute("usuarioDTO", form);
             model.addAttribute("tituloPagina", "Criar Conta");
             return "cadastro";
         }
 
+        redirectAttributes.addFlashAttribute("sucesso",
+                "Conta criada com sucesso! Faça login para continuar.");
         return "redirect:/login";
     }
 
+    @GetMapping("/validar-email-cadastro")
+    @ResponseBody
+    public boolean validarEmailCadastro(@RequestParam String email) {
+        return Validador.isEmailPessoalComDominioValido(email);
+    }
+
     /* ─── RECUPERAR / ALTERAR SENHA POR TOKEN ─────────────────────────────── */
+
+    // (sem mudanças) só exibe a página
     @GetMapping("/recuperar-senha")
     public String exibirRecuperSenha(@ModelAttribute UsuarioDTO form, Model model) {
         model.addAttribute("tituloPagina", "Alterar Senha");
@@ -120,34 +135,51 @@ public class UsuarioController {
         return "recuperar-senha";
     }
 
+    // ALTERADO: redirect após o POST + aviso de e-mail já enviado
     @PostMapping("/recuperar-senha")
-    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model) {
+    public String processarEmail(@ModelAttribute UsuarioDTO form, Model model,
+                                 RedirectAttributes redirect) {
+
         if (form.getEmail() == null || form.getEmail().isBlank()) {
             model.addAttribute("erro", "E-mail em branco");
             return "recuperar-senha";
         }
-        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
 
         if (!Validador.isEmailValido(form.getEmail())) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
-        } else if (res.isEmpty()) {
+        }
+
+        Optional<Usuario> res = usuarioRepository.findByEmail(form.getEmail());
+        if (res.isEmpty()) {
             model.addAttribute("erro", "E-mail inválido");
             return "recuperar-senha";
         }
 
-        Usuario usuario = res.get();
+        // Guarda o resultado para testar os 3 casos
+        String resultado = passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), res.get());
 
-        if (passwordResetService.enviarEmailRecuperarSenha(form.getEmail(), usuario) == null) {
-            model.addAttribute("succ", "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
-        } else {
+        // Já existe um e-mail válido: avisa para não clicar de novo
+        if (PasswordResetService.EMAIL_JA_ENVIADO.equals(resultado)) {
+            redirect.addFlashAttribute("erro",
+                    "O e-mail já foi enviado. Verifique sua caixa de entrada e o spam. " +
+                            "Não é necessário clicar novamente; você poderá pedir outro link em 3 minutos.");
+            return "redirect:/recuperar-senha";
+        }
+
+        // Erro real (falha no e-mail, usuário não encontrado etc.)
+        if (resultado != null) {
             model.addAttribute("erro", "Ocorreu um erro, tente novamente mais tarde");
             return "recuperar-senha";
         }
 
-        return "recuperar-senha";
+        // Sucesso: primeiro envio. O redirect evita reenvio do POST no F5
+        redirect.addFlashAttribute("succ",
+                "Foi enviado um e-mail com o link, verifique a caixa de mensagens ou spam.");
+        return "redirect:/recuperar-senha";
     }
 
+    // (sem mudanças)
     @GetMapping("/alterar-senha/{token}")
     public String exibirAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
         if (passwordResetService.verificarToken(token) != null) {
@@ -160,6 +192,7 @@ public class UsuarioController {
         return "alterar-senha";
     }
 
+    // ALTERADO: devolve o token no erro e apaga o token após o sucesso
     @PostMapping("/alterar-senha/{token}")
     public String processarAlterarSenha(@PathVariable String token, @ModelAttribute UsuarioDTO form, Model model) {
         if (passwordResetService.verificarToken(token) != null) {
@@ -172,11 +205,14 @@ public class UsuarioController {
         if (res != null) {
             model.addAttribute("erro", res);
             model.addAttribute("usuarioDTO", form);
+            model.addAttribute("token", token);
             return "alterar-senha";
         }
 
-        model.addAttribute("succ", "Senha alterada com sucesso!");
+        // O link não pode ser usado uma segunda vez
+        passwordResetService.invalidarToken(token);
 
+        model.addAttribute("succ", "Senha alterada com sucesso!");
         return "alterar-senha";
     }
 }

@@ -21,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.CacheEvict;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +36,7 @@ public class AgendamentoService {
     @Autowired private DisponibilidadeRepository disponibilidadeRepository;
     @Autowired private ModeloRepository modeloRepository;
     @Autowired private InstrutorRepository instrutorRepository;
+    @Autowired private Clock clock;
 
 
     @Transactional
@@ -40,7 +44,8 @@ public class AgendamentoService {
     public void confirmarAgendamentosPendentes(Usuario usuarioLogado) {
         if (usuarioLogado == null) return;
 
-        List<Agendamento> todosAgendamentos = agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
+        List<Agendamento> todosAgendamentos =
+                agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
 
         for (Agendamento ag : todosAgendamentos) {
             if (ag.getSituacao() == SituacaoAgendamento.PENDENTE) {
@@ -54,8 +59,12 @@ public class AgendamentoService {
     public List<SessaoAtendimentoDTO> listarPorDisponibilidade(Integer idProdutoUnidade, Usuario usuarioLogado) {
         List<SessaoAtendimentoDTO> lista = new ArrayList<>();
 
+        LocalDate hoje = LocalDate.now(clock);
+        LocalTime agora = LocalTime.now(clock);
+
         List<Disponibilidade> disponibilidades =
-                disponibilidadeRepository.listarPorProdutoUnidade(idProdutoUnidade);
+                disponibilidadeRepository.listarPorProdutoUnidadeAPartirDeAgora(
+                        idProdutoUnidade, hoje, agora);
 
         for (Disponibilidade d : disponibilidades) {
             boolean jaAgendou = false;
@@ -120,7 +129,9 @@ public class AgendamentoService {
         ag.setDisponibilidade(disp);
         ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
-        ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
+        ag.setDataHoraAgendamento(LocalDateTime.of(
+                disp.getDataDisponibilidade(),
+                disp.getHoraInicio()));
 
         agendamentoRepository.save(ag);
 
@@ -138,6 +149,11 @@ public class AgendamentoService {
                 .findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                         usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado."));
+
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
 
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
@@ -164,6 +180,11 @@ public class AgendamentoService {
             throw new RuntimeException("Esse agendamento já está cancelado.");
         }
 
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
+
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
 
@@ -177,9 +198,11 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
+    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(
+            Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(
+                pagina, tamanho, Sort.by("id").descending());
 
         // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
         SituacaoAgendamento filtroEnum = null;
@@ -187,7 +210,7 @@ public class AgendamentoService {
             try {
                 filtroEnum = SituacaoAgendamento.valueOf(filtroStr);
             } catch (IllegalArgumentException e) {
-                // Se mandarem um filtro inválido na URL, ignora e traz todos
+                // Filtro inválido: traz todos os agendamentos.
             }
         }
 
