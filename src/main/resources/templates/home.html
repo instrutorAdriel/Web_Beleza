@@ -364,7 +364,7 @@
                     <td class="align-middle text-center">
                         <button th:if="${sessao.agendadoPeloUsuario}"
                                 class="btn-cancelar ssp-btn-cancelar"
-                                th:onclick="|desfazerAgendamento(${sessao.id})|">
+                                th:onclick="|desfazerAgendamento(${sessao.id}, this)|">
                             ✕ Desfazer
                         </button>
 
@@ -376,7 +376,7 @@
 
                         <button th:if="${!sessao.agendadoPeloUsuario && sessao.vagasDisponiveis > 0}"
                                 class="btn-confirmar ssp-btn-confirm-active"
-                                th:onclick="|confirmarAgendamento(${sessao.id})|">
+                                th:onclick="|confirmarAgendamento(${sessao.id}, this)|">
                             Agendar ➔
                         </button>
                     </td>

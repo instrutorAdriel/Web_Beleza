@@ -1,3 +1,5 @@
+let requisicaoEmAndamento = false;
+
 // Abre o modal e pede ao Spring o HTML pronto (Fragmento) da tabela
 function abrirModalAgendamento(idServico) {
     console.log("Carregando tabela via Spring para o Serviço:", idServico);
@@ -30,13 +32,46 @@ function fecharModal() {
     document.getElementById("modal-agendamento").style.display = "none";
 }
 
+function bloquearBotoesModal(botaoClicado, textoCarregamento) {
+    const botoes = document.querySelectorAll("#tabela-sessoes-body button");
+    botoes.forEach(btn => {
+        btn.disabled = true;
+        btn.style.cursor = "not-allowed";
+        btn.style.opacity = "0.65";
+    });
+
+    if (botaoClicado) {
+        botaoClicado.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${textoCarregamento}`;
+        botaoClicado.style.opacity = "0.9";
+    }
+}
+
+function restaurarBotaoModal(botaoClicado, textoOriginal) {
+    const botoes = document.querySelectorAll("#tabela-sessoes-body button");
+    botoes.forEach(btn => {
+        if (!btn.classList.contains("ssp-btn-disabled")) {
+            btn.disabled = false;
+            btn.style.cursor = "pointer";
+            btn.style.opacity = "1";
+        }
+    });
+
+    if (botaoClicado) {
+        botaoClicado.innerHTML = textoOriginal;
+    }
+}
+
 // Executa a ação de Agendar
-// Executa a ação de Agendar
-function confirmarAgendamento(idSessao) {
+function confirmarAgendamento(idSessao, botaoClicado) {
+    if (requisicaoEmAndamento) return;
+    requisicaoEmAndamento = true;
+
+    const textoOriginal = botaoClicado ? botaoClicado.innerHTML : "Agendar ➔";
+    bloquearBotoesModal(botaoClicado, "Processando...");
+
     fetch(`/api/agendamento/${idSessao}/agendar`, { method: 'POST' })
         .then(response => {
             if (response.status === 401) {
-                // Se o Java disser que não está logado, avisa e manda para o /login
                 alert("Para agendar um horário, você precisa entrar na sua conta.");
                 window.location.href = "/login";
                 throw new Error("Usuário não autenticado");
@@ -52,32 +87,48 @@ function confirmarAgendamento(idSessao) {
         .catch(error => {
             if (error.message !== "Usuário não autenticado") {
                 alert(error.message);
+                restaurarBotaoModal(botaoClicado, textoOriginal);
             }
+        })
+        .finally(() => {
+            requisicaoEmAndamento = false;
         });
 }
 
 // Executa a ação de Desfazer o Agendamento
-function desfazerAgendamento(idSessao) {
-    if (confirm("Tem certeza que deseja cancelar este agendamento?")) {
-        fetch(`/api/agendamento/${idSessao}/cancelar`, { method: 'POST' })
-            .then(response => {
-                if (response.status === 401) {
-                    alert("Sua sessão expirou. Por favor, faça login novamente.");
-                    window.location.href = "/login";
-                    throw new Error("Usuário não autenticado");
-                }
-                if (response.ok) return response.text();
-                return response.text().then(text => { throw new Error(text) });
-            })
-            .then(mensagem => {
-                alert(mensagem);
-                const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
-                abrirModalAgendamento(idServicoAtual);
-            })
-            .catch(error => {
-                if (error.message !== "Usuário não autenticado") {
-                    alert("Erro ao cancelar: " + error.message);
-                }
-            });
+function desfazerAgendamento(idSessao, botaoClicado) {
+    if (requisicaoEmAndamento) return;
+
+    if (!confirm("Tem certeza que deseja cancelar este agendamento?")) {
+        return;
     }
+
+    requisicaoEmAndamento = true;
+    const textoOriginal = botaoClicado ? botaoClicado.innerHTML : "✕ Desfazer";
+    bloquearBotoesModal(botaoClicado, "Cancelando...");
+
+    fetch(`/api/agendamento/${idSessao}/cancelar`, { method: 'POST' })
+        .then(response => {
+            if (response.status === 401) {
+                alert("Sua sessão expirou. Por favor, faça login novamente.");
+                window.location.href = "/login";
+                throw new Error("Usuário não autenticado");
+            }
+            if (response.ok) return response.text();
+            return response.text().then(text => { throw new Error(text) });
+        })
+        .then(mensagem => {
+            alert(mensagem);
+            const idServicoAtual = document.getElementById("modal-agendamento").dataset.idServicoAtual;
+            abrirModalAgendamento(idServicoAtual);
+        })
+        .catch(error => {
+            if (error.message !== "Usuário não autenticado") {
+                alert("Erro ao cancelar: " + error.message);
+                restaurarBotaoModal(botaoClicado, textoOriginal);
+            }
+        })
+        .finally(() => {
+            requisicaoEmAndamento = false;
+        });
 }
