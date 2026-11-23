@@ -1,12 +1,18 @@
 /**
- * SENAC DF - Easter Egg: Cobrinha no Carregamento (V6 - Com Pausa de Saída)
+ * SENAC DF - Easter Egg: Cobrinha no Carregamento (V7 - Com Aceleração)
  */
 
 (function () {
     'use strict';
 
     const TAMANHO_BLOCO = 15;
-    const VELOCIDADE_MS = 120;
+
+    // --- INÍCIO DAS NOVAS CONSTANTES (Conforme as imagens) ---
+    const VELOCIDADE_MS = 120;      // velocidade inicial
+    const VELOCIDADE_MIN_MS = 60;   // limite (mais rápido que isso fica injogável)
+    const GANHO_POR_FRUTA_MS = 4;   // quanto acelera a cada fruta
+    // ---------------------------------------------------------
+
     const COR_COBRA = '#f39c12';
     const COR_FRUTA = '#e74c3c';
     const QTD_BOLINHAS_INICIAIS = 4;
@@ -20,9 +26,11 @@
     let fruta = { x: 0, y: 0 };
     let pontuacao = 0;
 
-    let carregamentoPendente = null;
+    // --- NOVA VARIÁVEL DE VELOCIDADE ---
+    let velocidadeAtual = VELOCIDADE_MS;
+    // -----------------------------------
 
-    // Variável de controle para saber se o usuário aceitou sair
+    let carregamentoPendente = null;
     let permitirSaida = false;
 
     function init() {
@@ -39,15 +47,20 @@
 
         document.addEventListener('keydown', tratarTeclado);
 
-        // A MÁGICA ACONTECE AQUI: Bloqueia a saída da página se o jogo estiver ativo
         window.addEventListener('beforeunload', function (e) {
             if (jogoAtivo && !permitirSaida) {
-                // Padrão moderno para acionar o diálogo de confirmação do navegador
                 e.preventDefault();
                 e.returnValue = '';
             }
         });
     }
+
+    // --- NOVA FUNÇÃO PARA (RE)INICIAR O LOOP ---
+    function iniciarLoop() {
+        clearInterval(loopId);
+        loopId = setInterval(atualizarJogo, velocidadeAtual);
+    }
+    // -------------------------------------------
 
     function tratarTeclado(e) {
         const setas = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
@@ -81,10 +94,14 @@
         permitirSaida = false;
         pontuacao = 0;
 
+        // --- RESETA A VELOCIDADE AO INICIAR O JOGO ---
+        velocidadeAtual = VELOCIDADE_MS;
+        // ---------------------------------------------
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         canvas.style.display = 'block';
-        canvas.dataset.jogoAtivo = 'true'; // Avisa o AJAX que o jogo está rolando
+        canvas.dataset.jogoAtivo = 'true';
 
         const spinnerOriginal = loader.querySelector('.fa-spinner');
         const textoOriginal = loader.querySelector('p');
@@ -106,7 +123,10 @@
         proximaDirecao = { x: 1, y: 0 };
 
         gerarFruta();
-        loopId = setInterval(atualizarJogo, VELOCIDADE_MS);
+
+        // --- TROCA DO SETINTERVAL ANTIGO PELA NOVA FUNÇÃO ---
+        iniciarLoop();
+        // ----------------------------------------------------
     }
 
     function gerarFruta() {
@@ -143,6 +163,17 @@
         if (cabeca.x === fruta.x && cabeca.y === fruta.y) {
             pontuacao++;
             gerarFruta();
+
+            // --- LÓGICA DE ACELERAÇÃO AO COMER A FRUTA ---
+            // Usa Math.max para garantir que a velocidade não caia abaixo do limite mínimo
+            const nova = Math.max(VELOCIDADE_MIN_MS, velocidadeAtual - GANHO_POR_FRUTA_MS);
+
+            if (nova !== velocidadeAtual) {
+                velocidadeAtual = nova;
+                iniciarLoop(); // Reinicia o loop com a nova velocidade
+            }
+            // ----------------------------------------------
+
         } else {
             cobra.pop();
         }
@@ -153,7 +184,7 @@
     function desenhar() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.textAlign = 'left';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         // Fruta
         ctx.fillStyle = COR_FRUTA;
         ctx.beginPath();
@@ -193,8 +224,6 @@
     function gameOver() {
         clearInterval(loopId);
         jogoAtivo = false;
-
-        // Como o usuário bateu na parede, a gente deixa ele sair (desbloqueia o beforeunload)
         permitirSaida = true;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -227,7 +256,6 @@
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
 
-            // Verifica se clicou na área do botão
             if (clickX >= canvas.width / 2 - 80 && clickX <= canvas.width / 2 + 80 &&
                 clickY >= canvas.height / 2 + 100 && clickY <= canvas.height / 2 + 140) {
                 fecharJogo();
@@ -253,13 +281,9 @@
             if (texto) texto.style.display = '';
         }
 
-        // Se o carregamento já terminou, segue para a página normalmente
         if (carregamentoPendente) irParaPagina();
     }
 
-    // =========================================================
-    // TELA DE CONFIRMAÇÃO + OUVINTE DO CARREGAMENTO FINALIZADO
-    // =========================================================
     function mostrarConfirmacao() {
         clearInterval(loopId);
         loopId = null;
@@ -295,11 +319,14 @@
             const naLinha = y >= cy + 70 && y <= cy + 110;
 
             if (naLinha && x >= cx - 160 && x <= cx - 20) {
-                fecharJogo(); // navega para a página
+                fecharJogo();
             } else if (naLinha && x >= cx + 20 && x <= cx + 160) {
                 canvas.style.pointerEvents = 'none';
                 canvas.onclick = null;
-                loopId = setInterval(atualizarJogo, VELOCIDADE_MS);
+
+                // --- TROCA AQUI TAMBÉM PARA MANTER A VELOCIDADE ATUAL ---
+                iniciarLoop();
+                // --------------------------------------------------------
             }
         };
     }
@@ -307,15 +334,12 @@
     document.addEventListener('carregamentoFinalizado', function (evento) {
         carregamentoPendente = evento.detail;
 
-        // Jogo já foi fechado: vai direto para a página
         if (canvas.dataset.jogoAtivo !== 'true') {
             irParaPagina();
             return;
         }
 
-        // Jogo rodando: pausa e pergunta
         if (jogoAtivo) mostrarConfirmacao();
-        // Se estiver no Game Over, o botão "Continuar" chama fecharJogo(), que já navega
     });
 
     function irParaPagina() {
