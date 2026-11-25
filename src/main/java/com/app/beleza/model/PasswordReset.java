@@ -34,7 +34,7 @@ public class PasswordReset {
     public PasswordReset (String token, Usuario usuario){
         this.token = token;
         this.usuario = usuario;
-        this.data_expiracao = LocalDateTime.now().plusMinutes(30);
+        this.data_expiracao = LocalDateTime.now().plusMinutes(3);
     }
 
     // Getters e Setters

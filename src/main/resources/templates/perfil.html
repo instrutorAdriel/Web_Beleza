@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/sidebar.js}" defer></script>
-    <script th:src="@{/js/perfil-calendario.js(v=5)}" defer></script>
+    <script th:src="@{/js/perfil-calendario.js(v=6)}" defer></script>
     <title th:text="${tituloPagina}">Perfil</title>
 </head>
 <body class="body-perfil">
@@ -80,6 +80,7 @@
                             <button type="button" id="abrirCalendarioNascimento" class="perfil-calendario-abrir" aria-label="Abrir calendário" aria-expanded="false"><i class="fa-regular fa-calendar"></i></button>
                         </div>
                         <small id="ajudaDataNascimento">Digite a data ou selecione no calendário.</small>
+                        <small id="erroIdadeMinima" role="alert" style="display:none; color:#b42318;">A idade mínima para participar do Salão de Beleza do Senac é 12 anos.</small>
                         <div id="calendarioNascimento" class="perfil-calendario" role="dialog" aria-label="Selecione a data de nascimento" hidden></div>
                     </div>
                     <div class="group-input">

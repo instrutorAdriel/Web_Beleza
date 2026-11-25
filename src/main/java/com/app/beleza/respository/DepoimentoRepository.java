@@ -22,6 +22,7 @@ public interface DepoimentoRepository extends JpaRepository<Depoimento, Integer>
             "JOIN FETCH pu.unidade unid " +
             "WHERE (:unidade IS NULL OR unid.nomeUnidade = :unidade) " +
             "AND (:servico IS NULL OR p.nomeProduto = :servico) " +
+            "AND unid.situacao = 'A' " +
             "AND d.statusModeracao = :status " +
             "ORDER BY d.dataEnvio DESC",
             countQuery = "SELECT count(d) FROM Depoimento d " +
@@ -31,6 +32,7 @@ public interface DepoimentoRepository extends JpaRepository<Depoimento, Integer>
                     "JOIN pu.produto p " +
                     "JOIN pu.unidade unid " +
                     "WHERE (:unidade IS NULL OR unid.nomeUnidade = :unidade) " +
+                    "AND unid.situacao = 'A' " +
                     "AND (:servico IS NULL OR p.nomeProduto = :servico) " +
                     "AND d.statusModeracao = :status")
     Page<Depoimento> buscarDepoimentosFiltrados(

@@ -1,0 +1,168 @@
+:root {
+    /* Paleta Principal Senac */
+    --fundo-principal: #ffffff;
+    --fundo-card: #f8fafc;
+    --fundo-dark: #000000;
+    --fundo-footer: #0f172a;
+    --fundo-input: #ffffff;
+    --senac-laranja: #f7941e;
+    --senac-laranja-hover: #e8830c;
+    --senac-laranja-alt: #F29301;
+    --texto-escuro: #1e293b;
+    --texto-claro: #ffffff;
+    --texto-mutado: #64748b;
+    --borda-suave: #e2e8f0;
+    --sucesso: #10b981;
+    --erro: #DC2626;
+    --transicao: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Variáveis de Compatibilidade (Telas de Autenticação) */
+    --e-global-color-primary: #000000;
+    --e-global-color-secondary: #F29301;
+    --e-global-color-text: #7A7A7A;
+    --e-global-color-accent: #F29301;
+    --e-global-color-c968c9f: #FFFFFF;
+    --e-global-typography-primary-font-family: "Poppins", sans-serif;
+    --wp--preset--shadow--natural: 0px 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   RESET GLOBAL
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove ícone nativo de revelar/limpar senha do Edge/IE */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
+
+/* ==========================================================================
+   COMPONENTES COMPARTILHADOS: TOGGLE DE SENHA (AUTH E PERFIL)
+   ========================================================================== */
+.ssp-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.ssp-password-wrapper .ssp-form-control {
+    padding-right: 3rem;
+}
+
+.ssp-toggle-password {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #A0AEC0;
+    cursor: pointer;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: color 0.2s ease;
+}
+
+.ssp-toggle-password:hover {
+    color: var(--e-global-color-primary);
+}
+
+/* ==========================================================================
+   MENSAGENS DE ERRO, SUCESSO E ALERTAS COMPARTILHADOS
+   ========================================================================== */
+.ssp-error-message {
+    color: var(--erro);
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: none;
+    font-weight: 500;
+}
+
+.ssp-success-message {
+    color: #16a34a;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+    display: none;
+    font-weight: 500;
+}
+
+.ssp-form-control.input-error {
+    border-color: var(--erro) !important;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12) !important;
+}
+
+.ssp-aviso-erro {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: 8px;
+    color: var(--erro);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.ssp-aviso-erro i {
+    color: #F59E0B;
+    font-size: 1rem;
+    margin-top: 0.1rem;
+}
+
+.ssp-status-box {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+}
+
+.ssp-error-box {
+    background-color: rgba(220, 38, 38, 0.1);
+}
+
+.ssp-success-box {
+    background-color: rgba(0, 213, 111, 0.1);
+}
+
+.ssp-message-display {
+    display: block;
+}
+
+.ssp-error-text-red {
+    color: var(--erro);
+}
+
+/* ==========================================================================
+   CLASSES UTILITÁRIAS
+   ========================================================================== */
+.hidden,
+.ssp-display-none {
+    display: none;
+}
+
+.ssp-mt-1 {
+    margin-top: 1rem;
+}
+
+.ssp-mt-1-5 {
+    margin-top: 1.5rem;
+}
+
+.ssp-text-center-mt {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.ssp-text-left-top {
+    text-align: left;
+    margin-top: 0.5rem;
+}

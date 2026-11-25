@@ -23,6 +23,8 @@ public class Validador {
 
     // Regex 100% compatível com qualquer versão do Java (8, 11, 17, 21+)
     private static final String EMOJI_REGEX = "[\\x{1F600}-\\x{1F64F}\\x{1F300}-\\x{1F5FF}\\x{1F680}-\\x{1F6FF}\\x{1F700}-\\x{1F77F}\\x{1F780}-\\x{1F7FF}\\x{1F800}-\\x{1F8FF}\\x{1F900}-\\x{1F9FF}\\x{1FA00}-\\x{1FA6F}\\x{1FA70}-\\x{1FAFF}\\x{2600}-\\x{27BF}\\x{FE00}-\\x{FE0F}]";
+    private static final String RFC5322_EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private static final Pattern PATTERN_EMAIL_RFC5322 = Pattern.compile(RFC5322_EMAIL_REGEX);
     private static final Pattern PATTERN_EMOJI = Pattern.compile(EMOJI_REGEX);
 
     // Mantido original
@@ -31,20 +33,22 @@ public class Validador {
             return false;
         }
 
-        // Se o e-mail contiver Punycode (conversão de emoji em domínio) ou emoji direto, considera inválido
-        if (email.toLowerCase().contains("xn--") || contemEmoji(email)) {
+        String emailNormalizado = email.trim();
+
+        if (emailNormalizado.length() > 254) {
             return false;
         }
 
-        final String regexEmail = "^(.+)@(.+)$";
-        final Pattern patternEmail = Pattern.compile(regexEmail);
-        final Matcher matcherEmail = patternEmail.matcher(email);
-
-        try {
-            return matcherEmail.matches();
-        } catch (InputMismatchException e){
+        if (emailNormalizado.toLowerCase().contains("xn--") || contemEmoji(emailNormalizado)) {
             return false;
         }
+
+        String[] partes = emailNormalizado.split("@", -1);
+        if (partes.length != 2 || partes[0].length() > 64) {
+            return false;
+        }
+
+        return PATTERN_EMAIL_RFC5322.matcher(emailNormalizado).matches();
     }
 
     /** Aceita somente provedores pessoais conhecidos e confirma que o domínio publica MX. */

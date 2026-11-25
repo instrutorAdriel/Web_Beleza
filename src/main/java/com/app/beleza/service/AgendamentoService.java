@@ -44,7 +44,8 @@ public class AgendamentoService {
     public void confirmarAgendamentosPendentes(Usuario usuarioLogado) {
         if (usuarioLogado == null) return;
 
-        List<Agendamento> todosAgendamentos = agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
+        List<Agendamento> todosAgendamentos =
+                agendamentoRepository.listarTodosPorUsuarioComJoins(usuarioLogado.getId());
 
         for (Agendamento ag : todosAgendamentos) {
             if (ag.getSituacao() == SituacaoAgendamento.PENDENTE) {
@@ -128,7 +129,9 @@ public class AgendamentoService {
         ag.setDisponibilidade(disp);
         ag.setSituacao(SituacaoAgendamento.CONFIRMADO);
         ag.setObservacao("");
-        ag.setDataHoraAgendamento(LocalDateTime.of(disp.getDataDisponibilidade(), disp.getHoraInicio()));
+        ag.setDataHoraAgendamento(LocalDateTime.of(
+                disp.getDataDisponibilidade(),
+                disp.getHoraInicio()));
 
         agendamentoRepository.save(ag);
 
@@ -146,6 +149,11 @@ public class AgendamentoService {
                 .findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
                         usuarioLogado.getId(), idDisponibilidade, SituacaoAgendamento.CANCELADO)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado."));
+
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
 
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
@@ -172,6 +180,11 @@ public class AgendamentoService {
             throw new RuntimeException("Esse agendamento já está cancelado.");
         }
 
+        // CORREÇÃO: evita salvar observacao como null
+        if (ag.getObservacao() == null) {
+            ag.setObservacao("");
+        }
+
         ag.setSituacao(SituacaoAgendamento.CANCELADO);
         agendamentoRepository.save(ag);
 
@@ -185,9 +198,11 @@ public class AgendamentoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
+    public Page<AgendamentoDTO> listarAgendamentosPorUsuarioPaginado(
+            Integer idModelo, Integer idUsuario, int pagina, int tamanho, String filtroStr) {
 
-        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(
+                pagina, tamanho, Sort.by("id").descending());
 
         // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
         SituacaoAgendamento filtroEnum = null;
@@ -195,7 +210,7 @@ public class AgendamentoService {
             try {
                 filtroEnum = SituacaoAgendamento.valueOf(filtroStr);
             } catch (IllegalArgumentException e) {
-                // Se mandarem um filtro inválido na URL, ignora e traz todos
+                // Filtro inválido: traz todos os agendamentos.
             }
         }
 
