@@ -3568,3 +3568,443 @@ body.body-perfil .perfil-calendario-abrir i {
     }
 
 }
+
+/* ===== PAINEL ADMINISTRATIVO ===== */
+.admin-body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--fundo-card);
+    color: var(--texto-escuro);
+    font-family: 'Public Sans', Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.admin-topbar {
+    background: var(--fundo-footer);
+    border-bottom: 4px solid var(--senac-laranja);
+}
+
+.admin-topbar-conteudo {
+    width: min(100% - 40px, 1120px);
+    min-height: 76px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.admin-marca,
+.admin-link-site {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--texto-claro);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.admin-marca img {
+    display: block;
+    width: 112px;
+    max-height: 48px;
+    object-fit: contain;
+}
+
+.admin-marca span {
+    border-left: 1px solid rgba(255, 255, 255, .3);
+    padding-left: 14px;
+    font-size: .9rem;
+}
+
+.admin-link-site {
+    gap: 8px;
+    color: var(--senac-laranja);
+    transition: var(--transicao);
+}
+
+.admin-link-site:hover {
+    color: #fff;
+}
+
+.admin-container {
+    width: min(100% - 40px, 1120px);
+    margin: 0 auto;
+    padding: 48px 0 64px;
+}
+
+.admin-header,
+.admin-depoimento-cabecalho,
+.admin-secao-cabecalho,
+.admin-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-header {
+    margin-bottom: 36px;
+}
+
+.admin-header h1 {
+    margin: 4px 0 8px;
+    color: var(--texto-escuro);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.2;
+}
+
+.admin-header > div:first-child > p:last-child,
+.admin-secao-cabecalho > div > p {
+    margin: 0;
+    color: var(--texto-mutado);
+}
+
+.admin-eyebrow {
+    margin: 0;
+    color: #b85f00;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.admin-resumo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 10px;
+    background: var(--fundo-principal);
+    color: var(--texto-mutado);
+    white-space: nowrap;
+}
+
+.admin-resumo > i {
+    color: var(--senac-laranja);
+    font-size: 1.25rem;
+}
+
+.admin-resumo strong {
+    color: var(--texto-escuro);
+    font-size: 1.1rem;
+}
+
+.admin-secao-cabecalho {
+    margin-bottom: 18px;
+}
+
+.admin-secao-cabecalho h2 {
+    margin: 0 0 4px;
+    padding-left: 14px;
+    border-left: 4px solid var(--senac-laranja);
+    color: var(--texto-escuro);
+    font-size: 1.35rem;
+}
+
+.admin-secao-cabecalho > div > p {
+    padding-left: 18px;
+    font-size: .92rem;
+}
+
+.admin-mensagem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.admin-sucesso {
+    border-color: #a7f3d0;
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.admin-erro {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.admin-depoimento {
+    margin: 18px 0;
+    padding: 28px;
+    border: 1px solid var(--borda-suave);
+    border-top: 3px solid var(--senac-laranja);
+    border-radius: 12px;
+    background: var(--fundo-principal);
+    box-shadow: 0 4px 15px rgba(15, 23, 42, .05);
+}
+
+.admin-depoimento-cabecalho {
+    align-items: flex-start;
+}
+
+.admin-depoimento h3 {
+    margin: 0;
+    color: var(--texto-escuro);
+    font-size: 1.2rem;
+}
+
+.admin-cliente-legenda {
+    margin: 0 0 2px;
+    color: var(--texto-mutado);
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.admin-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border: 1px solid #fcd34d;
+    border-radius: 999px;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: .82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-metadados {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 24px;
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--fundo-card);
+}
+
+.admin-metadados p {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin: 0;
+    color: var(--texto-mutado);
+    font-size: .9rem;
+}
+
+.admin-metadados i {
+    width: 16px;
+    color: var(--senac-laranja-hover);
+    text-align: center;
+}
+
+.admin-depoimento blockquote {
+    position: relative;
+    margin: 0 0 22px;
+    padding: 18px 20px;
+    border-left: 3px solid var(--senac-laranja);
+    border-radius: 0 8px 8px 0;
+    background: #fffaf3;
+    color: var(--texto-escuro);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+}
+
+.admin-imagens {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 280px));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.admin-imagens a {
+    display: grid;
+    gap: 8px;
+    color: var(--texto-mutado);
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-imagens a:hover {
+    color: var(--senac-laranja-hover);
+}
+
+.admin-imagens a > span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-imagens a > span i:last-child {
+    margin-left: auto;
+}
+
+.admin-imagens img {
+    width: 100%;
+    height: 190px;
+    border: 1px solid var(--borda-suave);
+    border-radius: 8px;
+    background: var(--fundo-card);
+    object-fit: contain;
+}
+
+.admin-imagens > p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--texto-mutado);
+    font-size: .9rem;
+}
+
+.admin-acoes {
+    justify-content: flex-start;
+    padding-top: 20px;
+    border-top: 1px solid var(--borda-suave);
+}
+
+.admin-acoes form {
+    margin: 0;
+}
+
+.admin-botao {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 10px 18px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: .92rem;
+    font-weight: 700;
+    transition: var(--transicao);
+}
+
+.admin-aprovar {
+    background: var(--senac-laranja);
+    color: #111827;
+}
+
+.admin-aprovar:hover {
+    background: var(--senac-laranja-hover);
+    box-shadow: 0 4px 12px rgba(247, 148, 30, .25);
+}
+
+.admin-rejeitar {
+    border-color: #fecaca;
+    background: #fff;
+    color: #b91c1c;
+}
+
+.admin-rejeitar:hover {
+    background: #fef2f2;
+}
+
+.admin-botao:focus-visible,
+.admin-link-site:focus-visible,
+.admin-imagens a:focus-visible {
+    outline: 3px solid rgba(247, 148, 30, .45);
+    outline-offset: 3px;
+}
+
+.admin-vazio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 24px;
+    border: 1px dashed var(--borda-suave);
+    border-radius: 10px;
+    background: var(--fundo-principal);
+    color: var(--texto-mutado);
+}
+
+.admin-vazio i {
+    color: var(--sucesso);
+    font-size: 1.25rem;
+}
+
+@media (max-width: 680px) {
+    .admin-topbar-conteudo,
+    .admin-container {
+        width: min(100% - 32px, 1120px);
+    }
+
+    .admin-topbar-conteudo {
+        min-height: 68px;
+    }
+
+    .admin-marca {
+        gap: 9px;
+    }
+
+    .admin-marca img {
+        width: 88px;
+    }
+
+    .admin-marca span {
+        padding-left: 9px;
+        font-size: .78rem;
+    }
+
+    .admin-link-site {
+        font-size: 0;
+    }
+
+    .admin-link-site i {
+        font-size: 1rem;
+    }
+
+    .admin-container {
+        padding: 32px 0 48px;
+    }
+
+    .admin-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .admin-resumo {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .admin-secao-cabecalho h2 {
+        font-size: 1.15rem;
+    }
+
+    .admin-depoimento {
+        padding: 20px;
+    }
+
+    .admin-metadados {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .admin-imagens {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-imagens img {
+        height: 220px;
+    }
+
+    .admin-acoes {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-acoes form,
+    .admin-botao {
+        width: 100%;
+    }
+}
