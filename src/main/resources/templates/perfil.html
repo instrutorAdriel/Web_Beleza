@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/sidebar.js}" defer></script>
@@ -15,7 +14,7 @@
 </head>
 <body class="body-perfil">
 <div class="mobile-header">
-    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu" aria-controls="sidebarMenu" aria-expanded="false">
         <i class="fa-solid fa-bars"></i>
         <span>Menu do Perfil</span>
     </button>
@@ -353,9 +352,6 @@
 
     </div>
 </div>
-<script th:src="@{/js/sidebar.js}"></script>
-<script th:src="@{/js/perfil.js}"></script>
-<script th:src="@{/js/perfil-calendario.js(v=6)}" defer></script>
 <script>
     // Função para exibir o loading
     function mostrarLoading() {

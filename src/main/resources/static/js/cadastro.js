@@ -141,6 +141,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (emailInput) {
         emailInput.addEventListener("input", () => {
+            clearTimeout(emailDebounceTimer);
+
+            // Bloqueia caracteres proibidos ao digitar e mostra o aviso
+            const valorOriginal = emailInput.value;
+            const limpeza = limparEmailDigitado(valorOriginal);
+
+            if (limpeza.valor !== valorOriginal) {
+                const pos = emailInput.selectionStart;
+                const diff = valorOriginal.length - limpeza.valor.length;
+                emailInput.value = limpeza.valor;
+
+                try {
+                    const novaPos = Math.max(0, pos - diff);
+                    emailInput.setSelectionRange(novaPos, novaPos);
+                } catch (err) {
+                    // inputs type="email" não permitem controlar o cursor; ignora
+                }
+
+                mostrarErroCampo(
+                    emailInput,
+                    "email-erro",
+                    limpeza.caractereProibido
+                        ? "Não é permitido digitar caracteres especiais, acentos ou espaços no e-mail."
+                        : "Não é permitido começar o nome com ponto, terminar com ponto antes do @ ou usar pontos seguidos."
+                );
+                return;
+            }
+
             limparErroCampo(emailInput, "email-erro");
             clearTimeout(emailDebounceTimer);
 
@@ -252,6 +280,39 @@ document.addEventListener("DOMContentLoaded", function () {
         if (smallErro) {
             smallErro.style.display = "none";
         }
+    }
+
+    // Remove do e-mail o que não é permitido e informa se havia caractere proibido
+    function limparEmailDigitado(valorOriginal) {
+        // Espaços não são permitidos em lugar nenhum
+        const valor = valorOriginal.replace(/\s/g, "");
+
+        // Separa no PRIMEIRO @; qualquer @ extra é removido (só pode existir um)
+        const posArroba = valor.indexOf("@");
+        let usuario = posArroba === -1 ? valor : valor.substring(0, posArroba);
+        let dominio = posArroba === -1 ? "" : valor.substring(posArroba + 1);
+
+        const caractereProibido =
+            /\s/.test(valorOriginal) ||
+            dominio.includes("@") ||
+            /[^A-Za-z0-9._\-]/.test(usuario) ||
+            /[^A-Za-z0-9.\-]/.test(dominio.replace(/@/g, ""));
+
+        // Nome de usuário: só letras (sem acento), números, ponto, hífen e underline
+        usuario = usuario.replace(/[^A-Za-z0-9._\-]/g, "");
+        usuario = usuario.replace(/\.{2,}/g, ".").replace(/^\./, "");
+        if (posArroba !== -1) {
+            usuario = usuario.replace(/\.$/, "");
+        }
+
+        // Domínio: só letras, números, ponto e hífen
+        dominio = dominio.replace(/[^A-Za-z0-9.\-]/g, "");
+        dominio = dominio.replace(/\.{2,}/g, ".").replace(/^\./, "");
+
+        return {
+            valor: posArroba === -1 ? usuario : usuario + "@" + dominio,
+            caractereProibido: caractereProibido
+        };
     }
 
     function senhaEhForte(senha) {
