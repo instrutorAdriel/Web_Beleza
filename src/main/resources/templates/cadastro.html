@@ -41,7 +41,7 @@
                        id="nomeCompleto"
                        class="ssp-form-control"
                        th:classappend="${campoErro == 'nomeCompleto'} ? 'input-error'"
-                       placeholder="Digite seu nome completo" required>
+                       placeholder="Digite seu nome completo" maxlength="255" required>
                 <small id="nomeCompleto-erro"
                        class="ssp-aviso-erro"
                        th:style="${campoErro == 'nomeCompleto'} ? 'display: flex;' : 'display: none;'">
@@ -53,14 +53,14 @@
                 <div class="ssp-form-group ssp-flex-1">
                     <label th:for="dataNascimento">Data de Nascimento</label>
                     <input type="date"
-                    th:field="*{dataNascimento}"
-                    id="data_nascimento"
-                    class="ssp-form-control"
-                    th:classappend="${campoErro == 'dataNascimento'} ? 'input-error'"
-                    min="1900-01-01"
-                    required>
+                           th:field="*{dataNascimento}"
+                           id="data_nascimento"
+                           class="ssp-form-control"
+                           th:classappend="${campoErro == 'dataNascimento'} ? 'input-error'"
+                           min="1900-01-01"
+                           required>
                     <small id="data_nascimento-erro" class="ssp-aviso-erro"
-                    th:style="${campoErro == 'dataNascimento'} ? 'display: flex;' : 'display: none;'">
+                           th:style="${campoErro == 'dataNascimento'} ? 'display: flex;' : 'display: none;'">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <span th:text="${campoErro == 'dataNascimento'} ? ${erro} : ''"></span>
                     </small>
@@ -75,7 +75,7 @@
                            placeholder="(00) 00000-0000"
                            maxlength="15" required>
                     <small id="telefone-erro" class="ssp-aviso-erro"
-                    th:style="${campoErro == 'telefone'} ? 'display: flex;' : 'display: none;'">
+                           th:style="${campoErro == 'telefone'} ? 'display: flex;' : 'display: none;'">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                         <span th:text="${campoErro == 'telefone'} ? ${erro} : ''"></span>
                     </small>

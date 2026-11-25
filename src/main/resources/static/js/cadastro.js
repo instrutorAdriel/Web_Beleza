@@ -184,6 +184,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const nome = nomeCompletoInput.value.trim();
         if (nome.length < 3 || !nome.includes(" ")) {
             registrarErro(nomeCompletoInput, "nomeCompleto-erro", "Digite seu nome e sobrenome.");
+        } else if (nome.length > 255) {
+            registrarErro(nomeCompletoInput, "nomeCompleto-erro", "O nome completo deve ter no máximo 255 caracteres.");
         }
 
         const nascimento = parseDataISO(dataNascimentoInput.value);
