@@ -15,7 +15,7 @@
 </head>
 <body class="body-perfil">
 <div class="mobile-header">
-    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu">
+    <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" aria-label="Abrir Menu" aria-controls="sidebarMenu" aria-expanded="false">
         <i class="fa-solid fa-bars"></i>
         <span>Menu do Perfil</span>
     </button>
@@ -353,9 +353,6 @@
 
     </div>
 </div>
-<script th:src="@{/js/sidebar.js}"></script>
-<script th:src="@{/js/perfil.js}"></script>
-<script th:src="@{/js/perfil-calendario.js(v=6)}" defer></script>
 <script>
     // Função para exibir o loading
     function mostrarLoading() {

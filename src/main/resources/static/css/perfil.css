@@ -22,6 +22,7 @@
     display: flex;
     min-height: 100vh;
     background-color: var(--fundo-principal);
+    width: 100%;
 }
 
 .container-painel {
@@ -126,6 +127,7 @@
    ========================================================================== */
 .conteudo-principal {
     flex: 1;
+    min-width: 0;
     padding: 40px;
     background-color: #fff;
 }
@@ -162,7 +164,7 @@
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
     margin-top: 1.5rem;
 }
@@ -760,17 +762,19 @@ body.body-perfil #perfil-informacao #nome {
     .sidebar {
         position: fixed;
         top: 0;
-        left: -300px;
-        width: 280px;
+        left: 0;
+        width: min(280px, 85vw);
         height: 100vh;
+        height: 100dvh;
         z-index: 99;
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-105%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
     }
 
     .sidebar.open {
-        left: 0;
+        transform: translateX(0);
     }
 
     .sidebar-header {
@@ -789,7 +793,7 @@ body.body-perfil #perfil-informacao #nome {
     .conteudo-principal {
         padding: 20px 16px;
         width: 100%;
-        max-width: 600px;
+        max-width: 100%;
         margin: 0 auto;
     }
 
@@ -811,11 +815,40 @@ body.body-perfil #perfil-informacao #nome {
     }
 
     .lista-agendamentos {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .body-perfil input,
+    .form-perfil select,
+    .form-perfil textarea {
+        max-width: 100%;
+    }
+
+    .paginacao-painel {
+        flex-wrap: wrap;
+        gap: 8px !important;
     }
 }
 
 @media (max-width: 480px) {
+    .mobile-header {
+        padding: 10px 14px;
+    }
+
+    .conteudo-principal {
+        padding: 16px 12px;
+    }
+
+    .secao-painel {
+        padding: 16px 12px;
+    }
+
+    .secao-header h2,
+    .secao-header h3 {
+        font-size: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
     .filtros-agendamento {
         gap: 6px;
     }
@@ -829,5 +862,22 @@ body.body-perfil #perfil-informacao #nome {
         min-width: 20px;
         padding: 1px 6px;
         font-size: 10px;
+    }
+
+    .filtro-btn {
+        white-space: normal;
+    }
+
+    .perfil-calendario {
+        left: 0;
+        right: 0;
+        transform: none;
+        width: min(100%, 340px);
+        margin-inline: auto;
+        padding: 8px;
+    }
+
+    .perfil-calendario-grade {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
     }
 }
