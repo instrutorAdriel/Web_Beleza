@@ -206,12 +206,8 @@ public class AgendamentoService {
 
         // Converte o texto da URL para o Enum. Se vier vazio, passa null (traz todos)
         SituacaoAgendamento filtroEnum = null;
-        if (filtroStr != null && !filtroStr.trim().isEmpty() && !filtroStr.equals("TODOS")) {
-            try {
-                filtroEnum = SituacaoAgendamento.valueOf(filtroStr);
-            } catch (IllegalArgumentException e) {
-                // Filtro inválido: traz todos os agendamentos.
-            }
+        if ("PENDENTE".equalsIgnoreCase(filtroStr) || "REALIZADO".equalsIgnoreCase(filtroStr)) {
+            filtroEnum = SituacaoAgendamento.valueOf(filtroStr.toUpperCase());
         }
 
         return agendamentoRepository.buscarPaginadoComFiltro(idModelo, filtroEnum, pageable)

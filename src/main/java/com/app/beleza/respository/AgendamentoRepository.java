@@ -78,17 +78,19 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
     Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
 
-    // Busca paginada trazendo todos ou filtrando por situação
+    // Busca paginada trazendo apenas PENDENTE e REALIZADO (nunca CANCELADO)
     @Query(value = "SELECT a FROM Agendamento a " +
             "JOIN FETCH a.disponibilidade d " +
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
             "JOIN FETCH pu.unidade u " +
             "WHERE a.modelo.idModelo = :idModelo " +
-            "AND (:filtro IS NULL OR a.situacao = :filtro)",
+            "AND ((:filtro IS NOT NULL AND a.situacao = :filtro) " +
+            "     OR (:filtro IS NULL AND a.situacao IN (com.app.beleza.model.enums.SituacaoAgendamento.PENDENTE, com.app.beleza.model.enums.SituacaoAgendamento.REALIZADO)))",
             countQuery = "SELECT COUNT(a) FROM Agendamento a " +
                     "WHERE a.modelo.idModelo = :idModelo " +
-                    "AND (:filtro IS NULL OR a.situacao = :filtro)")
+                    "AND ((:filtro IS NOT NULL AND a.situacao = :filtro) " +
+                    "     OR (:filtro IS NULL AND a.situacao IN (com.app.beleza.model.enums.SituacaoAgendamento.PENDENTE, com.app.beleza.model.enums.SituacaoAgendamento.REALIZADO)))")
     Page<Agendamento> buscarPaginadoComFiltro(
             @Param("idModelo") Integer idModelo,
             @Param("filtro") SituacaoAgendamento filtro,
@@ -100,7 +102,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "JOIN FETCH a.modelo m " +
             "WHERE a.id = :agendamentoId AND u.id = :usuarioId")
     Optional<Agendamento> findByAgendamentoIdAndUsuario(@Param("agendamentoId") Integer agendamentoId,
-                                                       @Param("usuarioId") Integer usuarioId);
+                                                        @Param("usuarioId") Integer usuarioId);
 
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
@@ -129,5 +131,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             @Param("situacao") SituacaoAgendamento situacao,
             @Param("inicioJanela") LocalDateTime inicioJanela,
             @Param("fimJanela") LocalDateTime fimJanela
-            );
+    );
 }

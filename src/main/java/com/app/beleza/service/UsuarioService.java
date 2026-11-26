@@ -19,6 +19,9 @@ import java.util.Optional;
 @Transactional
 public class UsuarioService {
 
+    private static final int TAMANHO_MAXIMO_NOME = 255;
+    private static final int TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA = 64;
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -34,8 +37,12 @@ public class UsuarioService {
             return "Informe seu nome e sobrenome.";
         }
 
+        if (form.getNomeCompleto().trim().length() > TAMANHO_MAXIMO_NOME) {
+            return "O nome completo deve ter no máximo " + TAMANHO_MAXIMO_NOME + " caracteres.";
+        }
+
         if (Validador.contemEmoji(form.getNomeCompleto()) ||
-        !form.getNomeCompleto().matches("^[A-Za-zÀ-ÿ\\s]+$")) {
+                !form.getNomeCompleto().matches("^[A-Za-zÀ-ÿ\\s]+$")) {
             return "O nome completo deve conter apenas letras e espaços.";
         }
 
@@ -53,8 +60,16 @@ public class UsuarioService {
             return "Informa um telefone válido com DDD.";
         }
 
+        if (form.getEmail() != null) {
+            String emailInformado = form.getEmail().trim();
+            int posicaoArroba = emailInformado.indexOf('@');
+            if (posicaoArroba > TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA) {
+                return "O e-mail deve ter no máximo " + TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA + " caracteres antes do @.";
+            }
+        }
+
         if (form.getEmail() == null || Validador.contemEmoji(form.getEmail()) ||
-        !Validador.isEmailPessoalComDominioValido(form.getEmail().trim())) {
+                !Validador.isEmailPessoalComDominioValido(form.getEmail().trim())) {
             return "Informe um e-mail válido.";
         }
 
@@ -177,6 +192,10 @@ public class UsuarioService {
 
         if (Validador.contemEmoji(nomeLimpo)) {
             return "O nome completo não pode conter emojis.";
+        }
+
+        if (form.getNomeCompleto() != null && form.getNomeCompleto().trim().length() > TAMANHO_MAXIMO_NOME) {
+            return "O nome completo deve ter no máximo " + TAMANHO_MAXIMO_NOME + " caracteres.";
         }
 
         // Exige nome e sobrenome
