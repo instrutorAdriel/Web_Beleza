@@ -175,7 +175,13 @@ public class UsuarioService {
     }
 
     public String salvarUsuarioInfo(UsuarioDTO form) {
-        if (Validador.contemEmoji(form.getNomeCompleto())) {
+        if (form.getNomeCompleto() == null || form.getNomeCompleto().trim().isEmpty()) {
+            return "Informe seu nome e sobrenome.";
+        }
+
+        String nomeLimpo = form.getNomeCompleto().trim().replaceAll("\\s+", " ");
+
+        if (Validador.contemEmoji(nomeLimpo)) {
             return "O nome completo não pode conter emojis.";
         }
 
@@ -183,13 +189,23 @@ public class UsuarioService {
             return "O nome completo deve ter no máximo " + TAMANHO_MAXIMO_NOME + " caracteres.";
         }
 
+        // Exige nome e sobrenome
+        if (!nomeLimpo.matches("^[A-Za-zÀ-ÿ]{2,}(\\s+[A-Za-zÀ-ÿ]{2,})+$")) {
+            return "Informe nome e sobrenome válidos (mínimo de 2 letras em cada, sem números ou símbolos).";
+        }
+
         if (form.getDataNascimento() == null || form.getDataNascimento().isAfter(LocalDate.now())) {
-            return "Data de nascimento inv\u00e1lida!";
+            return "Data de nascimento inválida!";
         }
 
         int idade = Period.between(form.getDataNascimento(), LocalDate.now()).getYears();
         if (idade < 12) {
-            return "A idade m\u00ednima para participar do Sal\u00e3o de Beleza do Senac \u00e9 12 anos.";
+            return "A idade mínima para participar do Salão de Beleza do Senac é 12 anos.";
+        }
+
+        // Valida exatamente 15 caracteres (XX) XXXXX-XXXX
+        if (form.getTelefone() == null || !form.getTelefone().trim().matches("^\\(\\d{2}\\)\\s\\d{5}-\\d{4}$")) {
+            return "Informe um telefone válido com 15 caracteres no formato (XX) XXXXX-XXXX.";
         }
 
         Optional<Usuario> usuarioBusca = usuarioRepository.findByEmail(form.getEmail());
@@ -208,13 +224,11 @@ public class UsuarioService {
 
         Modelo modelo = modeloBusca.get();
 
-        if (form.getNomeCompleto() != null && !form.getNomeCompleto().trim().isEmpty()) {
-            usuario.setNomeUsuario(form.getNomeCompleto().trim());
-            usuarioRepository.save(usuario);
-        }
+        usuario.setNomeUsuario(nomeLimpo);
+        usuarioRepository.save(usuario);
 
         modelo.setDataNascimento(form.getDataNascimento());
-        modelo.setTelefone(form.getTelefone());
+        modelo.setTelefone(form.getTelefone().trim());
         modeloRepository.save(modelo);
 
         return null;
