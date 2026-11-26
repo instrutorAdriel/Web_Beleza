@@ -20,6 +20,7 @@ import java.util.Optional;
 public class UsuarioService {
 
     private static final int TAMANHO_MAXIMO_NOME = 255;
+    private static final int TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA = 64;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -57,6 +58,14 @@ public class UsuarioService {
         String digitosTelefone = form.getTelefone().replaceAll("\\D", "");
         if (form.getTelefone() == null || digitosTelefone.length() < 10 || digitosTelefone.length() > 11) {
             return "Informa um telefone válido com DDD.";
+        }
+
+        if (form.getEmail() != null) {
+            String emailInformado = form.getEmail().trim();
+            int posicaoArroba = emailInformado.indexOf('@');
+            if (posicaoArroba > TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA) {
+                return "O e-mail deve ter no máximo " + TAMANHO_MAXIMO_EMAIL_ANTES_ARROBA + " caracteres antes do @.";
+            }
         }
 
         if (form.getEmail() == null || Validador.contemEmoji(form.getEmail()) ||
