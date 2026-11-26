@@ -3,66 +3,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    inicializarFiltrosAgendamento();
     inicializarNotificacoes();
     inicializarCarregamentoAgendamento();
     inicializarMascaraTelefone();
+    inicializarContadorDepoimento();
 });
-
-/**
- * Filtros de status dos Agendamentos no Perfil
- */
-function inicializarFiltrosAgendamento() {
-    const secao = document.getElementById('perfil-agendamento');
-    if (!secao) return;
-
-    const botoes = secao.querySelectorAll('.filtro-btn');
-    const cards = secao.querySelectorAll('#lista-agendamentos .card-agendamento');
-    const msgVazio = document.getElementById('filtro-vazio');
-
-    // Contadores locais para os agendamentos visíveis
-    const contadores = {
-        TODOS: 0,
-        CONFIRMADO: 0,
-        REALIZADO: 0,
-        CANCELADO: 0,
-        NAO_COMPARECEU: 0
-    };
-
-    cards.forEach(card => {
-        contadores.TODOS++;
-        const status = card.dataset.status;
-        if (Object.prototype.hasOwnProperty.call(contadores, status)) {
-            contadores[status]++;
-        }
-    });
-
-    Object.keys(contadores).forEach(status => {
-        const el = secao.querySelector(`.filtro-contador[data-contador="${status}"]`);
-        if (el) el.textContent = contadores[status];
-    });
-
-    function aplicarFiltro(status) {
-        botoes.forEach(b => b.classList.toggle('ativo', b.dataset.status === status));
-
-        let visiveis = 0;
-        cards.forEach(card => {
-            const mostrar = (status === 'TODOS' || card.dataset.status === status);
-            card.style.display = mostrar ? '' : 'none';
-            if (mostrar) visiveis++;
-        });
-
-        if (msgVazio) {
-            msgVazio.style.display = (visiveis === 0) ? 'block' : 'none';
-        }
-    }
-
-    botoes.forEach(botao => {
-        botao.addEventListener('click', () => {
-            aplicarFiltro(botao.dataset.status);
-        });
-    });
-}
 
 /**
  * Exibe o spinner global de carregamento
@@ -98,14 +43,16 @@ function inicializarNotificacoes() {
     const mensagens = document.querySelectorAll('.group-info.success, .group-info.error');
     mensagens.forEach(function (msg) {
         setTimeout(function () {
-            msg.style.transition = "opacity 0.5s ease";
-            msg.style.opacity = "0";
+            msg.style.transition = 'opacity 0.5s ease';
+            msg.style.opacity = '0';
             setTimeout(() => msg.remove(), 500);
         }, 4000);
     });
 }
 
-
+/**
+ * Máscara de telefone (XX) XXXXX-XXXX (15 caracteres)
+ */
 function inicializarMascaraTelefone() {
     const inputTelefone = document.getElementById('telefone');
     if (!inputTelefone) return;
@@ -130,4 +77,24 @@ function inicializarMascaraTelefone() {
     inputTelefone.addEventListener('input', function () {
         this.value = aplicarMascaraTelefone(this.value);
     });
+}
+
+/**
+ * Contador de caracteres do campo de depoimento (limite 255)
+ */
+function inicializarContadorDepoimento() {
+    const campoDepoimento = document.getElementById('campoTextoDepoimento');
+    const contadorDepoimento = document.getElementById('contadorCaracteresDepoimento');
+    const limite = 255;
+
+    if (!campoDepoimento || !contadorDepoimento) return;
+
+    function atualizarContador() {
+        const quantidade = campoDepoimento.value.length;
+        contadorDepoimento.textContent = quantidade + '/' + limite;
+        contadorDepoimento.style.color = quantidade >= limite ? '#dc2626' : '#6b7280';
+    }
+
+    campoDepoimento.addEventListener('input', atualizarContador);
+    atualizarContador();
 }
