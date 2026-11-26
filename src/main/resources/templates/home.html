@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <title>Senac - Página Inicial</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap">
-    <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/home.js}" defer></script>
     <script th:src="@{/js/agendamento.js}" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -17,7 +17,7 @@
     <div class="header-container">
 
         <div class="logo">
-            <img src="https://www.df.senac.br/wp-content/uploads/2024/08/logo_branca_senac-1-1.webp" alt="Senac DF">
+            <img src="/img/logo_branca_senac-fecomércio.png" alt="Senac DF">
         </div>
         <nav class="nav-menu">
             <a href="#hero" class="nav-link ativo">Home</a>
@@ -32,7 +32,10 @@
         </a>
 
         <div th:if="${usuario != null}" class="usuario-logado">
-            <a th:href="@{/perfil}" th:text="${usuarioNome}">Usuário</a>
+            <a th:href="@{/perfil}" class="link-perfil-usuario">
+                <img th:src="@{/img/Avatar_premium.png}" alt="Perfil" class="icone-perfil-header">
+                <span th:text="${usuarioNome}">Usuário</span>
+            </a>
             <a th:href="@{/logout}" class="btn-sair">Sair</a>
 
             <!-- Popover ancorado dentro do bloco do usuário -->
