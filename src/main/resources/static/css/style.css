@@ -6496,3 +6496,80 @@ body.body-perfil .perfil-calendario-abrir i {
     text-decoration: none;
     color: #ffffff;
 }
+
+/* ==========================================================================
+   CLASSES EXTRAÍDAS DO HTML DO PERFIL (LOADER, ALERTAS, PAGINAÇÃO E PREVIEW)
+   ========================================================================== */
+.loader-global {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loader-global-icone {
+    font-size: 3rem;
+    color: var(--senac-laranja);
+}
+
+.loader-global-texto {
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--texto-escuro);
+}
+
+.erro-idade-minima {
+    display: none;
+    color: #b42318;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.agendamentos-vazio {
+    grid-column: 1 / -1;
+}
+
+.form-cancelar-agendamento {
+    margin-top: 1rem;
+}
+
+.paginacao-painel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 2rem;
+}
+
+.btn-paginacao-aba {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--senac-laranja);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-paginacao-aba:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.preview-imagem-depoimento {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+}
