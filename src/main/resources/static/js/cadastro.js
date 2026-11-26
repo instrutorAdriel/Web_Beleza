@@ -4,11 +4,9 @@ function togglePasswordVisibility(inputId, iconId) {
 
     if (input.type === "password") {
         input.type = "text";
-        // Ao mostrar a senha, coloca o olho riscado
         icone.classList.replace("fa-eye", "fa-eye-slash");
     } else {
         input.type = "password";
-        // Ao ocultar a senha, volta ao olho aberto
         icone.classList.replace("fa-eye-slash", "fa-eye");
     }
 }
@@ -145,6 +143,15 @@ document.addEventListener("DOMContentLoaded", function () {
         emailInput.addEventListener("input", () => {
             clearTimeout(emailDebounceTimer);
 
+            // Corte automático: máximo de 64 caracteres antes do @
+            const valorDigitado = emailInput.value;
+            const posicaoArroba = valorDigitado.indexOf("@");
+            const parteLocal = posicaoArroba === -1 ? valorDigitado : valorDigitado.slice(0, posicaoArroba);
+            if (parteLocal.length > 64) {
+                emailInput.value = parteLocal.slice(0, 64) +
+                    (posicaoArroba === -1 ? "" : valorDigitado.slice(posicaoArroba));
+            }
+
             // Bloqueia caracteres proibidos ao digitar e mostra o aviso
             const valorOriginal = emailInput.value;
             const limpeza = limparEmailDigitado(valorOriginal);
@@ -172,6 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             limparErroCampo(emailInput, "email-erro");
+            clearTimeout(emailDebounceTimer);
 
             if (emailInput.value.trim().length > 0) {
                 emailDebounceTimer = setTimeout(() => {
@@ -213,6 +221,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const nome = nomeCompletoInput.value.trim();
         if (nome.length < 3 || !nome.includes(" ")) {
             registrarErro(nomeCompletoInput, "nomeCompleto-erro", "Digite seu nome e sobrenome.");
+        } else if (nome.length > 255) {
+            registrarErro(nomeCompletoInput, "nomeCompleto-erro", "O nome completo deve ter no máximo 255 caracteres.");
         }
 
         const nascimento = parseDataISO(dataNascimentoInput.value);
@@ -385,13 +395,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function validarEmailDinamico(verificarDominioServidor = true, bloquearBotao = false) {
         const email = emailInput.value.trim().toLowerCase();
-        // Nome: só letras, números, _ e -, com pontos apenas entre os trechos
-        // (não começa nem termina com ponto, nem tem pontos seguidos)
-        const regexRfc5322 = /^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
+        const regexRfc5322 = /^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\.[a-zA-Z0-9_!#$\%&'*+/=?`{\vert{}}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/;
         const partesEmail = email.split("@");
         const tamanhoValido = email.length <= 254 && partesEmail.length === 2 && partesEmail[0].length <= 64;
         const formatoValido = tamanhoValido && regexRfc5322.test(email);
         const provedorPessoal = formatoValido && dominiosPessoais.has(partesEmail[1]);
+
+        if (partesEmail.length === 2 && partesEmail[0].length > 64) {
+            mostrarErroCampo(
+                emailInput,
+                "email-erro",
+                "O e-mail deve ter no máximo 64 caracteres antes do @."
+            );
+            return false;
+        }
 
         if (!formatoValido || !provedorPessoal) {
             mostrarErroCampo(
@@ -432,7 +449,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
-});
     /*
     function atualizarChecklistEmail() {
         const email = emailInput.value.trim().toLowerCase();
@@ -503,3 +519,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 */
+});
