@@ -27,43 +27,39 @@ public class HomeController {
             HttpSession session,
             Model model) {
 
+        // Usuário logado
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
         model.addAttribute("usuario", usuario);
         model.addAttribute("usuarioNome", homeService.obterNomeExibicao(usuario));
-        model.addAttribute("procedimentos", homeService.listarProcedimentosPorUnidade());
 
-
-        // Pega a lista de procedimentos (usada na sessão de serviços e nos filtros)
+        // Procedimentos (uma única consulta ao banco)
         List<ServicoDisponibilidadeDTO> procedimentos = homeService.listarProcedimentosPorUnidade();
         model.addAttribute("procedimentos", procedimentos);
 
-        // Busca os 15 depoimentos (sem paginação)
+        // Unidades carregadas diretamente do banco
+        List<String> unidades = homeService.listarNomesUnidades();
+        model.addAttribute("unidades", unidades);
+        model.addAttribute("listaUnidadesFiltro", unidades);
+
+        // Depoimentos recentes
         Page<DepoimentoDTO> paginaDepoimentos = homeService.listarDepoimentosRecentes(unidade, servico);
         model.addAttribute("depoimentos", paginaDepoimentos.getContent());
         model.addAttribute("filtroUnidadeAtual", unidade);
         model.addAttribute("filtroServicoAtual", servico);
 
-        // Gera as listas únicas para os filtros
-        List<String> listaUnidades = procedimentos.stream()
-                .map(ServicoDisponibilidadeDTO::getUnidade)
-                .distinct()
-                .sorted()
-                .toList();
-
+        // Lista única de serviços para o filtro de depoimentos
         List<String> listaServicos = procedimentos.stream()
                 .map(ServicoDisponibilidadeDTO::getNomeServico)
                 .distinct()
                 .sorted()
                 .toList();
-
-        model.addAttribute("listaUnidadesFiltro", listaUnidades);
         model.addAttribute("listaServicosFiltro", listaServicos);
 
         return "home";
     }
 
     @GetMapping("/indefinido")
-    public String exibirTelaIndefinida(Model model){
+    public String exibirTelaIndefinida(Model model) {
         model.addAttribute("tituloPagina", "Página Indefinida");
         return "undefined";
     }

@@ -1,7 +1,6 @@
 package com.app.beleza.service;
 
 import com.app.beleza.model.Depoimento;
-import com.app.beleza.model.Disponibilidade;
 import com.app.beleza.model.ProdutoUnidade;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.DepoimentoDTO;
@@ -9,8 +8,9 @@ import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
 import com.app.beleza.respository.DepoimentoRepository;
 import com.app.beleza.respository.DisponibilidadeRepository;
 import com.app.beleza.respository.ProdutoUnidadeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +33,10 @@ public class HomeService {
     @Autowired
     private ProdutoUnidadeRepository produtoUnidadeRepository;
 
+    // Acesso direto ao banco via JPA, sem precisar de um repository novo
+    @PersistenceContext
+    private EntityManager entityManager;
+
     // Retorna apenas o primeiro e o segundo nome do usuário (ou null se não houver usuário)
     public String obterNomeExibicao(Usuario usuario) {
         if (usuario == null || usuario.getNomeUsuario() == null || usuario.getNomeUsuario().isBlank()) {
@@ -48,10 +52,22 @@ public class HomeService {
         return partes[0] + " " + partes[1];
     }
 
+    // Busca os nomes de todas as unidades cadastradas no banco, em ordem alfabética.
+    // Sem @Cacheable de propósito: uma unidade recém-cadastrada aparece na home imediatamente.
+    @Transactional(readOnly = true)
+    public List<String> listarNomesUnidades() {
+        return entityManager
+                .createQuery(
+                        "SELECT u.nomeUnidade FROM Unidade u " +
+                                "WHERE u.nomeUnidade IS NOT NULL " +
+                                "ORDER BY u.nomeUnidade",
+                        String.class)
+                .getResultList();
+    }
+
     @Cacheable("homeProcedimentos")
     public List<ServicoDisponibilidadeDTO> listarProcedimentosPorUnidade() {
         List<ServicoDisponibilidadeDTO> lista = new ArrayList<>();
-        //Optional<List<Disponibilidade>> optional = disponibilidadeRepository.findServicosUnicosComRelacionamentos();
         Optional<List<ProdutoUnidade>> optional = produtoUnidadeRepository.findProdutoUnidadeComRelacionamentos();
         List<ProdutoUnidade> procedimentos = new ArrayList<>();
 
@@ -66,8 +82,6 @@ public class HomeService {
             dto.setDescricao(procedimento.getProduto().getDescricao());
             dto.setImagem(procedimento.getProduto().getImagemAnexo());
             dto.setUnidade(procedimento.getUnidade().getNomeUnidade());
-            //dto.setHora_fim(procedimento.getHoraFim().toString());
-            //dto.setHora_inicio(procedimento.getHoraInicio().toString());
             lista.add(dto);
         }
 

@@ -7,6 +7,7 @@ let posicaoScrollAtual = 0;
 document.addEventListener('DOMContentLoaded', () => {
     inicializarHeroBanner();
     inicializarCarrossel();
+    inicializarCarrosselUnidades();
     inicializarFiltroBairros();
     inicializarFormularios();
     inicializarCarrosselDepoimentos();
@@ -23,6 +24,45 @@ function inicializarCarrossel() {
     const setaDireita = document.querySelector('.seta-servico.seta-direita');
     const viewport = document.querySelector('.carrossel-viewport-servicos');
     const cards = document.querySelectorAll('.carrossel-track-servicos .card-curso-completo');
+
+    /**
+     * MODULE: CARROSSEL DAS ABAS DE UNIDADES
+     */
+    function inicializarCarrosselUnidades() {
+        const track = document.querySelector('.abas-unidades-track');
+        const setaEsquerda = document.querySelector('.seta-unidade.seta-esquerda');
+        const setaDireita = document.querySelector('.seta-unidade.seta-direita');
+
+        if (!track || !setaEsquerda || !setaDireita) return;
+
+        const passo = () => track.clientWidth * 0.6;
+
+        setaEsquerda.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: -passo(), behavior: 'smooth' });
+        });
+
+        setaDireita.addEventListener('click', (e) => {
+            e.preventDefault();
+            track.scrollBy({ left: passo(), behavior: 'smooth' });
+        });
+
+        // Esconde as setas se todas as unidades couberem na tela
+        const atualizarSetas = () => {
+            const temOverflow = track.scrollWidth > track.clientWidth + 1;
+            setaEsquerda.style.visibility = temOverflow ? 'visible' : 'hidden';
+            setaDireita.style.visibility = temOverflow ? 'visible' : 'hidden';
+        };
+
+        atualizarSetas();
+        window.addEventListener('resize', atualizarSetas);
+
+        // Garante que a aba ativa fique visível ao carregar a página
+        const abaAtiva = track.querySelector('.aba-filtro.ativa');
+        if (abaAtiva) {
+            track.scrollLeft += abaAtiva.getBoundingClientRect().left - track.getBoundingClientRect().left;
+        }
+    }
 
     if (!track || !setaEsquerda || !setaDireita) return;
 

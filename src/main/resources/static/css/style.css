@@ -6496,3 +6496,35 @@ body.body-perfil .perfil-calendario-abrir i {
     text-decoration: none;
     color: #ffffff;
 }
+
+/* ===== Carrossel das abas de unidades ===== */
+.carrossel-wrapper-unidades {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 40px;          /* espaço entre as abas e os cards */
+}
+
+.carrossel-wrapper-unidades .abas-unidades-track {
+    flex: 1 1 auto;
+    min-width: 0;                 /* impede a faixa de crescer além da tela: é isso que faz a rolagem funcionar */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    margin: 0;                    /* remove a margem que empurrava as setas para baixo */
+    padding: 4px 0;               /* evita cortar a borda das abas */
+}
+
+.carrossel-wrapper-unidades .abas-unidades-track::-webkit-scrollbar {
+    display: none;
+}
+
+.carrossel-wrapper-unidades .aba-filtro {
+    flex-shrink: 0;
+    white-space: nowrap;
+}

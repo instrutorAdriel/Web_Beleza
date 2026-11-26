@@ -153,15 +153,70 @@
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
-    <div class="abas-categorias">
-        <a href="#" class="aba-filtro ativa" data-unidade="taguatinga">Taguatinga</a>
-        <a href="#" class="aba-filtro" data-unidade="sobradinho">Sobradinho</a>
-        <a href="#" class="aba-filtro" data-unidade="sao-sebastiao">São Sebastião</a>
-        <a href="#" class="aba-filtro" data-unidade="ceilandia">Ceilândia</a>
-        <a href="#" class="aba-filtro" data-unidade="gama">Gama</a>
-        <a href="#" class="aba-filtro" data-unidade="recanto-das-emas">Recanto das Emas</a>
-        <a href="#" class="aba-filtro" data-unidade="santa-maria">Santa Maria</a>
-        <a href="#" class="aba-filtro" data-unidade="plano-piloto">Plano Piloto</a>
+    <div class="carrossel-wrapper carrossel-wrapper-unidades"
+         style="position: relative; display: flex; align-items: center; padding-top: 0; padding-bottom: 0; margin-bottom: 40px;">
+
+        <button type="button" id="unidadesSetaEsq"
+                class="seta-carrossel seta-esquerda seta-unidade"
+                style="z-index: 5; cursor: pointer;">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div id="unidadesTrack" class="abas-categorias abas-unidades-track"
+             style="display: flex; flex-wrap: nowrap; flex: 1 1 auto; min-width: 0; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; scrollbar-width: none; margin: 0; padding: 4px 0;">
+            <a href="#"
+               class="aba-filtro"
+               style="flex-shrink: 0; white-space: nowrap;"
+               th:each="unidade, stat : ${unidades}"
+               th:classappend="${stat.first} ? 'ativa'"
+               th:data-unidade="${#strings.toLowerCase(#strings.replace(unidade, ' ', '-'))}"
+               th:text="${unidade}">
+                Unidade
+            </a>
+        </div>
+
+        <button type="button" id="unidadesSetaDir"
+                class="seta-carrossel seta-direita seta-unidade"
+                style="z-index: 5; cursor: pointer;">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        (function () {
+            const track = document.getElementById('unidadesTrack');
+            const setaEsq = document.getElementById('unidadesSetaEsq');
+            const setaDir = document.getElementById('unidadesSetaDir');
+            if (!track || !setaEsq || !setaDir) return;
+
+            const passo = () => Math.max(200, track.clientWidth * 0.6);
+
+            setaEsq.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                track.scrollLeft -= passo();
+            });
+
+            setaDir.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                track.scrollLeft += passo();
+            });
+
+            function atualizarSetas() {
+                const temOverflow = track.scrollWidth > track.clientWidth + 1;
+                setaEsq.style.visibility = temOverflow ? 'visible' : 'hidden';
+                setaDir.style.visibility = temOverflow ? 'visible' : 'hidden';
+            }
+
+            atualizarSetas();
+            window.addEventListener('resize', atualizarSetas);
+        })();
+    </script>
+
+        <button type="button" class="seta-carrossel seta-direita seta-unidade">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
     </div>
 
     <!-- MENSAGEM DE SERVIÇOS VAZIOS -->
