@@ -60,9 +60,12 @@ public class UsuarioController {
 
     /* ─── LOGIN / AUTENTICAÇÃO ────────────────────────────────────────────── */
     @GetMapping("/login")
-    public String exibirLogin(Model model) {
+    public String exibirLogin(@RequestParam(defaultValue = "false") boolean contaInativada, Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         model.addAttribute("tituloPagina", "Entrar");
+        if (contaInativada) {
+            model.addAttribute("erro", "Sua conta foi inativada para preservar dados vinculados a outras pessoas.");
+        }
         return "login";
     }
 

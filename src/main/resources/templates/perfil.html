@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" th:href="@{/img/favicon-senac.svg}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <link rel="stylesheet" th:href="@{/css/perfil.css(v=2)}">
     <script th:src="@{/js/toggle-senha.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
     <script th:src="@{/js/sidebar.js}" defer></script>
@@ -44,6 +44,7 @@
             <a th:href="@{/perfil(aba='configuracao')}" class="bar-item button" th:classappend="${abaAtiva == 'configuracao'} ? 'active'">Atualizar Senha</a>
             <a th:href="@{/perfil(aba='agendamento')}" class="bar-item button" th:classappend="${abaAtiva == 'agendamento'} ? 'active'">Agendamentos</a>
             <a th:href="@{/perfil(aba='depoimento')}" class="bar-item button" th:classappend="${abaAtiva == 'depoimento'} ? 'active'">Depoimentos</a>
+            <a th:href="@{/perfil(aba='excluir-conta')}" class="bar-item button" th:classappend="${abaAtiva == 'excluir-conta'} ? 'active'">Excluir Conta</a>
             <a th:href="@{/}" class="bar-item button">Voltar</a>
         </div>
     </div>
@@ -152,6 +153,19 @@
                     <button type="submit" class="btn">Atualizar Senha</button>
                 </div>
             </form>
+        </section>
+
+        <section id="perfil-excluir-conta" th:if="${abaAtiva == 'excluir-conta'}">
+            <section id="excluir-conta" class="excluir-conta" aria-labelledby="titulo-excluir-conta">
+                <h3 id="titulo-excluir-conta">Excluir conta</h3>
+                <p>A exclusão é permanente. Todos os dados associados à sua conta serão apagados de forma definitiva e não poderão ser recuperados.</p>
+                <p>Se existirem registros vinculados a outros usuários, sua conta será inativada para preservar esses dados e impedir novos acessos.</p>
+                <form th:action="@{/perfil/excluir-conta}" method="POST"
+                      onsubmit="return confirm('Tem certeza? A exclusão da conta e de todos os seus dados é permanente e não poderá ser desfeita.');">
+                    <input type="hidden" name="confirmarExclusao" value="true">
+                    <button type="submit" class="btn btn-excluir-conta">Excluir minha conta</button>
+                </form>
+            </section>
         </section>
 
         <!-- ABA: AGENDAMENTOS -->

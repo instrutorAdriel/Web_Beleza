@@ -14,6 +14,16 @@ import java.util.Optional;
 
 @Repository
 public interface DepoimentoRepository extends JpaRepository<Depoimento, Integer> {
+    void deleteByUsuarioId(Integer usuarioId);
+
+    @Query("SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END FROM Depoimento d " +
+            "WHERE d.usuario.id <> :usuarioId AND (" +
+            "d.agendamento.usuario.id = :usuarioId OR " +
+            "(:modeloId IS NOT NULL AND d.agendamento.modelo.idModelo = :modeloId) OR " +
+            "(:modeloId IS NOT NULL AND d.modelo.idModelo = :modeloId))")
+    boolean existeDepoimentoDeOutraPessoaVinculadoAConta(@Param("usuarioId") Integer usuarioId,
+                                                          @Param("modeloId") Integer modeloId);
+
     @Query(value = "SELECT d FROM Depoimento d " +
             "JOIN FETCH d.usuario u " +
             "JOIN FETCH d.agendamento a " +

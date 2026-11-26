@@ -91,4 +91,8 @@ public class PasswordResetService {
         passwordResetRepository.findByToken(token_uuid)
                 .ifPresent(passwordResetRepository::delete);
     }
+
+    public void removerTokensDoUsuario(Usuario usuario) {
+        passwordResetRepository.deleteByUsuarioId(usuario.getId());
+    }
 }

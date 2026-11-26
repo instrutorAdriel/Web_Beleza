@@ -13,6 +13,8 @@ import com.app.beleza.respository.ModeloRepository;
 import com.app.beleza.respository.UsuarioRepository;
 import com.app.beleza.service.AgendamentoService;
 import com.app.beleza.service.CloudinaryService;
+import com.app.beleza.service.PasswordResetService;
+import com.app.beleza.service.ExclusaoContaService;
 import com.app.beleza.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Base64;
 import java.util.List;
@@ -36,6 +40,12 @@ public class PerfilController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private PasswordResetService passwordResetService;
+
+    @Autowired
+    private ExclusaoContaService exclusaoContaService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -199,6 +209,64 @@ public class PerfilController {
 
         redirectAttributes.addFlashAttribute("mensagemSucesso", "Senha alterada com sucesso!");
         return "redirect:/perfil?aba=configuracao";
+    }
+
+    @PostMapping("/excluir-conta")
+    public String excluirConta(@RequestParam(name = "confirmarExclusao", defaultValue = "false") boolean confirmarExclusao,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+        if (usuario == null) return "redirect:/login";
+
+        if (!confirmarExclusao) {
+            redirectAttributes.addFlashAttribute("mensagemError", "Confirme que deseja excluir permanentemente sua conta.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+        Optional<Usuario> usuarioBanco = usuarioRepository.findById(usuario.getId());
+        if (usuarioBanco.isEmpty()) {
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        Optional<Modelo> modelo = modeloRepository.findByUsuario(usuarioBanco.get());
+        Integer modeloId = modelo.map(Modelo::getIdModelo).orElse(null);
+        try {
+        if (depoimentoRepository.existeDepoimentoDeOutraPessoaVinculadoAConta(usuario.getId(), modeloId)) {
+            usuarioBanco.get().setSituacao('I');
+            usuarioRepository.save(usuarioBanco.get());
+            session.invalidate();
+            if (usuarioBanco.get().getSituacao() == 'I') return "redirect:/login?contaInativada";
+            redirectAttributes.addFlashAttribute("mensagemError",
+                    "Não foi possível excluir a conta porque existem depoimentos de outras pessoas vinculados ao perfil ou aos agendamentos. Nenhum dado foi removido.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+
+            boolean excluida = exclusaoContaService.excluir(usuarioBanco.get(), modelo.orElse(null));
+            if (!excluida) {
+                usuarioBanco.get().setSituacao('I');
+                usuarioRepository.save(usuarioBanco.get());
+                session.invalidate();
+                if (usuarioBanco.get().getSituacao() == 'I') return "redirect:/login?contaInativada";
+                redirectAttributes.addFlashAttribute("mensagemError",
+                        "Não foi possível excluir a conta porque há agendamentos de outras pessoas vinculados ao perfil. Nenhum dado foi removido.");
+                return "redirect:/perfil?aba=configuracao";
+            }
+        } catch (DataAccessException e) {
+            if (!(e instanceof DataIntegrityViolationException)) {
+                redirectAttributes.addFlashAttribute("mensagemError", "O sistema nao conseguiu concluir a exclusao. A conta continua ativa.");
+                return "redirect:/perfil?aba=configuracao";
+            }
+            usuarioBanco.get().setSituacao('I');
+            usuarioRepository.save(usuarioBanco.get());
+            session.invalidate();
+            if (usuarioBanco.get().getSituacao() == 'I') return "redirect:/login?contaInativada";
+            redirectAttributes.addFlashAttribute("mensagemError",
+                    "Não foi possível excluir a conta por causa de dados relacionados no sistema. Nenhum dado foi removido; entre em contato com o suporte.");
+            return "redirect:/perfil?aba=configuracao";
+        }
+        session.invalidate();
+        return "redirect:/?contaExcluida";
     }
 
     @PostMapping("/enviar-depoimento")

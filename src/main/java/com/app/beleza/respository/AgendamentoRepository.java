@@ -21,6 +21,12 @@ import java.util.Optional;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer> {
 
+    void deleteByUsuarioId(Integer usuarioId);
+
+    void deleteByModeloIdModelo(Integer modeloId);
+
+    boolean existsByModeloIdModeloAndUsuarioIdNot(Integer modeloId, Integer usuarioId);
+
     Optional<Agendamento> findAgendamentoById(Integer id);
 
     Optional<List<Agendamento>> findAgendamentoByModelo(Modelo modelo);

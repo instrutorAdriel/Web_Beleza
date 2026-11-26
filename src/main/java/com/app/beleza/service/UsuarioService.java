@@ -107,6 +107,10 @@ public class UsuarioService {
 
         Usuario usuario = resultado.get();
 
+        if (usuario.getSituacao() == 'I') {
+            return null;
+        }
+
         if (!encoder.matches(senha, usuario.getSenha())) {
             System.out.println("[AVISO] O usuário '" + email + "' existe, mas a senha digitada está incorreta.");
             return null;

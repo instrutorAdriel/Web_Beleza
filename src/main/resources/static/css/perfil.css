@@ -438,6 +438,35 @@ body.body-perfil #perfil-informacao #nome {
     color: #1f2937;
 }
 
+.excluir-conta {
+    margin-top: 0;
+    padding: 1.5rem;
+    border: 1px solid #f0b4b4;
+    border-radius: 10px;
+    background: #fff8f8;
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.16);
+}
+
+#perfil-excluir-conta {
+    width: 100%;
+    max-width: 720px;
+    box-sizing: border-box;
+}
+
+.excluir-conta h3 {
+    margin-top: 0;
+    color: #991b1b;
+}
+
+.excluir-conta p {
+    line-height: 1.5;
+}
+
+.btn-excluir-conta {
+    background: #b42318;
+    border-color: #b42318;
+}
+
 /* ==========================================================================
    ABA AGENDAMENTOS: FILTROS, CARDS, STATUS E PAGINAÇÃO
    ========================================================================== */
