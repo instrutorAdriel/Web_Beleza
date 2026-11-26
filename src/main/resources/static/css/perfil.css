@@ -462,6 +462,10 @@ body.body-perfil #perfil-informacao #nome {
     line-height: 1.5;
 }
 
+.excluir-conta form {
+    margin-top: 1rem;
+}
+
 .btn-excluir-conta {
     background: #b42318;
     border-color: #b42318;
