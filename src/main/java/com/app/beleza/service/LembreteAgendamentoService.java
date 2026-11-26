@@ -2,7 +2,7 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.Agendamento;
 import com.app.beleza.model.enums.SituacaoAgendamento;
-import com.app.beleza.respository.AgendamentoRepository;
+import com.app.beleza.repository.AgendamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

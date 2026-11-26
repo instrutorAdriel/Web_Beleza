@@ -1,7 +1,7 @@
 package com.app.beleza.service;
 
 import com.app.beleza.model.dto.AgendamentoDTO;
-import com.app.beleza.respository.AgendamentoRepository;
+import com.app.beleza.repository.AgendamentoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +13,9 @@ import com.app.beleza.model.Modelo;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.SessaoAtendimentoDTO;
 import com.app.beleza.model.enums.SituacaoAgendamento;
-import com.app.beleza.respository.DisponibilidadeRepository;
-import com.app.beleza.respository.InstrutorRepository;
-import com.app.beleza.respository.ModeloRepository;
+import com.app.beleza.repository.DisponibilidadeRepository;
+import com.app.beleza.repository.InstrutorRepository;
+import com.app.beleza.repository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +123,6 @@ public class AgendamentoService {
                 .orElseThrow(() -> new RuntimeException("Nenhum instrutor cadastrado no sistema."));
 
         Agendamento ag = new Agendamento();
-        ag.setUsuario(usuarioLogado);
         ag.setModelo(modelo);
         ag.setInstrutor(instrutor);
         ag.setDisponibilidade(disp);
@@ -172,7 +171,7 @@ public class AgendamentoService {
         Agendamento ag = agendamentoRepository.findById(idAgendamento)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado."));
 
-        if (ag.getUsuario() == null || !ag.getUsuario().getId().equals(usuarioLogado.getId())) {
+        if (ag.getModelo().getUsuario() == null || !ag.getModelo().getUsuario().getId().equals(usuarioLogado.getId())) {
             throw new RuntimeException("Esse agendamento não é seu.");
         }
 

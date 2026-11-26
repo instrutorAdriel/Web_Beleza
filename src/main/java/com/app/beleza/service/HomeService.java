@@ -1,16 +1,14 @@
 package com.app.beleza.service;
 
 import com.app.beleza.model.Depoimento;
-import com.app.beleza.model.Disponibilidade;
 import com.app.beleza.model.ProdutoUnidade;
 import com.app.beleza.model.Usuario;
 import com.app.beleza.model.dto.DepoimentoDTO;
 import com.app.beleza.model.dto.ServicoDisponibilidadeDTO;
-import com.app.beleza.respository.DepoimentoRepository;
-import com.app.beleza.respository.DisponibilidadeRepository;
-import com.app.beleza.respository.ProdutoUnidadeRepository;
+import com.app.beleza.repository.DepoimentoRepository;
+import com.app.beleza.repository.DisponibilidadeRepository;
+import com.app.beleza.repository.ProdutoUnidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

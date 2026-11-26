@@ -20,9 +20,6 @@ public class Usuario {
     @Column(name="senha", nullable = false, length = 255)
     private String senha;
 
-    @Column(name="situacao", nullable = false)
-    private char situacao;
-
     // Construtor limpo
     public Usuario(){}
 
@@ -30,7 +27,6 @@ public class Usuario {
         this.nomeUsuario = nomeUsuario;
         this.email = email;
         this.senha = senha;
-        this.situacao = situacao;
     }
 
     // Getters e Setters
@@ -60,14 +56,6 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public char getSituacao() {
-        return situacao;
-    }
-
-    public void setSituacao(char situacao) {
-        this.situacao = situacao;
     }
 
     // Retorna apenas o primeiro e o segundo nome

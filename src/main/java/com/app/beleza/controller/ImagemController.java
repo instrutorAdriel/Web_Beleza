@@ -2,8 +2,8 @@ package com.app.beleza.controller;
 
 import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Produto;
-import com.app.beleza.respository.DepoimentoRepository;
-import com.app.beleza.respository.ProdutoRepository;
+import com.app.beleza.repository.DepoimentoRepository;
+import com.app.beleza.repository.ProdutoRepository;
 import com.app.beleza.service.CloudinaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

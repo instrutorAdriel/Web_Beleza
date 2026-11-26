@@ -1,4 +1,4 @@
-package com.app.beleza.respository;
+package com.app.beleza.repository;
 
 import com.app.beleza.model.PasswordReset;
 import com.app.beleza.model.Usuario;

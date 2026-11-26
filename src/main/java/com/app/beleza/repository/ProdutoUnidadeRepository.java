@@ -1,4 +1,4 @@
-package com.app.beleza.respository;
+package com.app.beleza.repository;
 
 import com.app.beleza.model.ProdutoUnidade;
 import org.springframework.data.jpa.repository.JpaRepository;

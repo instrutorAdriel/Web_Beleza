@@ -2,8 +2,8 @@ package com.app.beleza.service;
 
 import com.app.beleza.model.PasswordReset;
 import com.app.beleza.model.Usuario;
-import com.app.beleza.respository.PasswordResetRepository;
-import com.app.beleza.respository.UsuarioRepository;
+import com.app.beleza.repository.PasswordResetRepository;
+import com.app.beleza.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

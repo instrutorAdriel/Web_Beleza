@@ -38,8 +38,8 @@ public class EmailService {
     }
 
     public void enviarLembreteAgendamento(Agendamento agendamento) {
-        String emailDestino = agendamento.getUsuario().getEmail();
-        String nomeUsuario = agendamento.getUsuario().getNomeUsuario();
+        String emailDestino = agendamento.getModelo().getUsuario().getEmail();
+        String nomeUsuario = agendamento.getModelo().getUsuario().getNomeUsuario();
         String nomeServico = agendamento.getDisponibilidade().getProdutoUnidade().getProduto().getNomeProduto();
         String nomeUnidade = agendamento.getDisponibilidade().getProdutoUnidade().getUnidade().getNomeUnidade();
         String dataFormatada = agendamento.getDataHoraAgendamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm"));

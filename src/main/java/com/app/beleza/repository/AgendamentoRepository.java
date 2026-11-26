@@ -1,7 +1,6 @@
-package com.app.beleza.respository;
+package com.app.beleza.repository;
 
 import com.app.beleza.model.Agendamento;
-import com.app.beleza.model.Depoimento;
 import com.app.beleza.model.Instrutor;
 import com.app.beleza.model.Modelo;
 import com.app.beleza.model.enums.SituacaoAgendamento;
@@ -27,24 +26,32 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
 
     Optional<List<Agendamento>> findAgendamentoByInstrutor(Instrutor instrutor);
 
-    List<Agendamento> findByUsuarioIdAndSituacao(Integer usuarioId, SituacaoAgendamento situacao);
-
-    // Consulta filtrando diretamente pelo usuario.id da tabela Agendamento
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
             "LEFT JOIN FETCH d.produtoUnidade pu " +
             "LEFT JOIN FETCH pu.produto p " +
-            "WHERE a.usuario.id = :usuarioId AND a.situacao = :situacao")
+            "LEFT JOIN FETCH a.modelo m " +
+            "LEFT JOIN FETCH m.usuario mu " +
+            "WHERE mu.id = :usuarioId AND a.situacao = :situacao")
     List<Agendamento> findAgendamentosRealizadosPorUsuarioESituacao(@Param("usuarioId") Integer usuarioId,
                                                                     @Param("situacao") SituacaoAgendamento situacao);
 
-
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Agendamento a " +
+            "JOIN a.modelo m " +
+            "JOIN m.usuario mu " +
+            "WHERE mu.id = :usuarioId " +
+            "AND a.disponibilidade.id = :disponibilidadeId " +
+            "AND a.situacao <> :situacao")
     boolean existsByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
-            Integer usuarioId, Integer disponibilidadeId, SituacaoAgendamento situacao);
+            @Param("usuarioId") Integer usuarioId,
+            @Param("disponibilidadeId") Integer disponibilidadeId,
+            @Param("situacao") SituacaoAgendamento situacao);
 
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Agendamento a " +
             "JOIN a.disponibilidade d " +
-            "WHERE a.usuario.id = :usuarioId " +
+            "JOIN a.modelo m " +
+            "JOIN m.usuario mu " +
+            "WHERE mu.id = :usuarioId " +
             "AND a.situacao <> :situacaoCancelada " +
             "AND d.dataDisponibilidade = :data " +
             "AND d.horaInicio < :horaFim " +
@@ -55,8 +62,24 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
                                     @Param("horaInicio") LocalTime horaInicio,
                                     @Param("horaFim") LocalTime horaFim);
 
-    Optional<Agendamento> findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
-            Integer usuarioId, Integer disponibilidadeId, SituacaoAgendamento situacao);
+    @Query("SELECT a FROM Agendamento a " +
+            "JOIN a.modelo m " +
+            "JOIN m.usuario mu " +
+            "WHERE mu.id = :usuarioId " +
+            "AND a.disponibilidade.id = :disponibilidadeId " +
+            "AND a.situacao <> :situacao " +
+            "ORDER BY a.id ASC")
+    List<Agendamento> findPorUsuarioEDisponibilidadeList(
+            @Param("usuarioId") Integer usuarioId,
+            @Param("disponibilidadeId") Integer disponibilidadeId,
+            @Param("situacao") SituacaoAgendamento situacao);
+
+    default Optional<Agendamento> findFirstByUsuarioIdAndDisponibilidadeIdAndSituacaoNot(
+            Integer usuarioId, Integer disponibilidadeId, SituacaoAgendamento situacao) {
+        return findPorUsuarioEDisponibilidadeList(usuarioId, disponibilidadeId, situacao)
+                .stream()
+                .findFirst();
+    }
 
     @Query("SELECT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
@@ -64,8 +87,10 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "LEFT JOIN FETCH pu.produto " +
             "LEFT JOIN FETCH pu.unidade " +
             "LEFT JOIN FETCH a.instrutor i " +
-            "LEFT JOIN FETCH i.usuario " +
-            "WHERE a.usuario.id = :usuarioId " +
+            "LEFT JOIN FETCH a.modelo m " +
+            "LEFT JOIN FETCH i.usuario iu " +
+            "LEFT JOIN FETCH m.usuario mu " +
+            "WHERE mu.id = :usuarioId " +
             "ORDER BY a.dataHoraAgendamento DESC")
     List<Agendamento> listarTodosPorUsuarioComJoins(@Param("usuarioId") Integer usuarioId);
 
@@ -74,39 +99,43 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
             "JOIN FETCH pu.unidade u " +
-            "WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario",
-            countQuery = "SELECT COUNT(a) FROM Agendamento a WHERE a.modelo.idModelo = :idModelo OR a.modelo.usuario.id = :idUsuario")
+            "JOIN FETCH a.modelo m " +
+            "JOIN FETCH m.usuario mu " +
+            "WHERE m.idModelo = :idModelo OR mu.id = :idUsuario",
+            countQuery = "SELECT COUNT(a) FROM Agendamento a " +
+                    "JOIN a.modelo m " +
+                    "JOIN m.usuario mu " +
+                    "WHERE m.idModelo = :idModelo OR mu.id = :idUsuario")
     Page<Agendamento> findByModeloOrUsuarioPaginado(@Param("idModelo") Integer idModelo, @Param("idUsuario") Integer idUsuario, Pageable pageable);
 
-    // Busca paginada trazendo todos ou filtrando por situação
     @Query(value = "SELECT a FROM Agendamento a " +
             "JOIN FETCH a.disponibilidade d " +
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
             "JOIN FETCH pu.unidade u " +
-            "WHERE a.modelo.idModelo = :idModelo " +
+            "JOIN FETCH a.modelo m " +
+            "JOIN FETCH m.usuario mu " +
+            "WHERE mu.id = :idModelo " +
             "AND (:filtro IS NULL OR a.situacao = :filtro)",
             countQuery = "SELECT COUNT(a) FROM Agendamento a " +
-                    "WHERE a.modelo.idModelo = :idModelo " +
+                    "JOIN a.modelo m " +
+                    "JOIN m.usuario mu " +
+                    "WHERE mu.id = :idModelo " +
                     "AND (:filtro IS NULL OR a.situacao = :filtro)")
     Page<Agendamento> buscarPaginadoComFiltro(
             @Param("idModelo") Integer idModelo,
             @Param("filtro") SituacaoAgendamento filtro,
             Pageable pageable);
 
-
-    @Query("SELECT a FROM Agendamento a " +
-            "JOIN FETCH a.usuario u " +
-            "JOIN FETCH a.modelo m " +
-            "WHERE a.id = :agendamentoId AND u.id = :usuarioId")
-    Optional<Agendamento> findByAgendamentoIdAndUsuario(@Param("agendamentoId") Integer agendamentoId,
-                                                       @Param("usuarioId") Integer usuarioId);
+    Optional<Agendamento> findAgendamentoByIdAndModelo(@Param("agendamentoId") Integer id, @Param("modeloId") Modelo modelo);
 
     @Query("SELECT DISTINCT a FROM Agendamento a " +
             "LEFT JOIN FETCH a.disponibilidade d " +
             "LEFT JOIN FETCH d.produtoUnidade pu " +
             "LEFT JOIN FETCH pu.produto p " +
-            "WHERE (a.usuario.id = :usuarioId OR a.modelo.usuario.id = :usuarioId) " +
+            "LEFT JOIN FETCH a.modelo m " +
+            "LEFT JOIN FETCH m.usuario mu " +
+            "WHERE mu.id = :usuarioId " +
             " AND a.situacao = :situacao " +
             " AND NOT EXISTS (" +
             " SELECT dep FROM Depoimento dep WHERE dep.agendamento.id = a.id" +
@@ -117,7 +146,8 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
     );
 
     @Query("SELECT DISTINCT a FROM Agendamento a " +
-            "JOIN FETCH a.usuario u " +
+            "JOIN FETCH a.modelo m " +
+            "JOIN FETCH m.usuario mu " +
             "JOIN FETCH a.disponibilidade d " +
             "JOIN FETCH d.produtoUnidade pu " +
             "JOIN FETCH pu.produto p " +
@@ -129,5 +159,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Intege
             @Param("situacao") SituacaoAgendamento situacao,
             @Param("inicioJanela") LocalDateTime inicioJanela,
             @Param("fimJanela") LocalDateTime fimJanela
-            );
+    );
 }
