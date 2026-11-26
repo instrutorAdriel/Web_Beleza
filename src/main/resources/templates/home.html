@@ -153,12 +153,29 @@
     <h2 class="titulo-secao">Nossos Serviços para Agendamento</h2>
     <p class="subtitulo-secao">Escolha o procedimento desejado e filtre pela unidade mais próxima de você.</p>
 
+    <style>
+        .seta-unidade-simples {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            color: #f0962f;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .seta-unidade-simples:hover {
+            color: #c9761a;
+            transform: scale(1.15);
+        }
+    </style>
+
     <div class="carrossel-wrapper carrossel-wrapper-unidades"
          style="position: relative; display: flex; align-items: center; padding-top: 0; padding-bottom: 0; margin-bottom: 40px;">
 
-        <button type="button" id="unidadesSetaEsq"
-                class="seta-carrossel seta-esquerda seta-unidade"
-                style="z-index: 5; cursor: pointer;">
+        <button type="button" id="unidadesSetaEsq" class="seta-unidade-simples" aria-label="Unidades anteriores">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
@@ -175,9 +192,7 @@
             </a>
         </div>
 
-        <button type="button" id="unidadesSetaDir"
-                class="seta-carrossel seta-direita seta-unidade"
-                style="z-index: 5; cursor: pointer;">
+        <button type="button" id="unidadesSetaDir" class="seta-unidade-simples" aria-label="Próximas unidades">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
     </div>
@@ -263,7 +278,7 @@
 
                     </div>
 
-                </div> 
+                </div>
             </div>
         </div>
 
